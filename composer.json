@@ -1,0 +1,23 @@
+{
+    "name": "cbsua-umis/cbsua.dtrs",
+    "description": "CBSUA HRIS :: DTR",
+    "type": "project",
+    "require": {
+        "smarty/smarty": "^3.1",
+        "phroute/phroute": "^2.1",
+        "tecnickcom/tcpdf": "^6.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "" : "app/"
+        }
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "CBSUA UMIS",
+            "email": "umis@cbsua.edu.ph"
+        }
+    ],
+    "minimum-stability": "dev"
+}
