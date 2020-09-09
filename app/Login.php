@@ -4,13 +4,17 @@ use Controllers\LoginController;
 class Login extends LoginController {
     private $message;
 
-    public function __construct () {
-        parent::__construct ();
+    public function index () {
+        if ($this->user) {
+            if ($this->user['type'] == 'admin') $this->redirect ();
+            else $this->redirect ("profile");
+        }
+
+        $this->view->display ('login', ["message" => $this->message]);
     }
 
-    public function index () {
-        if ($_SESSION['user']) header ("location: /dashboard");
-        $this->view->display ('login', ["message" => $this->message]);
+    public function do_action () {
+        call_user_func_array ([$this, $this->data['action']], $this->data);
     }
 
     public function do_login () {
@@ -27,11 +31,10 @@ class Login extends LoginController {
     }
     
     public function change_type () {
-        if($_SESSION['user']['type'] == 'admin'){
-            unset($_SESSION['user']['type']);
-        }else{
-            $_SESSION['user']['type'] = 'admin';
-        }
-        header ("location: /login");
+        if($_SESSION['user']['type'] == 'admin') unset($_SESSION['user']['type']);
+        else $_SESSION['user']['type'] = 'admin';
+
+        $this->user = $_SESSION['user'];
+        $this->index ();
     }
 }

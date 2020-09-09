@@ -6,6 +6,7 @@
             <div class="row">
                 <div class="col col-login mx-auto">
                     <form class="card" action="" method="POST">
+                        <input type="hidden" name="action" value="do_login">
                         {if $error}<div class="card-alert alert alert-danger mb-0">{$error.message}</div>{/if}
                         <div class="card-body p-6">
                             <div class="card-title">Login to your account</div>

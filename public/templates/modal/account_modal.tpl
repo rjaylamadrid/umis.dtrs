@@ -8,7 +8,8 @@
         </div>
         <div class="modal-body">Login to your {if $user.type == 'admin'}Employee{else}Admin{/if} Account?</div>
         <div class="modal-footer">
-          <form method="POST" action="login/type">
+          <form method="POST" action="/login">
+            <input type="hidden" name="action" value="change_type">
             <input type="hidden" name="type" value="{if $user.type == 'admin'}employee{else}admin{/if}">
             <a href="#" class="btn btn-pill btn-secondary" type="" data-dismiss="modal">Cancel</a>
             <button class="btn btn-primary btn-pill" name="otherAccount" type="submit" >Login as {if $user.type == 'admin'}Employee{else}Admin{/if}</button>

@@ -7,21 +7,52 @@ $router->any('/', ['Login','index']);
 
 // Authentication
 $router->get('/login', ['Login','index']);
-$router->post('/login/type', 'Login@change_type');
-$router->post('/login', ['Login', 'do_login']);
+$router->post('/login', ['Login', 'do_action']);
 $router->get('/logout', function () {
     session_destroy();
     header ("location: login");
 });
 
-// Dashboard
-$router->get('/dashboard', ['Dashboard', 'index']);
+// FILTERS START
+$router->filter('auth', function(){    
+    if (!isset($_SESSION['user'])) {
+        header ('location: /login');
+        return false;
+    }
+});
+$router->filter('is_admin', function(){
+    if ($_SESSION['user']['type'] != "admin") {
+        header ('location: /profile');
+        return false;
+    }
+});
+// FILTERS END
 
-// Employees
-$router->get('/employees', ['Employees', 'index']);
+$router->group(['before' => 'auth'], function ($router) {
+    $router->group(['before' => 'is_admin'], function ($router) {
+        // ADMIN START:
+        // Dashboard
+        $router->get('/dashboard', ['Dashboard', 'index']);
+
+        // Employees
+        $router->group(["prefix" => "employees"], function ($router) {
+            $router->get('/', ['Employees', 'index']);
+            $router->get('/profile/{id}/{view}?', ['Employees', 'profile']);
+        });
+
+        // Attendance
+        $router->group(["prefix" => "attendance"], function ($router) {
+            $router->get('/', ['Attendance', 'index']);
+            $router->post('/', ['Attendance', 'do_action']);
+            $router->post('/print', ['Attendance', 'print_preview']);
+        });
+        // ADMIN END
+    });
+    
+    // EMPLOYEE START
+    $router->get('/profile/{view}?', ['Profile', 'index']);
+    // EMPLOYEE END
+});
 
 $dispatcher = new Phroute\Phroute\Dispatcher($router->getData());
-$response = $dispatcher->dispatch($_SERVER['REQUEST_METHOD'], parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
-    
-// Print out the value returned from the dispatched function
-echo $response;
+return $dispatcher->dispatch($_SERVER['REQUEST_METHOD'], parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
