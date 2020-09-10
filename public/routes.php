@@ -8,7 +8,7 @@ $router->any('/', ['Login','index']);
 // Authentication
 $router->get('/login', ['Login','index']);
 $router->post('/login', ['Login', 'do_action']);
-$router->get('/logout', function () {
+$router->any('/logout', function () {
     session_destroy();
     header ("location: login");
 });
@@ -38,6 +38,7 @@ $router->group(['before' => 'auth'], function ($router) {
         $router->group(["prefix" => "employees"], function ($router) {
             $router->get('/', ['Employees', 'index']);
             $router->get('/profile/{id}/{view}?', ['Employees', 'profile']);
+            $router->post('/', ['Employees', 'do_action']);
         });
 
         // Attendance
@@ -45,6 +46,12 @@ $router->group(['before' => 'auth'], function ($router) {
             $router->get('/', ['Attendance', 'index']);
             $router->post('/', ['Attendance', 'do_action']);
             $router->post('/print', ['Attendance', 'print_preview']);
+        });
+
+        // Settings
+        $router->group(["prefix" => "settings"], function ($router) {
+            $router->get("/", ["Settings", "index"]);
+            $router->get("/{tab}", ["Settings", "tab"]);
         });
         // ADMIN END
     });

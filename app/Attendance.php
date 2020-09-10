@@ -1,5 +1,6 @@
 <?php
 use Controllers\AttendanceController;
+use Model\Employee;
 
 class Attendance extends AttendanceController {
 
@@ -18,7 +19,7 @@ class Attendance extends AttendanceController {
     public function print_preview () {
         if ($this->data) {
             $attendance = $this->attendance ($this->data['employee_id'], ["month" => $this->data['month'], "year" => $this->data['year']])->compute (); // Employee Attendance
-            $profile = Profile::employee ($this->data['employee_id'])->get ();
+            $profile = Employee::find ($this->data['employee_id'])->get ();
             
             $vars = ["attendance" => $attendance, "employee" => $profile];
             
@@ -44,7 +45,7 @@ class Attendance extends AttendanceController {
     }
 
     protected function update_log () {
-        $attn = $this->attendance ($this->data['emp_id'], ["month" => $this->data['month'], "year" => $this->data['year']])->find ($this->data['id']);
+        $attn = $this->find ($this->data['month'].'-'.$this->data['year'], $this->data['id']);
         $rawdata = $this->get_raw_data ($this->data['month'].'-'.$this->data['year'], [$this->data['emp_id'], $this->data['date']]);
 
         $this->view->display ("custom/attendance_update_log", ["attn" => $attn, "rawdata" => $rawdata]);

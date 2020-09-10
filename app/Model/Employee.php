@@ -47,4 +47,8 @@ class Employee {
     public static function get () {
         return self::$employee;
     }
+
+    public static function update ($id, $col = [], $val) {
+
+    }
 }

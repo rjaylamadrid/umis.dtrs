@@ -216,32 +216,22 @@
 
     function view_raw_data (id, date) {
         var period = document.getElementById("month").value + '-' + document.getElementById("year").value;
-	    $.ajax({
-            url:"/attendance",
-            type:'POST',
-	    	data: {
-                'action': 'raw_data', 'id':id, 'period':period, 'date':date
-            },
-	    	success:function(data) {
-	        	$("#raw-data").html(data);
-	        	$("#raw-data-modal").modal('show');
-	    	}
-		});
+        f ({
+            action: 'raw_data', id: id, period: period, date: date
+        }, 'text').then (function (html) {
+            $("#raw-data").html(html);
+	        $("#raw-data-modal").modal('show');
+        });
     }
 
     function update_log (id, emp_id, date) {
         var month = document.getElementById("month").value
         var year = document.getElementById("year").value;
-        $.ajax({
-            url:"/attendance",
-            type:"POST",
-            data:{
-                'action': 'update_log', 'id':id, 'emp_id':emp_id, 'month':month, 'year': year, 'date':date
-            },
-            success:function(data){
-                $("#update-log").html(data);
-                $("#update-log-modal").modal('show');
-            }
+        f ({
+            action: 'update_log', id: id, emp_id: emp_id, month: month, year: year, date: date
+        }, 'text').then (function (html) {
+            $("#update-log").html(html);
+            $("#update-log-modal").modal('show');
         });
     }
 

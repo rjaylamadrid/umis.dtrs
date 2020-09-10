@@ -56,14 +56,6 @@
                                                 </a>
                                                 <a href="javascript:set_inactive('{$employee.employee_id}');" class="dropdown-item"><i class="dropdown-icon fe fe-tag"></i> Set as Inactive 
                                                 </a>
-                                                {* <div class="dropdown-divider"></div>
-                                                    <form method="POST" action="">
-                                                        <input type="hidden" name="ActiveStatus" value="'.$set.'">
-                                                        <input type="hidden" name="EmployeeID" value="'.$employees[$i]['employee_id'].'">
-                                                        <input type="hidden" name="inactive" value="'.$frm['inactive'].'">
-                                                        <button class="dropdown-item" type="submit" name="btnstatus" value="submit"><i class="dropdown-icon fe fe-link"></i> Set As '.$setStatus.'</button>
-                                                    </form>
-                                                </div> *}
                                             </div>
                                         </td>
                                     </tr>
@@ -81,8 +73,12 @@
         </div>
     </div>
     <script>
-        function set_inactive (id) {
-            
+        function set_inactive (id, val = 0) {
+            fetch ({
+                action: 'set-active', active: val, id: id
+            }).then (response => response.json().then (function (result) {
+                if (result.success) location.reload();
+            }));
         }
     </script>
 {/block}

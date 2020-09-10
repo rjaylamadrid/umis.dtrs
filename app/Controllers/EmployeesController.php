@@ -28,4 +28,6 @@ class EmployeesController extends Controller {
         }
         return;
     }
+
+    protected function set_active () {}
 }

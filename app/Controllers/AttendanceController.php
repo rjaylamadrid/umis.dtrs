@@ -52,14 +52,14 @@ class AttendanceController extends Controller {
         return DB::db("db_raw_data")->select("SELECT * FROM `$period` WHERE emp_id = ? AND log_date = ?", $args);
     }
 
-    protected function find ($no) {
-        foreach ($this->attendance as $attn) {
-            if ($attn['attn']['id'] == $no) return $attn['attn'];
-        }
+    protected function find ($period, $no) {
+        return DB::db("db_attendance")->fetch_row ("SELECT * FROM `$period` WHERE id = ?", $no);
     }
+
     protected function type () {
         return DB::select ("SELECT * FROM tbl_employee_type");
     }
+
     protected function to_pdf ($data) {
         PDF::preview ($data);
     }
