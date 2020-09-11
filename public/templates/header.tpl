@@ -46,36 +46,36 @@
                 <ul class="nav nav-tabs border-0 flex-column flex-lg-row">
                     {if $user.type == "admin"}
                         <li class="nav-item">
-                            <a href="{$server}/dashboard" class="nav-link {if $page == 'dashboard'}active{/if}"><i class="fe fe-home"></i> Dashboard</a>
+                            <a href="/dashboard" class="nav-link {if $page == 'dashboard'}active{/if}"><i class="fe fe-home"></i> Dashboard</a>
                         </li>
                         <li class="nav-item">
-                            <a href="{$server}/employees" class="nav-link {if $page == 'employees'}active{/if}"><i class="fe fe-users"></i> Employees</a>
+                            <a href="/employees" class="nav-link {if $page == 'employees'}active{/if}"><i class="fe fe-users"></i> Employees</a>
                         </li>
                         <li class="nav-item">
-                            <a href="{$server}/payroll" class="nav-link {if $frm.a == 'payroll'}active{/if}"><i class="fe fe-edit-3"></i> Payroll</a>
+                            <a href="/payroll" class="nav-link {if $page == 'payroll'}active{/if}"><i class="fe fe-edit-3"></i> Payroll</a>
                         </li>
                         <li class="nav-item">
-                            <a href="{$server}/attendance" class="nav-link {if $page == 'attendance'}active{/if}"><i class="fe fe-clock"></i> Daily Time Record</a>
+                            <a href="/attendance" class="nav-link {if $page == 'attendance'}active{/if}"><i class="fe fe-clock"></i> Daily Time Record</a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link {if $frm.a == 'calendar'}active{/if}"><i class="fe fe-calendar"></i> Calendar</a>
+                            <a href="#" class="nav-link {if $page == 'calendar'}active{/if}"><i class="fe fe-calendar"></i> Calendar</a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link {if $frm.a == 'leave'}active{/if}"><i class="fe fe-mail"></i> Leave Request</a>
+                            <a href="/request" class="nav-link {if $page == 'request'}active{/if}"><i class="fe fe-mail"></i> Leave Request</a>
                             <span><div class="notif"></div></span>
                         </li>
                         <li class="nav-item">
-                            <a href="{$server}/settings" class="nav-link {if $page == 'settings'}active{/if}"><i class="fe fe-settings"></i> Settings</a>
+                            <a href="/settings" class="nav-link {if $page == 'settings'}active{/if}"><i class="fe fe-settings"></i> Settings</a>
                         </li>
                     {else}
                         <li class="nav-item">
-                            <a href="{$server}/profile/basic-info" class="nav-link {if $frm.a == 'profile'}active{/if}"><i class="fe fe-user"></i> Profile</a>
+                            <a href="/profile" class="nav-link {if $frm.a == 'profile'}active{/if}"><i class="fe fe-user"></i> Profile</a>
                         </li>
                         <li class="nav-item">
-                            <a href="{$server}/payroll" class="nav-link {if $frm.a == 'payroll'}active{/if}"><i class="fe fe-edit-3"></i> Payroll</a>
+                            <a href="/payroll" class="nav-link {if $frm.a == 'payroll'}active{/if}"><i class="fe fe-edit-3"></i> Payroll</a>
                         </li>
                         <li class="nav-item">
-                            <a href="{$server}/attendance" class="nav-link {if $frm.a == 'attendance'}active{/if}"><i class="fe fe-clock"></i> Daily Time Record</a>
+                            <a href="/attendance" class="nav-link {if $frm.a == 'attendance'}active{/if}"><i class="fe fe-clock"></i> Daily Time Record</a>
                         </li>
                     {/if}
                 </ul>

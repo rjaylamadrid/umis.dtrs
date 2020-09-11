@@ -40,6 +40,7 @@ class DB {
         try {
             if (!($query = self::$db->prepare($args[0]))) return;
             if (!($query->execute($args[1]))) return;
+            self::$db = null;
             return $query;
         } catch (PDOException $e) {
             return;

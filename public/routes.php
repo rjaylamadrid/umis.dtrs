@@ -3,14 +3,16 @@ use Phroute\Phroute\RouteCollector;
 $router = new RouteCollector();
 
 // Landing page
-$router->any('/', ['Login','index']);
+$router->any('/', function () {
+    header ("location: /login");
+});
 
 // Authentication
 $router->get('/login', ['Login','index']);
 $router->post('/login', ['Login', 'do_action']);
 $router->any('/logout', function () {
     session_destroy();
-    header ("location: login");
+    header ("location: /login");
 });
 
 // FILTERS START
@@ -52,6 +54,11 @@ $router->group(['before' => 'auth'], function ($router) {
         $router->group(["prefix" => "settings"], function ($router) {
             $router->get("/", ["Settings", "index"]);
             $router->get("/{tab}", ["Settings", "tab"]);
+        });
+
+        // Request
+        $router->group(["prefix" => "request"], function ($router) {
+            $router->get("/", ["Request", "index"]);
         });
         // ADMIN END
     });

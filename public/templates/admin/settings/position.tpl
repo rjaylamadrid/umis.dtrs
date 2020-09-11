@@ -14,7 +14,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="table-responsive">
-                        <table class="table table-hover card-table table-vcenter text-nowrap datatable dataTable no-footer" id="employees">
+                        <table class="table table-hover card-table table-vcenter text-nowrap datatable dataTable no-footer" id="tbl-positions">
                             <thead>
                                 <tr>
                                     <th>Code</th>
@@ -34,6 +34,13 @@
                             {/foreach}
                             </tbody>
                         </table>
+                        <script>
+                            require (['core', 'datatables'], function ($, datatable) {
+                                $(document).ready (function() {
+                                    $("#tbl-positions").DataTable();
+                                })
+                            })
+                        </script>
                     </div>
                 </div>
             </div>
@@ -43,51 +50,3 @@
     <div class="modal-dialog" id="position" role="document" style="max-width: 500px;">
     </div>
 </div>
-<script type="text/javascript">
-    require(['datatables', 'jquery'], function(datatable, $) {
-        $(document).ready(function() {
-            $('#employees').DataTable();
-        });
-    });
-
-    require(['selectize', 'jquery'], function(selectize, $) {
-        $(document).ready(function() {
-            $('#select-beast').selectize({});
-        });
-    });
-    require(['jquery'], function() {
-        $(document).on('change', '#sgrade', function(e) {
-            check_salary();
-        });
-    });
-
-    function check_salary() {
-        var salary_grade = $('#sgrade').val();
-        salary_grade == '' ? $('#salary').attr('disabled', false) : $('#salary').attr('disabled', true);
-        if (salary_grade > 0) {
-            $.ajax({
-                url: "query.php?type=employee&view=salary",
-                data: {
-                    'no':salary_grade,'position':''
-                    },
-                success: function(data) {
-                    $('#salary').val(data);
-                }
-            });
-        }
-    }
-
-    function editposition(code) {
-        $.ajax({
-            url: 'query.php?type=setting&show=edit_position',
-            type: 'POST',
-            data:{
-                'code':code},
-            success: function(data) {
-                $('#position').html(data);
-                check_salary();
-                $('#position-modal').modal('show');
-            }
-        });
-    }
-</script>

@@ -31,7 +31,7 @@
                     <tr class="sgrade" onclick="edit_salary({$salary.no})">
                         <td>{$salary.no}</td>
                         {foreach $salary.step_increment as $step}
-                        <td>{$step}</td>
+                        <td>{$step|number_format:2}</td>
                         {/foreach}
                     </tr>
                 {/foreach}
