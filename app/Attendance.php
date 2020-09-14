@@ -13,7 +13,7 @@ class Attendance extends AttendanceController {
             $this->{$this->data['action']} ();
         } catch (\Throwable $th) {
             $this->index();
-        }
+        } 
     }
 
     public function print_preview () {
@@ -36,8 +36,8 @@ class Attendance extends AttendanceController {
     }
 
     protected function get_attendance () {
-        $this->attendance ($this->data['id'], ["month" => $this->data['month'], "year" => $this->data['year']], ($this->data['period'] - 1));
-        $this->view->display ('custom/dtr', ["attendance" => $this->attendance, "period" => $this->data]);
+        $attendance = $this->attendance ($this->data['id'], ["month" => $this->data['month'], "year" => $this->data['year']], ($this->data['period'] - 1))->compute ();
+        $this->view->display ('custom/dtr', ["attendance" => $attendance, "period" => $this->data]);
     }
 
     protected function raw_data () {

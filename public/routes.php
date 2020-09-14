@@ -40,6 +40,7 @@ $router->group(['before' => 'auth'], function ($router) {
         $router->group(["prefix" => "employees"], function ($router) {
             $router->get('/', ['Employees', 'index']);
             $router->get('/profile/{id}/{view}?', ['Employees', 'profile']);
+            $router->get('/update/{id}/{view}?', ['Employees', 'update']);
             $router->post('/', ['Employees', 'do_action']);
         });
 
@@ -65,6 +66,9 @@ $router->group(['before' => 'auth'], function ($router) {
     
     // EMPLOYEE START
     $router->get('/profile/{view}?', ['Profile', 'index']);
+    $router->get('/update/{view}?', ['Profile', 'update']);
+    $router->get('/dtr', ['DTR', 'index']);
+    $router->post('/dtr', ['DTR', 'do_action']);
     // EMPLOYEE END
 });
 

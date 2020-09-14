@@ -20,16 +20,9 @@ function init_dtr(id) {
     var year = document.getElementById("year").value;
     var period = document.getElementById("period").value;
 
-    $.ajax({
-        type:'POST',
-        url:'attendance',
-        data:{'action': 'get_attendance', 'id':id, 'month':month, 'year':year, 'period':period},
-        success:function(data) {
-            $("#dtr").html(data);
-            $("#cover-spin").hide(0);
-          $("#emp_active").val(id);
-        }
-      });
+    f({action: 'get_attendance', id:id, month:month, year:year, period:period}, "text").then( function(html){
+      $("#dtr").html(html);
+    });
   }
 }
 // ATTENDANCE::END

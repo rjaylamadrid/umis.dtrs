@@ -27,7 +27,7 @@
                             <i class="dropdown-icon fe fe-settings"></i> Settings
                         </a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="{$server}logout">
+                        <a class="dropdown-item" href="/logout">
                             <i class="dropdown-icon fe fe-log-out"></i> Sign out
                         </a>
                     </div>
@@ -75,7 +75,11 @@
                             <a href="/payroll" class="nav-link {if $frm.a == 'payroll'}active{/if}"><i class="fe fe-edit-3"></i> Payroll</a>
                         </li>
                         <li class="nav-item">
+<<<<<<< Updated upstream
                             <a href="/attendance" class="nav-link {if $frm.a == 'attendance'}active{/if}"><i class="fe fe-clock"></i> Daily Time Record</a>
+=======
+                            <a href="{$server}/dtr" class="nav-link {if $frm.a == 'attendance'}active{/if}"><i class="fe fe-clock"></i> Daily Time Record</a>
+>>>>>>> Stashed changes
                         </li>
                     {/if}
                 </ul>

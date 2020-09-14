@@ -20,7 +20,7 @@
         <script src="{$server}/assets/js/require.min.js"></script>
         <script>
             requirejs.config({
-                baseUrl: '.',
+                baseUrl: '/',
                 waitSeconds: 0
             });
         </script>

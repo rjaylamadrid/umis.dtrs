@@ -49,6 +49,8 @@ class Employee {
     }
 
     public static function update ($id, $col = [], $val) {
-
+        $table = $view == 'basic-info' ? 'tbl_employee' : 'tbl_employee_'.str_replace ("-", "_", $view);
+        $emp = Employee::employee($id)->info($table);
+        $this->view->display ('profile', ["employee" => Employee::$employee, "emp" => $emp, "tab" => $view, "view" => "update"]);
     }
 }

@@ -22,8 +22,7 @@ class Employees extends EmployeesController {
 
     public function update ($id, $view = 'basic-info') {
         $table = $view == 'basic-info' ? 'tbl_employee' : 'tbl_employee_'.str_replace ("-", "_", $view);
-
-        $emp = Employee::employee($id)->info($table);
+        $emp = Employee::find($id)->info($table);
         $this->view->display ('profile', ["employee" => Employee::$employee, "emp" => $emp, "tab" => $view, "view" => "update"]);
     }
 
