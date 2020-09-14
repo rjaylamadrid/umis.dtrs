@@ -1,11 +1,13 @@
 <?php
 use Controllers\EmployeesController;
 use Model\Employee;
+use Model\EmployeeStats;
 
 class Employees extends EmployeesController {
-    private $stats = [0, 0, 0, 0, 0, 0];
+    private $stats;
 
     public function index () {
+        $this->stats = EmployeeStats::campus ($this->user['campus_id'])->get_stats ();
         $this->view->display ('admin/employees', ["stats" => $this->stats, "employees" => $this->employees()->all()]);
     }
 

@@ -3,7 +3,7 @@
     <div class="container" style="padding-right: 0.75rem; padding-left: 0.75rem;">
         <div class="d-flex">
             <a class="header-brand" href="./index.html">
-                <img src="assets/images/logo.png" class="header-brand-img" alt="cbsua umis logo">
+                <img src="{$server}/assets/img/logo.png" class="header-brand-img" alt="cbsua umis logo">
             </a>
             <div class="d-flex order-lg-2 ml-auto">
                 <div class="dropdown">
@@ -75,11 +75,7 @@
                             <a href="/payroll" class="nav-link {if $frm.a == 'payroll'}active{/if}"><i class="fe fe-edit-3"></i> Payroll</a>
                         </li>
                         <li class="nav-item">
-<<<<<<< Updated upstream
-                            <a href="/attendance" class="nav-link {if $frm.a == 'attendance'}active{/if}"><i class="fe fe-clock"></i> Daily Time Record</a>
-=======
-                            <a href="{$server}/dtr" class="nav-link {if $frm.a == 'attendance'}active{/if}"><i class="fe fe-clock"></i> Daily Time Record</a>
->>>>>>> Stashed changes
+                            <a href="/dtr" class="nav-link {if $frm.a == 'attendance'}active{/if}"><i class="fe fe-clock"></i> Daily Time Record</a>
                         </li>
                     {/if}
                 </ul>
