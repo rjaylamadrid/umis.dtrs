@@ -8,7 +8,7 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="form-group form-inline">
-                                <a href="?a=employees&show=registration" class="btn btn-primary"><i class="fe fe-user-plus"></i> New employee</a>
+                                <a href="/employees/registration" class="btn btn-primary"><i class="fe fe-user-plus"></i> New employee</a>
                                 <div style="float: right;">
                                     <form action="" method="POST" id="inactivefrm">
                                         <div class="form-group" style="margin-bottom: 0px;">

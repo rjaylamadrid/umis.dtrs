@@ -6,11 +6,11 @@ class Login extends LoginController {
 
     public function index () {
         if ($this->user) {
-            if ($this->user['type'] == 'admin') $this->redirect ();
+            if ($this->user['is_admin']) $this->redirect ();
             else $this->redirect ("profile");
         }
 
-        $this->view->display ('login', ["message" => $this->message]);
+        $this->view->display ('login', ["message" => $this->message, "page" => "login"]);
     }
 
     public function do_action () {
@@ -31,8 +31,8 @@ class Login extends LoginController {
     }
     
     public function change_type () {
-        if($_SESSION['user']['type'] == 'admin') unset($_SESSION['user']['type']);
-        else $_SESSION['user']['type'] = 'admin';
+        if($_SESSION['user']['is_admin']) unset($_SESSION['user']['is_admin']);
+        else $_SESSION['user']['is_admin'] = 'admin';
 
         $this->user = $_SESSION['user'];
         $this->index ();

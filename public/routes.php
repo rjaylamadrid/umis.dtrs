@@ -42,6 +42,7 @@ $router->group(['before' => 'auth'], function ($router) {
             $router->get('/profile/{id}/{view}?', ['Employees', 'profile']);
             $router->get('/update/{id}/{view}?', ['Employees', 'update']);
             $router->post('/', ['Employees', 'do_action']);
+            $router->get('/registration', ['Employees', 'registration']);
         });
 
         // Attendance

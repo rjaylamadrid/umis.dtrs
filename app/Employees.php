@@ -30,4 +30,8 @@ class Employees extends EmployeesController {
         
         header ("location: /employees/profile/$id/$view");
     }
+
+    public function registration (){
+        $this->view->display ('admin/employee_registration');
+    }
 }

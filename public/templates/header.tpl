@@ -11,11 +11,11 @@
                         <span><img class="avatar" style="object-fit: cover;" src="assets/images/employees/{if $user.employee_picture}{$user.employee_picture}{else}profile_temp.jpeg{/if}"></span>
                         <span class="ml-2 d-none d-lg-block">
                             <span class="text-default">{$user.first_name|upper} {$user.last_name|upper}</span>
-                            <small class="text-muted d-block mt-1"></small>
+                            <small class="text-muted d-block mt-1">{$user.position}</small>
                         </span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                        {if $user.is_admin == 1}
+                        {if $user.type == "admin"}
                         <a class="dropdown-item" href="#loginOtherAccountModal" data-toggle="modal">
                             <i class="dropdown-icon fe fe-user"></i> Account
                         </a>
@@ -44,7 +44,7 @@
         <div class="row align-items-center">
             <div class="col-lg order-lg-first">
                 <ul class="nav nav-tabs border-0 flex-column flex-lg-row">
-                    {if $user.type == "admin"}
+                    {if $user.is_admin}
                         <li class="nav-item">
                             <a href="/dashboard" class="nav-link {if $page == 'dashboard'}active{/if}"><i class="fe fe-home"></i> Dashboard</a>
                         </li>
@@ -75,11 +75,7 @@
                             <a href="/payroll" class="nav-link {if $frm.a == 'payroll'}active{/if}"><i class="fe fe-edit-3"></i> Payroll</a>
                         </li>
                         <li class="nav-item">
-<<<<<<< Updated upstream
-                            <a href="/attendance" class="nav-link {if $frm.a == 'attendance'}active{/if}"><i class="fe fe-clock"></i> Daily Time Record</a>
-=======
                             <a href="{$server}/dtr" class="nav-link {if $frm.a == 'attendance'}active{/if}"><i class="fe fe-clock"></i> Daily Time Record</a>
->>>>>>> Stashed changes
                         </li>
                     {/if}
                 </ul>

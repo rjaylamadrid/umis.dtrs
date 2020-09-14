@@ -2,6 +2,7 @@
 namespace Controllers;
 
 use View\SmartyView;
+use Database\DB;
 
 class Controller {
     public $user;
@@ -22,5 +23,9 @@ class Controller {
 
     protected function redirect ($location = '/dashboard') {
         header ("location: $location");
+    }
+    
+    public function get_position ($id) {
+        return DB::fetch_row ("SELECT b.position_desc as position FROM tbl_employee_employment a, tbl_position b WHERE a.position = b.no AND a.employee_id = ? and a.date_to IS NULL ORDER BY date_from DESC", $id)['position'];
     }
 }
