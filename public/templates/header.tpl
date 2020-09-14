@@ -3,7 +3,7 @@
     <div class="container" style="padding-right: 0.75rem; padding-left: 0.75rem;">
         <div class="d-flex">
             <a class="header-brand" href="./index.html">
-                <img src="assets/images/logo.png" class="header-brand-img" alt="cbsua umis logo">
+                <img src="{$server}/assets/img/logo.png" class="header-brand-img" alt="cbsua umis logo">
             </a>
             <div class="d-flex order-lg-2 ml-auto">
                 <div class="dropdown">
