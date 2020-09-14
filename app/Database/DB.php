@@ -20,23 +20,19 @@ class DB {
         }
     }
 
-    private static function execute ($query, $vars) {
-
-    }
-
     public static function fetch_all () {
-        $result = self::query (func_get_args ());
+        $result = self::execute (func_get_args ());
         if ($result) return $result->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public static function fetch_row () {
-        $result = self::query (func_get_args ());
+        $result = self::execute (func_get_args ());
         if ($result) return $result->fetch(PDO::FETCH_ASSOC);
     }
 
-    private static function query ($args) {
-        self::connect (['localhost', self::$dbname, 'root', 'password']);
-        $args[1] = is_array ($args[1]) ? $args[1] : [$args[1]]; // Convert vars to array IF NOT array
+    private static function execute ($args) {
+        if (!self::$db) self::connect (['localhost', self::$dbname, 'root', 'password']);
+        $args[1] = isset ($args[1]) ? is_array ($args[1]) ? $args[1] : [$args[1]] : []; // Convert vars to array IF NOT array
         try {
             if (!($query = self::$db->prepare($args[0]))) return;
             if (!($query->execute($args[1]))) return;
@@ -48,13 +44,8 @@ class DB {
         return null;
     }
 
-    public static function select () {
-        $result = self::query (func_get_args ());
-        if ($result) return $result->fetchAll(PDO::FETCH_ASSOC);
-    }
-
     public static function insert () {
-        return self::query (func_get_args ())->lastInsertID();
+        return self::execute (func_get_args ())->lastInsertID();
     }
 
     public static function db ($db) {

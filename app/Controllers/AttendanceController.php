@@ -24,7 +24,7 @@ class AttendanceController extends Controller {
         foreach ($daterange as $date) {
             if (date_format($date, 'm') <= $arr['month']) {
                 $attendance[$i]['date'] = date_format($date, 'Y-m-d');
-                $attendance[$i]['attn'] = DB::db("db_attendance")->select ("SELECT * FROM `$table` WHERE emp_id = ? AND date = ?", [$id, date_format($date, 'Y-m-d')])[0];
+                $attendance[$i]['attn'] = DB::db("db_attendance")->fetch_all ("SELECT * FROM `$table` WHERE emp_id = ? AND date = ?", [$id, date_format($date, 'Y-m-d')])[0];
             }
             $i++;
         }
@@ -44,12 +44,12 @@ class AttendanceController extends Controller {
 
     protected function is_posted ($period) {
         $table = $period['month'].'-'.$period['year'];
-        $posted = DB::db("db_attendance")->select ("SELECT COUNT(*) AS count FROM `$table`")[0];
+        $posted = DB::db("db_attendance")->fetch_row ("SELECT COUNT(*) AS count FROM `$table`")[0];
         return $posted['count'] > 0;
     }
 
     protected function get_raw_data ($period, $args) {
-        return DB::db("db_raw_data")->select("SELECT * FROM `$period` WHERE emp_id = ? AND log_date = ?", $args);
+        return DB::db("db_raw_data")->fetch_all ("SELECT * FROM `$period` WHERE emp_id = ? AND log_date = ?", $args);
     }
 
     protected function find ($period, $no) {
@@ -57,7 +57,7 @@ class AttendanceController extends Controller {
     }
 
     protected function type () {
-        return DB::select ("SELECT * FROM tbl_employee_type");
+        return DB::fetch_all ("SELECT * FROM tbl_employee_type");
     }
 
     protected function to_pdf ($data) {
