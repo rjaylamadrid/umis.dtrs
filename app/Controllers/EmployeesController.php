@@ -6,7 +6,6 @@ use Profile;
 
 class EmployeesController extends Controller {
     public $employees;
-    public $employee;
     public $profile;
     
     public function bday_celebrant () {
