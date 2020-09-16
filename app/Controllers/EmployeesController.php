@@ -29,4 +29,8 @@ class EmployeesController extends Controller {
     }
 
     protected function set_active () {}
+    
+    protected function type () {
+        return DB::fetch_all ("SELECT * FROM tbl_employee_type");
+    }
 }

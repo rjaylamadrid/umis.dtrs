@@ -3,6 +3,7 @@ use Model\Employee;
 use Model\EmployeeStats;
 use Model\EmployeeProfile;
 use Controllers\EmployeesController;
+use Model\Position;
 
 class Employees extends EmployeesController {
     private $stats;
@@ -35,7 +36,8 @@ class Employees extends EmployeesController {
         header ("location: /employees/profile/$id/$view");
     }
 
-    public function registration (){
-        $this->view->display ('admin/employee_registration');
+    public function registration (){    
+        $positions = Position::positions();
+        $this->view->display ('admin/employee_registration', ['positions' => $positions, 'emp_type' => $this->type()]);
     }
 }

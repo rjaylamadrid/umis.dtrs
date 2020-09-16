@@ -2,6 +2,7 @@
 namespace Controllers;
 
 use Database\DB;
+use Model\Position;
 
 class LoginController extends Controller {
     private $tmp_user;
@@ -19,7 +20,7 @@ class LoginController extends Controller {
     }
 
     protected function save_session () {
-        $_SESSION['user'] = ['employee_no' => $this->tmp_user['no'], 'employee_id' => $this->tmp_user['employee_id'], 'campus_id' => $this->tmp_user['campus_id'], 'position' => Controller::get_position ($this->tmp_user['employee_id'])];
+        $_SESSION['user'] = ['employee_no' => $this->tmp_user['no'], 'employee_id' => $this->tmp_user['employee_id'], 'campus_id' => $this->tmp_user['campus_id'], 'position' => Position::find ($this->tmp_user['employee_id'])];
         $_SESSION['user'] = array_merge($_SESSION['user'], $this->user_data ());
         if ($this->tmp_user['privilege'] > 0) {
             $_SESSION['user']['is_admin'] = '1';
