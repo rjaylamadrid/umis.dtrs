@@ -22,7 +22,11 @@ class Employees extends EmployeesController {
     }
 
     public function do_action () {
-        
+        try {
+            $this->{$this->data['action']} ();
+        } catch (\Throwable $th) {
+            $this->index();
+        } 
     }
 
     public function update ($id, $view = 'basic-info') {
@@ -36,8 +40,14 @@ class Employees extends EmployeesController {
         header ("location: /employees/profile/$id/$view");
     }
 
-    public function registration (){    
-        $positions = Position::positions();
+    public function registration () {    
+        $positions = Position::positions()->all ();
         $this->view->display ('admin/employee_registration', ['positions' => $positions, 'emp_type' => $this->type()]);
+    }
+
+    public function get_position () {
+        $positions = Position::positions()->type ($this->data['type']);
+        return $positions;
+        //$this->view->display ()
     }
 }

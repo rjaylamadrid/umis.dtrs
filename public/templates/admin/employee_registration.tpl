@@ -132,7 +132,8 @@
                                     <div class="col-md-6 col-sm-12">
                                         <div class="form-group label-floating">
                                             <label class="form-label">Employment Status</label>
-                                            <select class="form-control" name="">
+                                            <select class="form-control" name="" required onchange="javascript:init_pos (this.value)">
+                                                <option selected disabled>Employment Status</option>
                                                 {foreach from=$emp_type item=type}
                                                 <option value="{$type.etype_id}">{$type.etype_desc}</option>
                                                 {/foreach}
@@ -144,7 +145,12 @@
                             <div class="col-lg-6 col-md-12 col-sm-12">
                                 <div class="form-group label-floating">
                                     <label class="form-label">Position</label>
-                                    <input type="text" class="form-control" name="employee_status[employee_id]" value="">
+                                    <select class="form-control" name="" id="positions">
+                                        <option selected disabled>Position</option>
+                                        {foreach from=$positions item=position}
+                                        <option value="{$position.no}">{$position.position_desc}</option>
+                                        {/foreach}
+                                    </select>
                                 </div>
                             </div>
                         </div>

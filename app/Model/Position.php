@@ -14,6 +14,10 @@ class Position {
         return $positions;
     }
 
+    public static function all () {
+        return self::$positions;
+    }
+
     public static function positions () {
         self::$positions = DB::fetch_all ("SELECT * FROM tbl_position WHERE 1 ORDER BY position_code ASC");
         return new self();

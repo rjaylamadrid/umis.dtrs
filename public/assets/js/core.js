@@ -44,4 +44,10 @@ function colours(size) {
   }
   return color;
 }
+
+function init_pos(type) {
+  f({action: 'get_position', type:type}, "json", "/employees").then( function(html){
+    console.log(html);
+  });
+}
 // OTHER FUNCTIONS :: END
