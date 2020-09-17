@@ -1,13 +1,37 @@
 {if $view != "update"}
     <div class="form-group" style="float: right;">
-        <a href="{$server}{if $user.is_admin}/employees/update/{$employee.employee_id}/voluntary-work{else}/update/voluntary-work{/if}" class="btn btn-secondary btn-sm ml-2"><i class="fe fe-edit-2"></i> Edit</a>
+        <a href="{$server}{if $user.is_admin}/employees/update/{$employee->info.employee_id}/voluntary-work{else}/update/voluntary-work{/if}" class="btn btn-secondary btn-sm ml-2"><i class="fe fe-edit-2"></i> Edit</a>
     </div>
     <div class="table-responsive">
         <table class="table card-table table-striped">
-            <tr class="row-header"><td colspan="2">1.</td></tr>
-            <tr><td>Name & Address of Organization</td><td>SAMPLE</td></tr>
-            <tr><td>Inclusive Dates</td><td><div>SAMPLE</div><div class="small text-muted">Hours: SAMPLE</div></td></tr>
-            <tr><td>Position</td><td><div>SAMPLE</div></td></tr>
+        {if $employee->voluntary_work}
+        {foreach from=$employee->voluntary_work item=voluntary_work}
+            <tr class="row-header">
+                <td colspan="2">1.</td>
+            </tr>
+            <tr>
+                <td>Name & Address of Organization</td>
+                <td>SAMPLE</td>
+            </tr>
+            <tr>
+                <td>Inclusive Dates</td>
+                <td>
+                    <div>SAMPLE</div>
+                    <div class="small text-muted">Hours: SAMPLE</div>
+                </td>
+            </tr>
+            <tr>
+                <td>Position</td>
+                <td>
+                    <div>SAMPLE</div>
+                </td>
+            </tr>
+        {/foreach}
+        {else}
+            <tr class="row-header">
+                <td colspan="2">No Record(s) found.</td>
+            </tr>
+        {/if}
         </table>
     </div>
 {else}

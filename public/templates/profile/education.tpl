@@ -1,10 +1,10 @@
 {if $view != "update"}
     <div class="form-group" style="float: right;">
-        <a href="{$server}{if $user.is_admin}/employees/update/{$employee.employee_id}/education{else}/update/education{/if}" class="btn btn-secondary btn-sm ml-2"><i class="fe fe-edit-2"></i> Edit</a>
+        <a href="{$server}{if $user.is_admin}/employees/update/{$employee->info.employee_id}/education{else}/update/education{/if}" class="btn btn-secondary btn-sm ml-2"><i class="fe fe-edit-2"></i> Edit</a>
     </div>
     <div class="table-responsive">
         <table class="table card-table table-striped">
-            {foreach from = $emp item = education}
+            {foreach from = $employee->education item = education}
                 <tr class="row-header"><td colspan="2">{$education.level}</td></tr>
                 <tr><td>School</td><td><div>{$education.school_name}</div><div class="small text-muted">{$education.school_address}</div></td></tr>
                 <tr><td>Basic Education/Degree</td><td><div>{$education.school_degree}</div><div class="small text-muted">{$education.highest_level}</div></td></tr>

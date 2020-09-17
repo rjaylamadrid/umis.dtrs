@@ -1,9 +1,9 @@
 <?php
+use Model\Position;
 use Model\Employee;
 use Model\EmployeeStats;
 use Model\EmployeeProfile;
 use Controllers\EmployeesController;
-use Model\Position;
 
 class Employees extends EmployeesController {
     private $stats;
@@ -16,9 +16,13 @@ class Employees extends EmployeesController {
 
     public function profile ($id = null, $view = 'basic-info') {
         $this->employee = new EmployeeProfile ($id);
-        $this->employee->{str_replace ("-", "_", $view)}();
-        print_r ($this->employee);
-        $this->view->display ('profile', ["employee" => $this->employee, "tab" => $view]);
+        try {
+            $this->employee->{str_replace ("-", "_", $view)}();
+        } catch (\Throwable $th) {
+            $view = 'basic-info';
+            $this->employee->basic_info ();
+        }
+        $this->view->display ('profile', ["employee" => $this->employee, "tab" => $view, "view" => "view"]);
     }
 
     public function do_action () {
@@ -26,7 +30,7 @@ class Employees extends EmployeesController {
             $this->{$this->data['action']} ();
         } catch (\Throwable $th) {
             $this->index();
-        } 
+        }
     }
 
     public function update ($id, $view = 'basic-info') {
@@ -36,7 +40,6 @@ class Employees extends EmployeesController {
     }
 
     public function save ($id, $view = 'basic-info') {
-        
         header ("location: /employees/profile/$id/$view");
     }
 

@@ -9,44 +9,72 @@ class EmployeeProfile {
     public $basic_info;
     public $family_background;
     public $eligibility;
-    public $work_experience;
+    public $employment;
     public $voluntary_work;
+    public $training_seminar;
     public $references;
     public $other_info;
+
+    private $args = ["table" => "tbl_employee", "col" => "*", "options" => "", "type" => "all"];
 
     public function __construct ($id = null) {
         $this->id = $id;
         $this->info ();
     }
+
     public function id ($id) {
         $this->id = $id;
         return $this;
     }
+
     public function info () {
         $this->info = DB::fetch_row ("SELECT a.first_name, a.middle_name, a.last_name, b.* FROM tbl_employee a, tbl_employee_status b WHERE a.no = b.emp_no AND b.emp_no = ? GROUP BY b.emp_no", $id);
     }
+
     public function basic_info () {
-        $this->basic_info = DB::fetch_row ("SELECT a.* FROM tbl_employee a WHERE no = ?", $this->id);
+        $this->basic_info = $this->get (["type" => "row"]);
     }
+
     public function family_background () {
-        $this->education = DB::fetch_all ("SELECT * FROM tbl_employee_dependent WHERE emp_no = ?", $this->id);
+        $this->education = $this->get (["table" => "tbl_employee_dependent"]);
     }
+
     public function education () {
-        $this->education = DB::fetch_all ("SELECT * FROM tbl_employee_education WHERE emp_no = ?", $this->id);
+        $this->education = $this->get (["table" => "tbl_employee_education", "options" => " ORDER BY year_graduated DESC"]);
     }
+
     public function eligibility () {
-        $this->eligibility = DB::fetch_all ("SELECT * FROM tbl_employee_eligibility WHERE emp_no = ?", $this->id);
+        $this->eligibility = $this->get (["table" => "tbl_employee_eligibility"]);
     }
-    public function work_experience () {
-        $this->work_experience = DB::fetch_all ("SELECT * FROM tbl_employee_employment WHERE emp_no = ?", $this->id);
+
+    public function employment () {
+        $this->employment = $this->get (["col" => "*, (CASE when date_to IS NULL THEN NOW() ELSE date_to END) AS dateto", "table" => "tbl_employee_employment", "options" => " ORDER BY dateto DESC"]);
     }
+
     public function voluntary_work () {
-        $this->work_experience = DB::fetch_all ("SELECT * FROM tbl_employee_voluntary_work WHERE emp_no = ?", $this->id);
+        $this->voluntary_work = $this->get (["table" => "tbl_employee_voluntary_work"]);
     }
+
+    public function training_seminar () {
+        $this->training_seminar = $this->get (["table" => "tbl_training_seminar"]);
+    }
+
     public function references () {
-        $this->work_experience = DB::fetch_all ("SELECT * FROM tbl_employee_reference WHERE emp_no = ?", $this->id);
+        $this->references = $this->get (["table" => "tbl_employee_reference"]);
     }
+
     public function other_info () {
-        $this->work_experience = DB::fetch_all ("SELECT * FROM tbl_employee_other WHERE emp_no = ?", $this->id);
+        $other_info = $this->get (["table" => "tbl_employee_other", "type" => "row"]);
+        foreach ($other_info as $key => $value) {
+            $this->other_info[$key] = explode (";", $value);
+        }
+    }
+
+    private function get ($args = []) {
+        $this->args = array_merge ($this->args, $args);
+
+        $id = $this->args['table'] == 'tbl_employee' ? 'no' : 'employee_id';
+        $stmt = "SELECT ".$this->args['col']." FROM ".$this->args['table']." WHERE $id = ? ".$this->args['options'];
+        return $this->args['type'] == "row" ? DB::fetch_row ($stmt, $this->id) : DB::fetch_all ($stmt, $this->id);
     }
 }

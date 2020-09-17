@@ -1,30 +1,38 @@
 {if $view != "update"}
     <div class="form-group" style="float: right;">
-        <a href="{$server}{if $user.is_admin}/employees/update/{$employee.employee_id}/employment{else}/update/employment{/if}" class="btn btn-secondary btn-sm ml-2"><i class="fe fe-edit-2"></i> Edit</a>
+        <a href="{$server}{if $user.is_admin}/employees/update/{$employee->info.employee_id}/employment{else}/update/employment{/if}" class="btn btn-secondary btn-sm ml-2"><i class="fe fe-edit-2"></i> Edit</a>
     </div>
     <div class="table-responsive">
         <table class="table card-table table-striped">
-                <tr class="row-header"><td colspan="2">SAMPLE</td></tr>
-                <tr>
-                    <td>Position/Title</td>
-                    <td><div>SAMPLE</div>
-                        <div id="inclusive-date<?php echo $i; ?>" class="small text-muted">SAMPLE</div></td>
-                </tr>
-                <tr>
-                    <td>Company</td>
-                    <td>SAMPLE</td>
-                </tr>
-                <tr>
-                    <td>Salary</td>
-                    <td>SAMPLE
-                        <div class="small text-muted">SAMPLE</div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Appointment</td>
-                    <td><div>SAMPLE</div>
-                        <div class="small text-muted">SAMPLE</div></td>
-                </tr>
+        {foreach from=$employee->employment item=employment}
+            <tr class="row-header">
+                <td colspan="2">{$employment.position}</td>
+            </tr>
+            <tr>
+                <td>Position/Title</td>
+                <td>
+                    <div>{$employment.position}</div>
+                    <div class="small text-muted">{$employment.date_from} - {if $employment.date_to}{$employment.date_to}{else}PRESENT{/if}</div>
+                </td>
+            </tr>
+            <tr>
+                <td>Company</td>
+                <td>{$employment.company}</td>
+            </tr>
+            <tr>
+                <td>Salary</td>
+                <td>{$employment.salary|number_format:2}
+                    <div class="small text-muted">Monthly Salary</div>
+                </td>
+            </tr>
+            <tr>
+                <td>Appointment</td>
+                <td>
+                    <div>{$employment.appointment}</div>
+                    <div class="small text-muted">Government Service: {if $employment.govt_service == "1"}YES{else}NO{/if}</div>
+                </td>
+            </tr>
+        {/foreach}
         </table>
     </div>
 {else}

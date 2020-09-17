@@ -1,11 +1,37 @@
 {if $view != "update"}
     <div class="form-group" style="float: right;">
-        <a href="{$server}{if $user.is_admin}/employees/update/{$employee.employee_id}/other-info{else}/update/other-info{/if}" class="btn btn-secondary btn-sm ml-2"><i class="fe fe-edit-2"></i> Edit</a>
+        <a href="{$server}{if $user.is_admin}/employees/update/{$employee->info.employee_id}/other-info{else}/update/other-info{/if}" class="btn btn-secondary btn-sm ml-2"><i class="fe fe-edit-2"></i> Edit</a>
     </div>
     <div class="table-responsive">
         <table class="table card-table table-striped">
-            <tr class="row-header"><td>Skills and Hobbies</td><td>Recognition</td><td>Association/Organization</td></tr>
-            <tr><td style="font-weight:normal">SAMPLE</td><td>SAMPLE</td><td>SAMPLE</td></tr>
+        {if $employee->other_info}
+            <tr class="row-header">
+                <td>Skills and Hobbies</td>
+                <td>Recognition</td>
+                <td>Association/Organization</td>
+            </tr>
+            <tr>
+                <td style="font-weight:normal">
+                {foreach from=$employee->other_info.other_skill item=skills}
+                    <p>{$skills}</p>
+                {/foreach}
+                </td>
+                <td>
+                {foreach from=$employee->other_info.other_recognition item=recognition}
+                    <p>{$recognition}</p>
+                {/foreach}
+                </td>
+                <td>
+                {foreach from=$employee->other_info.other_organization item=org}
+                    <p>{$org}</p>
+                {/foreach}
+                </td>
+            </tr>
+        {else}
+            <tr class="row-header">
+                <td colspan="2">no Record(s) found.</td>
+            </tr>
+        {/if}
         </table>
     </div>
 {else}

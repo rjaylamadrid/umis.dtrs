@@ -1,12 +1,32 @@
 {if $view != "update"}
     <div class="form-group" style="float: right;">
-        <a href="{$server}{if $user.is_admin}/employees/update/{$employee.employee_id}/references{else}/update/references{/if}" class="btn btn-secondary btn-sm ml-2"><i class="fe fe-edit-2"></i> Edit</a>
+        <a href="{$server}{if $user.is_admin}/employees/update/{$employee->info.employee_id}/references{else}/update/references{/if}" class="btn btn-secondary btn-sm ml-2"><i class="fe fe-edit-2"></i> Edit</a>
     </div>
     <div class="table-responsive">
         <table class="table card-table table-striped">
-            <tr class="row-header"><td colspan="2">1.</td></tr>
-            <tr><td>Name</td><td>SAMPLE<div class="small text-muted">SAMPLE</div></td></tr>
-            <tr><td>Address</td><td><div>SAMPLE</div><div class="small text-muted">CONTACT NO: SAMPLE</div></td></tr>
+        {if $employee->references}
+            {foreach from=$employee->references item=references}
+                <tr class="row-header">
+                    <td colspan="2">1.</td>
+                </tr>
+                <tr>
+                    <td>Name</td>
+                    <td>{$references.reference_name}<div class="small text-muted">{$references.reference_position}</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Address</td>
+                    <td>
+                        <div>{$references.reference_address}</div>
+                        <div class="small text-muted">CONTACT NO: {$references.reference_contact}</div>
+                    </td>
+                </tr>
+            {/foreach}
+        {else}
+            <tr class="row-header">
+                <td colspan="2">no Record(s) found.</td>
+            </tr>
+        {/if}
         </table>
     </div>
 {else}

@@ -1,14 +1,38 @@
 {if $view != "update"}
     <div class="form-group" style="float: right;">
-        <a href="{$server}{if $user.is_admin}/employees/update/{$employee.employee_id}/training-seminar{else}/update/training-seminar{/if}" class="btn btn-secondary btn-sm ml-2"><i class="fe fe-edit-2"></i> Edit</a>
+        <a href="{$server}{if $user.is_admin}/employees/update/{$employee->info.employee_id}/training-seminar{else}/update/training-seminar{/if}" class="btn btn-secondary btn-sm ml-2"><i class="fe fe-edit-2"></i> Edit</a>
     </div>
     <div class="table-responsive">
         <table class="table card-table table-striped">
-            <tr class="row-header"><td colspan="2">1.</td></tr>
-            <tr><td>Title of Training</td><td>SAMPLE</td></tr>
-            <tr><td>Sponsored by</td><td>SAMPLE</td></tr>
-            <tr><td>No of hours</td><td><div>SAMPLE hour(s)<div class="small text-muted">SAMPLE</div></td></tr>
-            <tr><td>Type of LD</td><td>SAMPLE</td></tr>
+        {if $employee->training_seminar}
+            {foreach from=$employee->training_seminar item=training_seminar}
+                <tr class="row-header">
+                    <td colspan="2">1.</td>
+                </tr>
+                <tr>
+                    <td>Title of Training</td>
+                    <td>{$training_seminar.training_title}</td>
+                </tr>
+                <tr>
+                    <td>Sponsored by</td>
+                    <td>{$training_seminar.training_sponsor}</td>
+                </tr>
+                <tr>
+                    <td>No of hours</td>
+                    <td>
+                        <div>{$training_seminar.training_hours}<div class="small text-muted">{$training_seminar.training_from} - {$training_seminar.training_to}</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Type of LD</td>
+                    <td>{$training_seminar.training_type}</td>
+                </tr>
+            {/foreach}
+        {else}
+            <tr class="row-header">
+                <td colspan="2">No Record(s) found.</td>
+            </tr>
+        {/if}
         </table>
     </div>
 {else}
