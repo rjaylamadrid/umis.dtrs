@@ -4,6 +4,7 @@ use Model\Employee;
 use Model\EmployeeStats;
 use Model\EmployeeProfile;
 use Controllers\EmployeesController;
+use Model\Schedule;
 
 class Employees extends EmployeesController {
     private $stats;
@@ -42,14 +43,15 @@ class Employees extends EmployeesController {
         header ("location: /employees/profile/$id/$view");
     }
 
-    public function registration () {    
+    public function registration () {
         $positions = Position::positions()->all ();
-        $this->view->display ('admin/employee_registration', ['positions' => $positions, 'emp_type' => $this->type()]);
+        $presets = Schedule::presets()->all ();
+        $this->view->display ('admin/employee_registration', ['positions' => $positions, 'emp_type' => $this->type(), 'schedules' => $presets , 'departments' => $this->departments(), 'designations' => $this->designations(), 'id' => $this->new_id ('1')]);
     }
 
     public function get_position () {
         $positions = Position::positions()->type ($this->data['type']);
-        return $positions;
-        //$this->view->display ()
+        echo json_encode($positions);
     }
+
 }

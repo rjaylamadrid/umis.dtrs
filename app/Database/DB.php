@@ -4,6 +4,7 @@ use PDO;
 class DB {
     public static $db;
     public static $dbname = "db_master2";
+    public static $stmt;
 
     private $options = [
         PDO::ATTR_EMULATE_PREPARES => false,
@@ -51,5 +52,18 @@ class DB {
     public static function db ($db) {
         self::$dbname = $db;
         return new self ();
+    }
+
+    public static function stmt_builder ($data) {
+        self::$stmt = '';
+        $i = count ($data);
+        foreach ($data as $key => $value) {
+            self::$stmt .= $key." = ?";
+            $i--;
+            if ($i > 0){
+                self::$stmt .= ", ";
+            }
+        }
+        return self::$stmt;
     }
 }

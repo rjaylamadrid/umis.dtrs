@@ -46,8 +46,29 @@ function colours(size) {
 }
 
 function init_pos(type) {
-  f({action: 'get_position', type:type}, "json", "/employees").then( function(html){
-    console.log(html);
+  if(type == 3){
+    type = 2;
+  }else if(type == 4) {
+    type = 1;
+  }
+  console.log(type);
+  f({action: 'get_position', type:type}, "json", "/employees").then( function(positions){
+    $('#positions').html("<option selected disabled>Position</option>");
+    positions.forEach(function (position){
+        $('#positions').append("<option value='" + position['no'] + "'>" + position['position_desc'] + "</option>");
+    });
   });
+}
+
+function set_new (new_emp) {
+  if (new_emp) {
+    $('#employee_id').attr('readonly',true);
+    f({action: 'new_id'}, "text", "/employees").then( function(id){
+      $('#employee_id').val(id);
+    });
+  } else {
+    $('#employee_id').val('');
+    $('#employee_id').attr('readonly',false);
+  }
 }
 // OTHER FUNCTIONS :: END

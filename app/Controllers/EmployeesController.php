@@ -33,4 +33,28 @@ class EmployeesController extends Controller {
     protected function type () {
         return DB::fetch_all ("SELECT * FROM tbl_employee_type");
     }
+    
+    protected function departments () {
+        return DB::fetch_all ("SELECT * FROM tbl_department ORDER BY department_desc");
+    }
+
+    protected function designations () {
+        return DB::fetch_all ("SELECT * FROM tbl_privilege ORDER BY priv_desc");
+    }
+
+    public function new_id ($e = NULL) {
+        $year = date('y');
+        $count = count($this->employees ()->all())+1;
+        $id = $year.'-'.$count;
+        if ($e) {
+            return $id;
+        }  else {
+            echo $id;
+        };
+    }
+
+    protected function register () {
+        $id = DB::insert ("INSERT INTO tbl_employee SET ".stmt_builder($this->data['emp']), $this->data['emp']);
+        echo $id;
+    }
 }
