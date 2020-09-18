@@ -36,7 +36,7 @@ class EmployeeProfile {
     }
 
     public function family_background () {
-        $this->education = $this->get (["table" => "tbl_employee_dependent"]);
+        $this->education = $this->get (["table" => "tbl_employee_family_background"]);
     }
 
     public function education () {

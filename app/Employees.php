@@ -14,15 +14,16 @@ class Employees extends EmployeesController {
         $this->view->display ('admin/employees', ["stats" => $this->stats, "employees" => $this->employees()->all()]);
     }
 
-    public function profile ($id = null, $view = 'basic-info') {
+    public function profile ($id = null, $tab = 'basic-info', $view='view') {
         $this->employee = new EmployeeProfile ($id);
+        print_r($this->employee);
         try {
-            $this->employee->{str_replace ("-", "_", $view)}();
+            $this->employee->{str_replace ("-", "_", $tab)}();
         } catch (\Throwable $th) {
-            $view = 'basic-info';
+            $tab = 'basic-info';
             $this->employee->basic_info ();
         }
-        $this->view->display ('profile', ["employee" => $this->employee, "tab" => $view, "view" => "view"]);
+        $this->view->display ('profile', ["employee" => $this->employee, "tab" => $tab, "view" => $view]);
     }
 
     public function do_action () {
@@ -34,9 +35,7 @@ class Employees extends EmployeesController {
     }
 
     public function update ($id, $view = 'basic-info') {
-        $table = $view == 'basic-info' ? 'tbl_employee' : 'tbl_employee_'.str_replace ("-", "_", $view);
-        $emp = Employee::find($id)->info($table);
-        $this->view->display ('profile', ["employee" => Employee::$employee, "emp" => $emp, "tab" => $view, "view" => "update"]);
+        $this->profile($id,$view,'update');
     }
 
     public function save ($id, $view = 'basic-info') {

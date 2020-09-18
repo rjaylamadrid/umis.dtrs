@@ -1,21 +1,21 @@
 {$view}
-{foreach from = $emp item = rel}
-    {if $rel.relationship == 1}
-        {$spouse = $rel}
-    {elseif $rel.relationship == 2}
-        {$mother = $rel}
-    {elseif $rel.relationship == 3}
-        {$father = $rel}
+{foreach from = $employee->family_background item = family_background}
+    {if $family_background.relationship == 1}
+        {$spouse = $family_background}
+    {elseif $family_background.relationship == 2}
+        {$mother = $family_background}
+    {elseif $family_background.relationship == 3}
+        {$father = $family_background}
     {/if}
 {/foreach}
 {if $view != "update"}
     <div class="form-group" style="float: right;">
-        <a href="{$server}{if $user.is_admin}/employees/update/{$employee->info.employee_id}/family-background{else}/update/family-background{/if}" class="btn btn-secondary btn-sm ml-2"><i class="fe fe-edit-2"></i> Edit</a>
+        <a href="{$server}{if $user.type}/employees/update/{$employee->id}/family-background{else}/update/family-background{/if}" class="btn btn-secondary btn-sm ml-2"><i class="fe fe-edit-2"></i> Edit</a>
     </div>
     <div class="table-responsive">
         <table class="table card-table table-striped">
             <tr class="row-header"><td colspan="2">Spouse's Information</td></tr>
-            <tr><td>Name</td><td>{$spouse.first_name} {$spouse.middle_name} {$spouse.last_name} {$spouse.ext_name}</td></tr>
+            <tr><td>Name</td><td>{$spouse.childname} {$spouse.middle_name} {$spouse.last_name} {$spouse.ext_name}</td></tr>
             <tr><td>Occupation</td><td>{$spouse.occupation}</td></tr>
             <tr><td>Employer/Business</td><td>{$spouse.employer}</td></tr>
             <tr><td>Business Address</td><td>{$spouse.business_address}</td></tr>

@@ -1,10 +1,11 @@
 {if $view != "update"}
     <div class="form-group" style="float: right;">
-        <a href="{$server}{if $user.is_admin}/employees/update/{$employee->info.employee_id}/education{else}/update/education{/if}" class="btn btn-secondary btn-sm ml-2"><i class="fe fe-edit-2"></i> Edit</a>
+        <a href="{$server}{if $user.type}/employees/update/{$employee->id}/education{else}/update/education{/if}" class="btn btn-secondary btn-sm ml-2"><i class="fe fe-edit-2"></i> Edit</a>
     </div>
     <div class="table-responsive">
         <table class="table card-table table-striped">
             {foreach from = $employee->education item = education}
+            {* {$school=$education} *}
                 <tr class="row-header"><td colspan="2">{$education.level}</td></tr>
                 <tr><td>School</td><td><div>{$education.school_name}</div><div class="small text-muted">{$education.school_address}</div></td></tr>
                 <tr><td>Basic Education/Degree</td><td><div>{$education.school_degree}</div><div class="small text-muted">{$education.highest_level}</div></td></tr>
@@ -20,7 +21,7 @@
         <label class="h4">Educational Background</label>
         <div class="card mb-1">
             <div class="card-content">
-                {foreach from = $emp item = education}
+                {foreach from = $employee->education item = education}
                 <div class="card-header pt-0 pb-0">
                     <h4 class="card-title">{$education.level}</h4>
                     <a href="#" onclick="" class="ml-auto" style="text-decoration:  none;"><span class="fe fe-chevron-down"></span></a>

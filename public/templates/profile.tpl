@@ -16,6 +16,7 @@
         }
         </style>
         <div class="row">
+        {* {var_dump($employee->id)} *}
 {if $view == "update"}
             <div class="col-md-2">
                 <div class="list-group list-group-transparent mb-0">
@@ -37,7 +38,7 @@
                 </div>
                 <div class="employee-tab">
                     <div class="list-group list-group-transparent mb-0">
-                        <a href="{$server}{if $user.is_admin}/employees/profile/{$employee->id}{else}/profile{/if}" class="list-group-item list-group-item-action d-flex align-items-center {if $tab == 'basic-info'} active {else if $tab == ''} active {/if}"><span class="icon mr-3"><i class="fe fe-users"></i></span>Personal Info</a>
+                        <a href="{$server}{if $user.is_admin}/employees/profile/{$employee->id}/basic-info{else}/profile{/if}" class="list-group-item list-group-item-action d-flex align-items-center {if $tab == 'basic-info'} active {else if $tab == ''} active {/if}"><span class="icon mr-3"><i class="fe fe-users"></i></span>Personal Info</a>
                         <a href="{$server}{if $user.is_admin}/employees/profile/{$employee->id}/family-background{else}/profile/family-background{/if}" class="list-group-item list-group-item-action d-flex align-items-center {if $tab == 'family-background'} active {/if}"><span class="icon mr-3"><i class="fe fe-home"></i></span>Family Background</a>
                         <a href="{$server}{if $user.is_admin}/employees/profile/{$employee->id}/education{else}/profile/education{/if}" class="list-group-item list-group-item-action d-flex align-items-center {if $tab == 'education'} active {/if}"><span class="icon mr-3"><i class="fe fe-award"></i></span>Education</a>
                         <a href="{$server}{if $user.is_admin}/employees/profile/{$employee->id}/eligibility{else}/profile/eligibility{/if}" class="list-group-item list-group-item-action d-flex align-items-center {if $tab == 'eligibility'} active {/if}"><span class="icon mr-3"><i class="fe fe-file"></i></span>Eligibility</a>

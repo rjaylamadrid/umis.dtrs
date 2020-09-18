@@ -1,4 +1,5 @@
-{$emp = $emp[0]}
+{* {$emp = $emp[0]} *}
+{* {var_dump($employee->id)} *}
 {if $view != "update"}
     <div class="form-group" style="float: right;">
         <a href="{$server}{if $user.type}/employees/update/{$employee->id}{else}/update{/if}" class="btn btn-secondary btn-sm ml-2"><i class="fe fe-edit-2"></i> Edit</a>
