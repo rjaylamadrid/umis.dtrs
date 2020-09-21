@@ -43,15 +43,15 @@ class Employees extends EmployeesController {
         header ("location: /employees/profile/$id/$view");
     }
 
-    public function registration () {
+    public function registration ($success = NULL) {
+        if ($success) $message = ['success' => '1', 'message' => 'New employee has been successfully registered!'];
         $positions = Position::positions()->all ();
         $presets = Schedule::presets()->all ();
-        $this->view->display ('admin/employee_registration', ['positions' => $positions, 'emp_type' => $this->type(), 'schedules' => $presets , 'departments' => $this->departments(), 'designations' => $this->designations(), 'id' => $this->new_id ('1')]);
+        $this->view->display ('admin/employee_registration', ['positions' => $positions, 'emp_type' => $this->type(), 'schedules' => $presets , 'departments' => $this->departments(), 'designations' => $this->designations(), 'id' => $this->new_id ('1'), 'message' => $message]);
     }
 
-    public function get_position () {
-        $positions = Position::positions()->type ($this->data['type']);
-        echo json_encode($positions);
+    public function employment ($id, $tab = 'employment') {
+        $this->employee = new EmployeeProfile ($id);
+        $this->view->display ('admin/employee_employment', ['employee' => $this->employee, 'tab' => $tab]);
     }
-
 }

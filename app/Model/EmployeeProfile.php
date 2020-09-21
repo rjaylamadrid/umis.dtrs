@@ -14,12 +14,14 @@ class EmployeeProfile {
     public $training_seminar;
     public $references;
     public $other_info;
+    public $position;
 
     private $args = ["table" => "tbl_employee", "col" => "*", "options" => "", "type" => "all"];
 
     public function __construct ($id = null) {
         $this->id = $id;
         $this->info ();
+        $this->position ();
     }
 
     public function id ($id) {
@@ -28,7 +30,7 @@ class EmployeeProfile {
     }
 
     public function info () {
-        $this->info = DB::fetch_row ("SELECT a.first_name, a.middle_name, a.last_name, b.* FROM tbl_employee a, tbl_employee_status b WHERE a.no = b.emp_no AND b.emp_no = ? GROUP BY b.emp_no", $id);
+        $this->info = DB::fetch_row ("SELECT a.first_name, a.middle_name, a.last_name, b.* FROM tbl_employee a, tbl_employee_status b WHERE a.no = b.employee_id AND b.employee_id = ? GROUP BY b.employee_id", $this->id);
     }
 
     public function basic_info () {
@@ -68,6 +70,10 @@ class EmployeeProfile {
         foreach ($other_info as $key => $value) {
             $this->other_info[$key] = explode (";", $value);
         }
+    }
+
+    public function position () {
+        $this->position = DB::fetch_row ("SELECT * FROM tbl_position WHERE no = ?", $this->info['position_id']);
     }
 
     private function get ($args = []) {

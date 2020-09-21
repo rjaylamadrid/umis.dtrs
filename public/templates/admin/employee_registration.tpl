@@ -1,12 +1,11 @@
 {extends file="layout.tpl"}
 {block name="content"}
 <div class="my-3 my-md-5">
+          
     <div class="container center align-content-center">     
-        <div class="page-header">
-            <h1 class="page-title"><?php echo "Register Employee "//. ucfirst ($frm['a']); ?></h1>
-        </div>
         <div class="row row-cards row-deck">
         <div class="col-sm-10 m-auto">
+            {if $message}<div class="alert card-alert {if $message.success}alert-success{else}alert-danger{/if} alert-dismissible"><button type="button" class="close" data-dismiss="alert"></button>{$message.message}</div>{/if}
             <div class="card ">
                 <form class="user ml-5 mr-5" method="post" action="/employees" enctype="multipart/form-data">
                     <input type="hidden" name="action" value="register">
@@ -103,7 +102,7 @@
                             <div class="col-lg-9 col-md-6 col-sm-12">
                                 <div class="form-group label-floating">
                                     <label class="form-label">Schedule</label>
-                                    <select class="form-control" name="emp_sched[sched_code]">
+                                    <select class="form-control" name="sched_code">
                                         <option selected disabled>Schedule</option>
                                         {foreach from = $schedules item = schedule}
                                             <option value = "{$schedule.sched_code}">{$schedule.sched_day} ({$schedule.sched_time})</option>
@@ -138,13 +137,13 @@
                                     <div class="col-md-6 col-sm-12">
                                         <div class="form-group label-floating">
                                             <label class="form-label">Date Hired (*current position)</label>
-                                            <input type="date" class="form-control" name="emp_employment[date_hired]">
+                                            <input type="date" class="form-control" name="emp_status[date_start]">
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-sm-12">
                                         <div class="form-group label-floating">
                                             <label class="form-label">Employment Status</label>
-                                            <select class="form-control" name="emp_status[etype_id]" required onchange="javascript:init_pos (this.value)">
+                                            <select class="form-control" name="emp_status1[etype_id]" required onchange="javascript:init_pos (this.value)">
                                                 <option selected disabled>Employment Status</option>
                                                 {foreach from=$emp_type item=type}
                                                 <option value="{$type.etype_id}">{$type.etype_desc}</option>
@@ -157,7 +156,7 @@
                             <div class="col-lg-6 col-md-12 col-sm-12">
                                 <div class="form-group label-floating">
                                     <label class="form-label">Position</label>
-                                    <select class="form-control" name="" id="positions">
+                                    <select class="form-control" name="emp_status[position_id]" id="positions">
                                         <option selected disabled>Position</option>
                                         {foreach from=$positions item=position}
                                         <option value="{$position.no}">{$position.position_desc}</option>

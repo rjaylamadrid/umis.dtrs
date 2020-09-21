@@ -37,7 +37,6 @@ class DB {
         try {
             if (!($query = self::$db->prepare($args[0]))) return;
             if (!($query->execute($args[1]))) return;
-            self::$db = null;
             return $query;
         } catch (PDOException $e) {
             return;
@@ -46,7 +45,8 @@ class DB {
     }
 
     public static function insert () {
-        return self::execute (func_get_args ())->lastInsertID();
+        self::execute (func_get_args ());
+        return self::$db->lastInsertId();
     }
 
     public static function db ($db) {
@@ -58,7 +58,7 @@ class DB {
         self::$stmt = '';
         $i = count ($data);
         foreach ($data as $key => $value) {
-            self::$stmt .= $key." = ?";
+            self::$stmt .= "$key = :$key";
             $i--;
             if ($i > 0){
                 self::$stmt .= ", ";

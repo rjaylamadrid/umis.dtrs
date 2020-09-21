@@ -3,6 +3,7 @@ namespace Controllers;
 
 use Database\DB;
 use Profile;
+use Model\Position;
 
 class EmployeesController extends Controller {
     public $employees;
@@ -27,6 +28,11 @@ class EmployeesController extends Controller {
         }
         return;
     }
+    
+    public function get_position () {
+        $positions = Position::positions()->type ($this->data['type']);
+        echo json_encode($positions);
+    }
 
     protected function set_active () {}
     
@@ -35,7 +41,7 @@ class EmployeesController extends Controller {
     }
     
     protected function departments () {
-        return DB::fetch_all ("SELECT * FROM tbl_department ORDER BY department_desc");
+        return DB::fetch_all ("SELECT * FROM tbl_department WHERE campus_id = ? ORDER BY department_desc", $this->user['campus_id']);
     }
 
     protected function designations () {
@@ -54,7 +60,21 @@ class EmployeesController extends Controller {
     }
 
     protected function register () {
-        $id = DB::insert ("INSERT INTO tbl_employee SET ".stmt_builder($this->data['emp']), $this->data['emp']);
-        echo $id;
+        $id = DB::insert ("INSERT INTO tbl_employee SET ".DB::stmt_builder ($this->data['emp']), $this->data['emp']);
+        if ($id) {
+            $this->data['emp_status']['campus_id'] = $this->user['campus_id'];
+            $this->data['emp_status']['employee_id'] = $id;
+            if (!(self::add_status ($this->data['emp_status']))) header ("location: /employees/registration");
+            if (!(self::set_schedule ($this->data['sched_code'], $id))) header ("location: /employees/registration");
+            header ("location: /employees/registration/success");
+        }
+    }
+
+    public static function set_schedule ($sched, $id){
+        return DB::insert ("INSERT INTO tbl_employee_sched SET sched_code = ?, employee_id = ?", [$sched, $id]);
+    }
+
+    public static function add_status ($data) {
+        return DB::insert ("INSERT INTO tbl_employee_status SET ".DB::stmt_builder ($data), $data);
     }
 }

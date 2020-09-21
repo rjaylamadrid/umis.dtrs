@@ -52,7 +52,7 @@
                                             <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; transform: translate3d(-181px, 20px, 0px); top: 0px; left: 0px; will-change: transform;">
                                                 <a href="{$server}/employees/profile/{$employee.employee_id}" class="dropdown-item"><i class="dropdown-icon fe fe-tag"></i> View Profile 
                                                 </a>
-                                                <a href="?a=employees&show=employment&id={$employee.employee_id}&tab=employment" class="dropdown-item"><i class="dropdown-icon fe fe-user"></i> View Employment 
+                                                <a href="{$server}/employees/employment/{$employee.employee_id}" class="dropdown-item"><i class="dropdown-icon fe fe-user"></i> View Employment 
                                                 </a>
                                                 <a href="javascript:set_inactive('{$employee.employee_id}');" class="dropdown-item"><i class="dropdown-icon fe fe-tag"></i> Set as Inactive 
                                                 </a>
