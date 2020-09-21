@@ -15,6 +15,7 @@ class EmployeeProfile {
     public $references;
     public $other_info;
     public $position;
+    public $schedule;
 
     private $args = ["table" => "tbl_employee", "col" => "*", "options" => "", "type" => "all"];
 
@@ -76,6 +77,10 @@ class EmployeeProfile {
         $this->position = DB::fetch_row ("SELECT * FROM tbl_position WHERE no = ?", $this->info['position_id']);
     }
 
+    public function schedule () {
+        $this->schedule = DB::fetch_all ("SELECT * FROM tbl_schedule WHERE sched_code = ?", $this->info['sched_code']);
+    }
+    
     private function get ($args = []) {
         $this->args = array_merge ($this->args, $args);
 

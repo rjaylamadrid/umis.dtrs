@@ -19,7 +19,7 @@
       	{if ($view == 'update')}
           <div class="col-md-2">
             <div class="list-group list-group-transparent mb-0">
-              <a href="?a=employees&show=employment&id=<?php echo $frm['id'];?>&tab=<?php echo $frm['tab']; ?>" class="list-group-item list-group-item-action d-flex align-items-center active"><span class="icon mr-3"><i class="fe fe-back"></i></span> Back to profile</a>
+              <a href="{$server}/employees/employment/{$employee->id}/{$tab}" class="list-group-item list-group-item-action d-flex align-items-center active"><span class="icon mr-3"><i class="fe fe-back"></i></span> Back to employment</a>
             </div>
           </div>
         {else}

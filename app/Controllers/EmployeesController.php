@@ -4,6 +4,7 @@ namespace Controllers;
 use Database\DB;
 use Profile;
 use Model\Position;
+use Model\Schedule;
 
 class EmployeesController extends Controller {
     public $employees;
@@ -76,5 +77,10 @@ class EmployeesController extends Controller {
 
     public static function add_status ($data) {
         return DB::insert ("INSERT INTO tbl_employee_status SET ".DB::stmt_builder ($data), $data);
+    }
+
+    public function get_schedule () {
+        $schedules = Schedule::schedule ($this->data['sched_code']);
+        $this->view->display ('custom/schedule', ['schedules' => $schedules]);
     }
 }

@@ -51,7 +51,6 @@ function init_pos(type) {
   }else if(type == 4) {
     type = 1;
   }
-  console.log(type);
   f({action: 'get_position', type:type}, "json", "/employees").then( function(positions){
     $('#positions').html("<option selected disabled>Position</option>");
     positions.forEach(function (position){
@@ -69,6 +68,16 @@ function set_new (new_emp) {
   } else {
     $('#employee_id').val('');
     $('#employee_id').attr('readonly',false);
+  }
+}
+
+function get_schedule (sched_code) {
+  if (sched_code === "create"){
+    $("#create-schedule-modal").modal('show');
+  }else{
+    f({action: 'get_schedule', sched_code:sched_code}, "text", "/employees").then( function(html){
+      $("#schedule").html(html);
+    });
   }
 }
 // OTHER FUNCTIONS :: END

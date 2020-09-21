@@ -14,4 +14,8 @@ class Schedule {
         self::$presets = DB::fetch_all ("SELECT * FROM tbl_schedule_preset WHERE 1 ORDER BY sched_code");
         return new self();
     }
+
+    public static function schedule ($preset) {
+        return DB::fetch_all ("SELECT * FROM tbl_schedule WHERE sched_code = ?", $preset);
+    }
 }
