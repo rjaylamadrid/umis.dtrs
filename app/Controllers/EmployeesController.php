@@ -4,6 +4,7 @@ namespace Controllers;
 use Database\DB;
 use Profile;
 use Model\Position;
+use Model\Schedule;
 
 class EmployeesController extends Controller {
     public $employees;
@@ -83,5 +84,10 @@ class EmployeesController extends Controller {
         $id_col = $tab == 'tbl_basic_info' ? 'no' : 'employee_id';
         $tab = $tab == 'tbl_basic_info' ? 'tbl_employee' : $tab;
         return DB::update ("UPDATE " . $tab . " SET " .  DB::stmt_builder($employeeinfo) . " WHERE ". $id_col . "=" . $id,$employeeinfo);
+    }
+    
+    public function get_schedule () {
+        $schedules = Schedule::schedule ($this->data['sched_code']);
+        $this->view->display ('custom/schedule', ['schedules' => $schedules]);
     }
 }
