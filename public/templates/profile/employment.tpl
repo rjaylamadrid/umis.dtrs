@@ -56,32 +56,34 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>
-                                <div>SAMPLE</div>
-                                <div class="small text-muted">Date: SAMPLE</div>
-                            </td>
-                            <td>
-                                <div>SAMPLE</div>
-                            </td>
-                            <td>
-                                <div>SAMPLE</div>
-                                <div class="small text-muted">Salary Grade: SAMPLE</div>
-                            </td>
-                            <td>
-                                <div>SAMPLE</div>
-                                <div class="small text-muted">Gov't Service: SAMPLE</div>
-                            </td>
-                            <td style="vertical-align: middle; text-align: center;">
-                                <form action="" method="POST">
-                                    <input type="hidden" name="action" value="delete">
-                                    <input type="hidden" name="employment_no" value="1">
-                                    <button type="submit" class="btn btn-outline-danger btn-sm">
-                                        <i class="fe fe-trash"></i>
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
+                        {foreach from=$employee->employment item=employment}
+                            <tr>
+                                <td>
+                                    <div>{$employment.position}</div>
+                                    <div class="small text-muted">Date: {$employment.date_from} - {if $employment.date_to}{$employment.date_to}{else}PRESENT{/if}</div>
+                                </td>
+                                <td>
+                                    <div>{$employment.company}</div>
+                                </td>
+                                <td>
+                                    <div>{$employment.salary|number_format:2}</div>
+                                    <div class="small text-muted">Salary Grade: SAMPLE</div>
+                                </td>
+                                <td>
+                                    <div>{$employment.appointment}</div>
+                                    <div class="small text-muted">Gov't Service: {if $employment.govt_service == "1"}YES{else}NO{/if}</div>
+                                </td>
+                                <td style="vertical-align: middle; text-align: center;">
+                                    <form action="" method="POST">
+                                        <input type="hidden" name="action" value="delete">
+                                        <input type="hidden" name="employment_no" value="1">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm">
+                                            <i class="fe fe-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {/foreach}
                     </tbody>
                 </table>
             </div>

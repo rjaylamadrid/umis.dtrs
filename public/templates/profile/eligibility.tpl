@@ -45,7 +45,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {foreach from = $emp item = eligibility}
+                        {foreach from = $employee->eligibility item = eligibility}
                         <tr>
                             <td>
                                 <div>{$eligibility.eligibility_name}</div>

@@ -27,6 +27,20 @@ function init_dtr(id) {
 }
 // ATTENDANCE::END
 
+// EMPLOYEE PROFILE :: START
+function show_collapse(id) {
+  if($('#'+id).hasClass('collapse')){
+    $('#'+id).removeClass('collapse');
+    $('.'+id).removeClass('fe-chevron-down');
+    $('.'+id).addClass('fe-chevron-up');
+  }else{
+    $('#'+id).addClass('collapse');
+    $('.'+id).addClass('fe-chevron-down');
+    $('.'+id).removeClass('fe-chevron-up');
+  }
+}
+// EMPLOYEE PROFILE :: END
+
 // OTHER FUNCTIONS :: START
 function colours(size) {
   var color = [];

@@ -49,6 +49,11 @@ class DB {
         return self::$db->lastInsertId();
     }
 
+    public static function update () {
+        // print_r(func_get_args());
+        return self::execute (func_get_args ());
+    }
+
     public static function db ($db) {
         self::$dbname = $db;
         return new self ();

@@ -77,4 +77,11 @@ class EmployeesController extends Controller {
     public static function add_status ($data) {
         return DB::insert ("INSERT INTO tbl_employee_status SET ".DB::stmt_builder ($data), $data);
     }
+
+    public static function update_profile($id, $employeeinfo, $tab) {
+        $tab = 'tbl_'.str_replace ("-","_",$tab);
+        $id_col = $tab == 'tbl_basic_info' ? 'no' : 'employee_id';
+        $tab = $tab == 'tbl_basic_info' ? 'tbl_employee' : $tab;
+        return DB::update ("UPDATE " . $tab . " SET " .  DB::stmt_builder($employeeinfo) . " WHERE ". $id_col . "=" . $id,$employeeinfo);
+    }
 }

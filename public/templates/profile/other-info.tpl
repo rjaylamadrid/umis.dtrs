@@ -10,26 +10,28 @@
                 <td>Recognition</td>
                 <td>Association/Organization</td>
             </tr>
-            <tr>
-                <td style="font-weight:normal">
-                {foreach from=$employee->other_info.other_skill item=skills}
-                    <p>{$skills}</p>
-                {/foreach}
-                </td>
-                <td>
-                {foreach from=$employee->other_info.other_recognition item=recognition}
-                    <p>{$recognition}</p>
-                {/foreach}
-                </td>
-                <td>
-                {foreach from=$employee->other_info.other_organization item=org}
-                    <p>{$org}</p>
-                {/foreach}
-                </td>
-            </tr>
+            {foreach from=$employee->other_info item=other_info}
+                {$other_info.other_skill = ";"|explode:$other_info.other_skill}
+                {$other_info.other_recognition = ";"|explode:$other_info.other_recognition}
+                {$other_info.other_organization = ";"|explode:$other_info.other_organization}
+                
+                {for $i=0 to $other_info.other_skill|@count}
+                    <tr>
+                        <td style="font-weight:normal">
+                            <p>{$other_info.other_skill[$i]}</p>
+                        </td>
+                        <td>
+                            <p>{$other_info.other_recognition[$i]}</p>
+                        </td>
+                        <td>
+                            <p>{$other_info.other_organization[$i]}</p>
+                        </td>
+                    </tr>
+                {/for}
+            {/foreach}
         {else}
             <tr class="row-header">
-                <td colspan="2">no Record(s) found.</td>
+                <td colspan="2">No Record(s) Found</td>
             </tr>
         {/if}
         </table>

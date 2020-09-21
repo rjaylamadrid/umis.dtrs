@@ -39,8 +39,10 @@ class Employees extends EmployeesController {
         $this->profile($id,$view,'update');
     }
 
-    public function save ($id, $view = 'basic-info') {
-        header ("location: /employees/profile/$id/$view");
+    public function save ($id, $tab = 'basic-info') {
+        // print_r($_POST['employeeinfo']);
+        // $empUpd = EmployeesController::update_profile($id,$_POST['employeeinfo'],$tab);
+        header ("location: /employees/profile/$id/$tab");
     }
 
     public function registration ($success = NULL) {

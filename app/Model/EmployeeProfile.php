@@ -38,7 +38,7 @@ class EmployeeProfile {
     }
 
     public function family_background () {
-        $this->education = $this->get (["table" => "tbl_employee_family_background"]);
+        $this->family_background = $this->get (["table" => "tbl_employee_family_background"]);
     }
 
     public function education () {
@@ -58,18 +58,15 @@ class EmployeeProfile {
     }
 
     public function training_seminar () {
-        $this->training_seminar = $this->get (["table" => "tbl_training_seminar"]);
+        $this->training_seminar = $this->get (["table" => "tbl_employee_training_seminar"]);
     }
 
     public function references () {
-        $this->references = $this->get (["table" => "tbl_employee_reference"]);
+        $this->references = $this->get (["table" => "tbl_employee_references"]);
     }
 
     public function other_info () {
-        $other_info = $this->get (["table" => "tbl_employee_other", "type" => "row"]);
-        foreach ($other_info as $key => $value) {
-            $this->other_info[$key] = explode (";", $value);
-        }
+        $this->other_info = $this->get (["table" => "tbl_employee_other_info"]);
     }
 
     public function position () {

@@ -1,4 +1,3 @@
-{$view}
 {foreach from = $employee->family_background item = family_background}
     {if $family_background.relationship == 1}
         {$spouse = $family_background}
@@ -6,6 +5,8 @@
         {$mother = $family_background}
     {elseif $family_background.relationship == 3}
         {$father = $family_background}
+    {elseif $family_background.relationship == 0}
+        {$child = $family_background}
     {/if}
 {/foreach}
 {if $view != "update"}
@@ -15,7 +16,7 @@
     <div class="table-responsive">
         <table class="table card-table table-striped">
             <tr class="row-header"><td colspan="2">Spouse's Information</td></tr>
-            <tr><td>Name</td><td>{$spouse.childname} {$spouse.middle_name} {$spouse.last_name} {$spouse.ext_name}</td></tr>
+            <tr><td>Name</td><td>{$spouse.first_name} {$spouse.middle_name} {$spouse.last_name} {$spouse.ext_name}</td></tr>
             <tr><td>Occupation</td><td>{$spouse.occupation}</td></tr>
             <tr><td>Employer/Business</td><td>{$spouse.employer}</td></tr>
             <tr><td>Business Address</td><td>{$spouse.business_address}</td></tr>
@@ -30,9 +31,9 @@
             <tr class="row-header"><td colspan="2">Children</td></tr>
             <tr>
                 <th>Name of Children</th>
-                <th>Date of Birth</th>
+                <th>Date of Birth </th>
             </tr>
-            {foreach from = $emp item = child }
+            {foreach from = $employee->family_background item = child }
                 {if $child.relationship == 0}<tr><td>{$child.first_name} {$child.middle_name} {$child.last_name} {$child.ext_name}</td><td>{$child.birthdate}</td></tr>{/if}
             {/foreach}
         </table>
@@ -155,16 +156,16 @@
                         </tr>
 
                         <tbody>
-                            {foreach from = $emp item = child }
+                            {foreach from = $employee->family_background item = child }
                                 {if $child.relationship == 0}
-                                    <tr id="row">
-                                            <td><input type="text" class="form-control" name="first_name" value="{$child.first_name}"></td>
-                                            <td><input type="text" class="form-control" name="middle_name" value="{$child.middle_name}"></td>
-                                            <td><input type="text" class="form-control" name="last_name" value="{$child.last_name}"></td>
-                                            <td><input type="text" class="form-control" name="ext_name" value="{$child.ext_name}"></td>
-                                            <td><input type="text" class="form-control" name="birthdate" value="{$child.birthdate}"></td>
-                                            <td style="vertical-align: middle; text-align: center;"><a class="btn btn-outline-danger btn-sm"><i class="fe fe-trash"></i></a></td>
-                                    </tr>
+                                <tr id="row">
+                                        <td><input type="text" class="form-control" name="first_name" value="{$child.first_name}"></td>
+                                        <td><input type="text" class="form-control" name="middle_name" value="{$child.middle_name}"></td>
+                                        <td><input type="text" class="form-control" name="last_name" value="{$child.last_name}"></td>
+                                        <td><input type="text" class="form-control" name="ext_name" value="{$child.ext_name}"></td>
+                                        <td><input type="text" class="form-control" name="birthdate" value="{$child.birthdate}"></td>
+                                        <td style="vertical-align: middle; text-align: center;"><a class="btn btn-outline-danger btn-sm"><i class="fe fe-trash"></i></a></td>
+                                </tr>
                                 {/if}
                             {/foreach}
                         </tbody>

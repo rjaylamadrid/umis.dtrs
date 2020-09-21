@@ -5,9 +5,9 @@
     <div class="table-responsive">
         <table class="table card-table table-striped">
         {if $employee->training_seminar}
-            {foreach from=$employee->training_seminar item=training_seminar}
+            {foreach from = $employee->training_seminar item = training_seminar}
                 <tr class="row-header">
-                    <td colspan="2">1.</td>
+                    <td colspan="2">{$training_seminar@iteration}</td>
                 </tr>
                 <tr>
                     <td>Title of Training</td>
@@ -79,21 +79,23 @@
                     </tr>
                 </thead>
                 <tbody>
-                   <tr>
-                       <td>SAMPLE</td>
-                       <td>SAMPLE</td>
-                       <td>SAMPLE</td>
-                       <td>SAMPLE</td>
-                       <td>SAMPLE</td>
-                       <td>SAMPLE</td>
-                       <td style="vertical-align: middle; text-align: center;">
-                            <form action="" method="POST">
-                                <input type="hidden" name="action" value="delete">
-                                <input type="hidden" name="training_no" value="1">
-                                <button type="submit" class="btn btn-outline-danger btn-sm"><i class="fe fe-trash"></i></button>
-                            </form>
-                        </td>
-                    </tr>
+                    {foreach from = $employee->training_seminar item = training_seminar}
+                        <tr>
+                            <td>{$training_seminar.training_title}</td>
+                            <td>{$training_seminar.training_from}</td>
+                            <td>{$training_seminar.training_to}</td>
+                            <td>{$training_seminar.training_hours}</td>
+                            <td>{$training_seminar.training_type}</td>
+                            <td>{$training_seminar.training_sponsor}</td>
+                            <td style="vertical-align: middle; text-align: center;">
+                                <form action="" method="POST">
+                                    <input type="hidden" name="action" value="delete">
+                                    <input type="hidden" name="training_no" value="1">
+                                    <button type="submit" class="btn btn-outline-danger btn-sm"><i class="fe fe-trash"></i></button>
+                                </form>
+                            </td>
+                        </tr>
+                    {/foreach}
                 </tbody>
             </table>
         </div>

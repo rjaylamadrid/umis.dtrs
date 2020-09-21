@@ -5,7 +5,6 @@
     <div class="table-responsive">
         <table class="table card-table table-striped">
             {foreach from = $employee->education item = education}
-            {* {$school=$education} *}
                 <tr class="row-header"><td colspan="2">{$education.level}</td></tr>
                 <tr><td>School</td><td><div>{$education.school_name}</div><div class="small text-muted">{$education.school_address}</div></td></tr>
                 <tr><td>Basic Education/Degree</td><td><div>{$education.school_degree}</div><div class="small text-muted">{$education.highest_level}</div></td></tr>
@@ -15,42 +14,51 @@
         </table>
     </div>
 {else}
-<form method = "POST" action="">
+<form method = "POST" action="{$server}{if $user.is_admin}/employees/save/{$employee->id}{else}/save{/if}">
     <input type="hidden" name="action" value="save_changes">
     <div class="form-group row btn-square">
         <label class="h4">Educational Background</label>
+        <div style="float: right;">
+            <a href="" class="btn btn-outline-success btn-sm" data-toggle="modal" data-target="#eligibility-info"><i class="fe fe-plus"></i>Add Educational Background</a>
+        </div>
         <div class="card mb-1">
             <div class="card-content">
                 {foreach from = $employee->education item = education}
                 <div class="card-header pt-0 pb-0">
                     <h4 class="card-title">{$education.level}</h4>
-                    <a href="#" onclick="" class="ml-auto" style="text-decoration:  none;"><span class="fe fe-chevron-down"></span></a>
+                    <a href="#" onclick="javascript:show_collapse({$education@iteration})" class="ml-auto" style="text-decoration: none;"><span class="{$education@iteration} fe fe-chevron-down"></span></a>
                 </div>
-                <div class="card-body collapse" id="">
+                <div class="card-body collapse" id="{$education@iteration}">
                     <div class="row">
                         <div class="col-sm-12 col-md-12">
                             <div class="form-group mb-1">
                                 <label class="form-label mb-0">School Name</label>
-                                <input type="text" class="form-control" name="SchoolName[0]" value="{$education.school_name}">
+                                <input type="text" class="form-control" name="school_name[{$education@iteration}]" value="{$education.school_name}">
                             </div>
                         </div>
-                        <div class="col-sm-12 col-md-6">
+                        <div class="col-sm-12 col-md-4">
                             <div class="form-group mb-1">
                                 <label class="form-label mb-0">School Degree</label>
-                                <input type="text" class="form-control" name="SchoolDegree[0]" value="{$education.school_degree}">
+                                <input type="text" class="form-control" name="school_degree[{$education@iteration}]" value="{$education.school_degree}">
                             </div>
                         </div>
-                        <div class="col-sm-12 col-md-6">
+                        <div class="col-sm-12 col-md-4">
                             <div class="form-group mb-1">
-                                <label class="form-label mb-0">Period of Attendance</label>
-                                <input type="text" class="form-control" name="InclusiveDate[0]" value="{$education.period_from} - {$education.period_to}">
+                                <label class="form-label mb-0">Date Started</label>
+                                <input type="date" class="form-control" name="InclusiveDate[{$education@iteration}]" value="{$education.period_from}">
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-4">
+                            <div class="form-group mb-1">
+                                <label class="form-label mb-0">Date Finished</label>
+                                <input type="date" class="form-control" name="InclusiveDate[{$education@iteration}]" value="{$education.period_to}">
                             </div>
                         </div>
                         <div class="col-sm-12 col-md-4">
                             <div class="form-group mb-1">
                                 <div class="label-floating">
                                     <label class="form-label mb-0">Highest Level</label>
-                                    <input type="text" class="form-control" name="HighestLevel[0]" value="{$education.highest_level}">
+                                    <input type="text" class="form-control" name="HighestLevel[{$education@iteration}]" value="{$education.highest_level}">
                                 </div>
                             </div>
                         </div>
@@ -58,7 +66,7 @@
                             <div class="form-group mb-1">
                                 <div class="label-floating">
                                     <label class="form-label mb-0">Year Graduated</label>
-                                    <input type="text" class="form-control" name="GraduateYear[0]" value="{$education.year_graduated}">
+                                    <input type="text" class="form-control" name="GraduateYear[{$education@iteration}]" value="{$education.year_graduated}">
                                 </div>
                             </div>
                         </div>
@@ -66,7 +74,7 @@
                             <div class="form-group mb-1">
                                 <div class="label-floating">
                                     <label class="form-label mb-0">Academic Honors</label>
-                                    <input type="text" class="form-control" name="Honor[0]" value="{$education.academic_honor}">
+                                    <input type="text" class="form-control" name="Honor[{$education@iteration}]" value="{$education.academic_honor}">
                                 </div>
                             </div>
                         </div>
@@ -83,4 +91,68 @@
         </div>
     </div>
   </form>
+
+<div class="modal fade margin-top-70" id="eligibility-info" role="dialog" tabindex="-1" style="margin-left:-50px;">
+    <div class="modal-dialog" id="eligibility-modal" role="document" style="max-width: 600px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add new eligibity</h4>
+            </div>
+            <div class="modal-body">
+                <form action="" method="POST">
+                    <input type="hidden" name="action" value="save">
+                    <input type="hidden" name="new_eligibility[emp_id]" value="1">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12">
+                            <div class="form-group label-floating">
+                                <label class="form-label">School Name</label>
+                                <input type="text" class="form-control" name="new_eligibility[eligibility_name]" required="">
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-sm-12">
+                            <div class="form-group label-floating">
+                                <label class="form-label">School Degree</label>
+                                <input type="text" class="form-control" name="new_eligibility[eligibility_rating]">
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <div class="form-group label-floating">
+                                <label class="form-label">Date Started</label>
+                                <input type="date" class="form-control" name="new_eligibility[eligibility_date_exam]" required="">
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <div class="form-group label-floating">
+                                <label class="form-label">Date Finished</label>
+                                <input type="date" class="form-control" name="new_eligibility[eligibility_place_exam]" required="">
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-sm-12">
+                            <div class="form-group label-floating">
+                                <label class="form-label">Academic Honors</label>
+                                <input type="text" class="form-control" name="new_eligibility[eligibility_rating]">
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <div class="form-group label-floating">
+                                <label class="form-label">Highest Level</label>
+                                <input type="text" class="form-control" name="new_eligibility[eligibility_date_exam]" required="">
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <div class="form-group label-floating">
+                                <label class="form-label">Year Graduated</label>
+                                <input type="text" class="form-control" name="new_eligibility[eligibility_place_exam]" required="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Save Eligibility</button>
+                        <button class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
   {/if}

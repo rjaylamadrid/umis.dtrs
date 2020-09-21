@@ -7,7 +7,7 @@
         {if $employee->references}
             {foreach from=$employee->references item=references}
                 <tr class="row-header">
-                    <td colspan="2">1.</td>
+                    <td colspan="2">{$references@iteration}</td>
                 </tr>
                 <tr>
                     <td>Name</td>
@@ -49,17 +49,19 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td><div>SAMPLE</div></td>
-                            <td><div>SAMPLE</div></td>
-                            <td><div>SAMPLE</div></td>
-                                <td style="vertical-align: middle; text-align: center;">
-                                    <form action="" method="POST"><input type="hidden" name="action" value="delete">
-                                        <input type="hidden" name="reference_no" value="1">
-                                        <button type="submit" class="btn btn-outline-danger btn-sm"><i class="fe fe-trash"></i></button>
-                                    </form>
-                                </td>
-                        </tr>
+                        {foreach from=$employee->references item=references}
+                            <tr>
+                                <td><div>{$references.reference_name}</div></td>
+                                <td><div>{$references.reference_address}</div></td>
+                                <td><div>{$references.reference_contact}</div></td>
+                                    <td style="vertical-align: middle; text-align: center;">
+                                        <form action="" method="POST"><input type="hidden" name="action" value="delete">
+                                            <input type="hidden" name="reference_no" value="1">
+                                            <button type="submit" class="btn btn-outline-danger btn-sm"><i class="fe fe-trash"></i></button>
+                                        </form>
+                                    </td>
+                            </tr>
+                        {/foreach}
                     </tbody>
                 </table>
             </div>
