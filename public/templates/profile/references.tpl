@@ -74,31 +74,30 @@
                     <h4 class="modal-title">Add new character reference</h4>
                 </div>
                 <div class="modal-body">
-                    <form action="" method="POST">
-                        <input type="hidden" name="action" value="save">
-                        <input type="hidden" name="new_reference[emp_id]" value="1">
+                    <form action="{$server}{if $user.is_admin}/employees/add_profile_info/{$employee->id}/references{else}/save{/if}" method="POST">
+                        <input type="hidden" name="employeeinfo[employee_id]" value="{$employee->id}">
                         <div class="row">
                             <div class="col-lg-12 col-md-12 col-sm-12">
                                 <div class="form-group label-floating">
                                     <label class="form-label">Name</label>
-                                    <input type="text" class="form-control" name="new_reference[ReferenceName]" required="">
+                                    <input type="text" class="form-control" name="employeeinfo[reference_name]" required="">
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12">
                                 <div class="form-group label-floating">
                                     <label class="form-label">Address</label>
-                                    <input type="text" class="form-control" name="new_reference[ReferenceAddress]">
+                                    <input type="text" class="form-control" name="employeeinfo[reference_address]">
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12">
                                 <div class="form-group label-floating">
                                     <label class="form-label">Tel. No.</label>
-                                    <input type="text" class="form-control" name="new_reference[ReferenceContactNo]" required="">
+                                    <input type="text" class="form-control" name="employeeinfo[reference_contact]" required="">
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary">Save Reference</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
                             <button class="btn btn-secondary" data-dismiss="modal">Close</button>
                         </div>
                     </form>

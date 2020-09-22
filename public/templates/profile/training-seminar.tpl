@@ -103,9 +103,8 @@
   
     <div class="modal fade margin-top-70" id="learning-development-info" role="dialog" tabindex="-1" style="margin-left:-50px;">
         <div class="modal-dialog" id="learning-development-modal" role="document" style="max-width: 600px;">
-            <form method="POST" action="">
-                <input type = "hidden" name="action" value="save">
-                <input type = "hidden" name ="new_training[EmployeeID]" value="<?php echo $emp['emp_id'];?>">
+            <form method="POST" action="{$server}{if $user.is_admin}/employees/add_profile_info/{$employee->id}/training-seminar{else}/save{/if}">
+                <input type="hidden" name="employeeinfo[employee_id]" value="{$employee->id}">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">Add Learning & Development Attended</h4>
@@ -115,44 +114,45 @@
                             <div class="col-lg-12 col-md-12 col-sm-12">
                                 <div class="form-group label-floating">
                                     <label class="form-label">Title of Learning and Development Interventions</label>
-                                    <input type="text" class="form-control" name="new_training[TrainingName]">
+                                    <input type="text" class="form-control" name="employeeinfo[training_title]">
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12">
                                 <div class="form-group label-floating">
                                     <label class="form-label">Inclusive Date (FROM)</label>
-                                    <input type="date" class="form-control" name="date_from">
+                                    <input type="date" class="form-control" name="employeeinfo[training_from]">
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12">
                                 <div class="form-group label-floating">
                                     <label class="form-label">Inclusive Date (TO)</label>
-                                    <input type="date" class="form-control" name="date_to">
+                                    <input type="date" class="form-control" name="employeeinfo[training_to]">
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12">
                                 <div class="form-group label-floating">
                                     <label class="form-label">Number of Hours</label>
-                                    <input type="text" class="form-control" name="new_training[TrainingHour]">
+                                    <input type="text" class="form-control" name="employeeinfo[training_hours]">
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12">
                                 <div class="form-group label-floating">
                                     <label class="form-label">Type of LD</label>
-                                    <input type="text" class="form-control" name="new_training[TrainingType]">
+                                    <input type="text" class="form-control" name="employeeinfo[training_type]">
                                 </div>
                             </div>
                             <div class="col-lg-12 col-md-12 col-sm-12">
                                 <div class="form-group label-floating">
                                     <label class="form-label">Conducted/Sponsored by</label>
-                                    <input type="text" class="form-control" name="new_training[TrainingSponsor]">
+                                    <input type="text" class="form-control" name="employeeinfo[training_sponsor]">
                                 </div>
                             </div>
                         </div>
                         <p><i>Type of LD (Managerial/Supervisory/Technical/etc.)</i></p>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
                 </div>
             </form>

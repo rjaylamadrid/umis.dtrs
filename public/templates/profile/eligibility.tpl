@@ -80,49 +80,48 @@
                     <h4 class="modal-title">Add new eligibity</h4>
                 </div>
                 <div class="modal-body">
-                    <form action="" method="POST">
-                        <input type="hidden" name="action" value="save">
-                        <input type="hidden" name="new_eligibility[emp_id]" value="1">
+                    <form action="{$server}{if $user.is_admin}/employees/add_profile_info/{$employee->id}/eligibility{else}/save{/if}" method="POST">
+                        <input type="hidden" name="employeeinfo[employee_id]" value="{$employee->id}">
                         <div class="row">
                             <div class="col-lg-12 col-md-12 col-sm-12">
                                 <div class="form-group label-floating">
                                     <label class="form-label">Eligibility (Career Service/RA 1080)</label>
-                                    <input type="text" class="form-control" name="new_eligibility[eligibility_name]" required="">
+                                    <input type="text" class="form-control" name="employeeinfo[eligibility_name]" required="">
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12">
                                 <div class="form-group label-floating">
                                     <label class="form-label">Rating</label>
-                                    <input type="text" class="form-control" name="new_eligibility[eligibility_rating]">
+                                    <input type="text" class="form-control" name="employeeinfo[eligibility_rating]">
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12">
                                 <div class="form-group label-floating">
                                     <label class="form-label">Date of Examination</label>
-                                    <input type="date" class="form-control" name="new_eligibility[eligibility_date_exam]" required="">
+                                    <input type="date" class="form-control" name="employeeinfo[eligibility_date_exam]" required="">
                                 </div>
                             </div>
                             <div class="col-lg-12 col-md-12 col-sm-12">
                                 <div class="form-group label-floating">
                                     <label class="form-label">Place of Examination</label>
-                                    <input type="text" class="form-control" name="new_eligibility[eligibility_place_exam]" required="">
+                                    <input type="text" class="form-control" name="employeeinfo[eligibility_place_exam]" required="">
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12">
                                 <div class="form-group label-floating">
                                     <label class="form-label">License Number</label>
-                                    <input type="text" class="form-control" name="new_eligibility[eligibility_license]">
+                                    <input type="text" class="form-control" name="employeeinfo[eligibility_license]">
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12">
                                 <div class="form-group label-floating">
                                     <label class="form-label">License Validity</label>
-                                    <input type="date" class="form-control" name="new_eligibility[eligibility_validity]">
+                                    <input type="date" class="form-control" name="employeeinfo[eligibility_validity]">
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary">Save Eligibility</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
                             <button class="btn btn-secondary" data-dismiss="modal">Close</button>
                         </div>
                     </form>

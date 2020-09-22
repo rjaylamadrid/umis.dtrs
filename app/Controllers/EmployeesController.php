@@ -79,12 +79,65 @@ class EmployeesController extends Controller {
         return DB::insert ("INSERT INTO tbl_employee_status SET ".DB::stmt_builder ($data), $data);
     }
 
+    // public static function add_profile($id,$employeeinfo,$tab) {
+    //     $tab = 'tbl_employee_'.str_replace ("-","_",$tab);
+    //     if($tab == 'tbl_employee_other_info') {
+    //         $column='';
+    //         if($employeeinfo['other_skill']) {
+    //             $column='other_skill';
+    //         }
+    //         else if($employeeinfo['other_recognition']) {
+    //             $column='other_recognition';
+    //         }
+    //         else if($employeeinfo['other_organization']) {
+    //             $column='other_organization';
+    //         }
+    //         DB::fetch_row ("SELECT $column FROM ")
+    //     }
+    //     else {
+    //         return DB::insert("INSERT INTO $tab SET ".DB::stmt_builder ($employeeinfo), $employeeinfo);
+    //     }
+    // }
+
     public static function update_profile($id, $employeeinfo, $tab) {
-        $tab = 'tbl_'.str_replace ("-","_",$tab);
-        $id_col = $tab == 'tbl_basic_info' ? 'no' : 'employee_id';
-        $tab = $tab == 'tbl_basic_info' ? 'tbl_employee' : $tab;
-        return DB::update ("UPDATE " . $tab . " SET " .  DB::stmt_builder($employeeinfo) . " WHERE ". $id_col . "=" . $id,$employeeinfo);
+        $tab = 'tbl_employee_'.str_replace ("-","_",$tab);
+        $tab = $tab == 'tbl_employee_basic_info' ? 'tbl_employee' : $tab;
+        $id_col = $tab == 'tbl_employee' ? 'no' : 'employee_id';
+        
+        // BASIC_INFO
+        if ($tab == 'tbl_employee') {
+            return DB::update ("UPDATE " . $tab . " SET " .  DB::stmt_builder($employeeinfo) . " WHERE ". $id_col . "=" . $id,$employeeinfo);
+        }
+        // FAMILY_BACKGROUND
+        else if ($tab == 'tbl_employee_family_background') {
+            for ($i=0;$i<sizeof($employeeinfo);$i++) {
+                if ($i == 0) {
+                    for($j=1;$j<=sizeof($employeeinfo[$i]);$j++) {
+                        $temp = DB::update ("UPDATE $tab SET " . DB::stmt_builder($employeeinfo[$i][$j]) . " WHERE no = ". $employeeinfo[$i][$j]['no'],$employeeinfo[$i][$j]);
+                    }
+                }
+                else {
+                    $temp = DB::update ("UPDATE $tab SET " . DB::stmt_builder($employeeinfo[$i]) . " WHERE $id_col = $id AND relationship = '$i'",$employeeinfo[$i]);
+                }
+            }
+        }
+        // EDUCATION
+        else if ($tab == 'tbl_employee_education') {
+            $levels = ['Elementary', 'Secondary', 'Vocational', 'College', 'Graduate Studies'];
+            foreach ($levels as $value) {
+                if ($employeeinfo[$value]['school_name']) {
+                    $temp = DB::update ("UPDATE $tab SET " . DB::stmt_builder($employeeinfo[$value]) . " WHERE $id_col = $id AND level = '$value'",$employeeinfo[$value]);
+                }
+            }
+        }
+        else if ($tab == 'tbl_employee_other_info') {
+            return DB::update ("UPDATE $tab SET other_skill = '" . implode(";", $employeeinfo['skill']) . "', other_recognition = '" . implode(";", $employeeinfo['recog']) . "', other_organization = '" . implode(";", $employeeinfo['org']) . "' WHERE $id_col = $id");
+        }
     }
+
+    // public static function get_education($id) {
+
+    // }
     
     public function get_schedule () {
         $schedules = Schedule::schedule ($this->data['sched_code']);
