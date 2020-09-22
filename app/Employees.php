@@ -45,8 +45,13 @@ class Employees extends EmployeesController {
 
     public function save ($id, $tab = 'basic-info') {
         // print_r($_POST['employeeinfo']);
-        // $empUpd = EmployeesController::update_profile($id,$_POST['employeeinfo'],$tab);
+        $empUpd = EmployeesController::update_profile($id,$_POST['employeeinfo'],$tab);
         header ("location: /employees/profile/$id/$tab");
+    }
+
+    public function add_profile_info ($id, $tab = 'basic-info') {
+        $empAdd = EmployeesController::add_profile($id,$_POST['employeeinfo'],$tab);
+        header ("location: /employees/update/$id/$tab");
     }
 
     public function registration ($success = NULL) {

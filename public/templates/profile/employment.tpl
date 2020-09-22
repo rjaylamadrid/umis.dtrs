@@ -6,7 +6,7 @@
         <table class="table card-table table-striped">
         {foreach from=$employee->employment item=employment}
             <tr class="row-header">
-                <td colspan="2">{$employment.position}</td>
+                <td colspan="2">{$employment@iteration}</td>
             </tr>
             <tr>
                 <td>Position/Title</td>
@@ -96,50 +96,49 @@
                     <h4 class="modal-title">Add Work Experience</h4>
                 </div>
                 <div class="modal-body">
-                    <form action="" method="POST">
-                        <input type="hidden" name="action" value="save">
-                        <input type="hidden" name="new_experience[emp_id]" value="1">
+                    <form action="{$server}{if $user.is_admin}/employees/add_profile_info/{$employee->id}/employment{else}/save{/if}" method="POST">
+                        <input type="hidden" name="employeeinfo[employee_id]" value="{$employee->id}">
                         <div class="row">
                             <div class="col-lg-12 col-md-12 col-sm-12">
                                 <div class="form-group label-floating">
                                     <label class="form-label">Position/Title</label>
-                                    <input type="text" class="form-control" name="new_experience[EmploymentPosition]" required="">
+                                    <input type="text" class="form-control" name="employeeinfo[position]" required="">
                                 </div>
                             </div>
                             <div class="col-lg-12 col-md-12 col-sm-12">
                                 <div class="form-group label-floating">
                                     <label class="form-label">Company Name</label>
-                                    <input type="text" class="form-control" name="new_experience[EmploymentCompany]">
+                                    <input type="text" class="form-control" name="employeeinfo[company]">
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12">
                                 <div class="form-group label-floating">
                                     <label class="form-label">Start</label>
-                                    <input type="date" class="form-control" name="date_start" required="">
+                                    <input type="date" class="form-control" name="employeeinfo[date_from]" required="">
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12">
                                 <div class="form-group label-floating">
                                     <label class="form-label">End (*if necessary)</label>
-                                    <input type="date" class="form-control" name="date_end">
+                                    <input type="date" class="form-control" name="employeeinfo[date_to]">
                                 </div>
                             </div>
                             <div class="col-lg-4 col-md-4 col-sm-12">
                                 <div class="form-group label-floating">
                                     <label class="form-label">Salary</label>
-                                    <input type="text" class="form-control" name="new_experience[EmploymentSalary]">
+                                    <input type="text" class="form-control" name="employeeinfo[salary]">
                                 </div>
                             </div>
                             <div class="col-lg-2 col-md-2 col-sm-12">
                                 <div class="form-group label-floating">
                                     <label class="form-label">SG</label>
-                                    <input type="number" max="30" class="form-control" name="new_experience[EmploymentSalaryGrade]">
+                                    <input type="number" max="30" class="form-control" name="employeeinfo[salary_grade]">
                                 </div>
                             </div>
                             <div class="col-lg-4 col-md-4 col-sm-12">
                                 <div class="form-group label-floating">
                                     <label class="form-label">Appointment</label>
-                                    <select class="form-control" name="new_experience[EmploymentStatus]">
+                                    <select class="form-control" name="employeeinfo[appointment]">
                                         <option value="Regular">Regular</option>
                                         <option value="Casual">Casual</option>
                                         <option value="Temporary">Temporary</option>
@@ -152,15 +151,15 @@
                             <div class="col-lg-2 col-md-2 col-sm-12">
                                 <div class="form-group label-floating">
                                     <label class="form-label">Gov't</label>
-                                    <select class="form-control" name="new_experience[EmploymentGovt]">
-                                        <option value="Y">Yes</option>
-                                        <option value="N">No</option>
+                                    <select class="form-control" name="employeeinfo[govt_service]">
+                                        <option value="1">Yes</option>
+                                        <option value="0">No</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary">Save Experience</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
                             <button class="btn btn-secondary" data-dismiss="modal">Close</button>
                         </div>
                     </form>

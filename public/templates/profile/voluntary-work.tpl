@@ -80,49 +80,49 @@
 
     <div class="modal fade margin-top-70" id="voluntary-work-info" role="dialog" tabindex="-1" style="margin-left:-50px;">
         <div class="modal-dialog" id="voluntary-work-modal" role="document" style="max-width: 600px;">
-            <form method="POST" action="">  
+            <form method="POST" action="{$server}{if $user.is_admin}/employees/add_profile_info/{$employee->id}/voluntary-work{else}/save{/if}">  
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">Add new voluntary work</h4>
                     </div>
                     <div class="modal-body">
                         <div class="row">
-                            <input type="hidden" name="action" value="save">
-                            <input type="hidden" name = "new_voluntary[EmployeeID]" value="1">
+                            <input type="hidden" name="employeeinfo[employee_id]" value="{$employee->id}">
                             <div class="col-lg-12 col-md-12 col-sm-12">
                                 <div class="form-group label-floating">
                                     <label class="form-label">Name & Address of Organization</label>
-                                    <input type="text" class="form-control" name="new_voluntary[OrganizationName]">
+                                    <input type="text" class="form-control" name="employeeinfo[organization_name]">
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12">
                                 <div class="form-group label-floating">
                                     <label class="form-label">Inclusive Date (FROM)</label>
-                                    <input type="date" class="form-control" name="date_from">
+                                    <input type="date" class="form-control" name="employeeinfo[date_from]">
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12">
                                 <div class="form-group label-floating">
                                     <label class="form-label">Inclusive Date (TO)</label>
-                                    <input type="date" class="form-control" name="date_to">
+                                    <input type="date" class="form-control" name="employeeinfo[date_to]">
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-12 col-sm-12">
                                 <div class="form-group label-floating">
                                     <label class="form-label">Number of hours</label>
-                                    <input type="text" class="form-control" name="new_voluntary[OrganizationHour]">
+                                    <input type="text" class="form-control" name="employeeinfo[total_hours]">
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12">
                                 <div class="form-group label-floating">
                                     <label class="form-label">Position/Nature of Work</label>
-                                    <input type="text" class="form-control" name="new_voluntary[OrganizationPosition]">
+                                    <input type="text" class="form-control" name="employeeinfo[organization_position]">
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
                 </div>
             </form>
