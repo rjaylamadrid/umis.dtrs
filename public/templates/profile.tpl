@@ -31,7 +31,7 @@
                             <span class="avatar avatar-xxl mr-5" style="background-image: url(img/profile_temp.jpeg)"></span>
                             <div class="media-body">
                                 <h4 class="m-0">{$employee->info.first_name} {$employee->info.last_name}</h4>
-                                <p class="text-muted mb-0"></p> 
+                                <p class="text-muted mb-0">{$employee->position.position_desc}</p> 
                             </div>
                         </div>
                     </div>

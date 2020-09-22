@@ -7,18 +7,24 @@
 {else}
     <div style="min-height:530px">
         <form action="" method="POST">
-            <input type="hidden" id="action" name="action" value="update">
-            <select class="form-control col-md-6" name="sched_code" onchange ="javascript:get_schedule(this.value)">
-                <option selected disabled>Schedule</option>
-                {foreach from = $presets item = preset}
-                    <option value = "{$preset.sched_code}" {if $employee->info.sched_code == $preset.sched_code}selected{/if}>{$preset.sched_day} ({$preset.sched_time})</option>
-                {/foreach}
-                <option value="create">Create Schedule</option>
-            </select>
-        </form><br/>
+            <div class="row pl-2">
+                <input type="hidden" id="action" name="action" value="update">
+                <select class="form-control col-md-6" name="sched_code" onchange ="javascript:get_schedule(this.value)">
+                    <option selected disabled>Schedule</option>
+                    {foreach from = $presets item = preset}
+                        <option value = "{$preset.sched_code}" {if $employee->info.sched_code == $preset.sched_code}selected{/if}>{$preset.sched_day} ({$preset.sched_time})</option>
+                    {/foreach}
+                </select>
+                <div class="col-md-6">
+                    <div class="form-group" style="float: right;">
+                        <a href="javascript:get_schedule('create')" class="btn btn-primary">Create new schedule</a>
+                    </div>
+                </div>
+            </div>
+        </form>
         <div id="schedule">
         {include file="custom/schedule.tpl"}
         </div>
     </div>
-    {include file="admin/modal/create_schedule.tpl"};
+    {include file="admin/modal/create_schedule.tpl"}
 {/if}

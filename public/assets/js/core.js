@@ -94,4 +94,13 @@ function get_schedule (sched_code) {
     });
   }
 }
+
+function get_salary () {
+  var position = $('#positions').val();
+  var date = $('#date-start').val();
+  var campus = $('#campus').val();
+  f({action: 'get_salary', position_id:position, date_start:date, campus_id:campus}, "text", "/employees").then( function(html){
+    console.log(html);
+  });
+}
 // OTHER FUNCTIONS :: END

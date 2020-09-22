@@ -39,7 +39,7 @@ class Employees extends EmployeesController {
         $this->profile ($id,$view,'update');
     }
 
-    public function employment_update ($id, $tab = 'employment') {
+    public function employment_update ($id, $tab = 'employment_info') {
         $this->employment ($id,$tab,'update');
     }
 
@@ -56,16 +56,16 @@ class Employees extends EmployeesController {
         $this->view->display ('admin/employee_registration', ['positions' => $positions, 'emp_type' => $this->type(), 'schedules' => $presets , 'departments' => $this->departments(), 'designations' => $this->designations(), 'id' => $this->new_id ('1'), 'message' => $message]);
     }
 
-    public function employment ($id, $tab = 'employment', $view = 'view') {
+    public function employment ($id, $tab = 'employment_info', $view = 'view') {
         $this->employee = new EmployeeProfile ($id);
         $positions = Position::positions()->all ();
         try {
             $this->employee->{str_replace ("-", "_", $tab)}();
         } catch (\Throwable $th) {
-            $tab = 'employment';
+            $tab = 'employment_info';
             $this->employee->info ();
         }
         $presets = Schedule::presets()->all();
-        $this->view->display ('admin/employee_employment', ['positions' => $positions, 'emp_type' => $this->type(), 'employee' => $this->employee, 'tab' => $tab, 'view' => $view, 'presets' => $presets]);
+        $this->view->display ('admin/employee_employment', ['positions' => $positions, 'emp_type' => $this->type(), 'employee' => $this->employee, 'tab' => $tab, 'view' => $view, 'presets' => $presets , 'departments' => $this->departments(), 'designations' => $this->designations()]);
     }
 }

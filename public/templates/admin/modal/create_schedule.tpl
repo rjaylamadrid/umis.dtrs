@@ -3,7 +3,7 @@
         <div class="modal-content" style="width:800px;">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Create</h3>
+                    <h3 class="card-title">Create New Schedule</h3>
                 </div>
                 <div class="card-body">
                     <form action="" method="POST">

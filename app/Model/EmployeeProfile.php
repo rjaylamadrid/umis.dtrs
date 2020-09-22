@@ -2,6 +2,7 @@
 namespace Model;
 
 use Database\DB;
+use Model\Position;
 
 class EmployeeProfile {
     public $id;
@@ -15,6 +16,7 @@ class EmployeeProfile {
     public $references;
     public $other_info;
     public $position;
+    public $employment_info;
     public $schedule;
 
     private $args = ["table" => "tbl_employee", "col" => "*", "options" => "", "type" => "all"];
@@ -70,8 +72,13 @@ class EmployeeProfile {
         $this->other_info = $this->get (["table" => "tbl_employee_other_info"]);
     }
 
+    public function employment_info () {
+        $this->employment_info['department'] = Position::department ($this->info['department_id']);
+        $this->employment_info['designation'] = Position::designation ($this->info['privilege']);
+    }
+
     public function position () {
-        $this->position = DB::fetch_row ("SELECT * FROM tbl_position WHERE no = ?", $this->info['position_id']);
+        $this->position = Position::position ($this->info['position_id']) -> get_salary($this->info['campus_id'],$this->info['date_start']);
     }
 
     public function schedule () {

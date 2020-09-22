@@ -5,7 +5,10 @@
     <div class="container center align-content-center">     
         <div class="row row-cards row-deck">
         <div class="col-sm-10 m-auto">
-            {if $message}<div class="alert card-alert {if $message.success}alert-success{else}alert-danger{/if} alert-dismissible"><button type="button" class="close" data-dismiss="alert"></button>{$message.message}</div>{/if}
+            {if $message}<div class="alert card-alert {if $message.success}alert-success{else}alert-danger{/if} alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert"></button>
+                <i class="fe {if $message.success}fe-check{else}fe-alert-triangle{/if} mr-2" aria-hidden="true"></i>{$message.message}
+            </div>{/if}
             <div class="card ">
                 <form class="user ml-5 mr-5" method="post" action="/employees" enctype="multipart/form-data">
                     <input type="hidden" name="action" value="register">

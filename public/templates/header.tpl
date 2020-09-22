@@ -52,7 +52,7 @@
                             <a href="/employees" class="nav-link {if $page == 'employees'}active{/if}"><i class="fe fe-users"></i> Employees</a>
                         </li>
                         <li class="nav-item">
-                            <a href="/payroll" class="nav-link {if $page == 'payroll'}active{/if}"><i class="fe fe-edit-3"></i> Payroll</a>
+                            <a href="/payroll" class="nav-link {if $page == 'payroll'}active{/if}"><i class="fe fe-credit-card"></i> Payroll</a>
                         </li>
                         <li class="nav-item">
                             <a href="/attendance" class="nav-link {if $page == 'attendance'}active{/if}"><i class="fe fe-clock"></i> Daily Time Record</a>
@@ -72,7 +72,7 @@
                             <a href="/profile" class="nav-link {if $frm.a == 'profile'}active{/if}"><i class="fe fe-user"></i> Profile</a>
                         </li>
                         <li class="nav-item">
-                            <a href="/payroll" class="nav-link {if $frm.a == 'payroll'}active{/if}"><i class="fe fe-edit-3"></i> Payroll</a>
+                            <a href="/payroll" class="nav-link {if $frm.a == 'payroll'}active{/if}"><i class="fe fe-credit-card"></i> Payroll</a>
                         </li>
                         <li class="nav-item">
                             <a href="{$server}/dtr" class="nav-link {if $frm.a == 'attendance'}active{/if}"><i class="fe fe-clock"></i> Daily Time Record</a>

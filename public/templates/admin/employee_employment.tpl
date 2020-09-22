@@ -37,9 +37,10 @@
 	          </div>
 	          <div class="employee-tab">
 	          	<div class="list-group list-group-transparent mb-0">
-	            	<a href="{$server}/employees/employment/{$employee->id}" class="list-group-item list-group-item-action d-flex align-items-center {if $tab == ''}active{/if}{if $tab == 'employment'}active{/if}"><span class="icon mr-3"><i class="fe fe-user"></i></span>Employment</a>
+	            	<a href="{$server}/employees/employment/{$employee->id}" class="list-group-item list-group-item-action d-flex align-items-center {if $tab == ''}active{/if}{if $tab == 'employment_info'}active{/if}"><span class="icon mr-3"><i class="fe fe-user"></i></span>Employment</a>
 	            	<a href="{$server}/employees/employment/{$employee->id}/schedule" class="list-group-item list-group-item-action d-flex align-items-center {if $tab == 'schedule'}active{/if}"><span class="icon mr-3"><i class="fe fe-clock"></i></span>Schedule</a>
-	            	<a href="{$server}/employees/employment/{$employee->id}/leave-record" class="list-group-item list-group-item-action d-flex align-items-center {if $tab == 'leave-record'}active{/if}"><span class="icon mr-3"><i class="fe fe-clipboard"></i></span>Leave Record</a>
+	            	<a href="{$server}/employees/employment/{$employee->id}/payroll" class="list-group-item list-group-item-action d-flex align-items-center {if $tab == 'service-record'}active{/if}"><span class="icon mr-3"><i class="fe fe-credit-card"></i></span>Payroll</a>
+	          		<a href="{$server}/employees/employment/{$employee->id}/leave-record" class="list-group-item list-group-item-action d-flex align-items-center {if $tab == 'leave-record'}active{/if}"><span class="icon mr-3"><i class="fe fe-clipboard"></i></span>Leave Record</a>
 	            	<a href="{$server}/employees/employment/{$employee->id}/service-record" class="list-group-item list-group-item-action d-flex align-items-center {if $tab == 'service-record'}active{/if}"><span class="icon mr-3"><i class="fe fe-layers"></i></span>Service Record</a>
 	          	</div>
 	          </div>

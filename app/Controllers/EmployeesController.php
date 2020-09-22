@@ -35,6 +35,11 @@ class EmployeesController extends Controller {
         echo json_encode($positions);
     }
 
+    public function get_salary () {
+        $salary = Position::position ($this->data['position_id']) -> get_salary ($this->data['campus_id'], $this->data['date_start']);
+        return isset($salary[0]) ? $salary['salary'] : $salary;
+    }
+
     protected function set_active () {}
     
     protected function type () {
