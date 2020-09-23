@@ -37,7 +37,7 @@ class EmployeesController extends Controller {
 
     public function get_salary () {
         $salary = Position::position ($this->data['position_id']) -> get_salary ($this->data['campus_id'], $this->data['date_start']);
-        return isset($salary[0]) ? $salary['salary'] : $salary;
+        print_r($salary['salary']);
     }
 
     protected function set_active () {}

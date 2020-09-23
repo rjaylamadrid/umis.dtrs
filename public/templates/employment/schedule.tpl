@@ -17,14 +17,19 @@
                 </select>
                 <div class="col-md-6">
                     <div class="form-group" style="float: right;">
-                        <a href="javascript:get_schedule('create')" class="btn btn-primary">Create new schedule</a>
+                        <a href="javascript:get_schedule('create')" class="btn btn-secondary">Create new schedule</a>
                     </div>
                 </div>
             </div>
+            <div id="schedule">
+            {include file="custom/schedule.tpl"}
+            </div>
+            <div class="col-md-12 mt-5">
+                <div class="form-group" style="float: right;">
+                    <a href="javascript:get_schedule('create')" class="btn btn-primary">Save Changes</a>
+                </div>
+            </div>
         </form>
-        <div id="schedule">
-        {include file="custom/schedule.tpl"}
-        </div>
     </div>
     {include file="admin/modal/create_schedule.tpl"}
 {/if}

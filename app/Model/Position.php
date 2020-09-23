@@ -40,7 +40,9 @@ class Position {
     public static function get_salary ($campus, $date_start, $date = NULL) {
         if (!$date) $date = date('Y-m-d');
         if (self::$position['salary_grade'] == 0) {
-            self::$position['salary']  = DB::fetch_row ("SELECT * FROM tbl_cos_salary WHERE position_id = ? AND date_implemented < ?  AND campus_id = ? ORDER BY date_implemented DESC", [self::$position['no'], $date, $campus]);
+            $salary  = DB::fetch_row ("SELECT * FROM tbl_cos_salary WHERE position_id = ? AND date_implemented < ?  AND campus_id = ? ORDER BY date_implemented DESC", [self::$position['no'], $date, $campus]);
+            self::$position['salary'] = $salary['salary'];
+            self::$position['salary_type'] = $salary['salary_type'];
         }else{
             $salary  = DB::fetch_row ("SELECT step_increment as salary FROM tbl_salary_grade WHERE salary_grade = ? AND date_implemented < ?  AND campus_id = ? ORDER BY date_implemented DESC", [self::$position['salary_grade'], $date, $campus])['salary'];
             $steps = explode (',' , $salary);

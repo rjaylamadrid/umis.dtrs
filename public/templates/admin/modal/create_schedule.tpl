@@ -21,6 +21,16 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="table-responsive">
+                            <table class="table card-table table-striped">
+                                <thead>
+                                    <tr><th>Day</th><th>AM IN</th><th>AM OUT</th><th>PM IN</th><th>PM OUT</th><th></th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>Monday</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </form>
                 </div>
             </div>

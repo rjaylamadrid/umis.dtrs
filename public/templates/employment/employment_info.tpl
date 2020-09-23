@@ -7,16 +7,13 @@
             <tr class="row-header"><td colspan="2">Employment Information</td></tr>
             <tr><td>Status</td><td>Status</td></tr>
             <tr><td>Position</td><td><div>{$employee->position.position_desc}<div class="small text-muted">{$employee->info.date_start}</div></div></td></tr>
-            {if $employee->position.salary_grade}
-                <tr><td>Salary</td><td><div>Php {$employee->position.salary|number_format:2:".":","}<div class="small text-muted">Salary Grade {$employee->position.salary_grade} - Step {$employee->position.increment}</div></div></td></tr>
-            {else}
-                <tr><td>Salary</td><td><div>Php {$employee->position.salary['salary']|number_format:2:".":","}<div class="small text-muted">{$employee->position.salary['salary_type']}</div></div></td></tr>
-            {/if}
+            <tr><td>Salary</td><td><div>Php {$employee->position.salary|number_format:2:".":","}<div class="small text-muted">
+            {if $employee->position.salary_grade}Salary Grade {$employee->position.salary_grade} - Step {$employee->position.increment}{else}{$employee->position.salary_type}{/if}</div></div></td></tr>
             <tr><td>Department</td><td><div>{$employee->employment_info.department}<div class="small text-muted">{$employee->employment_info.designation}</div></div></td></tr>
         </table>
     </div>
     <div class="form-group" style="float: right;">
-        <a href="#" data-toggle="modal" data-target="#promote-employee-modal" class="btn btn-success btn-md ml-2"><i class="fe fe-arrow-up-circle"></i> Promote</a>
+        <a href="#" data-toggle="modal" data-target="#promote-employee-modal" class="btn btn-success btn-md ml-2">New Employment Info</a>
     </div>
     {include file="admin/modal/promote_employee.tpl"}
 {else}
@@ -55,7 +52,7 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label class="form-label">Salary</label>
-                        <input type="text" class="form-control" name="" value="Php {if $employee->position.salary_grade}{$employee->position.salary|number_format:2:".":","}{else}{$employee->position.salary['salary']|number_format:2:".":","}{/if}" disabled id="salary">
+                        <input type="text" class="form-control" name="" value="Php {$employee->position.salary|number_format:2:".":","}" disabled id="salary">
                     </div>
                 </div>
                     <div class="col-md-12">

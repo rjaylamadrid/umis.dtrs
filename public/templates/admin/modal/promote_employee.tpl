@@ -7,6 +7,7 @@
                 </div>
                 <div class="card-body">
                     <form action="" method="POST">
+                        <input type="hidden" id="campus" value="{$employee->info.campus_id}">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -22,7 +23,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label class="form-label">Position</label>
-                                    <select class="form-control" name="emp_status[position_id]" id="positions">
+                                    <select class="form-control" name="emp_status[position_id]" id="positions" onchange="get_salary()">
                                         <option selected disabled>Position</option>
                                         {foreach from=$positions item=position}
                                         <option value="{$position.no}" {if $position.no == $employee->info.position_id}selected{/if}>{$position.position_desc}</option>
@@ -33,13 +34,13 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label">Effectivity Date</label>
-                                    <input type="date" class="form-control" name="emp_status[date_start]" value="{$employee->info.date_start}">
+                                    <input type="date" class="form-control" name="emp_status[date_start]" value="{$employee->info.date_start}" id="date-start" onchange="get_salary()">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label">Salary</label>
-                                    <input type="text" class="form-control" name="" value="Php {if $employee->position.salary_grade}{$employee->position.salary|number_format:2:".":","}{else}{$employee->position.salary['salary']|number_format:2:".":","}{/if}" disabled>
+                                    <input type="text" class="form-control" name="" value="Php {$employee->position.salary|number_format:2:".":","}" disabled id="salary">
                                 </div>
                             </div>
                              <div class="col-md-12">
