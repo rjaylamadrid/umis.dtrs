@@ -23,66 +23,66 @@
         <div class="card mb-1">
             <div class="card-content">
                 {foreach from = $employee->education item = education}
-                <div class="card-header pt-0 pb-0">
-                    <h4 class="card-title">{$education.level}</h4>
-                    <a href="#" onclick="javascript:show_collapse({$education@iteration})" class="ml-auto" style="text-decoration: none;"><span class="{$education@iteration} fe fe-chevron-down"></span></a>
-                </div>
-                <div class="card-body collapse" id="{$education@iteration}">
-                    <div class="row">
-                        <div class="col-sm-12 col-md-12">
-                            <div class="form-group mb-1">
-                                <label class="form-label mb-0">School Name</label>
-                                <input type="text" class="form-control" name="employeeinfo[{$education.level}][school_name]" value="{$education.school_name}">
-                            </div>
-                        </div>
-                        <div class="col-sm-12 col-md-4">
-                            <div class="form-group mb-1">
-                                <label class="form-label mb-0">School Degree</label>
-                                <input type="text" class="form-control" name="employeeinfo[{$education.level}][school_degree]" value="{$education.school_degree}">
-                            </div>
-                        </div>
-                        <div class="col-sm-12 col-md-4">
-                            <div class="form-group mb-1">
-                                <label class="form-label mb-0">Date Started</label>
-                                <input type="date" class="form-control" name="employeeinfo[{$education.level}][period_from]" value="{$education.period_from}">
-                            </div>
-                        </div>
-                        <div class="col-sm-12 col-md-4">
-                            <div class="form-group mb-1">
-                                <label class="form-label mb-0">Date Finished</label>
-                                <input type="date" class="form-control" name="employeeinfo[{$education.level}][period_to]" value="{$education.period_to}">
-                            </div>
-                        </div>
-                        <div class="col-sm-12 col-md-4">
-                            <div class="form-group mb-1">
-                                <div class="label-floating">
-                                    <label class="form-label mb-0">Highest Level</label>
-                                    <input type="text" class="form-control" name="employeeinfo[{$education.level}][highest_level]" value="{$education.highest_level}">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-12 col-md-4">
-                            <div class="form-group mb-1">
-                                <div class="label-floating">
-                                    <label class="form-label mb-0">Year Graduated</label>
-                                    <input type="text" class="form-control" name="employeeinfo[{$education.level}][year_graduated]" value="{$education.year_graduated}">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-12 col-md-4">
-                            <div class="form-group mb-1">
-                                <div class="label-floating">
-                                    <label class="form-label mb-0">Academic Honors</label>
-                                    <input type="text" class="form-control" name="employeeinfo[{$education.level}][academic_honor]" value="{$education.academic_honor}">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-12 mt-2" style="text-align: right;">
-                            <a class="btn btn-danger" style="color:#fff">Delete Record</a>
-                        </div>
-                        <br />
+                    <div class="card-header pt-0 pb-0">
+                        <h4 class="card-title">{$education.level}</h4>
+                        <a href="#" onclick="javascript:show_collapse({$education@iteration})" class="ml-auto" style="text-decoration: none;"><span class="{$education@iteration} fe fe-chevron-down"></span></a>
                     </div>
-                </div>
+                    <div class="card-body collapse" id="{$education@iteration}">
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12">
+                                <div class="form-group mb-1">
+                                    <label class="form-label mb-0">School Name</label>
+                                    <input type="text" class="form-control" name="employeeinfo[{$education.level}][school_name]" value="{$education.school_name}">
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-4">
+                                <div class="form-group mb-1">
+                                    <label class="form-label mb-0">School Degree</label>
+                                    <input type="text" class="form-control" name="employeeinfo[{$education.level}][school_degree]" value="{$education.school_degree}">
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-4">
+                                <div class="form-group mb-1">
+                                    <label class="form-label mb-0">Date Started</label>
+                                    <input type="date" class="form-control" name="employeeinfo[{$education.level}][period_from]" value="{$education.period_from}">
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-4">
+                                <div class="form-group mb-1">
+                                    <label class="form-label mb-0">Date Finished</label>
+                                    <input type="date" class="form-control" name="employeeinfo[{$education.level}][period_to]" value="{$education.period_to}">
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-4">
+                                <div class="form-group mb-1">
+                                    <div class="label-floating">
+                                        <label class="form-label mb-0">Highest Level</label>
+                                        <input type="text" class="form-control" name="employeeinfo[{$education.level}][highest_level]" value="{$education.highest_level}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-4">
+                                <div class="form-group mb-1">
+                                    <div class="label-floating">
+                                        <label class="form-label mb-0">Year Graduated</label>
+                                        <input type="text" class="form-control" name="employeeinfo[{$education.level}][year_graduated]" value="{$education.year_graduated}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-4">
+                                <div class="form-group mb-1">
+                                    <div class="label-floating">
+                                        <label class="form-label mb-0">Academic Honors</label>
+                                        <input type="text" class="form-control" name="employeeinfo[{$education.level}][academic_honor]" value="{$education.academic_honor}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 mt-2" style="text-align: right;">
+                                <a class="btn btn-danger" style="color:#fff"  onclick="javascript:confirm_delete({$education.no})">Delete Record</a>
+                            </div>
+                            <br />
+                        </div>
+                    </div>
                 {/foreach}
             </div>
         </div>
@@ -92,7 +92,7 @@
             </div>
         </div>
     </div>
-  </form>
+</form>
 
 <div class="modal fade margin-top-70" id="eligibility-info" role="dialog" tabindex="-1" style="margin-left:-50px;">
     <div class="modal-dialog" id="eligibility-modal" role="document" style="max-width: 600px;">
@@ -169,4 +169,30 @@
         </div>
     </div>
 </div>
-  {/if}
+
+{* <div class="modal fade margin-top-70" id="confirm-delete" role="dialog" tabindex="-1" style="margin-left:-50px;">
+    <div class="modal-dialog" id="eligibility-modal" role="document" style="max-width: 600px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Confirmation</h4>
+            </div>
+            <div class="modal-body">
+                <form action="{$server}{if $user.is_admin}/employees/add_profile_info/{$employee->id}/other-info{else}/save{/if}" method="POST">
+                    <div class="row align-center">
+                        <div class="col-lg-12 col-md-12 col-sm-12">
+                            <div class="form-group label-floating">
+                                <p>Are you sure that you want to delete this record? {$education.no}</p>
+                                {* <input type="text" class="form-control" name="employeeinfo[other_skill]" required="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Yes</button>
+                        <button class="btn btn-secondary" data-dismiss="modal">No</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div> *}
+{/if}

@@ -103,25 +103,19 @@ class EmployeesController extends Controller {
         return DB::update ("UPDATE tbl_employee_status SET ".DB::stmt_builder ($data)." WHERE employee_id = ?", $data);
     }
 
-    // public static function add_profile($id,$employeeinfo,$tab) {
-    //     $tab = 'tbl_employee_'.str_replace ("-","_",$tab);
-    //     if($tab == 'tbl_employee_other_info') {
-    //         $column='';
-    //         if($employeeinfo['other_skill']) {
-    //             $column='other_skill';
-    //         }
-    //         else if($employeeinfo['other_recognition']) {
-    //             $column='other_recognition';
-    //         }
-    //         else if($employeeinfo['other_organization']) {
-    //             $column='other_organization';
-    //         }
-    //         DB::fetch_row ("SELECT $column FROM ")
-    //     }
-    //     else {
-    //         return DB::insert("INSERT INTO $tab SET ".DB::stmt_builder ($employeeinfo), $employeeinfo);
-    //     }
-    // }
+    public static function add_profile($id,$employeeinfo,$tab) {
+        $tab = 'tbl_employee_'.str_replace ("-","_",$tab);
+        if($tab == 'tbl_employee_other_info') {
+            foreach ($employeeinfo as $key => $value) {
+                $other_row=DB::fetch_row ("SELECT $key FROM $tab WHERE employee_id = $id");
+                $other_row["$key"] = $other_row["$key"] == '' ? $value : $other_row["$key"].";".$value;
+                return DB::update ("UPDATE $tab SET ".DB::stmt_builder($employeeinfo). " WHERE employee_id = $id",$other_row);
+            }
+        }
+        else {
+            return DB::insert("INSERT INTO $tab SET ".DB::stmt_builder ($employeeinfo), $employeeinfo);
+        }
+    }
 
     public static function update_profile($id, $employeeinfo, $tab) {
         $tab = 'tbl_employee_'.str_replace ("-","_",$tab);
