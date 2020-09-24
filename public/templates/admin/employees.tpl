@@ -10,10 +10,10 @@
                             <div class="form-group form-inline">
                                 <a href="/employees/registration" class="btn btn-primary"><i class="fe fe-user-plus"></i> New employee</a>
                                 <div style="float: right;">
-                                    <form action="" method="POST" id="inactivefrm">
+                                    <form action="" method="POST" id="frm_inactive">
                                         <div class="form-group" style="margin-bottom: 0px;">
                                             <label class="custom-switch" style="display: inline-block; padding: 0 10px; ">
-                                                <input type="checkbox" name="inactive" class="custom-switch-input" onclick="inactivefrm.submit()" {if $frm['inactive']}checked{/if}>
+                                                <input type="checkbox" name="inactive" onchange="document.forms['frm_inactive'].submit()" class="custom-switch-input" {if $status == '0'}checked{/if}>
                                                 <span class="custom-switch-indicator"></span>
                                                 <span class="custom-switch-description">Inactive </span>
                                             </label>
@@ -46,15 +46,16 @@
                                         <td>{$employee.first_name|upper} {$employee.last_name|upper}</td>
                                         <td>{$employee.gender}</td>
                                         <td>{$employee.birthdate}</td>
-                                        <td></td>
+                                        <td>{$employee.position}</td>
                                         <td class="text-center"><div class="item-action dropdown">
                                             <a href="javascript:void(0)" data-toggle="dropdown" class="icon" aria-expanded="false"><i class="fe fe-more-vertical"></i></a>
                                             <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; transform: translate3d(-181px, 20px, 0px); top: 0px; left: 0px; will-change: transform;">
-                                                <a href="{$server}/employees/profile/{$employee.employee_id}" class="dropdown-item"><i class="dropdown-icon fe fe-tag"></i> View Profile 
+                                                <a href="{$server}/employees/profile/{$employee.employee_no}" class="dropdown-item"><i class="dropdown-icon fe fe-tag"></i> View Profile 
                                                 </a>
-                                                <a href="{$server}/employees/employment/{$employee.employee_id}" class="dropdown-item"><i class="dropdown-icon fe fe-user"></i> View Employment 
+                                                <a href="{$server}/employees/employment/{$employee.employee_no}" class="dropdown-item"><i class="dropdown-icon fe fe-user"></i> View Employment 
                                                 </a>
-                                                <a href="javascript:set_inactive('{$employee.employee_id}');" class="dropdown-item"><i class="dropdown-icon fe fe-tag"></i> Set as Inactive 
+                                                {* <a href="javascript:set_inactive('{$employee.employee_no}', '{if $employee.active_status == '0'}1{else}0{/if}');" class="dropdown-item"><i class="dropdown-icon fe fe-tag"></i> Set as {if $employee.active_status == '0'}Active{else}Inactive{/if} *}
+                                                <a href="" data-toggle="modal" data-target="#employee-status-modal" class="dropdown-item"><i class="dropdown-icon fe fe-tag"></i> Set as {if $employee.active_status == '0'}Active{else}Inactive{/if}
                                                 </a>
                                             </div>
                                         </td>
@@ -74,11 +75,10 @@
     </div>
     <script>
         function set_inactive (id, val = 0) {
-            fetch ({
-                action: 'set-active', active: val, id: id
-            }).then (response => response.json().then (function (result) {
+            f({ action: 'set_active', active: val, id: id}, "json", "/employees").then (function (result) {
                 if (result.success) location.reload();
-            }));
+            });
         }
     </script>
+    {include file="admin/modal/employee_status.tpl"}
 {/block}

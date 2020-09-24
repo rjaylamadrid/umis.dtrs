@@ -24,7 +24,7 @@ class EmployeeStats {
     }
 
     public static function employees_count ($status = 1) {
-        $result = DB::fetch_row ("SELECT COUNT(no) total FROM tbl_employee_status WHERE campus_id = ? AND active_status = ?", [self::$campus, $status]);
+        $result = DB::fetch_row ("SELECT COUNT(*) as total FROM (SELECT active_status FROM tbl_employee a, tbl_employee_status b WHERE a.no = b.employee_id AND b.campus_id = ? GROUP BY a.employee_id) a WHERE active_status = ?", [self::$campus, $status]);
         return $result['total'];
     }
 

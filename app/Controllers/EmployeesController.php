@@ -15,7 +15,7 @@ class EmployeesController extends Controller {
     }
 
     public function employees () {
-        $this->employees = DB::fetch_all ("SELECT * FROM tbl_employee a, tbl_employee_status b WHERE a.no = b.employee_id AND b.campus_id = ? GROUP BY a.employee_id", $this->user['campus_id']);
+        $this->employees = DB::fetch_all ("SELECT a.employee_id as employee_id, a.no as employee_no, first_name, last_name, gender, birthdate, position_desc as position, active_status FROM tbl_employee a, tbl_employee_status b, tbl_position c WHERE a.no = b.employee_id AND b.campus_id = ? AND b.position_id = c.no GROUP BY a.employee_id", $this->user['campus_id']);
         return $this;
     }
 
@@ -29,6 +29,15 @@ class EmployeesController extends Controller {
         }
         return;
     }
+
+    public function status ($status = '1') {
+        if (!$employees) $this->employees ();
+        $employees = [];
+        foreach ($this->employees as $employee) {
+            if ($employee['active_status'] == $status) $employees[] = $employee;
+        }
+        return $employees;
+    }
     
     public function get_position () {
         $positions = Position::positions()->type ($this->data['type']);
@@ -40,8 +49,14 @@ class EmployeesController extends Controller {
         print_r($salary['salary']);
     }
 
-    protected function set_active () {}
-    
+    protected function set_active () {
+        if ($this->data['active'] == '0') {
+            $set = DB::update ("UPDATE tbl_employee_status SET date_end = ? , active_status = 0 WHERE employee_id = ? AND active_status = 1", [date('Y-m-d'), $this->data['id']]);
+            if ($set) $result = ['success' => date('Y-m-d')];
+        }
+        echo json_encode($result);
+    }
+
     protected function type () {
         return DB::fetch_all ("SELECT * FROM tbl_employee_type");
     }
@@ -82,6 +97,10 @@ class EmployeesController extends Controller {
 
     public static function add_status ($data) {
         return DB::insert ("INSERT INTO tbl_employee_status SET ".DB::stmt_builder ($data), $data);
+    }
+
+    public static function update_status ($data) {
+        return DB::update ("UPDATE tbl_employee_status SET ".DB::stmt_builder ($data)." WHERE employee_id = ?", $data);
     }
 
     // public static function add_profile($id,$employeeinfo,$tab) {

@@ -1,4 +1,4 @@
-{if $user.type}
+{if $user.is_admin}
 {include file="admin/attendance.tpl"}
 {else}
     {extends file="layout.tpl"}

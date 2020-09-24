@@ -82,7 +82,7 @@ class EmployeeProfile {
     }
 
     public function schedule () {
-        $this->schedule = DB::fetch_all ("SELECT * FROM tbl_schedule WHERE sched_code = ?", $this->info['sched_code']);
+        $this->schedule = DB::fetch_all ("SELECT a.* FROM tbl_schedule a, (SELECT * FROM tbl_employee_sched WHERE employee_id = ? ORDER BY `date` DESC LIMIT 0,1) b WHERE a.sched_code = b.sched_code", $this->id);
     }
     
     private function get ($args = []) {

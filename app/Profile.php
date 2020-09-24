@@ -1,15 +1,20 @@
 <?php
 use Controllers\ProfileController;
 use Model\Employee;
+use Model\EmployeeProfile;
 
 class Profile extends ProfileController {
     private $tab;
 
-    public function index ($tab = 'basic-info') {
-        $this->tab = $tab;
-
-        $emp = Employee::find($this->user['employee_id'])->info($this->table ());
-        $this->view->display ('profile', ["employee" => Employee::get(), "emp" => $emp, "tab" => $tab]);
+    public function index ($tab = 'basic-info', $view = 'view') {
+        $this->employee = new EmployeeProfile ($this->user['employee_id']);
+        try {
+            $this->employee->{str_replace ("-", "_", $tab)}();
+        } catch (\Throwable $th) {
+            $tab = 'basic-info';
+            $this->employee->basic_info ();
+        }
+        $this->view->display ('profile', ["employee" => $this->employee, "tab" => $tab, "view" => $view]);
     }
 
     private function table () {
@@ -17,9 +22,6 @@ class Profile extends ProfileController {
     }
 
     public function update ($tab = 'basic-info'){
-        $this->tab = $tab;
-
-        $emp = Employee::find($this->user['employee_id'])->info($this->table ());
-        $this->view->display ('profile', ["employee" => Employee::get(), "emp" => $emp, "tab" => $tab, "view" => "update"]);
+        $this->index($tab, 'update');
     }
 }

@@ -3,11 +3,6 @@
     text-align: center;
 }
 </style>
-{if !$user.type}
-    <div class="card-header">
-        <p class="card-title">Total hours: <b>{$attendance.total}</b>&nbsp;&nbsp;&nbsp;Tardy: <b>{$attendance.ut}</b></p>
-    </div>
-{/if}
 <div class="table-responsive dtr">
     <table class="order-table table table-bordered text-gray-900 dtr-data" id="dataTable" width="100%" cellspacing="0">
         <thead>
@@ -17,7 +12,7 @@
             <th colspan="2">AFTERNOON</th>
             <th colspan="2">OVERTIME</th>
             <th colspan="3">TOTAL</th>
-            {if $user.type}<th></th>{/if}
+            {if $user.is_admin}<th></th>{/if}
             </tr>
             <tr>
             <td>IN</td>
@@ -29,7 +24,7 @@
             <td>Hours</td>
             <td>Tardy</td>
             <td>Remarks</td>
-            {if $user.type}<td></td>{/if}
+            {if $user.is_admin}<td></td>{/if}
             </tr>
         </thead>
         <tbody>
@@ -48,7 +43,7 @@
                 <td>{$attn.total_hours}</td>
                 <td>{$attn.late + $attn.undertime}</td>
                 <td></td>
-                {if $user.type}
+                {if $user.is_admin}
                 <td><a href="javascript:view_raw_data('{$attn.emp_id}', '{$attn.date|date_format:"%Y-%m-%d"}');" class="icon" title="View Raw Data"><i class="fe fe-eye"></i></a><a href="javascript:update_log('{$attn.id}', '{$attn.emp_id}', '{$attn.date|date_format:"%Y-%m-%d"}');" class="icon" title="Edit Log"><i class="fe fe-edit"></i></a></td>
                 {/if}
             </tr>
@@ -57,7 +52,7 @@
                 <tr>
                     <td><b>{$attn.date|date_format:"%d"}</b></td>
                     <td colspan="9" style="text-align: center; letter-spacing: 60px;">{$attn.date|date_format:"%A"|upper}</td>
-                    {if $user.type}
+                    {if $user.is_admin}
                     <td><a href="javascript:view_raw_data('{$attn.emp_id}', '{$attn.date|date_format:"%Y-%m-%d"}');" class="icon" title="View Raw Data"><i class="fe fe-eye"></i></a><a href="javascript:update_log('{$attn.id}', '{$attn.emp_id}', '{$attn.date|date_format:"%Y-%m-%d"}');" class="icon" title="Edit Log"><i class="fe fe-edit"></i></a></td>
                     {/if}    
                 </tr>
@@ -73,7 +68,7 @@
                     <td> 0.00  </td>
                     <td> 0  </td>
                     <td></td>
-                    {if $user.type}
+                    {if $user.is_admin}
                     <td><a href="javascript:view_raw_data('{$attn.emp_id}', '{$attn.date|date_format:"%Y-%m-%d"}');" class="icon" title="View Raw Data"><i class="fe fe-eye"></i></a><a href="javascript:update_log('{$attn.id}', '{$attn.emp_id}', '{$attn.date|date_format:"%Y-%m-%d"}');" class="icon" title="Edit Log"><i class="fe fe-edit"></i></a></td>
                     {/if}
                 </tr>
@@ -90,11 +85,11 @@
         <input type="hidden" name="period" value={$period.period}>
         <input type="hidden" name="month" value={$period.month}>
         <input type="hidden" name="year" value={$period.year}>
-        {if $user.type}
+        {if $user.is_admin}
         <div class="text-right">
             <button type="submit" class="btn btn-primary">Print DTR</button>
         </div>
         {/if}
     </form>
-    <p>* Total rendered hours (in hours) ** Tardy (in minutes)</p>
+    <p>{$attendance.total} Total rendered hours (in hours) {$attendance.ut} Tardy (in minutes)</p>
   </div>
