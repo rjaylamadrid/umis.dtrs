@@ -182,7 +182,7 @@
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="form-group label-floating">
                                 <p>Are you sure that you want to delete this record? {$education.no}</p>
-                                {* <input type="text" class="form-control" name="employeeinfo[other_skill]" required="">
+                                <input type="text" class="form-control" name="employeeinfo[other_skill]" required="">
                             </div>
                         </div>
                     </div>

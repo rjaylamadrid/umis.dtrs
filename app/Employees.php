@@ -36,6 +36,10 @@ class Employees extends EmployeesController {
         }
     }
 
+    public function delete($no, $tab) {
+        print_r($no);
+    }
+
     public function update ($id, $view = 'basic-info') {
         $this->profile ($id,$view,'update');
     }

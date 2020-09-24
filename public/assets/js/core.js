@@ -40,8 +40,11 @@ function show_collapse(id) {
   }
 }
 
-function confirm_delete(no) {
-  alert("R u sure ba?" + no);
+function confirm_delete(row_id) {
+  if(confirm("Confirm delete function?" + row_id)) {
+    console.log("yessed");
+    // f({action: 'delete', row_id:row_id}, "json", "/employees")
+  }
 }
 // EMPLOYEE PROFILE :: END
 
