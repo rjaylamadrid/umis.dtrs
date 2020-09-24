@@ -4,15 +4,21 @@
     </div>
     <div class="table-responsive">
         <table class="table card-table table-striped">
-            {foreach from = $employee->eligibility item = eligibility}
-            <tr class="row-header"><td colspan="2">1</td></tr>
-            <tr><td>Title of ELigibility</td><td>{$eligibility.eligibility_name}<div class="small text-muted">RATING: {$eligibility.eligibility_rating}</div></td></tr>
-            <tr><td>Place & Date of Exam</td><td><div>{$eligibility.eligibility_place_exam}</div><div class="small text-muted">DATE: {$eligibility.eligibility_date_exam}</div></td></tr>
-            <tr>
-                <td>Licence No</td>
-                <td>
-                    <div>{$eligibility.eligibility_license}</div><div class="small text-muted">VALIDITY: {$eligibility.eligibility_validity}</div></td></tr>
-            {/foreach}
+            {if $employee->eligibility}
+                {foreach from = $employee->eligibility item = eligibility}
+                <tr class="row-header"><td colspan="2">1</td></tr>
+                <tr><td>Title of ELigibility</td><td>{$eligibility.eligibility_name}<div class="small text-muted">RATING: {$eligibility.eligibility_rating}</div></td></tr>
+                <tr><td>Place & Date of Exam</td><td><div>{$eligibility.eligibility_place_exam}</div><div class="small text-muted">DATE: {$eligibility.eligibility_date_exam}</div></td></tr>
+                <tr>
+                    <td>Licence No</td>
+                    <td>
+                        <div>{$eligibility.eligibility_license}</div><div class="small text-muted">VALIDITY: {$eligibility.eligibility_validity}</div></td></tr>
+                {/foreach}
+            {else}
+                <tr class="row-header">
+                    <td colspan="2">No Record(s) Found</td>
+                </tr>
+            {/if}
         </table>
     </div>
 {else}

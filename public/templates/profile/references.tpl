@@ -24,7 +24,7 @@
             {/foreach}
         {else}
             <tr class="row-header">
-                <td colspan="2">no Record(s) found.</td>
+                <td colspan="2">No Record(s) Found</td>
             </tr>
         {/if}
         </table>

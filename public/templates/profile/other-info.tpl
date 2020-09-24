@@ -16,7 +16,11 @@
                 {for $i=0 to $other_info.other_skill|@count-1}
                 <tr>
                     <td style="font-weight:normal">
-                        <p>{$other_info.other_skill[$i]}</p>
+                        {if $other_info.other_skill[0]}
+                            <p>{$other_info.other_skill[$i]}</p>
+                        {else}
+                            <p>No Record(s) Found</p>
+                        {/if}
                     </td>
                 </tr>
                 {/for}
@@ -27,7 +31,11 @@
                 {for $i=0 to $other_info.other_recognition|@count-1}
                 <tr>
                     <td style="font-weight:normal">
-                        <p>{$other_info.other_recognition[$i]}</p>
+                        {if $other_info.other_recognition[0]}
+                            <p>{$other_info.other_recognition[$i]}</p>
+                        {else}
+                            <p>No Record(s) Found</p>
+                        {/if}
                     </td>
                 </tr>
                 {/for}
@@ -38,7 +46,11 @@
                 {for $i=0 to $other_info.other_organization|@count-1}
                 <tr>
                     <td style="font-weight:normal">
-                        <p>{$other_info.other_organization[$i]}</p>
+                        {if $other_info.other_organization[0]}
+                            <p>{$other_info.other_organization[$i]}</p>
+                        {else}
+                            <p>No Record(s) Found</p>
+                        {/if}
                     </td>
                 </tr>
                 {/for}
@@ -122,7 +134,6 @@
                 </div>
                 <div class="modal-body">
                     <form action="{$server}{if $user.is_admin}/employees/add_profile_info/{$employee->id}/other-info{else}/save{/if}" method="POST">
-                        <input type="hidden" name="employeeinfo[employee_id]" value="{$employee->id}">
                         <div class="row">
                             <div class="col-lg-12 col-md-12 col-sm-12">
                                 <div class="form-group label-floating">
@@ -149,7 +160,6 @@
                 </div>
                 <div class="modal-body">
                     <form action="{$server}{if $user.is_admin}/employees/add_profile_info/{$employee->id}/other-info{else}/save{/if}" method="POST">
-                        <input type="hidden" name="employeeinfo[employee_id]" value="{$employee->id}">
                         <div class="row">
                             <div class="col-lg-12 col-md-12 col-sm-12">
                                 <div class="form-group label-floating">
@@ -176,7 +186,6 @@
                 </div>
                 <div class="modal-body">
                     <form action="{$server}{if $user.is_admin}/employees/add_profile_info/{$employee->id}/other-info{else}/save{/if}" method="POST">
-                        <input type="hidden" name="employeeinfo[employee_id]" value="{$employee->id}">
                         <div class="row">
                             <div class="col-lg-12 col-md-12 col-sm-12">
                                 <div class="form-group label-floating">

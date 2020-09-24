@@ -4,35 +4,41 @@
     </div>
     <div class="table-responsive">
         <table class="table card-table table-striped">
-        {foreach from=$employee->employment item=employment}
+        {if $employee->employment}
+            {foreach from=$employee->employment item=employment}
+                <tr class="row-header">
+                    <td colspan="2">{$employment@iteration}</td>
+                </tr>
+                <tr>
+                    <td>Position/Title</td>
+                    <td>
+                        <div>{$employment.position}</div>
+                        <div class="small text-muted">{$employment.date_from} - {if $employment.date_to}{$employment.date_to}{else}PRESENT{/if}</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Company</td>
+                    <td>{$employment.company}</td>
+                </tr>
+                <tr>
+                    <td>Salary</td>
+                    <td>{$employment.salary|number_format:2}
+                        <div class="small text-muted">Monthly Salary</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Appointment</td>
+                    <td>
+                        <div>{$employment.appointment}</div>
+                        <div class="small text-muted">Government Service: {if $employment.govt_service == "1"}YES{else}NO{/if}</div>
+                    </td>
+                </tr>
+            {/foreach}
+        {else}
             <tr class="row-header">
-                <td colspan="2">{$employment@iteration}</td>
+                <td colspan="2">No Record(s) Found</td>
             </tr>
-            <tr>
-                <td>Position/Title</td>
-                <td>
-                    <div>{$employment.position}</div>
-                    <div class="small text-muted">{$employment.date_from} - {if $employment.date_to}{$employment.date_to}{else}PRESENT{/if}</div>
-                </td>
-            </tr>
-            <tr>
-                <td>Company</td>
-                <td>{$employment.company}</td>
-            </tr>
-            <tr>
-                <td>Salary</td>
-                <td>{$employment.salary|number_format:2}
-                    <div class="small text-muted">Monthly Salary</div>
-                </td>
-            </tr>
-            <tr>
-                <td>Appointment</td>
-                <td>
-                    <div>{$employment.appointment}</div>
-                    <div class="small text-muted">Government Service: {if $employment.govt_service == "1"}YES{else}NO{/if}</div>
-                </td>
-            </tr>
-        {/foreach}
+        {/if}
         </table>
     </div>
 {else}

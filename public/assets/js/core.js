@@ -39,6 +39,10 @@ function show_collapse(id) {
     $('.'+id).removeClass('fe-chevron-up');
   }
 }
+
+function confirm_delete(no) {
+  alert("R u sure ba?" + no);
+}
 // EMPLOYEE PROFILE :: END
 
 // OTHER FUNCTIONS :: START
