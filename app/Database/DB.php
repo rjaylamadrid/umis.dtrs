@@ -32,7 +32,7 @@ class DB {
     }
 
     private static function execute ($args) {
-        if (!self::$db) self::connect (['localhost', self::$dbname, 'root', '']);
+        if (!self::$db) self::connect (['localhost', self::$dbname, 'root', 'password']);
         $args[1] = isset ($args[1]) ? is_array ($args[1]) ? $args[1] : [$args[1]] : []; // Convert vars to array IF NOT array
         try {
             if (!($query = self::$db->prepare($args[0]))) return;
