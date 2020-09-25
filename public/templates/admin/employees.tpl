@@ -55,7 +55,7 @@
                                                 <a href="{$server}/employees/employment/{$employee.employee_no}" class="dropdown-item"><i class="dropdown-icon fe fe-user"></i> View Employment 
                                                 </a>
                                                 {* <a href="javascript:set_inactive('{$employee.employee_no}', '{if $employee.active_status == '0'}1{else}0{/if}');" class="dropdown-item"><i class="dropdown-icon fe fe-tag"></i> Set as {if $employee.active_status == '0'}Active{else}Inactive{/if} *}
-                                                <a href="" data-toggle="modal" data-target="#employee-status-modal" class="dropdown-item"><i class="dropdown-icon fe fe-tag"></i> Set as {if $employee.active_status == '0'}Active{else}Inactive{/if}
+                                                <a href="javascript::" class="dropdown-item"><i class="dropdown-icon fe fe-tag"></i> Set as {if $employee.active_status == '0'}Active{else}Inactive{/if}
                                                 </a>
                                             </div>
                                         </td>
@@ -80,5 +80,8 @@
             });
         }
     </script>
-    {include file="admin/modal/employee_status.tpl"}
+    <div class="modal fade margin-top-70" id="employee-status-modal" role="dialog" tabindex="-1" style="margin-left:-50px;">
+        <div class="modal-dialog" role="document">
+        </div>
+    </div>
 {/block}

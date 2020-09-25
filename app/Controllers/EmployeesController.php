@@ -15,7 +15,7 @@ class EmployeesController extends Controller {
     }
 
     public function employees () {
-        $this->employees = DB::fetch_all ("SELECT a.employee_id as employee_id, a.no as employee_no, first_name, last_name, gender, birthdate, position_desc as position, active_status FROM tbl_employee a, tbl_employee_status b, tbl_position c WHERE a.no = b.employee_id AND b.campus_id = ? AND b.position_id = c.no GROUP BY a.employee_id", $this->user['campus_id']);
+        $this->employees = DB::fetch_all ("SELECT a.employee_id as employee_id, a.no as employee_no, first_name, last_name, gender, birthdate, position_desc as position, active_status FROM tbl_employee a, tbl_employee_status b, tbl_position c WHERE a.no = b.employee_id AND b.campus_id = ? AND b.position_id = c.no AND b.no = (SELECT no FROM tbl_employee_status WHERE employee_id = a.no ORDER BY date_start DESC LIMIT 0,1)", $this->user['campus_id']);
         return $this;
     }
 
@@ -91,18 +91,6 @@ class EmployeesController extends Controller {
         }
     }
 
-    public static function set_schedule ($sched, $id){
-        return DB::insert ("INSERT INTO tbl_employee_sched SET sched_code = ?, employee_id = ?", [$sched, $id]);
-    }
-
-    public static function add_status ($data) {
-        return DB::insert ("INSERT INTO tbl_employee_status SET ".DB::stmt_builder ($data), $data);
-    }
-
-    public static function update_status ($data) {
-        return DB::update ("UPDATE tbl_employee_status SET ".DB::stmt_builder ($data)." WHERE employee_id = ?", $data);
-    }
-
     public static function add_profile($id,$employeeinfo,$tab) {
         $tab = 'tbl_employee_'.str_replace ("-","_",$tab);
         if($tab == 'tbl_employee_other_info') {
@@ -156,9 +144,35 @@ class EmployeesController extends Controller {
     // public static function get_education($id) {
 
     // }
-    
+
+    //EMPLOYMENT MODULE
+    public function update_schedule () {
+        $update = $this->set_schedule ($this->data['sched_code'], $this->data['employee_id']);
+        header ("location: /employees/employment-update/{$this->data['employee_id']}/schedule");
+    }
+
+    public function update_employment_info () {
+        $set = DB::update ("UPDATE tbl_employee_status SET date_end = ? , active_status = 0 WHERE employee_id = ? AND active_status = 1", [date('Y-m-d'), $this->data['emp_status']['employee_id']]);
+        if ($set) self::add_status ($this->data['emp_status']);
+        header ("location: /employees/employment/{$this->data['emp_status']['employee_id']}/employment_info/success");
+    }
+
     public function get_schedule () {
         $schedules = Schedule::schedule ($this->data['sched_code']);
         $this->view->display ('custom/schedule', ['schedules' => $schedules]);
     }
+
+    public static function set_schedule ($sched, $id){
+        return DB::insert ("INSERT INTO tbl_employee_sched SET sched_code = ?, employee_id = ?", [$sched, $id]);
+    }
+
+    public static function add_status ($data) {
+        return DB::insert ("INSERT INTO tbl_employee_status SET ".DB::stmt_builder ($data), $data);
+    }
+
+    public static function update_status ($data) {
+        return DB::update ("UPDATE tbl_employee_status SET ".DB::stmt_builder ($data)." WHERE employee_id = ?", $data);
+    }
+
+    //END OF EMPLOYMENT MODULE
 }

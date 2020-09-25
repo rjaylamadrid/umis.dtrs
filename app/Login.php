@@ -32,7 +32,7 @@ class Login extends LoginController {
     
     public function change_type () {
         if($_SESSION['user']['is_admin']) unset($_SESSION['user']['is_admin']);
-        else $_SESSION['user']['is_admin'] = 'admin';
+        else $_SESSION['user']['is_admin'] = '1';
 
         $this->user = $_SESSION['user'];
         $this->index ();

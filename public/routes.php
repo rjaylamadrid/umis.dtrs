@@ -23,7 +23,7 @@ $router->filter('auth', function(){
     }
 });
 $router->filter('is_admin', function(){
-    if ($_SESSION['user']['type'] != "admin") {
+    if (!($_SESSION['user']['is_admin'])) {
         header ('location: /profile');
         return false;
     }
@@ -46,7 +46,7 @@ $router->group(['before' => 'auth'], function ($router) {
             $router->post('/', ['Employees', 'do_action']);
             $router->get('/registration/{success}?', ['Employees', 'registration']);
             $router->get('/employment/{id}/{tab}?', ['Employees', 'employment']);
-            $router->get('/employment-update/{id}/{tab}?', ['Employees', 'employment_update']);
+            $router->get('/employment-update/{id}/{tab}/{result}?', ['Employees', 'employment_update']);
         });
 
         // Attendance

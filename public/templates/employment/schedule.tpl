@@ -6,13 +6,20 @@
     {include file="custom/schedule.tpl"}
 {else}
     <div style="min-height:530px">
-        <form action="" method="POST">
+        {if $message}
+            <div class="alert card-alert {if $message.success}alert-success{else}alert-danger{/if} alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert"></button>
+                <i class="fe {if $message.success}fe-check{else}fe-alert-triangle{/if} mr-2" aria-hidden="true"></i>{$message.message}
+            </div><br/>
+        {/if}
+        <form action="/employees" method="POST">
             <div class="row pl-2">
-                <input type="hidden" id="action" name="action" value="update">
+                <input type="hidden" id="action" name="action" value="update_schedule">
+                <input type="hidden" name="employee_id" value="{$employee->id}">
                 <select class="form-control col-md-6" name="sched_code" onchange ="javascript:get_schedule(this.value)">
                     <option selected disabled>Schedule</option>
                     {foreach from = $presets item = preset}
-                        <option value = "{$preset.sched_code}" {if $employee->info.sched_code == $preset.sched_code}selected{/if}>{$preset.sched_day} ({$preset.sched_time})</option>
+                        <option value = "{$preset.sched_code}" {if $schedules[0].sched_code == $preset.sched_code}selected{/if}>{$preset.sched_day} ({$preset.sched_time})</option>
                     {/foreach}
                 </select>
                 <div class="col-md-6">
@@ -26,7 +33,7 @@
             </div>
             <div class="col-md-12 mt-5">
                 <div class="form-group" style="float: right;">
-                    <a href="javascript:get_schedule('create')" class="btn btn-primary">Save Changes</a>
+                    <button name="submit" value="submit" class="btn btn-primary">Save Changes</button>
                 </div>
             </div>
         </form>

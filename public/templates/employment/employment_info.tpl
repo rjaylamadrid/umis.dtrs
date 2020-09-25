@@ -1,11 +1,11 @@
 {if $view !="update"}
     <div class="form-group" style="float: right;">
-        <a href="{$server}/employees/employment-update/{$employee->id}" class="btn btn-secondary btn-sm ml-2"><i class="fe fe-edit-2"></i> Edit</a>
+        <a href="{$server}/employees/employment-update/{$employee->id}/employment_info" class="btn btn-secondary btn-sm ml-2"><i class="fe fe-edit-2"></i> Edit</a>
     </div>
     <div class="table-responsive">
         <table class="table card-table table-striped">
             <tr class="row-header"><td colspan="2">Employment Information</td></tr>
-            <tr><td>Status</td><td>Status</td></tr>
+            <tr><td>Status</td><td>{$employee->position.type}</td></tr>
             <tr><td>Position</td><td><div>{$employee->position.position_desc}<div class="small text-muted">{$employee->info.date_start}</div></div></td></tr>
             <tr><td>Salary</td><td><div>Php {$employee->position.salary|number_format:2:".":","}<div class="small text-muted">
             {if $employee->position.salary_grade}Salary Grade {$employee->position.salary_grade} - Step {$employee->position.increment}{else}{$employee->position.salary_type}{/if}</div></div></td></tr>
@@ -17,7 +17,7 @@
     </div>
     {include file="admin/modal/promote_employee.tpl"}
 {else}
-    <form action="" method="POST" enctype="multipart/form-data" accept-charset="UTF-8">
+    <form action="" method="POST" accept-charset="UTF-8">
         <div class="form-group row btn-square">
             <div class="row p-5">
                 <div class="col-md-6">
@@ -26,7 +26,7 @@
                         <select class="form-control" name="emp_status1[etype_id]" required onchange="javascript:init_pos (this.value)">
                             <option selected disabled>Employment Status</option>
                             {foreach from=$emp_type item=type}
-                            <option value="{$type.etype_id}">{$type.etype_desc}</option>
+                            <option value="{$type.etype_id}" {if $type.etype_id == $employee->info.etype_id}selected{/if}>{$type.etype_desc}</option>
                             {/foreach}
                         </select>
                     </div>

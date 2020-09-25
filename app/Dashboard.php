@@ -9,12 +9,12 @@ class Dashboard extends DashboardController {
     }
 
     public function index () {
-        if ($this->user['type']) {
+        if ($this->user['is_admin']) {
             $employee = EmployeeStats::campus ($this->user['campus_id'])->get_stats ();
 
             $this->view->display ('admin/dashboard', ['bdaycelebrant' => $this->bday_celebrant(), "employee" => $employee]);
         } else {
-            $this->view->display ('home');
+            header ('location: /profile');
         }
     }
 }

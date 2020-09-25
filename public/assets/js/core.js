@@ -108,7 +108,6 @@ function get_salary () {
   var campus = $('#campus').val();
   f({action: 'get_salary', position_id:position, date_start:date, campus_id:campus}, "text", "/employees").then( function(html){
     $('#salary').val("Php " + html.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,'));
-    console.log("Php " + html.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,'));
   });
 }
 // OTHER FUNCTIONS :: END

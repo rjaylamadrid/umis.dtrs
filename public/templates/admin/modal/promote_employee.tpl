@@ -6,13 +6,15 @@
                     <h3 class="card-title">Promotion</h3>
                 </div>
                 <div class="card-body">
-                    <form action="" method="POST">
-                        <input type="hidden" id="campus" value="{$employee->info.campus_id}">
+                    <form action="/employees" method="POST">
+                        <input type="hidden" name="action" value="update_employment_info">
+                        <input type="hidden" name="emp_status[campus_id]" id="campus" value="{$employee->info.campus_id}">
+                        <input type="hidden" name="emp_status[employee_id]" value="{$employee->id}">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label">Employment Status</label>
-                                    <select class="form-control" name="emp_status1[etype_id]" required onchange="javascript:init_pos (this.value)">
+                                    <select class="form-control" name="emp_status[etype_id]" required onchange="javascript:init_pos (this.value)">
                                         <option selected disabled>Employment Status</option>
                                         {foreach from=$emp_type item=type}
                                         <option value="{$type.etype_id}">{$type.etype_desc}</option>
@@ -26,7 +28,7 @@
                                     <select class="form-control" name="emp_status[position_id]" id="positions" onchange="get_salary()">
                                         <option selected disabled>Position</option>
                                         {foreach from=$positions item=position}
-                                        <option value="{$position.no}" {if $position.no == $employee->info.position_id}selected{/if}>{$position.position_desc}</option>
+                                        <option value="{$position.no}"</option>
                                         {/foreach}
                                     </select>
                                 </div>
@@ -34,22 +36,22 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label">Effectivity Date</label>
-                                    <input type="date" class="form-control" name="emp_status[date_start]" value="{$employee->info.date_start}" id="date-start" onchange="get_salary()">
+                                    <input type="date" class="form-control" name="emp_status[date_start]" id="date-start" onchange="get_salary()">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label">Salary</label>
-                                    <input type="text" class="form-control" name="" value="Php {$employee->position.salary|number_format:2:".":","}" disabled id="salary">
+                                    <input type="text" class="form-control" name="" value="Php 0.00" disabled id="salary">
                                 </div>
                             </div>
                              <div class="col-md-12">
                                 <div class="form-group">
                                     <label class="form-label">Department</label>
-                                    <select class="form-control" name="emp_status1[etype_id]" required onchange="javascript:init_pos (this.value)">
+                                    <select class="form-control" name="emp_status[department_id]" required>
                                         <option selected disabled>Department</option>
                                         {foreach from=$departments item=dept}
-                                        <option value="{$dept.no}" {if $dept.no == $employee->info.department_id}selected{/if}>{$dept.department_desc}</option>
+                                        <option value="{$dept.no}">{$dept.department_desc}</option>
                                         {/foreach}
                                     </select>
                                 </div>
@@ -57,10 +59,10 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label class="form-label">Designation</label>
-                                    <select class="form-control" name="emp_status[position_id]" id="positions">
+                                    <select class="form-control" name="emp_status[privilege]">
                                         <option selected disabled>Designation</option>
                                         {foreach from=$designations item=designation}
-                                        <option value="{$designation.priv_level}" {if $designation.priv_level == $employee->info.privilege}selected{/if}>{$designation.priv_desc}</option>
+                                        <option value="{$designation.priv_level}">{$designation.priv_desc}</option>
                                         {/foreach}
                                     </select>
                                 </div>
