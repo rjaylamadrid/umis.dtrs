@@ -78,7 +78,7 @@
                                 </div>
                             </div>
                             <div class="col-md-12 mt-2" style="text-align: right;">
-                                <a class="btn btn-danger" style="color:#fff"  onclick="javascript:confirm_delete({$education.no})">Delete Record</a>
+                                <a class="btn btn-danger" style="color:#fff"  onclick="javascript:confirm_delete({$education.no},{$employee->id},'{$tab}')">Delete Record</a>
                             </div>
                             <br />
                         </div>

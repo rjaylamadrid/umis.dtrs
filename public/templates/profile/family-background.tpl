@@ -157,7 +157,6 @@
                             <th colspan="4">Name of Children</th>
                             <th>Date of Birth</th>
                             <th style="width: 10%; vertical-align: middle; text-align: center;"><a href="#" class="btn btn-outline-success btn-sm"data-toggle="modal" data-target="#children-info"><i class="fe fe-plus"></i></a></th>
-                            <!-- <th style="width: 10%; vertical-align: middle; text-align: center;"><a href="javascript:add_children_row()" class="btn btn-outline-success btn-sm"><i class="fe fe-plus"></i></a></th> -->
                         </tr>
 
                         <tbody>
@@ -170,7 +169,7 @@
                                         <td><input type="text" class="form-control" name="employeeinfo[0][{$child@iteration}][last_name]" value="{$child.last_name}"></td>
                                         <td><input type="text" class="form-control" name="employeeinfo[0][{$child@iteration}][ext_name]" value="{$child.ext_name}"></td>
                                         <td><input type="text" class="form-control" name="employeeinfo[0][{$child@iteration}][birthdate]" value="{$child.birthdate}"></td>
-                                        <td style="vertical-align: middle; text-align: center;"><a class="btn btn-outline-danger btn-sm"><i class="fe fe-trash"></i></a></td>
+                                        <td style="vertical-align: middle; text-align: center;"><a class="btn btn-outline-danger btn-sm" href="javascript:confirm_delete({$child.no},{$child.employee_id},'{$tab}')"><i class="fe fe-trash"></i></a></td>
                                 </tr>
                                 {/if}
                             {/foreach}

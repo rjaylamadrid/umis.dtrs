@@ -76,14 +76,15 @@
                     <table class="table table-bordered" id="skill">
                         <thead><tr><th colspan="2">Skills</th></tr></thead>
                             {for $i=0 to $other_info.other_skill|@count-1}
-                            <tr id="skill">
-                                <td style="font-weight:normal"><input class="form-control" type="text" name="employeeinfo[skill][{$i}]" value="{$other_info.other_skill[$i]}"></td>
-                                <td style="vertical-align: middle; text-align: center;"><a class="btn btn-outline-danger btn-sm" href="#"><i class="fe fe-trash"></i></a></td>
-                            </tr>
+                                {if ($other_info.other_skill[$i] != '')}
+                                    <tr id="skill">
+                                        <td style="font-weight:normal"><input class="form-control" type="text" name="employeeinfo[skill][{$i}]" value="{$other_info.other_skill[$i]}"></td>
+                                        <td style="vertical-align: middle; text-align: center;"><a class="btn btn-outline-danger btn-sm" href="javascript:confirm_delete({$other_info.no},{$other_info.employee_id},'{$tab}', '{"other_skill"}', '{$other_info.other_skill[$i]}')"><i class="fe fe-trash"></i></a></td>
+                                    </tr>
+                                {/if}
                             {/for}
                             <tr>
-                                <td></td>
-                                <td style="vertical-align: middle; text-align: center;"><a class="btn btn-outline-success btn-sm" href="#" data-toggle="modal" data-target="#other-skill"><i class="fe fe-plus"></i></a></td>
+                                <td style="vertical-align: middle; text-align: center;"><a class="btn btn-outline-success btn-sm" href="#" data-toggle="modal" data-target="#other-skill">Add new skill<i class="fe fe-plus"></i></a></td>
                             </tr>
                     </table>
                 </div>
@@ -91,14 +92,15 @@
                     <table class="table table-bordered" id="recog">
                         <thead><tr><th colspan="2">Recognition</th></tr></thead>
                         {for $i=0 to $other_info.other_recognition|@count-1}
-                        <tr id="recog">
-                            <td style="font-weight:normal"><input class="form-control" type="text" name="employeeinfo[recog][{$i}]" value="{$other_info.other_recognition[$i]}"></td>
-                            <td style="vertical-align: middle; text-align: center;"><a class="btn btn-outline-danger btn-sm" href="#"><i class="fe fe-trash"></i></a></td>
-                        </tr>
+                            {if ($other_info.other_recognition[$i] != '')}
+                            <tr id="recog">
+                                <td style="font-weight:normal"><input class="form-control" type="text" name="employeeinfo[recog][{$i}]" value="{$other_info.other_recognition[$i]}"></td>
+                                <td style="vertical-align: middle; text-align: center;"><a class="btn btn-outline-danger btn-sm" href="#"><i class="fe fe-trash"></i></a></td>
+                            </tr>
+                            {/if}
                         {/for}
                         <tr>
-                            <td></td>
-                            <td style="vertical-align: middle; text-align: center;"><a class="btn btn-outline-success btn-sm" href="#" data-toggle="modal" data-target="#other-recog"><i class="fe fe-plus"></i></a></td>
+                            <td style="vertical-align: middle; text-align: center;"><a class="btn btn-outline-success btn-sm" href="#" data-toggle="modal" data-target="#other-recog">Add new recognition<i class="fe fe-plus"></i></a></td>
                         </tr>
                     </table>
                 </div>
@@ -106,14 +108,15 @@
                     <table class="table table-bordered" id="org">
                         <thead><tr><th colspan="2">Association/Organization</th></tr></thead>
                         {for $i=0 to $other_info.other_organization|@count-1}
-                        <tr id="org">
-                            <td style="font-weight:normal"><input class="form-control" type="text" name="employeeinfo[org][{$i}]" value="{$other_info.other_organization[$i]}"></td>
-                            <td style="vertical-align: middle; text-align: center;"><a class="btn btn-outline-danger btn-sm" href="#"><i class="fe fe-trash"></i></a></td>
-                        </tr>
+                            {if ($other_info.other_organization[$i] != '')}
+                                <tr id="org">
+                                    <td style="font-weight:normal"><input class="form-control" type="text" name="employeeinfo[org][{$i}]" value="{$other_info.other_organization[$i]}"></td>
+                                    <td style="vertical-align: middle; text-align: center;"><a class="btn btn-outline-danger btn-sm" href="#"><i class="fe fe-trash"></i></a></td>
+                                </tr>
+                            {/if}
                         {/for}
                         <tr>
-                            <td></td>
-                            <td style="vertical-align: middle; text-align: center;"><a class="btn btn-outline-success btn-sm" href="#" data-toggle="modal" data-target="#other-org"><i class="fe fe-plus"></i></a></td>
+                            <td style="vertical-align: middle; text-align: center;"><a class="btn btn-outline-success btn-sm" href="#" data-toggle="modal" data-target="#other-org">Add new association/organization<i class="fe fe-plus"></i></a></td>
                         </tr>
                     </table>
                 </div>

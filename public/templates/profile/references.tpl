@@ -55,10 +55,7 @@
                                 <td><div>{$references.reference_address}</div></td>
                                 <td><div>{$references.reference_contact}</div></td>
                                     <td style="vertical-align: middle; text-align: center;">
-                                        <form action="" method="POST"><input type="hidden" name="action" value="delete">
-                                            <input type="hidden" name="reference_no" value="1">
-                                            <button type="submit" class="btn btn-outline-danger btn-sm"><i class="fe fe-trash"></i></button>
-                                        </form>
+                                    <a href="javascript:confirm_delete({$references.no},{$references.employee_id},'{$tab}')" class="btn btn-outline-danger btn-sm"><i class="fe fe-trash"></i></a>
                                     </td>
                             </tr>
                         {/foreach}

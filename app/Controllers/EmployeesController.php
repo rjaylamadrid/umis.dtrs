@@ -38,6 +38,35 @@ class EmployeesController extends Controller {
         }
         return $employees;
     }
+
+    public function delete_row () {
+        $row = DB::fetch_row ("SELECT * FROM tbl_employee_". str_replace ("-","_",$this->data['tab']) ." WHERE no = ?", $this->data['no']);
+        if($this->data['tab'] == 'other-info') {
+            $data_array = explode(";",$row[$this->data['other_info_col']]);
+            $key = array_search($this->data['other_info_data'], $data_array);
+            array_splice($data_array, $key, 1);
+            DB::update ("UPDATE tbl_employee_other_info SET ". $this->data['other_info_col'] ."= ? WHERE no = ". $this->data['no'], [implode(";",$data_array)]);
+
+            DB::insert ("INSERT INTO tbl_employee_update_delete SET updated_action = ?, updated_table = ?, updated_old_data = ?, updated_new_data = ?, updated_employee_id = ?, updated_admin_id = ?, updated_date = ?", [1,$this->data['tab'],$this->data['other_info_col'].";".$this->data['other_info_data'],'',$row['employee_id'],1,date("Y-m-d")]);
+        }
+        else {
+            if ($row) {
+                $i=1;
+                foreach ($row as $value) {
+                    if ($i == sizeof($row)) {
+                        $data .= $value;
+                    }
+                    else {
+                        $data .= $value . ";";
+                    }
+                    $i++;
+                }
+                $values = array(updated_action=>1,updated_table=>$this->data['tab'],updated_old_data=>$data,updated_new_data=>'',updated_employee_id=>$row['employee_id'],updated_admin_id=>1,updated_date=>date("Y-m-d"));
+                DB::insert ("INSERT INTO tbl_employee_update_delete SET ". DB::stmt_builder ($values), $values);
+                DB::delete ("DELETE FROM tbl_employee_". str_replace ("-","_",$this->data['tab']) ." WHERE no = ?", $this->data['no']);
+            }
+        }
+    }
     
     public function get_position () {
         $positions = Position::positions()->type ($this->data['type']);

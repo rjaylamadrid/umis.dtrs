@@ -88,11 +88,7 @@
                             <td>{$training_seminar.training_type}</td>
                             <td>{$training_seminar.training_sponsor}</td>
                             <td style="vertical-align: middle; text-align: center;">
-                                <form action="" method="POST">
-                                    <input type="hidden" name="action" value="delete">
-                                    <input type="hidden" name="training_no" value="1">
-                                    <button type="submit" class="btn btn-outline-danger btn-sm"><i class="fe fe-trash"></i></button>
-                                </form>
+                            <a href="javascript:confirm_delete({$training_seminar.no},{$training_seminar.employee_id},'{$tab}')" type="submit" class="btn btn-outline-danger btn-sm"><i class="fe fe-trash"></i></a>
                             </td>
                         </tr>
                     {/foreach}

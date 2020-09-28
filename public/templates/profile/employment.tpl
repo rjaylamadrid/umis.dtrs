@@ -80,13 +80,9 @@
                                     <div class="small text-muted">Gov't Service: {if $employment.govt_service == "1"}YES{else}NO{/if}</div>
                                 </td>
                                 <td style="vertical-align: middle; text-align: center;">
-                                    <form action="" method="POST">
-                                        <input type="hidden" name="action" value="delete">
-                                        <input type="hidden" name="employment_no" value="1">
-                                        <button type="submit" class="btn btn-outline-danger btn-sm">
-                                            <i class="fe fe-trash"></i>
-                                        </button>
-                                    </form>
+                                <a href="javascript:confirm_delete({$employment.no},{$employment.employee_id},'{$tab}')" class="btn btn-outline-danger btn-sm">
+                                    <i class="fe fe-trash"></i>
+                                </a>
                                 </td>
                             </tr>
                         {/foreach}

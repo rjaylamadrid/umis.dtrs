@@ -40,10 +40,19 @@ function show_collapse(id) {
   }
 }
 
-function confirm_delete(row_id) {
-  if(confirm("Confirm delete function?" + row_id)) {
-    console.log("yessed");
-    // f({action: 'delete', row_id:row_id}, "json", "/employees")
+function confirm_delete(no, id, tab, other_info_col='', other_info_data='') {
+  if(confirm("Confirm delete function?" + no + tab + id + other_info_col + other_info_data)) {
+    if(tab=='other-info') {
+      f({action: 'delete_row', no:no, tab:tab, other_info_col:other_info_col, other_info_data:other_info_data}, "text", "/employees").then( function (data) {
+        location.href = "/employees/profile/" + id + "/" + tab;
+      });
+    }
+    else {
+      console.log(id);
+      f({action: 'delete_row', no:no, tab:tab}, "text", "/employees").then( function (data) {
+        location.href = "/employees/profile/" + id + "/" + tab;
+      });
+    }
   }
 }
 // EMPLOYEE PROFILE :: END

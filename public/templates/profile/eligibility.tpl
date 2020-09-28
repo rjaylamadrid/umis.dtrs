@@ -66,10 +66,7 @@
                                 <div class="small text-muted">Valid until: {$eligibility.eligibility_validity}</div>
                             </td>
                             <td style="vertical-align: middle; text-align: center;">
-                                <form action="" method="POST"><input type="hidden" name="action" value="delete">
-                                    <input type="hidden" name="eligibility_no" value="SAMPLE">
-                                    <button type="submit" class="btn btn-outline-danger btn-sm"><i class="fe fe-trash"></i></button>
-                                </form>
+                                    <a type="submit" class="btn btn-outline-danger btn-sm" href="javascript:confirm_delete({$eligibility.no},{$employee->id},'{$tab}')"><i class="fe fe-trash"></i></a>
                             </td>
                         </tr>
                         {/foreach}

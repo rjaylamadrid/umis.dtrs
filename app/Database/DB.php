@@ -50,9 +50,10 @@ class DB {
     }
 
     public static function update () {
-        // print "<pre>";
-        // print_r(func_get_args());
-        // print "</pre>";
+        return self::execute (func_get_args ());
+    }
+
+    public static function delete () {
         return self::execute (func_get_args ());
     }
 
