@@ -1,16 +1,111 @@
 {extends file="layout.tpl"}
 {block name=content}
+{if $view}
+<div class="my-3 my-md-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Leave Request Details</div>
+                    </div>
+                    <div class="card-body">
+                        <table class="table" style="margin-top: -1.5rem;">
+                            <thead>
+                                <tr>
+                                    <th style="width: 30%;"></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tr>
+                                <td colspan="2"><h4 class="mb-0">EMPLOYEE DETAILS</h4></td>
+                            </tr>
+                            <tr>
+                                <td>Employee Name</td>
+                                <td><b>{$request.EmpName}</b></td>
+                            </tr>
+                            <tr>
+                                <td>Department/Office</td>
+                                <td>{$request.lv_office}</td>
+                            </tr>
+                            <tr>
+                                <td>Position/Designation</td>
+                                <td>{$request.lv_office}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"><h4 class="mb-0">LEAVE REQUEST DETAILS</h4></td>
+                            </tr>
+                            <tr>
+                                <td>Type of leave/reason</td>
+                                <td>{$request.lv_type}</td>
+                            </tr>
+                            <tr>
+                                <td>Where Leave will be Spent</td>
+                                <td>{$request.lv_where}</td>
+                            </tr>
+                            <tr>
+                                <td>No. days</td>
+                                <td>{$request.lv_no_days}</td>
+                            </tr>
+                            <tr>
+                                <td>Inclusive Dates</td>
+                                <td>{$request.lv_date_fr} - {$request.lv_date_to}</td>
+                            </tr>
+                            <tr>
+                                <td>Commutation</td>
+                                <td>{$request.lv_commutation}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-lg-4">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Action</div>
+                    </div>
+                    <form class="card-body" action="" method="POST" onsubmit="return confirm('Please click OK to confirm.')">
+                        <div class="form-group">
+                            <div class="form-label">Response</div>
+                            <div class="custom-controls-stacked">
+                                <label class="custom-control custom-radio">
+                                    <input type="radio" class="custom-control-input" name="example-radios" value="option1" checked="">
+                                    <div class="custom-control-label">No action</div>
+                                </label>
+                                <label class="custom-control custom-radio">
+                                    <input type="radio" class="custom-control-input" name="example-radios" value="option1">
+                                    <div class="custom-control-label">Recommend</div>
+                                </label>
+                                <label class="custom-control custom-radio">
+                                    <input type="radio" class="custom-control-input" name="example-radios" value="option1">
+                                    <div class="custom-control-label">Disapproved</div>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Remarks</label>
+                            <textarea class="form-control" name="example-textarea-input" rows="6" placeholder="Enter remarks here..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                    </form>
+                </div>
+                <a href="{$server}/request" class="btn btn-secondary btn-block">Back to Leave Request list</a>
+            </div>
+        </div>
+    </div>
+</div>
+{else}
 <div class="my-3 my-md-5">
     <div class="container">
     <div class="card">
         <div class="card-body">
             <form class="form-group form-inline" style="vertical-align: middle;" method="POST" action="" id="formFilter">
                 <label style="display: inline-block;">Request Status Filter </label>
-                <select name="request_stat_filter" class="form-control custom-select" onchange="this.form.submit()">
-                    <option value="?a=forms&status=0&response=0" {if $status == 0 && $response == 0}selected{/if}>For Checking</option>
-                    <option value="?a=forms&status=0&response=1" {if $status == 0 && $response == 1}selected{/if}>For Recommendation</option>
-                    <option value="?a=forms&status=1&response=1" {if $status == 1 && $response == 1}selected{/if}>Approved</option>
-                    <option value="?a=forms&status=2&response=1" {if $status == 2 && $response == 1}selected{/if}>Disapproved</option>
+                <select name="request_stat_filter" class="form-control custom-select" onchange="load_request(this.value)">
+                    <option value="" {if $status == 0 && $response == 0}selected{/if}>For Checking</option>
+                    <option value="for-recommendation" {if $status == 0 && $response == 1}selected{/if}>For Recommendation</option>
+                    <option value="approved" {if $status == 1 && $response == 1}selected{/if}>Approved</option>
+                    <option value="disapproved" {if $status == 2 && $response == 1}selected{/if}>Disapproved</option>
                 </select>
                 <div style="float: right;"> <button name="print_all_request" class="btn btn-primary"> <i class="fe fe-printer"></i> Print All</button></div>
             </form>
@@ -41,35 +136,18 @@
                         <td>
                             <input type="hidden" name="emp_id" value="{$request.employee_id}">
                             <div>{$request.EmpName}</div>
-                            <div class="small text-muted">
-                                TODO: Position here
-                            </div>
                         </td>
                         <td>
                             <div>{$request.lv_type}</div>
-                            <div class="small text-muted">{if $request.lv_where == "Within the Philippines"}{$request.lv_where}{else}{$request.lv_where} - {$request.lv_where_specific}{/if}</div>
                         </td>
                         <td>
                             <div>{$request.lv_date_fr} - {$request.lv_date_to}</div>
-                            <div class="small text-muted">{$request.lv_no_days} day/s - Commutation ({$request.lv_commutation})</div>
                         </td>
                         <td class="text-center">
                             <div>{$request.lv_dateof_filing}</div>
                         </td>
                         <td class="text-center">
-                            <button data-toggle="modal" data-fetch="{$request.leave_id}" data-target="#openModal" class="btn btn-secondary btn-pill openModal"
-                            {if $request.lv_status == 1 && $request.response == 2}
-                                disabled> <i class="fe fe-check"></i> Approved
-                            {elseif $request.lv_status == 0 && $request.response == 2}
-                                disabled> <i class="fe fe-arrow"></i> For Approval
-                            {elseif $request.lv_status == 2}
-                                disabled><i class="fe fe-x"></i> Disapproved
-                            {elseif $request.response == 3}
-                                disabled><i class="fe fe-trash"></i> Cancelled
-                            {else}
-                                ><i class="fe fe-info"></i> View Details
-                            {/if}
-                            </button>
+                            <a href="/request/details/{$request.leave_id}" class="btn btn-secondary btn-pill openModal"><i class="fe fe-info"></i> View Details</a>
                         </td>
                         <td>
                             {if $request.lv_status != 0}
@@ -102,4 +180,10 @@
         </div>
     </div>
 </div>
+<script>
+    function load_request (status) {
+        document.location = "{$server}/request/"+status;
+    }
+</script>
+{/if}
 {/block}

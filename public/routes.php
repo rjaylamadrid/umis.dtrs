@@ -65,6 +65,8 @@ $router->group(['before' => 'auth'], function ($router) {
         // Request
         $router->group(["prefix" => "request"], function ($router) {
             $router->get("/", ["Request", "index"]);
+            $router->any('/details/{id:i}', ["Request", "request_details"]);
+            $router->get("/{status}", ["Request", "get_requests"]);
         });
         // ADMIN END
     });

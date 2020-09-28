@@ -13,7 +13,7 @@ class Employees extends EmployeesController {
     public function index () {
         $status  = $this->data['inactive'] ? 0 : 1;
         $this->stats = EmployeeStats::campus ($this->user['campus_id'])->get_stats ();
-        $this->view->display ('admin/employees', ["stats" => $this->stats, "employees" => $this->employees() ->status($status), "status" => $status]);
+        $this->view->display ('admin/employees', ["stats" => $this->stats, "employees" => $this->employees()->status($status), "status" => $status]);
     }
 
     public function profile ($id = null, $tab = 'basic-info', $view='view') {
