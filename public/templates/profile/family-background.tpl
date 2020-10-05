@@ -40,6 +40,28 @@
     </div>
 {else}
     <form action="{$server}{if $user.is_admin}/employees/save/{$employee->id}/family-background{else}/save{/if}" method="POST">
+        <input type="hidden" name="employeeinfo[1][no]" value="{$spouse.no}">
+        <input type="hidden" name="employeeinfo[1][employee_id]" value="{$employee->id}">
+        <input type="hidden" name="employeeinfo[1][relationship]" value="{$spouse.relationship}">
+        <input type="hidden" name="employeeinfo[1][birthdate]" value="{$spouse.birthdate}">
+
+        <input type="hidden" name="employeeinfo[3][no]" value="{$father.no}">
+        <input type="hidden" name="employeeinfo[3][employee_id]" value="{$employee->id}">
+        <input type="hidden" name="employeeinfo[3][relationship]" value="{$father.relationship}">
+        <input type="hidden" name="employeeinfo[3][birthdate]" value="{$father.birthdate}">
+        <input type="hidden" name="employeeinfo[3][occupation]" value="{$father.occupation}">
+        <input type="hidden" name="employeeinfo[3][employer]" value="{$father.employer}">
+        <input type="hidden" name="employeeinfo[3][business_address]" value="{$father.business_address}">
+        <input type="hidden" name="employeeinfo[3][telephone_no]" value="{$father.telephone_no}">
+
+        <input type="hidden" name="employeeinfo[2][no]" value="{$mother.no}">
+        <input type="hidden" name="employeeinfo[2][employee_id]" value="{$employee->id}">
+        <input type="hidden" name="employeeinfo[2][relationship]" value="{$mother.relationship}">
+        <input type="hidden" name="employeeinfo[2][birthdate]" value="{$mother.birthdate}">
+        <input type="hidden" name="employeeinfo[2][occupation]" value="{$mother.occupation}">
+        <input type="hidden" name="employeeinfo[2][employer]" value="{$mother.employer}">
+        <input type="hidden" name="employeeinfo[2][business_address]" value="{$mother.business_address}">
+        <input type="hidden" name="employeeinfo[2][telephone_no]" value="{$mother.telephone_no}">
         <div class="form-group row btn-square">
             <label class="h4">Spouse's Information</label>
             <div class="row">
@@ -145,7 +167,7 @@
                 <div class="col-sm-12 col-md-6 col-lg-3">
                     <div class="form-group">
                         <label class="form-label">Ext Name</label>
-                        <input type="text" class="form-control" name="employeeinfo[2][ext_name]" value="{$father.ext_name}">
+                        <input type="text" class="form-control" name="employeeinfo[2][ext_name]" value="{$mother.ext_name}">
                     </div>
                 </div>
             </div>
@@ -163,7 +185,13 @@
                             {foreach from = $employee->family_background item = child }
                                 {if $child.relationship == 0}
                                 <tr id="row">
-                                        <input type="hidden" class="form-control" name="employeeinfo[0][{$child@iteration}][no]" value="{$child.no}">
+                                        <input type="hidden" name="employeeinfo[0][{$child@iteration}][no]" value="{$child.no}">
+                                        <input type="hidden" name="employeeinfo[0][{$child@iteration}][employee_id]" value="{$employee->id}">
+                                        <input type="hidden" name="employeeinfo[0][{$child@iteration}][relationship]" value="{$child.relationship}">
+                                        <input type="hidden" name="employeeinfo[0][{$child@iteration}][occupation]" value="{$child.occupation}">
+                                        <input type="hidden" name="employeeinfo[0][{$child@iteration}][employer]" value="{$child.employer}">
+                                        <input type="hidden" name="employeeinfo[0][{$child@iteration}][business_address]" value="{$child.business_address}">
+                                        <input type="hidden" name="employeeinfo[0][{$child@iteration}][telephone_no]" value="{$child.telephone_no}">
                                         <td><input type="text" class="form-control" name="employeeinfo[0][{$child@iteration}][first_name]" value="{$child.first_name}"></td>
                                         <td><input type="text" class="form-control" name="employeeinfo[0][{$child@iteration}][middle_name]" value="{$child.middle_name}"></td>
                                         <td><input type="text" class="form-control" name="employeeinfo[0][{$child@iteration}][last_name]" value="{$child.last_name}"></td>

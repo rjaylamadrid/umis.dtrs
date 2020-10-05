@@ -23,6 +23,10 @@
         <div class="card mb-1">
             <div class="card-content">
                 {foreach from = $employee->education item = education}
+                <input type="hidden" name="employeeinfo[{$education.level}][no]" value="{$education.no}">
+                <input type="hidden" name="employeeinfo[{$education.level}][employee_id]" value="{$employee->id}">
+                <input type="hidden" name="employeeinfo[{$education.level}][level]" value="{$education.level}">
+                <input type="hidden" name="employeeinfo[{$education.level}][school_address]" value="{$education.school_address}">
                     <div class="card-header pt-0 pb-0">
                         <h4 class="card-title">{$education.level}</h4>
                         <a href="#" onclick="javascript:show_collapse({$education@iteration})" class="ml-auto" style="text-decoration: none;"><span class="{$education@iteration} fe fe-chevron-down"></span></a>
@@ -169,30 +173,4 @@
         </div>
     </div>
 </div>
-
-{* <div class="modal fade margin-top-70" id="confirm-delete" role="dialog" tabindex="-1" style="margin-left:-50px;">
-    <div class="modal-dialog" id="eligibility-modal" role="document" style="max-width: 600px;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Confirmation</h4>
-            </div>
-            <div class="modal-body">
-                <form action="{$server}{if $user.is_admin}/employees/add_profile_info/{$employee->id}/other-info{else}/save{/if}" method="POST">
-                    <div class="row align-center">
-                        <div class="col-lg-12 col-md-12 col-sm-12">
-                            <div class="form-group label-floating">
-                                <p>Are you sure that you want to delete this record? {$education.no}</p>
-                                <input type="text" class="form-control" name="employeeinfo[other_skill]" required="">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Yes</button>
-                        <button class="btn btn-secondary" data-dismiss="modal">No</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div> *}
 {/if}
