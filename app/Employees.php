@@ -50,6 +50,10 @@ class Employees extends EmployeesController {
         header ("location: /employees/profile/$id/$tab");
     }
 
+    // public function submit () {
+    //     header ("location: /profile")
+    // }
+
     public function add_profile_info ($id, $tab = 'basic-info') {
         $empAdd = EmployeesController::add_profile($id,$_POST['employeeinfo'],$tab);
         header ("location: /employees/update/$id/$tab");

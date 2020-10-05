@@ -31,6 +31,9 @@
     </div>
 {else}
     <form action="{$server}{if $user.is_admin}/employees/save/{$employee->id}{else}/save{/if}" method="POST" enctype="multipart/form-data" accept-charset="UTF-8">
+        <input type="hidden" name="employeeinfo[no]" value="{$employee->basic_info.no}">
+        <input type="hidden" name="employeeinfo[employee_id]" value="{$employee->basic_info.employee_id}">
+        <input type="hidden" name="employeeinfo[employee_picture]" value="{$employee->basic_info.employee_picture}">
         <div class="form-group row btn-square">
             <div class="row">
                 <div class="col-sm-12 col-lg-4 col-md-4 mb-4 text-center btn-square">
@@ -76,8 +79,8 @@
                                 <label class="form-label" for="gender">Gender</label>
                                 <select  class="selectpicker form-control" data-style="btn btn-success btn-round" name="employeeinfo[gender]">
                                     <option value="" disabled></option>
-                                    <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
+                                    <option value="Male" {if $employee->basic_info.gender == 'Male'} selected {/if}>Male</option>
+                                    <option value="Female" {if $employee->basic_info.gender == 'Female'} selected {/if}>Female</option>
                                 </select>
                             </div>
                         </div>
@@ -305,7 +308,7 @@
         </div>
         <div class="row">
             <div class="col-md-12" style="text-align: right;">
-            <button type="submit" class="btn btn-primary">Save changes</button>
+            <button type="submit" class="btn btn-primary">{if $user.is_admin}Save changes{else}Submit to HR{/if}</button>
             </div>
         </div>
     </form>

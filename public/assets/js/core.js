@@ -40,8 +40,8 @@ function show_collapse(id) {
   }
 }
 
-function confirm_delete(no, id, tab, other_info_col='', other_info_data='') {
-  if(confirm("Confirm delete function?" + no + tab + id + other_info_col + other_info_data)) {
+function confirm_delete(no, id, tab, other_info_col='', other_info_data='', admin_id='') {
+  if(confirm("Confirm delete function?" + no + tab + id + other_info_col + other_info_data + admin_id)) {
     if(tab=='other-info') {
       f({action: 'delete_row', no:no, tab:tab, other_info_col:other_info_col, other_info_data:other_info_data}, "text", "/employees").then( function (data) {
         location.href = "/employees/profile/" + id + "/" + tab;

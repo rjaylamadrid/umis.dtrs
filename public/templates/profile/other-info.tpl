@@ -79,7 +79,7 @@
                                 {if ($other_info.other_skill[$i] != '')}
                                     <tr id="skill">
                                         <td style="font-weight:normal"><input class="form-control" type="text" name="employeeinfo[skill][{$i}]" value="{$other_info.other_skill[$i]}"></td>
-                                        <td style="vertical-align: middle; text-align: center;"><a class="btn btn-outline-danger btn-sm" href="javascript:confirm_delete({$other_info.no},{$other_info.employee_id},'{$tab}', '{"other_skill"}', '{$other_info.other_skill[$i]}')"><i class="fe fe-trash"></i></a></td>
+                                        <td style="vertical-align: middle; text-align: center;"><a class="btn btn-outline-danger btn-sm" href="javascript:confirm_delete({$other_info.no},{$other_info.employee_id},'{$tab}', '{"other_skill"}', '{$other_info.other_skill[$i]}',{$user.employee_id})"><i class="fe fe-trash"></i></a></td>
                                     </tr>
                                 {/if}
                             {/for}
@@ -95,7 +95,7 @@
                             {if ($other_info.other_recognition[$i] != '')}
                             <tr id="recog">
                                 <td style="font-weight:normal"><input class="form-control" type="text" name="employeeinfo[recog][{$i}]" value="{$other_info.other_recognition[$i]}"></td>
-                                <td style="vertical-align: middle; text-align: center;"><a class="btn btn-outline-danger btn-sm" href="#"><i class="fe fe-trash"></i></a></td>
+                                <td style="vertical-align: middle; text-align: center;"><a class="btn btn-outline-danger btn-sm" href="javascript:confirm_delete({$other_info.no},{$other_info.employee_id},'{$tab}', '{"other_recognition"}', '{$other_info.other_recognition[$i]}')"><i class="fe fe-trash"></i></a></td>
                             </tr>
                             {/if}
                         {/for}
@@ -111,7 +111,7 @@
                             {if ($other_info.other_organization[$i] != '')}
                                 <tr id="org">
                                     <td style="font-weight:normal"><input class="form-control" type="text" name="employeeinfo[org][{$i}]" value="{$other_info.other_organization[$i]}"></td>
-                                    <td style="vertical-align: middle; text-align: center;"><a class="btn btn-outline-danger btn-sm" href="#"><i class="fe fe-trash"></i></a></td>
+                                    <td style="vertical-align: middle; text-align: center;"><a class="btn btn-outline-danger btn-sm" href="javascript:confirm_delete({$other_info.no},{$other_info.employee_id},'{$tab}', '{"other_organization"}', '{$other_info.other_organization[$i]}')"><i class="fe fe-trash"></i></a></td>
                                 </tr>
                             {/if}
                         {/for}
