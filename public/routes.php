@@ -39,9 +39,9 @@ $router->group(['before' => 'auth'], function ($router) {
         // Employees
         $router->group(["prefix" => "employees"], function ($router) {
             $router->get('/', ['Employees', 'index']);
-            $router->get('/profile/{id}/{view}?', ['Employees', 'profile']);
+            $router->get('/profile/{id}/{view}/{result}?', ['Employees', 'profile']);
             $router->get('/update/{id}/{view}?', ['Employees', 'update']);
-            $router->post('/save/{id}/{tab}?', ['Employees', 'save']);
+            $router->post('/save/{id}/{tab}/{result}?', ['Employees', 'save']);
             $router->post('/add_profile_info/{id}/{tab}?', ['Employees', 'add_profile_info']);
             $router->post('/', ['Employees', 'do_action']);
             $router->get('/registration/{success}?', ['Employees', 'registration']);

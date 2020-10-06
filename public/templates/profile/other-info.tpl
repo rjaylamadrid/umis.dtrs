@@ -2,6 +2,13 @@
     <div class="form-group" style="float: right;">
         <a href="{$server}{if $user.is_admin}/employees/update/{$employee->id}/other-info{else}/update/other-info{/if}" class="btn btn-secondary btn-sm ml-2"><i class="fe fe-edit-2"></i> Edit</a>
     </div>
+    {if $message}
+        <div class="alert card-alert {if $message.success}alert-success{else}alert-danger{/if} alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert"></button>
+            <i class="fe {if $message.success}fe-check{else}fe-alert-triangle{/if} mr-2" aria-hidden="true"></i>{$message.message}
+        </div>
+        <br />
+    {/if}
     <div class="table-responsive">
         <table class="table card-table table-striped">
         {if $employee->other_info}
@@ -70,8 +77,8 @@
                 {$other_info.other_skill = ";"|explode:$other_info.other_skill}
                 {$other_info.other_recognition = ";"|explode:$other_info.other_recognition}
                 {$other_info.other_organization = ";"|explode:$other_info.other_organization}
-
-                
+                <input type="hidden" name="employeeinfo[no]" value="{$other_info.no}">
+                <input type="hidden" name="employeeinfo[employee_id]" value="{$other_info.employee_id}">
                 <div class="col-md-4 table-responsive">
                     <table class="table table-bordered" id="skill">
                         <thead><tr><th colspan="2">Skills</th></tr></thead>
@@ -95,7 +102,7 @@
                             {if ($other_info.other_recognition[$i] != '')}
                             <tr id="recog">
                                 <td style="font-weight:normal"><input class="form-control" type="text" name="employeeinfo[recog][{$i}]" value="{$other_info.other_recognition[$i]}"></td>
-                                <td style="vertical-align: middle; text-align: center;"><a class="btn btn-outline-danger btn-sm" href="javascript:confirm_delete({$other_info.no},{$other_info.employee_id},'{$tab}', '{"other_recognition"}', '{$other_info.other_recognition[$i]}')"><i class="fe fe-trash"></i></a></td>
+                                <td style="vertical-align: middle; text-align: center;"><a class="btn btn-outline-danger btn-sm" href="javascript:confirm_delete({$other_info.no},{$other_info.employee_id},'{$tab}', '{"other_recognition"}', '{$other_info.other_recognition[$i]}',{$user.employee_id})"><i class="fe fe-trash"></i></a></td>
                             </tr>
                             {/if}
                         {/for}
@@ -111,7 +118,7 @@
                             {if ($other_info.other_organization[$i] != '')}
                                 <tr id="org">
                                     <td style="font-weight:normal"><input class="form-control" type="text" name="employeeinfo[org][{$i}]" value="{$other_info.other_organization[$i]}"></td>
-                                    <td style="vertical-align: middle; text-align: center;"><a class="btn btn-outline-danger btn-sm" href="javascript:confirm_delete({$other_info.no},{$other_info.employee_id},'{$tab}', '{"other_organization"}', '{$other_info.other_organization[$i]}')"><i class="fe fe-trash"></i></a></td>
+                                    <td style="vertical-align: middle; text-align: center;"><a class="btn btn-outline-danger btn-sm" href="javascript:confirm_delete({$other_info.no},{$other_info.employee_id},'{$tab}', '{"other_organization"}', '{$other_info.other_organization[$i]}',{$user.employee_id})"><i class="fe fe-trash"></i></a></td>
                                 </tr>
                             {/if}
                         {/for}

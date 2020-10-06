@@ -4,6 +4,13 @@
     <div class="form-group" style="float: right;">
         <a href="{$server}{if $user.is_admin}/employees/update/{$employee->id}{else}/update{/if}" class="btn btn-secondary btn-sm ml-2"><i class="fe fe-edit-2"></i> Edit</a>
     </div>
+    {if $message}
+        <div class="alert card-alert {if $message.success}alert-success{else}alert-danger{/if} alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert"></button>
+            <i class="fe {if $message.success}fe-check{else}fe-alert-triangle{/if} mr-2" aria-hidden="true"></i>{$message.message}
+        </div>
+        <br />
+    {/if}
     <div class="table-responsive">
         <table class="table card-table table-striped">
             <tr class="row-header"><td colspan="2">Personal Information</td></tr>
@@ -30,7 +37,7 @@
         </table>
     </div>
 {else}
-    <form action="{$server}{if $user.is_admin}/employees/save/{$employee->id}{else}/save{/if}" method="POST" enctype="multipart/form-data" accept-charset="UTF-8">
+    <form action="{$server}{if $user.is_admin}/employees/save/{$employee->id}/basic-info{else}/save{/if}" method="POST" enctype="multipart/form-data" accept-charset="UTF-8">
         <input type="hidden" name="employeeinfo[no]" value="{$employee->basic_info.no}">
         <input type="hidden" name="employeeinfo[employee_id]" value="{$employee->basic_info.employee_id}">
         <input type="hidden" name="employeeinfo[employee_picture]" value="{$employee->basic_info.employee_picture}">

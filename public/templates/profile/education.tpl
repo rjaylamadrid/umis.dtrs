@@ -2,6 +2,13 @@
     <div class="form-group" style="float: right;">
         <a href="{$server}{if $user.is_admin}/employees/update/{$employee->id}/education{else}/update/education{/if}" class="btn btn-secondary btn-sm ml-2"><i class="fe fe-edit-2"></i> Edit</a>
     </div>
+    {if $message}
+        <div class="alert card-alert {if $message.success}alert-success{else}alert-danger{/if} alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert"></button>
+            <i class="fe {if $message.success}fe-check{else}fe-alert-triangle{/if} mr-2" aria-hidden="true"></i>{$message.message}
+        </div>
+        <br />
+    {/if}
     <div class="table-responsive">
         <table class="table card-table table-striped">
             {foreach from = $employee->education item = education}

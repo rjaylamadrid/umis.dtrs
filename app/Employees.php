@@ -16,7 +16,7 @@ class Employees extends EmployeesController {
         $this->view->display ('admin/employees', ["stats" => $this->stats, "employees" => $this->employees()->status($status), "status" => $status]);
     }
 
-    public function profile ($id = null, $tab = 'basic-info', $view='view') {
+    public function profile ($id = null, $tab = 'basic-info', $view='view', $message=NULL) {
         $this->employee = new EmployeeProfile ($id);
         print_r($this->employee);
         try {
@@ -25,7 +25,7 @@ class Employees extends EmployeesController {
             $tab = 'basic-info';
             $this->employee->basic_info ();
         }
-        $this->view->display ('profile', ["employee" => $this->employee, "tab" => $tab, "view" => $view]);
+        $this->view->display ('profile', ["employee" => $this->employee, "tab" => $tab, "view" => $view, "message" => $message]);
     }
 
     public function do_action () {
@@ -45,9 +45,10 @@ class Employees extends EmployeesController {
         $this->employment ($id,$tab,'update', $message);
     }
 
-    public function save ($id, $tab = 'basic-info') {
-        $empUpd = $this->update_profile($id,$_POST['employeeinfo'],$tab);
-        header ("location: /employees/profile/$id/$tab");
+    public function save ($id, $tab='basic-info') {
+        $result = $this->update_profile($id,$_POST['employeeinfo'],$_FILES['profile_picture'],$tab);
+        if ($result == 'success') $message = ['success' => 'success', 'message' => 'Employee\'s profile was successfully updated!'];
+        $this->profile ($id,$tab,'view',$message);
     }
 
     // public function submit () {

@@ -93,14 +93,30 @@ class EmployeesController extends Controller {
 
     public static function add_profile($id,$employeeinfo,$tab) {
         $tab = 'tbl_employee_'.str_replace ("-","_",$tab);
+        $inserted_data='';
+        $ctr=1;
         if($tab == 'tbl_employee_other_info') {
             foreach ($employeeinfo as $key => $value) {
                 $other_row=DB::fetch_row ("SELECT $key FROM $tab WHERE employee_id = $id");
                 $other_row["$key"] = $other_row["$key"] == '' ? $value : $other_row["$key"].";".$value;
+                $inserted_vals = array('updated_action'=>2,'updated_table'=>$tab,'updated_old_data'=>'','updated_new_data'=>$key."=".$value,'updated_employee_id'=>$id,'updated_admin_id'=>1,'updated_date'=>date("Y-m-d"));
+                // print_r($user);
+                DB::insert ("INSERT INTO tbl_employee_update_delete SET ". DB::stmt_builder($inserted_vals),$inserted_vals);
                 return DB::update ("UPDATE $tab SET ".DB::stmt_builder($employeeinfo). " WHERE employee_id = $id",$other_row);
             }
         }
         else {
+            foreach ($employeeinfo as $key => $value) {
+                if ($ctr != sizeof($employeeinfo)) {
+                    $inserted_data .= $key."=".$value.";";
+                }
+                else {
+                    $inserted_data .= $key."=".$value;
+                }
+                $ctr++;
+            }
+            $inserted_vals = array('updated_action'=>2,'updated_table'=>$tab,'updated_old_data'=>'','updated_new_data'=>$inserted_data,'updated_employee_id'=>$id,'updated_admin_id'=>1,'updated_date'=>date("Y-m-d"));
+            DB::insert ("INSERT INTO tbl_employee_update_delete SET ". DB::stmt_builder($inserted_vals),$inserted_vals);
             return DB::insert("INSERT INTO $tab SET ".DB::stmt_builder ($employeeinfo), $employeeinfo);
         }
     }
@@ -113,7 +129,7 @@ class EmployeesController extends Controller {
             array_splice($data_array, $key, 1);
             DB::update ("UPDATE tbl_employee_other_info SET ". $this->data['other_info_col'] ."= ? WHERE no = ". $this->data['no'], [implode(";",$data_array)]);
 
-            DB::insert ("INSERT INTO tbl_employee_update_delete SET updated_action = ?, updated_table = ?, updated_old_data = ?, updated_new_data = ?, updated_employee_id = ?, updated_admin_id = ?, updated_date = ?", [1,$this->data['tab'],$this->data['other_info_col'].";".$this->data['other_info_data'],'',$row['employee_id'],1,date("Y-m-d")]);
+            DB::insert ("INSERT INTO tbl_employee_update_delete SET updated_action = ?, updated_table = ?, updated_old_data = ?, updated_new_data = ?, updated_employee_id = ?, updated_admin_id = ?, updated_date = ?", [1,$this->data['tab'],$this->data['other_info_col'].";".$this->data['other_info_data'],'',$row['employee_id'],$this->data['admin_id'],date("Y-m-d")]);
         }
         else {
             if ($row) {
@@ -134,7 +150,7 @@ class EmployeesController extends Controller {
         }
     }  
 
-    public static function update_profile($id, $employeeinfo, $tab) {
+    public static function update_profile($id, $employeeinfo, $picture='', $tab) {
         $tab = 'tbl_employee_'.str_replace ("-","_",$tab);
         $tab = $tab == 'tbl_employee_basic_info' ? 'tbl_employee' : $tab;
         $id_col = $tab == 'tbl_employee' ? 'no' : 'employee_id';
@@ -142,10 +158,40 @@ class EmployeesController extends Controller {
         // BASIC_INFO
         if ($tab == 'tbl_employee') {
             $row = DB::fetch_row ("SELECT * FROM $tab WHERE $id_col = ?", $id);
-            $new_data = self::get_array_differences($row,$employeeinfo);
-            $updated_vals = array('updated_action'=>0,'updated_table'=>$tab,'updated_old_data'=>$new_data[0],'updated_new_data'=>$new_data[1],'updated_employee_id'=>$id,'updated_admin_id'=>1,'updated_date'=>date("Y-m-d"));
-            DB::insert ("INSERT INTO tbl_employee_update_delete SET ". DB::stmt_builder ($updated_vals),$updated_vals);
-            DB::update ("UPDATE " . $tab . " SET " .  DB::stmt_builder($employeeinfo) . " WHERE ". $id_col . "=" . $id,$employeeinfo);
+            $difference = array_diff($row,$employeeinfo);
+            foreach ($difference as $key => $value) {
+                $old_data .= $key."=".$value;
+                $new_data .= $key."=".$employeeinfo[$key];
+                if($ctr != sizeof($difference)) {
+                    $old_data .= ";";
+                    $new_data .= ";";
+                }
+                $ctr++;
+            }
+            $ctr=1;
+            $difference2 = array_diff($employeeinfo,$row);
+            foreach ($difference2 as $key => $value) {
+                if(strpos($new_data,$key) !== false) {
+                    print_r($key.$value." itworks! ");
+                }
+                else {
+                    $old_data .= ";".$key."=".$row[$key];
+                    $new_data .= ";".$key."=".$value;
+                }
+            }
+            $updated_vals = array('updated_action'=>0,'updated_table'=>$tab,'updated_old_data'=>$old_data,'updated_new_data'=>$new_data,'updated_employee_id'=>$id,'updated_admin_id'=>1,'updated_date'=>date("Y-m-d"));
+            // employee_picture saving
+            if ($picture['name'] != '') {
+                $target_file = "../public/assets/employee_picture/$id." . strtolower(pathinfo($picture['name'],PATHINFO_EXTENSION));
+                if(move_uploaded_file($picture['tmp_name'], $target_file) === true) {
+
+                }
+            }
+            $update_qry = DB::update ("UPDATE " . $tab . " SET " .  DB::stmt_builder($employeeinfo) . " WHERE ". $id_col . "=" . $id,$employeeinfo);
+            if ($update_qry != NULL) {
+                DB::insert ("INSERT INTO tbl_employee_update_delete SET ". DB::stmt_builder ($updated_vals),$updated_vals);
+                return 'success';
+            }
         }
         // FAMILY_BACKGROUND
         else if ($tab == 'tbl_employee_family_background') {
@@ -182,15 +228,34 @@ class EmployeesController extends Controller {
                     if ((sizeof(array_diff($row[$value],$employeeinfo[$value])) > 0) || (sizeof(array_diff($employeeinfo[$value],$row[$value])) > 0)) {
                         $new_data = self::get_array_differences($row[$value],$employeeinfo[$value]);
                         $updated_vals = array('updated_action'=>0,'updated_table'=>$tab,'updated_old_data'=>"no=".$row[$value]['no'].";".$new_data[0],'updated_new_data'=>"no=".$row[$value]['no'].";".$new_data[1],'updated_employee_id'=>$id,'updated_admin_id'=>1,'updated_date'=>date("Y-m-d"));
-                        DB::insert ("INSERT INTO tbl_employee_update_delete SET ". DB::stmt_builder ($updated_vals),$updated_vals);
-                        $temp = DB::update ("UPDATE $tab SET " . DB::stmt_builder($employeeinfo[$value]) . " WHERE $id_col = $id AND level = '$value'",$employeeinfo[$value]);
+                        $update_qry = DB::update ("UPDATE $tab SET " . DB::stmt_builder($employeeinfo[$value]) . " WHERE $id_col = $id AND level = '$value'",$employeeinfo[$value]);
+                        if ($update_qry != NULL) {
+                            DB::insert ("INSERT INTO tbl_employee_update_delete SET ". DB::stmt_builder ($updated_vals),$updated_vals);
+                            return 'success';
+                        }
                     }
                 }
             }
         }
         // OTHER_INFO
         else if ($tab == 'tbl_employee_other_info') {
-            return DB::update ("UPDATE $tab SET other_skill = '" . implode(";", $employeeinfo['skill']) . "', other_recognition = '" . implode(";", $employeeinfo['recog']) . "', other_organization = '" . implode(";", $employeeinfo['org']) . "' WHERE $id_col = $id");
+            $row = DB::fetch_row("SELECT * FROM $tab WHERE $id_col = ?",$id);
+            $skill = sizeof($employeeinfo['skill']) > 1 ? implode(";",$employeeinfo['skill']) : $employeeinfo['skill'][0];
+            $recog = sizeof($employeeinfo['recog']) > 1 ? implode(";",$employeeinfo['recog']) : $employeeinfo['recog'][0];
+            $org = sizeof($employeeinfo['org']) > 1 ? implode(";",$employeeinfo['org']) : $employeeinfo['org'][0];
+
+            $frm = array('no'=>$employeeinfo['no'],'employee_id'=>$employeeinfo['employee_id'],'other_skill'=>$skill,'other_recognition'=>$recog,'other_organization'=>$org);
+            $new_data = self::get_array_differences($row,$frm);
+
+            foreach ($new_data as $key => $value) {
+               $new_data[$key] = str_replace([";other_recognition",";other_organization"],["|other_recognition","|other_organization"],$value);
+            }
+            $updated_vals = array('updated_action'=>0,'updated_table'=>$tab,'updated_old_data'=>$new_data[0],'updated_new_data'=>$new_data[1],'updated_employee_id'=>$id,'updated_admin_id'=>1,'updated_date'=>date("Y-m-d"));
+            $update_qry = DB::update ("UPDATE $tab SET other_skill = '" . implode(";", $employeeinfo['skill']) . "', other_recognition = '" . implode(";", $employeeinfo['recog']) . "', other_organization = '" . implode(";", $employeeinfo['org']) . "' WHERE $id_col = $id");
+            if ($update_qry != NULL) {
+                DB::insert("INSERT INTO tbl_employee_update_delete SET ". DB::stmt_builder ($updated_vals),$updated_vals);
+                return 'success';
+            }
         }
     }
 
