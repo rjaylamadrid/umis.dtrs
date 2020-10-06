@@ -142,28 +142,8 @@ class EmployeesController extends Controller {
         // BASIC_INFO
         if ($tab == 'tbl_employee') {
             $row = DB::fetch_row ("SELECT * FROM $tab WHERE $id_col = ?", $id);
-            $difference = array_diff($row,$employeeinfo);
-            foreach ($difference as $key => $value) {
-                $old_data .= $key."=".$value;
-                $new_data .= $key."=".$employeeinfo[$key];
-                if($ctr != sizeof($difference)) {
-                    $old_data .= ";";
-                    $new_data .= ";";
-                }
-                $ctr++;
-            }
-            $ctr=1;
-            $difference2 = array_diff($employeeinfo,$row);
-            foreach ($difference2 as $key => $value) {
-                if(strpos($new_data,$key) !== false) {
-                    print_r($key.$value." itworks! ");
-                }
-                else {
-                    $old_data .= ";".$key."=".$row[$key];
-                    $new_data .= ";".$key."=".$value;
-                }
-            }
-            $updated_vals = array(updated_action=>0,updated_table=>$tab,updated_old_data=>$old_data,updated_new_data=>$new_data,updated_employee_id=>$id,updated_admin_id=>1,updated_date=>date("Y-m-d"));
+            $new_data = self::get_array_differences($row,$employeeinfo);
+            $updated_vals = array('updated_action'=>0,'updated_table'=>$tab,'updated_old_data'=>$new_data[0],'updated_new_data'=>$new_data[1],'updated_employee_id'=>$id,'updated_admin_id'=>1,'updated_date'=>date("Y-m-d"));
             DB::insert ("INSERT INTO tbl_employee_update_delete SET ". DB::stmt_builder ($updated_vals),$updated_vals);
             DB::update ("UPDATE " . $tab . " SET " .  DB::stmt_builder($employeeinfo) . " WHERE ". $id_col . "=" . $id,$employeeinfo);
         }
