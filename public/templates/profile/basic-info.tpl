@@ -40,17 +40,16 @@
     <form action="{$server}{if $user.is_admin}/employees/save/{$employee->id}/basic-info{else}/save{/if}" method="POST" enctype="multipart/form-data" accept-charset="UTF-8">
         <input type="hidden" name="employeeinfo[no]" value="{$employee->basic_info.no}">
         <input type="hidden" name="employeeinfo[employee_id]" value="{$employee->basic_info.employee_id}">
-        <input type="hidden" name="employeeinfo[employee_picture]" value="{$employee->basic_info.employee_picture}">
         <div class="form-group row btn-square">
             <div class="row">
                 <div class="col-sm-12 col-lg-4 col-md-4 mb-4 text-center btn-square">
                     <div class="form-group">
                         <div style="text-align: center; border: 2; width: 100%; align-content: center" id="thumb-output">
-                            <img style="text-align: center; border: 1;" src="img/profile_temp.jpeg"  >
+                            <img style="text-align: center; border: 1;" src="../../assets/employee_picture/{$employee->basic_info.employee_picture}"  >
                         </div>
                     </div>
                     <div class="form-group">
-                        <input type="file" id="file-input" class="" name="profile_picture" value="img/profile_temp.jpeg" style="width:13rem">
+                        <input type="file" id="file-input" class="" name="profile_picture" value="{$employee->basic_info.employee_picture}" accept="image/*" style="width:13rem">
                     </div>
                 </div>
                 <div class="col-sm-12 col-md-8" style="padding-right: 0px; padding-left: 0px;">

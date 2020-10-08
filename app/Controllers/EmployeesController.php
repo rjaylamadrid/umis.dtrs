@@ -38,37 +38,6 @@ class EmployeesController extends Controller {
         }
         return $employees;
     }
-<<<<<<< Updated upstream
-=======
-
-    public function delete_row () {
-        $row = DB::fetch_row ("SELECT * FROM tbl_employee_". str_replace ("-","_",$this->data['tab']) ." WHERE no = ?", $this->data['no']);
-        if($this->data['tab'] == 'other-info') {
-            $data_array = explode(";",$row[$this->data['other_info_col']]);
-            $key = array_search($this->data['other_info_data'], $data_array);
-            array_splice($data_array, $key, 1);
-            DB::update ("UPDATE tbl_employee_other_info SET ". $this->data['other_info_col'] ."= ? WHERE no = ". $this->data['no'], [implode(";",$data_array)]);
-            DB::insert ("INSERT INTO tbl_employee_update_delete SET updated_action = ?, updated_table = ?, updated_old_data = ?, updated_new_data = ?, updated_employee_id = ?, updated_admin_id = ?, updated_date = ?", [1,$this->data['tab'],$this->data['other_info_col'].";".$this->data['other_info_data'],'',$row['employee_id'],1,date("Y-m-d")]);
-        }
-        else {
-            if ($row) {
-                $i=1;
-                foreach ($row as $value) {
-                    if ($i == sizeof($row)) {
-                        $data .= $value;
-                    }
-                    else {
-                        $data .= $value . ";";
-                    }
-                    $i++;
-                }
-                $values = array(updated_action=>1,updated_table=>$this->data['tab'],updated_old_data=>$data,updated_new_data=>'',updated_employee_id=>$row['employee_id'],updated_admin_id=>1,updated_date=>date("Y-m-d"));
-                DB::insert ("INSERT INTO tbl_employee_update_delete SET ". DB::stmt_builder ($values), $values);
-                DB::delete ("DELETE FROM tbl_employee_". str_replace ("-","_",$this->data['tab']) ." WHERE no = ?", $this->data['no']);
-            }
-        }
-    }
->>>>>>> Stashed changes
     
     public function get_position () {
         $positions = Position::positions()->type ($this->data['type']);
@@ -159,7 +128,6 @@ class EmployeesController extends Controller {
             $key = array_search($this->data['other_info_data'], $data_array);
             array_splice($data_array, $key, 1);
             DB::update ("UPDATE tbl_employee_other_info SET ". $this->data['other_info_col'] ."= ? WHERE no = ". $this->data['no'], [implode(";",$data_array)]);
-
             DB::insert ("INSERT INTO tbl_employee_update_delete SET updated_action = ?, updated_table = ?, updated_old_data = ?, updated_new_data = ?, updated_employee_id = ?, updated_admin_id = ?, updated_date = ?", [1,$this->data['tab'],$this->data['other_info_col'].";".$this->data['other_info_data'],'',$row['employee_id'],$this->data['admin_id'],date("Y-m-d")]);
         }
         else {
@@ -189,6 +157,19 @@ class EmployeesController extends Controller {
         // BASIC_INFO
         if ($tab == 'tbl_employee') {
             $row = DB::fetch_row ("SELECT * FROM $tab WHERE $id_col = ?", $id);
+
+            // employee_picture saving
+            if ($picture['name'] != '') {
+                $target_file = "../public/assets/employee_picture/$id." . strtolower(pathinfo($picture['name'],PATHINFO_EXTENSION));
+                if(file_exists("../public/assets/employee_picture/$id")) unlink("../public/assets/employee_picture/$id");
+                if(move_uploaded_file($picture['tmp_name'], $target_file) === true) {
+                    $employeeinfo += ['employee_picture' => "$id." . strtolower(pathinfo($picture['name'],PATHINFO_EXTENSION))];
+                }
+            }
+            else {
+                $employeeinfo += ['employee_picture' => $row['employee_picture']];
+            }
+
             $difference = array_diff($row,$employeeinfo);
             foreach ($difference as $key => $value) {
                 $old_data .= $key."=".$value;
@@ -203,7 +184,7 @@ class EmployeesController extends Controller {
             $difference2 = array_diff($employeeinfo,$row);
             foreach ($difference2 as $key => $value) {
                 if(strpos($new_data,$key) !== false) {
-                    print_r($key.$value." itworks! ");
+                    print_r($key.$value);
                 }
                 else {
                     $old_data .= ";".$key."=".$row[$key];
@@ -211,13 +192,7 @@ class EmployeesController extends Controller {
                 }
             }
             $updated_vals = array('updated_action'=>0,'updated_table'=>$tab,'updated_old_data'=>$old_data,'updated_new_data'=>$new_data,'updated_employee_id'=>$id,'updated_admin_id'=>1,'updated_date'=>date("Y-m-d"));
-            // employee_picture saving
-            if ($picture['name'] != '') {
-                $target_file = "../public/assets/employee_picture/$id." . strtolower(pathinfo($picture['name'],PATHINFO_EXTENSION));
-                if(move_uploaded_file($picture['tmp_name'], $target_file) === true) {
-
-                }
-            }
+            
             $update_qry = DB::update ("UPDATE " . $tab . " SET " .  DB::stmt_builder($employeeinfo) . " WHERE ". $id_col . "=" . $id,$employeeinfo);
             if ($update_qry != NULL) {
                 DB::insert ("INSERT INTO tbl_employee_update_delete SET ". DB::stmt_builder ($updated_vals),$updated_vals);

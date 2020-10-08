@@ -13,7 +13,7 @@
                     <td>Position/Title</td>
                     <td>
                         <div>{$employment.position}</div>
-                        <div class="small text-muted">{$employment.date_from} - {if $employment.date_to}{$employment.date_to}{else}PRESENT{/if}</div>
+                        <div class="small text-muted">{$employment.date_from} to {if $employment.date_to}{$employment.date_to}{else}PRESENT{/if}</div>
                     </td>
                 </tr>
                 <tr>

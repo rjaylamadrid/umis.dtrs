@@ -66,7 +66,7 @@ class Employees extends EmployeesController {
     }
 
     public function employment ($id, $tab = 'employment_info', $view = 'view', $message = NULL) {
-        if ($success) $message = ['success' => '1', 'message' => 'New employee has been successfully registered!'];
+        if ($message) $message = ['success' => '1', 'message' => 'Employment information has been successfully updated!'];
         $this->employee = new EmployeeProfile ($id);
         try {
             $this->employee->{str_replace ("-", "_", $tab)}();

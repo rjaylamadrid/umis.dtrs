@@ -10,16 +10,18 @@
     </div>
     <div class="table-responsive">
         <table class="table card-table table-striped">
-            <tr class="row-header"><td colspan="2">Employment Information</td></tr>
-            <tr><td>Status</td><td>{$employee->position.type}</td></tr>
-            <tr><td>Position</td><td><div>{$employee->position.position_desc}<div class="small text-muted">{$employee->info.date_start}</div></div></td></tr>
-            <tr><td>Salary</td><td><div>Php {$employee->position.salary|number_format:2:".":","}<div class="small text-muted">
-            {if $employee->position.salary_grade}Salary Grade {$employee->position.salary_grade} - Step {$employee->position.increment}{else}{$employee->position.salary_type}{/if}</div></div></td></tr>
-            <tr><td>Department</td><td><div>{$employee->employment_info.department}<div class="small text-muted">{$employee->employment_info.designation}</div></div></td></tr>
+            {* {foreach from = $employee->position item = position} *}
+                <tr class="row-header"><td colspan="2">Employment Information</td></tr>
+                <tr><td>Status</td><td>{$employee->position.type}</td></tr>
+                <tr><td>Position</td><td><div>{$employee->position.position_desc}<div class="small text-muted">{$employee->info.date_start} {if $employee->info.date_end} to {$employee->info.date_end} {else} to Present {/if}</div></div></td></tr>
+                <tr><td>Salary</td><td><div>Php {$employee->position.salary|number_format:2:".":","}<div class="small text-muted">
+                {if $employee->position.salary_grade}Salary Grade {$employee->position.salary_grade} - Step {$employee->position.increment}{else}{$employee->position.salary_type}{/if}</div></div></td></tr>
+                <tr><td>Department</td><td><div>{$employee->employment_info.department}<div class="small text-muted">{$employee->employment_info.designation}</div></div></td></tr>
+            {* {/foreach} *}
         </table>
     </div>
     <div class="form-group" style="float: right;">
-        <a href="#" data-toggle="modal" data-target="#promote-employee-modal" class="btn btn-success btn-md ml-2">New Employment Info</a>
+        <a href="#" data-toggle="modal" data-target="#promote-employee-modal" class="btn btn-success btn-md ml-2"><i class="fe fe-plus"></i> New Employment Info</a>
     </div>
     {include file="admin/modal/promote_employee.tpl"}
 {else}

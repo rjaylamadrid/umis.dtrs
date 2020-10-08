@@ -3,7 +3,7 @@
         <div class="modal-content">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Promotion</h3>
+                    <h3 class="card-title">New Employment Information</h3>
                 </div>
                 <div class="card-body">
                     <form action="/employees" method="POST">
@@ -13,7 +13,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label class="form-label">Previous employment (Last day)</label>
+                                    <label class="form-label">Previous Designation's Last Day of Service</label>
                                     <input type="date" class="form-control" name="date_end">
                                 </div>
                             </div>
