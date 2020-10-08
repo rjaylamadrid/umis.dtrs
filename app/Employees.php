@@ -41,8 +41,7 @@ class Employees extends EmployeesController {
     }
 
     public function employment_update ($id, $tab = 'employment_info', $result = NULL) {
-        if ($result == 'success') $message = ['success' => 'success', 'message' => 'Schedule was successfully updated!'];
-        $this->employment ($id,$tab,'update', $message);
+        $this->employment ($id,$tab,'update', $result);
     }
 
     public function save ($id, $tab = 'basic-info') {
@@ -60,13 +59,13 @@ class Employees extends EmployeesController {
     }
 
     public function registration ($success = NULL) {
-        if ($success) $message = ['success' => '1', 'message' => 'New employee has been successfully registered!'];
         $positions = Position::positions()->all ();
         $presets = Schedule::presets()->all ();
         $this->view->display ('admin/employee_registration', ['positions' => $positions, 'emp_type' => $this->type(), 'schedules' => $presets , 'departments' => $this->departments(), 'designations' => $this->designations(), 'id' => $this->new_id ('1'), 'message' => $message]);
     }
 
     public function employment ($id, $tab = 'employment_info', $view = 'view', $message = NULL) {
+        if ($success) $message = ['success' => '1', 'message' => 'New employee has been successfully registered!'];
         $this->employee = new EmployeeProfile ($id);
         try {
             $this->employee->{str_replace ("-", "_", $tab)}();

@@ -1,3 +1,9 @@
+{if $message}
+    <div class="alert card-alert {if $message.success}alert-success{else}alert-danger{/if} alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert"></button>
+        <i class="fe {if $message.success}fe-check{else}fe-alert-triangle{/if} mr-2" aria-hidden="true"></i>{$message.message}
+    </div><br/>
+{/if}
 {if $view !="update"}
     <div class="form-group" style="float: right;">
         <a href="{$server}/employees/employment-update/{$employee->id}/employment_info" class="btn btn-secondary btn-sm ml-2"><i class="fe fe-edit-2"></i> Edit</a>
@@ -17,13 +23,17 @@
     </div>
     {include file="admin/modal/promote_employee.tpl"}
 {else}
-    <form action="" method="POST" accept-charset="UTF-8">
+    <form action="/employees" method="POST" accept-charset="UTF-8">
+        <input type="hidden" name="action" value="update_employment_info">
+        <input type="hidden" id="campus" value="{$employee->info.campus_id}">
+        <input type="hidden" name="employee_id" value="{$employee->id}">
+        <input type="hidden" name="type" value="current">
         <div class="form-group row btn-square">
             <div class="row p-5">
                 <div class="col-md-6">
                     <div class="form-group">
                         <label class="form-label">Employment Status</label>
-                        <select class="form-control" name="emp_status1[etype_id]" required onchange="javascript:init_pos (this.value)">
+                        <select class="form-control" name="emp_status[etype_id]" required onchange="javascript:init_pos (this.value)">
                             <option selected disabled>Employment Status</option>
                             {foreach from=$emp_type item=type}
                             <option value="{$type.etype_id}" {if $type.etype_id == $employee->info.etype_id}selected{/if}>{$type.etype_desc}</option>
@@ -48,7 +58,6 @@
                         <input type="date" class="form-control" name="emp_status[date_start]" value="{$employee->info.date_start}" id="date-start" onchange="javascript:get_salary()">
                     </div>
                 </div>
-                <input type="hidden" id="campus" value="{$employee->info.campus_id}">
                 <div class="col-md-6">
                     <div class="form-group">
                         <label class="form-label">Salary</label>
@@ -58,7 +67,7 @@
                     <div class="col-md-12">
                     <div class="form-group">
                         <label class="form-label">Department</label>
-                        <select class="form-control" name="emp_status1[etype_id]" required onchange="javascript:init_pos (this.value)">
+                        <select class="form-control" name="emp_status[department_id]" required>
                             <option selected disabled>Department</option>
                             {foreach from=$departments item=dept}
                             <option value="{$dept.no}" {if $dept.no == $employee->info.department_id}selected{/if}>{$dept.department_desc}</option>
@@ -69,7 +78,7 @@
                 <div class="col-md-12">
                     <div class="form-group">
                         <label class="form-label">Designation</label>
-                        <select class="form-control" name="emp_status[position_id]" id="positions">
+                        <select class="form-control" name="emp_status[privilege]">
                             <option selected disabled>Designation</option>
                             {foreach from=$designations item=designation}
                             <option value="{$designation.priv_level}" {if $designation.priv_level == $employee->info.privilege}selected{/if}>{$designation.priv_desc}</option>

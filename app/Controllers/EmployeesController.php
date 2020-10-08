@@ -38,6 +38,37 @@ class EmployeesController extends Controller {
         }
         return $employees;
     }
+<<<<<<< Updated upstream
+=======
+
+    public function delete_row () {
+        $row = DB::fetch_row ("SELECT * FROM tbl_employee_". str_replace ("-","_",$this->data['tab']) ." WHERE no = ?", $this->data['no']);
+        if($this->data['tab'] == 'other-info') {
+            $data_array = explode(";",$row[$this->data['other_info_col']]);
+            $key = array_search($this->data['other_info_data'], $data_array);
+            array_splice($data_array, $key, 1);
+            DB::update ("UPDATE tbl_employee_other_info SET ". $this->data['other_info_col'] ."= ? WHERE no = ". $this->data['no'], [implode(";",$data_array)]);
+            DB::insert ("INSERT INTO tbl_employee_update_delete SET updated_action = ?, updated_table = ?, updated_old_data = ?, updated_new_data = ?, updated_employee_id = ?, updated_admin_id = ?, updated_date = ?", [1,$this->data['tab'],$this->data['other_info_col'].";".$this->data['other_info_data'],'',$row['employee_id'],1,date("Y-m-d")]);
+        }
+        else {
+            if ($row) {
+                $i=1;
+                foreach ($row as $value) {
+                    if ($i == sizeof($row)) {
+                        $data .= $value;
+                    }
+                    else {
+                        $data .= $value . ";";
+                    }
+                    $i++;
+                }
+                $values = array(updated_action=>1,updated_table=>$this->data['tab'],updated_old_data=>$data,updated_new_data=>'',updated_employee_id=>$row['employee_id'],updated_admin_id=>1,updated_date=>date("Y-m-d"));
+                DB::insert ("INSERT INTO tbl_employee_update_delete SET ". DB::stmt_builder ($values), $values);
+                DB::delete ("DELETE FROM tbl_employee_". str_replace ("-","_",$this->data['tab']) ." WHERE no = ?", $this->data['no']);
+            }
+        }
+    }
+>>>>>>> Stashed changes
     
     public function get_position () {
         $positions = Position::positions()->type ($this->data['type']);
@@ -243,9 +274,14 @@ class EmployeesController extends Controller {
     }
 
     public function update_employment_info () {
-        $set = DB::update ("UPDATE tbl_employee_status SET date_end = ? , active_status = 0 WHERE employee_id = ? AND active_status = 1", [date('Y-m-d'), $this->data['emp_status']['employee_id']]);
-        if ($set) self::add_status ($this->data['emp_status']);
-        header ("location: /employees/employment/{$this->data['emp_status']['employee_id']}/employment_info/success");
+        if ($this->data['type'] == "current"){
+            $this->update_status ($this->data['emp_status'], $this->data['employee_id']);
+            header ("location: /employees/employment-update/{$this->data['employee_id']}/employment_info/success");
+        }else{
+            $set = DB::update ("UPDATE tbl_employee_status SET date_end = ? , active_status = 0 WHERE employee_id = ? AND active_status = 1", [$this->data['date_end'], $this->data['emp_status']['employee_id']]);
+            if ($set) self::add_status ($this->data['emp_status']);
+            header ("location: /employees/employment/{$this->data['emp_status']['employee_id']}/employment_info/success");
+        }
     }
 
     public function get_schedule () {
@@ -261,8 +297,8 @@ class EmployeesController extends Controller {
         return DB::insert ("INSERT INTO tbl_employee_status SET ".DB::stmt_builder ($data), $data);
     }
 
-    public static function update_status ($data) {
-        return DB::update ("UPDATE tbl_employee_status SET ".DB::stmt_builder ($data)." WHERE employee_id = ?", $data);
+    public static function update_status ($data, $id) {
+        return DB::update ("UPDATE tbl_employee_status SET ".DB::stmt_builder ($data)." WHERE no = (SELECT no FROM tbl_employee_status WHERE employee_id = ".$id." ORDER BY date_start DESC LIMIT 0,1)", $data);
     }
 
     //END OF EMPLOYMENT MODULE

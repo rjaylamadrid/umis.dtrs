@@ -11,7 +11,14 @@
                         <input type="hidden" name="emp_status[campus_id]" id="campus" value="{$employee->info.campus_id}">
                         <input type="hidden" name="emp_status[employee_id]" value="{$employee->id}">
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="form-label">Previous employment (Last day)</label>
+                                    <input type="date" class="form-control" name="date_end">
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="col-md-12">
                                 <div class="form-group">
                                     <label class="form-label">Employment Status</label>
                                     <select class="form-control" name="emp_status[etype_id]" required onchange="javascript:init_pos (this.value)">

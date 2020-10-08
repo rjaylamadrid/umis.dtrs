@@ -3,7 +3,7 @@ namespace Database;
 use PDO;
 class DB {
     public static $db;
-    public static $dbname = "db_master2";
+    public static $dbname = "db_master";
     public static $stmt;
 
     private $options = [
