@@ -10,7 +10,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="form-label">Preset Day's</label>
+                                    <label class="form-label">Preset Days</label>
                                     <input type="text" class="form-control" name="employeeinfo[FirstName]" value="" placeholder="(ex. MWF)">
                                 </div>
                             </div>

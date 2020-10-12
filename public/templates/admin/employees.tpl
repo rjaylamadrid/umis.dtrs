@@ -52,7 +52,7 @@
                                             <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; transform: translate3d(-181px, 20px, 0px); top: 0px; left: 0px; will-change: transform;">
                                                 <a href="{$server}/employees/profile/{$employee.employee_no}/basic-info" class="dropdown-item"><i class="dropdown-icon fe fe-tag"></i> View Profile 
                                                 </a>
-                                                <a href="{$server}/employees/employment/{$employee.employee_no}" class="dropdown-item"><i class="dropdown-icon fe fe-user"></i> View Employment 
+                                                <a href="{$server}/employees/employment/{$employee.employee_no}/employment_info" class="dropdown-item"><i class="dropdown-icon fe fe-user"></i> View Employment 
                                                 </a>
                                                 {* <a href="javascript:set_inactive('{$employee.employee_no}', '{if $employee.active_status == '0'}1{else}0{/if}');" class="dropdown-item"><i class="dropdown-icon fe fe-tag"></i> Set as {if $employee.active_status == '0'}Active{else}Inactive{/if} *}
                                                 <a href="javascript::" class="dropdown-item"><i class="dropdown-icon fe fe-tag"></i> Set as {if $employee.active_status == '0'}Active{else}Inactive{/if}
