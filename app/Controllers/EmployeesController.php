@@ -303,21 +303,23 @@ class EmployeesController extends Controller {
         return [$old_data, $new_data];
     }
 
-    // public static function get_education($id) {
-
-    // }
-
     //EMPLOYMENT MODULE
     public function update_schedule () {
         $update = $this->set_schedule ($this->data['sched_code'], $this->data['employee_id']);
-        header ("location: /employees/employment-update/{$this->data['employee_id']}/schedule");
+        header ("location: /employees/employment-update/{$this->data['employee_id']}/schedule/success");
     }
 
     public function update_employment_info () {
         if ($this->data['type'] == "current"){
             $this->update_status ($this->data['emp_status'], $this->data['employee_id']);
             header ("location: /employees/employment-update/{$this->data['employee_id']}/employment_info/success");
-        }else{
+        }
+        else if ($this->data['type'] == "new") {
+            $this->data['emp_status'] += ['date_added' => date('Y-m-d')];
+            $set = DB::insert ("INSERT INTO tbl_employee_status SET ". DB::stmt_builder ($this->data['emp_status']), $this->data['emp_status']);
+            header ("location: /employees/employment/{$this->data['emp_status']['employee_id']}/service_record/success");
+        }
+        else{
             $set = DB::update ("UPDATE tbl_employee_status SET date_end = ? , active_status = 0 WHERE employee_id = ? AND active_status = 1", [$this->data['date_end'], $this->data['emp_status']['employee_id']]);
             if ($set) self::add_status ($this->data['emp_status']);
             header ("location: /employees/employment/{$this->data['emp_status']['employee_id']}/employment_info/success");

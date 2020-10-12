@@ -18,7 +18,7 @@ class Employees extends EmployeesController {
 
     public function profile ($id = null, $tab = 'basic-info', $view='view', $message=NULL) {
         $this->employee = new EmployeeProfile ($id);
-        print_r($this->employee);
+        // print_r($this->employee);
         try {
             $this->employee->{str_replace ("-", "_", $tab)}();
         } catch (\Throwable $th) {
@@ -68,10 +68,11 @@ class Employees extends EmployeesController {
     public function employment ($id, $tab = 'employment_info', $view = 'view', $message = NULL) {
         if ($message) $message = ['success' => '1', 'message' => 'Employment information has been successfully updated!'];
         $this->employee = new EmployeeProfile ($id);
+        print_r($this->employee);
         try {
             $this->employee->{str_replace ("-", "_", $tab)}();
         } catch (\Throwable $th) {
-            $tab = 'employment_info';
+            // $tab = 'employment_info';
             $this->employee->info ();
         }
         $presets = Schedule::presets()->all();
