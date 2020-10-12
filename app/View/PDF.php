@@ -13,7 +13,7 @@ class PDF {
 
     public static function preview ($args) {
         if (!self::$pdf) self::set ();
-
+        self::$pdf->SetPrintHeader(false);
         self::$pdf->addPage();
         self::$pdf->writeHTML($args['content'], true, false, true, false, '');
         self::$pdf->Output('example_006.pdf', 'I');

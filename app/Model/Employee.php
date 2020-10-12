@@ -2,6 +2,7 @@
 namespace Model;
 
 use Database\DB;
+use Model\Position;
 
 class Employee {
     static $employee;
@@ -17,18 +18,39 @@ class Employee {
         if (!self::$employees) self::employees ();
         $employees = [];
         foreach (self::$employees as $e) {
-            if ($e['emp_type'] == $type) $employees[] = $e;
+            if ($e['etype_id'] == $type) $employees[] = $e;
+        }
+        return $employees;
+    }
+    
+    public function status ($status = '1', $campus) {
+        if (!self::$employees) self::employees ();
+        $employees = [];
+        foreach (self::$employees as $e) {
+            if ($e['active_status'] == $status && $e['campus_id'] == $campus) $employees[] = $e;
         }
         return $employees;
     }
 
     public static function employees () {
-        self::$employees = DB::fetch_all ("SELECT a.first_name, a.middle_name, a.last_name, b.* FROM tbl_employee a, tbl_employee_status b WHERE a.no = b.employee_id AND b.active_status = 1 GROUP BY a.no ORDER BY a.last_name");
+        self::$employees = DB::fetch_all ("SELECT a.employee_id as employee_id, a.no as employee_no, first_name, last_name, gender, birthdate, active_status, b.* FROM tbl_employee a, tbl_employee_status b WHERE a.no = b.employee_id AND b.no = (SELECT no FROM tbl_employee_status WHERE employee_id = a.no ORDER BY date_start DESC LIMIT 0,1) ORDER BY last_name ASC");
+        return new self();
+    }
+
+    public static function position () {
+        if (!self::$employees) self::employees ();
+        $employees = [];
+        foreach (self::$employees as $e) {
+            $position = Position::position($e['position_id'])->find(); 
+            $e['position'] = $position['position_desc'];
+            $employees[] = $e;
+        }
+        self::$employees = $employees;
         return new self();
     }
 
     public static function find ($id) {
-        self::$employee = DB::db("db_master2")->fetch_row ("SELECT a.first_name, a.middle_name, a.last_name, b.* FROM tbl_employee a, tbl_employee_status b WHERE a.no = b.employee_id AND b.employee_id = ? GROUP BY a.employee_id", $id)[0];
+        self::$employee = DB::db("db_master")->fetch_row ("SELECT a.first_name, a.middle_name, a.last_name, b.*, a.employee_id  FROM tbl_employee a, tbl_employee_status b WHERE a.no = b.employee_id AND b.employee_id = ? GROUP BY a.employee_id", $id);
         return new static();
     }
 

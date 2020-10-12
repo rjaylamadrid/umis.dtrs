@@ -1,11 +1,12 @@
 <?php
 use Controllers\AttendanceController;
 use Model\Employee;
+use Model\Position;
 
 class Attendance extends AttendanceController {
 
     public function index () {
-        $this->view->display ('attendance', ["emp_type" => $this->type ()]);
+        $this->view->display ('attendance', ["emp_type" => Position::emp_type()]);
     }
 
     public function do_action () {
@@ -32,7 +33,7 @@ class Attendance extends AttendanceController {
     protected function generate () {
         if ($this->data['emp_type']) $employees = Employee::type ($this->data['emp_type']);
         else $employees = Employee::getAll();
-        $this->view->display ('attendance', ["period" => $this->data, "employees" => $employees, "posted" => $this->is_posted ($this->data)]);
+        $this->view->display ('attendance', ["period" => $this->data, "emp_type" => Position::emp_type(), "employees" => $employees, "posted" => $this->is_posted ($this->data)]);
     }
 
     protected function get_attendance () {

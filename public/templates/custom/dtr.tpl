@@ -32,7 +32,7 @@
             {foreach $attendance.attn as $attn}
             {if $attn.attn}
             {$attn = $attn.attn}
-            <tr class="">
+            <tr class="" {if $attn.auth == "false"} style="background-color: #ff00001a" {/if}>
                 <td><b>{$attn.date|date_format:"%d"}</b></td>
                 <td>{$attn.am_in}</td>
                 <td>{$attn.am_out}</td>

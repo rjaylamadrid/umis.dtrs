@@ -1,7 +1,7 @@
 <div class="content">
     <table>
         <tr>
-            <td colspan="1"><img src="http://dtrs.com/assets/img/cbsua_logosmall.png" width="50px" height="50px"></td>
+            <td colspan="1"><img src="http://dtrs.com/assets/img/cbsua_logosmall.png" width="40px" height="40px"></td>
             <td colspan="5" style="font-size: 7px;">Republic of the Philippines<br/>
                 <b>CENTRAL BICOL STATE UNIVERSITY OF AGRICULTURE</b><br/>
                 Impig, Sipocot, Camarines Sur 4408<br/>
@@ -51,13 +51,13 @@
             {$attn = $attn.attn}
             <tr class="border">
                 <td><b>{$attn.date|trim|date_format:"%d"}</b></td>
-                <td>{$attn.am_in|substr:0:-1|trim}</td>
-                <td>{$attn.am_out|substr:0:-1|trim}</td>
-                <td>{$attn.pm_in|substr:0:-1|trim}</td>
-                <td>{$attn.pm_out|substr:0:-1|trim}</td>
+                <td>{if $attn.am_in != ":"}{$attn.am_in|substr:0:-1|trim}{else}{$attn.am_in}{/if}</td>
+                <td>{if $attn.am_out != ":"}{$attn.am_out|substr:0:-1|trim}{else}{$attn.am_out}{/if}</td>
+                <td>{if $attn.pm_in != ":"}{$attn.pm_in|substr:0:-1|trim}{else}{$attn.pm_in}{/if}</td>
+                <td>{if $attn.pm_out != ":"}{$attn.pm_out|substr:0:-1|trim}{else}{$attn.pm_out}{/if}</td>
                 <td>{$attn.ot_in|substr:0:-1|trim}</td>
                 <td>{$attn.ot_out|substr:0:-1|trim}</td>
-                <td></td>
+                <td> {$attn.is_absent} </td>
                 <td>{$attn.late + $attn.undertime}</td>
             </tr>
             {else}
@@ -82,9 +82,10 @@
             {/foreach}
             <tr class="border">
                 <td colspan="7" style="text-align: left;">TOTAL HOURS: <b>{$attendance.total}</b> OVERTIME: <b>0.00</b></td>
-                <td>0.00</td>
+                <td>{$attendance.abs}</td>
                 <td>{$attendance.ut}</td>
             </tr>
+            <br/>
             <tr class="no-border">
                 <td colspan="9" style="text-align: justify;">         I CERTIFY on my honor that the above is a true and correct report of the hours of work performed, record of which was made daily at the time of arrival and departure from office.<br /><br /></td>
             </tr>

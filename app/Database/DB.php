@@ -59,6 +59,7 @@ class DB {
 
     public static function db ($db) {
         self::$dbname = $db;
+        self::$db = NULL;
         return new self ();
     }
 

@@ -66,4 +66,8 @@ class Position {
     public static function designation ($priv_level) {
         return DB::fetch_row ("SELECT priv_desc as designation FROM tbl_privilege WHERE priv_id = ?", $priv_level)['designation'];
     }
+    
+    public static function emp_type () {
+        return DB::fetch_all ("SELECT * FROM tbl_employee_type");
+    }
 }

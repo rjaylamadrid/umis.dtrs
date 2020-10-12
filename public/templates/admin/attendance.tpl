@@ -20,7 +20,7 @@
                 </div>
             </div>
         </div>
-        {/if}
+        {else}
         <div class="row row-cards" id="attendance-content">
             <input type="hidden" id="month" value="{$period.month}">
             <input type="hidden" id="year" value="{$period.year}">
@@ -40,7 +40,7 @@
                         </label>
                         {foreach $employees as $employee}
       	        	  	<label class="selectgroup-item">
-      	        	  	    <input type="radio" name="employee_id" value="{$employee.employee_id}" class="selectgroup-input" onclick="init_dtr (this.value);">
+      	        	  	    <input type="radio" name="employee_id" value="{$employee.employee_no}" class="selectgroup-input" onclick="init_dtr (this.value);">
       	        	  	    <span class="selectgroup-button" style="text-align: left;"><b>{$employee.last_name|upper}, {$employee.first_name|upper}</b></span>
                         </label>
                         {/foreach}
@@ -95,10 +95,9 @@
                 </div>
    	        </div>
    	    </div>
-        
+        {/if}
    	</div>
 </div>
-
 {include file="admin/modal/attendance_period.tpl"}
 
 <div class="modal fade margin-top-70" id="raw-data-modal" role="dialog" tabindex="-1" style="margin-left:-50px;">

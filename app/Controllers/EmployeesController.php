@@ -4,6 +4,7 @@ namespace Controllers;
 use Database\DB;
 use Profile;
 use Model\Position;
+use Model\Employee;
 use Model\Schedule;
 
 class EmployeesController extends Controller {
@@ -14,31 +15,6 @@ class EmployeesController extends Controller {
         return DB::fetch_all ("SELECT first_name, last_name, DATE_FORMAT(birthdate, '%M %d') AS BDate, (YEAR(NOW()) - YEAR(birthdate)) AS Age, DAYNAME(DATE_FORMAT(birthdate, '$this->year-%m-%d')) AS Araw, employee_picture FROM tbl_employee a, tbl_employee_status b WHERE a.no = b.employee_id AND b.active_status = 1 AND b.campus_id = ? AND MONTH(a.birthdate) = ? AND DAY(birthdate) BETWEEN 1 AND 31 ORDER BY BDate", [$this->user['campus_id'], $this->year]);
     }
 
-    public function employees () {
-        $this->employees = DB::fetch_all ("SELECT a.employee_id as employee_id, a.no as employee_no, first_name, last_name, gender, birthdate, position_desc as position, active_status FROM tbl_employee a, tbl_employee_status b, tbl_position c WHERE a.no = b.employee_id AND b.campus_id = ? AND b.position_id = c.no AND b.no = (SELECT no FROM tbl_employee_status WHERE employee_id = a.no ORDER BY date_start DESC LIMIT 0,1)", $this->user['campus_id']);
-        return $this;
-    }
-
-    public function all () {
-        return $this->employees;
-    }
-
-    public function find ($id) {
-        foreach ($this->employees as $employee) {
-            if ($employee['employee_id'] == $id) return $employee;
-        }
-        return;
-    }
-
-    public function status ($status = '1') {
-        if (!$employees) $this->employees ();
-        $employees = [];
-        foreach ($this->employees as $employee) {
-            if ($employee['active_status'] == $status) $employees[] = $employee;
-        }
-        return $employees;
-    }
-    
     public function get_position () {
         $positions = Position::positions()->type ($this->data['type']);
         echo json_encode($positions);
@@ -56,10 +32,6 @@ class EmployeesController extends Controller {
         }
         echo json_encode($result);
     }
-
-    protected function type () {
-        return DB::fetch_all ("SELECT * FROM tbl_employee_type");
-    }
     
     protected function departments () {
         return DB::fetch_all ("SELECT * FROM tbl_department WHERE campus_id = ? ORDER BY department_desc", $this->user['campus_id']);
@@ -71,7 +43,7 @@ class EmployeesController extends Controller {
 
     public function new_id ($e = NULL) {
         $year = date('y');
-        $count = count($this->employees ()->all())+1;
+        $count = count(Employee::employees ()->getAll())+1;
         $id = $year.'-'.$count;
         if ($e) {
             return $id;

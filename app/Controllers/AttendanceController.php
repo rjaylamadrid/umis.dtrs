@@ -25,11 +25,25 @@ class AttendanceController extends Controller {
             if (date_format($date, 'm') <= $arr['month']) {
                 $attendance[$i]['date'] = date_format($date, 'Y-m-d');
                 $attendance[$i]['attn'] = DB::db("db_attendance")->fetch_all ("SELECT * FROM `$table` WHERE emp_id = ? AND date = ?", [$id, date_format($date, 'Y-m-d')])[0];
+                $attendance[$i]['attn'] = $this->authenticate($attendance[$i]['attn']);
             }
             $i++;
         }
         $this->attendance = $attendance;
         return $this;
+    }
+
+    protected function authenticate($attn){
+        if ($attn) {
+            $data = $attn['date'].$attn['emp_id'].$attn['am_in'].$attn['am_out'].$attn['pm_in'].$attn['pm_out'].$attn['ot_in'].$attn['ot_out'];
+            $data = md5(utf8_encode($data), TRUE);
+            if(base64_encode($data) == $attn['signature']){
+                $attn['auth'] = "true";
+            }else{
+                $attn['auth'] = "false";
+            }
+        }
+        return $attn;
     }
 
     protected function compute () {
@@ -38,14 +52,15 @@ class AttendanceController extends Controller {
             $attendance['attn'][$i] = $this->attendance[$i];
             $attendance['total'] += $this->attendance[$i]['attn']['total_hours'];
             $attendance['ut'] += ($this->attendance[$i]['attn']['late'] + $this->attendance[$i]['attn']['undertime']);
+            $attendance['abs'] += $this->attendance[$i]['attn']['is_absent'];
         }
         return $attendance;
     }
 
     protected function is_posted ($period) {
         $table = $period['month'].'-'.$period['year'];
-        $posted = DB::db("db_attendance")->fetch_row ("SELECT COUNT(*) AS count FROM `$table`")[0];
-        return $posted['count'] > 0;
+        $posted = DB::db("db_attendance")->fetch_row ("SELECT COUNT(*) AS count FROM `$table`");
+        return $posted['count'];
     }
 
     protected function get_raw_data ($period, $args) {
@@ -54,10 +69,6 @@ class AttendanceController extends Controller {
 
     protected function find ($period, $no) {
         return DB::db("db_attendance")->fetch_row ("SELECT * FROM `$period` WHERE id = ?", $no);
-    }
-
-    protected function type () {
-        return DB::fetch_all ("SELECT * FROM tbl_employee_type");
     }
 
     protected function to_pdf ($data) {

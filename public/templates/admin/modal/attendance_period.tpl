@@ -41,7 +41,7 @@
                             </div>
                             <div class="form-group">
                                 <label class="custom-switch">
-                                    <input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input">
+                                    <input type="checkbox" name="inactive" class="custom-switch-input">
                                     <span class="custom-switch-indicator"></span>
                                     <span class="custom-switch-description">Include inactive employees</span>
                                 </label>
