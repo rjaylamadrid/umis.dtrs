@@ -10,22 +10,37 @@
                         <form action="" method="POST">
                             <input type="hidden" name="action" value="generate">
                             <label style="display: inline-block;">Select DTR period:&nbsp;</label>
-                            <div class="form-group">
-                                <select name="period" class="form-control custom-select">
+                            <div class="form-group mb-2">
+                                <select name="period" class="form-control custom-select" onchange="javascript:customDate(this.value)">
                                     <option value="1">First Half (1 - 15)</option>
                                     <option value="2">Second Half (16 - 31)</option>
                                     <option value="3">Whole Month (1 - 31)</option>
+                                    <option value="4">Customize</option>
                                 </select>
                             </div>
-                            <div class="form-group form-inline">
+                            <div class="form-group form-inline d-none" id="custom">
                                 <div class="row">
                                     <div class="col-lg-6">
+                                        <label style="justify-content: flex-start">Date From&nbsp;</label>
+                                        <input type="date" name="date_from" class="form-control" style="width: 100%" value="{date('Y-m-')}01">
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <label style="justify-content: flex-start">Date To&nbsp;</label>
+                                        <input type="date" name="date_to" class="form-control" style="width: 100%" value="{date('Y-m-d')}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group form-inline" id="preset">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <label style="justify-content: flex-start">Month&nbsp;</label>
                                         <select name="month" class="form-control custom-select" style="width: 100%" required>
                                             <option value="00" disabled="">Month</option>
                                             {include file="custom/select_month.tpl"}
                                         </select>
                                     </div>
                                     <div class="col-lg-6">
+                                        <label style="justify-content: flex-start">Year&nbsp;</label>
                                         <input type="number" name="year" class="form-control" placeholder="Year" value="{date('Y')}" style="width: 100%">
                                     </div>
                                 </div>

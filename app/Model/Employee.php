@@ -69,4 +69,8 @@ class Employee {
     public static function get () {
         return self::$employee;
     }
+
+    public static function get_campus ($campus) {
+        return DB::fetch_row ("SELECT * FROM tbl_campus WHERE id = ?", $campus);
+    }
 }

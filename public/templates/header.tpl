@@ -58,7 +58,7 @@
                             <a href="/attendance" class="nav-link {if $page == 'attendance'}active{/if}"><i class="fe fe-clock"></i> Daily Time Record</a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link {if $page == 'calendar'}active{/if}"><i class="fe fe-calendar"></i> Calendar</a>
+                            <a href="/calendar" class="nav-link {if $page == 'calendar'}active{/if}"><i class="fe fe-calendar"></i> Calendar</a>
                         </li>
                         <li class="nav-item">
                             <a href="/request" class="nav-link {if $page == 'request'}active{/if}"><i class="fe fe-mail"></i> Leave Request</a>

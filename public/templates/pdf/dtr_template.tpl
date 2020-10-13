@@ -4,10 +4,10 @@
             <td colspan="1"><img src="http://dtrs.com/assets/img/cbsua_logosmall.png" width="40px" height="40px"></td>
             <td colspan="5" style="font-size: 7px;">Republic of the Philippines<br/>
                 <b>CENTRAL BICOL STATE UNIVERSITY OF AGRICULTURE</b><br/>
-                Impig, Sipocot, Camarines Sur 4408<br/>
+                {$campus.campus_address}<br/>
                 Website: www.cbsua.edu.ph<br/>
-                Email Address: cbsua.sipocot@yahoo.com<br/>
-                Telephone: (054) 881-6681<br/>
+                Email Address: {$campus.campus_email}<br/>
+                Telephone: {$campus.campus_telephone}<br/>
             </td>
         </tr>
         <br/>

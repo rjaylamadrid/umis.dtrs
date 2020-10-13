@@ -119,4 +119,14 @@ function get_salary () {
     $('#salary').val("Php " + html.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,'));
   });
 }
+
+function customDate (is_custom) {
+  if (is_custom == "4") {
+    $('#preset').addClass("d-none");
+    $('#custom').removeClass("d-none");
+  } else {
+    $('#preset').removeClass("d-none");
+    $('#custom').addClass("d-none");
+  }
+}
 // OTHER FUNCTIONS :: END

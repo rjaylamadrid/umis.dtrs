@@ -7,13 +7,13 @@
             <div class="loader"></div>
             <div class="dimmer-content"></div>
         </div>
-        {if !$posted}
+        {if $posted}
         <div class="card">
             <div id="sync" class="card-body">
                 <input type="hidden" id="month" value="{$period.month}">
                 <input type="hidden" id="year" value="{$period.year}">
                 <div class="text-center">
-                    <p>Attendance not yet posted or uploaded. <b>PERIOD: {$period.month}-{$period.year}</b></p>
+                    <p>Attendance not yet posted or uploaded. <b>PERIOD: {$posted}</b></p>
                     <button onclick="sync_now()" class="btn btn-outline-primary">Update Attendance Now</button>
                     <div id="sync-result">
                     </div>

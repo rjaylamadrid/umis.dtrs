@@ -56,6 +56,12 @@ $router->group(['before' => 'auth'], function ($router) {
             $router->post('/print', ['Attendance', 'print_preview']);
         });
 
+        //Calendar
+        $router->group(["prefix" => "calendar"], function ($router) {
+            $router->get('/', ['Calendar', 'index']);
+            $router->get('/{tab}', ['Calendar', 'tab']);
+        });
+
         // Settings
         $router->group(["prefix" => "settings"], function ($router) {
             $router->get("/", ["Settings", "index"]);

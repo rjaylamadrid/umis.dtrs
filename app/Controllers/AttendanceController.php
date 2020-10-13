@@ -58,9 +58,24 @@ class AttendanceController extends Controller {
     }
 
     protected function is_posted ($period) {
-        $table = $period['month'].'-'.$period['year'];
-        $posted = DB::db("db_attendance")->fetch_row ("SELECT COUNT(*) AS count FROM `$table`");
-        return $posted['count'];
+        $tbls = "";
+        if ($period['period'] == "4") {
+            $start = date_create($period['date_from'])->format('m-Y');
+            $end = date_create($period['date_to'])->format('m-Y');
+            for ($y = intval(substr($start, 3)); $y <= intval(substr($end, 3)); $y++) {
+                for ($i = intval(substr($start, 0, 2)); $i <= intval(substr($end, 0, 2)); $i++) {
+                    if ($i < 10) $i = '0'.$i;
+                    $table = $i.'-'.$y;
+                    $posted = DB::db("db_attendance")->fetch_row ("SELECT COUNT(*) AS count FROM `$table`");
+                    if (!($posted['count'])) $tbls .= $table ." ";
+                }
+            }
+        } else {
+            $table = $period['month'].'-'.$period['year'];
+            $posted = DB::db("db_attendance")->fetch_row ("SELECT COUNT(*) AS count FROM `$table`");
+            if (!($posted['count'])) $tbls = $table;
+        }
+        return $tbls;
     }
 
     protected function get_raw_data ($period, $args) {
