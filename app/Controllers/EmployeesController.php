@@ -312,6 +312,11 @@ class EmployeesController extends Controller {
     }
 
     public static function update_status ($data, $id) {
+        $old_data = DB::fetch_row ("SELECT privilege,department_id,date_start,position_id,etype_id FROM tbl_employee_status WHERE employee_id = ? AND active_status = '1'",$id);
+        $frm = array('privilege' => $data['privilege'], 'department_id' => $data['department_id'], 'date_start' => $data['date_start'], 'position_id' => $data['position_id'], 'etype_id' => $data['etype_id']);
+        $diff = self::get_array_differences($old_data, $frm);
+        $updated_vals = array('updated_action'=>0,'updated_table'=>'current_employment_info','updated_old_data'=>$diff[0],'updated_new_data'=>$diff[1],'updated_employee_id'=>$id,'updated_admin_id'=>1,'updated_date'=>date("Y-m-d"));
+        DB::insert ("INSERT INTO tbl_employee_update_delete SET ".DB::stmt_builder ($updated_vals),$updated_vals);
         return DB::update ("UPDATE tbl_employee_status SET ".DB::stmt_builder ($data)." WHERE no = (SELECT no FROM tbl_employee_status WHERE employee_id = ".$id." ORDER BY date_start DESC LIMIT 0,1)", $data);
     }
 

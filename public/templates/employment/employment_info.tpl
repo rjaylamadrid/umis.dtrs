@@ -25,6 +25,9 @@
     </div>
     {include file="admin/modal/promote_employee.tpl"}
 {else}
+    <div class="form-group form-inline">
+        <label class="h4" style="display: inline-block;">Current Employment Information</label>
+    </div>
     <form action="/employees" method="POST" accept-charset="UTF-8">
         <input type="hidden" name="action" value="update_employment_info">
         <input type="hidden" id="campus" value="{$employee->info.campus_id}">

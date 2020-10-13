@@ -3,7 +3,7 @@
         <div class="modal-content">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">New Service Record</h3>
+                    <h3 class="card-title">Past Service Record</h3>
                 </div>
                 <div class="card-body">
                     <form action="/employees" method="POST">
@@ -16,7 +16,7 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label class="form-label">Date Started</label>
-                                        <input type="date" class="form-control" name="emp_status[date_start]">
+                                        <input type="date" class="form-control" name="emp_status[date_start]" id="date-start">
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label">Date Ended</label>

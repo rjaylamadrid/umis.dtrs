@@ -19,7 +19,6 @@ class Employees extends EmployeesController {
 
     public function profile ($id = null, $tab = 'basic-info', $view='view', $message=NULL) {
         $this->employee = new EmployeeProfile ($id);
-        // print_r($this->employee);
         try {
             $this->employee->{str_replace ("-", "_", $tab)}();
         } catch (\Throwable $th) {
@@ -30,6 +29,7 @@ class Employees extends EmployeesController {
     }
 
     public function do_action () {
+        // $this->{$this->data['action']} ();
         try {
             $this->{$this->data['action']} ();
         } catch (\Throwable $th) {
@@ -50,10 +50,6 @@ class Employees extends EmployeesController {
         if ($result == 'success') $message = ['success' => 'success', 'message' => 'Employee\'s profile was successfully updated!'];
         $this->profile ($id,$tab,'view',$message);
     }
-
-    // public function submit () {
-    //     header ("location: /profile")
-    // }
 
     public function add_profile_info ($id, $tab = 'basic-info') {
         $empAdd = $this->add_profile($id,$_POST['employeeinfo'],$tab);
@@ -78,6 +74,6 @@ class Employees extends EmployeesController {
         }
         $presets = Schedule::presets()->all();
         $positions = Position::positions()->type ($this->employee->info['etype_id']);
-        $this->view->display ('admin/employee_employment', ['positions' => $positions, 'emp_type' => $this->type (), 'employee' => $this->employee, 'tab' => $tab, 'view' => $view, 'presets' => $presets , 'departments' => $this->departments(), 'designations' => $this->designations(), 'message' => $message]);
+        $this->view->display ('admin/employee_employment', ['positions' => $positions, 'emp_type' => Position::emp_type(), 'employee' => $this->employee, 'tab' => $tab, 'view' => $view, 'presets' => $presets , 'departments' => $this->departments(), 'designations' => $this->designations(), 'message' => $message]);
     }
 }
