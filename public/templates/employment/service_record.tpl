@@ -6,6 +6,12 @@
     {include file="custom/service_record.tpl"}
 {else}
     <div class="form-group form-inline">
+    {if $message}
+            <div class="alert card-alert {if $message.success}alert-success{else}alert-danger{/if} alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert"></button>
+                <i class="fe {if $message.success}fe-check{else}fe-alert-triangle{/if} mr-2" aria-hidden="true"></i>{$message.message}
+            </div><br/>
+    {/if}
     <label class="h4" style="display: inline-block;">Service Record</label>
         <div style="float: right;">
             <a href="" class="btn btn-outline-success btn-sm" data-toggle="modal" data-target="#add-service-record-modal"><i class="fe fe-plus"></i>Add Past Service Record</a>

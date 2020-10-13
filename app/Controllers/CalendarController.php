@@ -9,7 +9,5 @@ class CalendarController extends Controller {
     protected function get_calendar ($month, $year) {
         $date = date_create($year.'-'.$month.'-01');
         $lastday = date_format($date, 't');
-        
-        
     }
 }

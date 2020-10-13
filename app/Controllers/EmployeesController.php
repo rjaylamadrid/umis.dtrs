@@ -287,7 +287,7 @@ class EmployeesController extends Controller {
             header ("location: /employees/employment-update/{$this->data['employee_id']}/employment_info/success");
         }
         else if ($this->data['type'] == "new") {
-            $this->data['emp_status'] += ['date_added' => date('Y-m-d')];
+            $this->data['emp_status'] += ['active_status' => 0];
             $set = DB::insert ("INSERT INTO tbl_employee_status SET ". DB::stmt_builder ($this->data['emp_status']), $this->data['emp_status']);
             header ("location: /employees/employment/{$this->data['emp_status']['employee_id']}/service_record/success");
         }
@@ -320,5 +320,21 @@ class EmployeesController extends Controller {
         return DB::update ("UPDATE tbl_employee_status SET ".DB::stmt_builder ($data)." WHERE no = (SELECT no FROM tbl_employee_status WHERE employee_id = ".$id." ORDER BY date_start DESC LIMIT 0,1)", $data);
     }
 
+    public function create_sched_preset() {
+        $scheds = DB::fetch_row ("SELECT COUNT(*)AS COUNT FROM tbl_schedule_preset");
+        $this->data['schedule_preset'] += ['sched_code' => "SCHED".str_pad($scheds['COUNT']+1,4,'0',STR_PAD_LEFT)];
+
+        DB::insert ("INSERT INTO tbl_schedule_preset SET ". DB::stmt_builder ($this->data['schedule_preset']),$this->data['schedule_preset']);
+        foreach ($this->data['day'] as $key => $days) {
+            $inout = array('sched_code' => $this->data['schedule_preset']['sched_code'], 'weekday' => $days);
+            if ($this->data['amin'.$key] != '') {$inout += ['am_in' => date("H:i:s",strtotime($this->data['amin'.$key]))];}
+            if ($this->data['amout'.$key] != '') {$inout += ['am_out' => date("H:i:s",strtotime($this->data['amout'.$key]))];}
+            if ($this->data['pmin'.$key] != '') {$inout += ['pm_in' => date("H:i:s",strtotime($this->data['pmin'.$key]))];}
+            if ($this->data['pmout'.$key] != '') {$inout += ['pm_out' => date("H:i:s",strtotime($this->data['pmout'.$key]))];}
+            DB::insert ("INSERT INTO tbl_schedule SET ". DB::stmt_builder ($inout),$inout);
+        }
+        $id=$this->data['id'];
+        header ("location: /employees/employment-update/$id/schedule/success");
+    }
     //END OF EMPLOYMENT MODULE
 }

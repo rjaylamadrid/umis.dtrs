@@ -11,6 +11,7 @@
                         <input type="hidden" name="type" value="new">
                         <input type="hidden" name="emp_status[campus_id]" id="campus" value="{$employee->info.campus_id}">
                         <input type="hidden" name="emp_status[employee_id]" value="{$employee->id}">
+                        {* <input type="hidden" name="emp_status[active_status]" value="0"> *}
                         <div class="row">
                             <div class="col-md-12 form-group">
                                 <div class="row">

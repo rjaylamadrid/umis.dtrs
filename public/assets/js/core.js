@@ -134,4 +134,19 @@ function customDate (is_custom) {
     $('#custom').addClass("d-none");
   }
 }
+
+function create_sched (ctr) {
+  if(document.getElementById("day"+ctr).checked) {
+    $("#amin"+ctr).show(0);
+    $("#amout"+ctr).show(0);
+    $("#pmin"+ctr).show(0);
+    $("#pmout"+ctr).show(0);
+  }
+  else {
+    $("#amin"+ctr).hide(0);
+    $("#amout"+ctr).hide(0);
+    $("#pmin"+ctr).hide(0);
+    $("#pmout"+ctr).hide(0);
+  }
+}
 // OTHER FUNCTIONS :: END

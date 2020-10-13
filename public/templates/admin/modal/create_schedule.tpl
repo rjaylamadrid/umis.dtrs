@@ -6,18 +6,20 @@
                     <h3 class="card-title">Create New Schedule</h3>
                 </div>
                 <div class="card-body">
-                    <form action="" method="POST">
+                    <form action="/employees" method="POST">
+                        <input type="hidden" name="action" value="create_sched_preset">
+                        <input type="hidden" name="id" value="{$employee->id}">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="form-label">Preset Days</label>
-                                    <input type="text" class="form-control" name="employeeinfo[FirstName]" value="" placeholder="(ex. MWF)">
+                                    <label class="form-label">Schedule Preset Name</label>
+                                    <input type="text" class="form-control" name="schedule_preset[sched_day]" value="" placeholder="i.e. EVERYDAY">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="form-label">Preset Time</label>
-                                    <input type="text" class="form-control" name="employeeinfo[FirstName]" value="" placeholder="(ex. 7:30 - 5:00)">
+                                    <label class="form-label">Schedule Preset Time</label>
+                                    <input type="text" class="form-control" name="schedule_preset[sched_time]" value="" placeholder="i.e. 7:30 - 12:00 | 1:00 - 5:00">
                                 </div>
                             </div>
                         </div>
@@ -27,9 +29,24 @@
                                     <tr><th>Day</th><th>AM IN</th><th>AM OUT</th><th>PM IN</th><th>PM OUT</th><th></th></tr>
                                 </thead>
                                 <tbody>
-                                    <tr><td>Monday</td></tr>
+                                    {$days = array('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday')}
+                                    {foreach from=$days item=day}
+                                    <tr>
+                                        <td><input type="checkbox" name="day[{$day@iteration}]" value="{$day}" id="day{$day@iteration}" onclick="javascript:create_sched({$day@iteration})" checked>{$day}</td>
+                                        <td><input type="time" name="amin{$day@iteration}" id="amin{$day@iteration}"></td>
+                                        <td><input type="time" name="amout{$day@iteration}" id="amout{$day@iteration}"></td>
+                                        <td><input type="time" name="pmin{$day@iteration}" id="pmin{$day@iteration}"></td>
+                                        <td><input type="time" name="pmout{$day@iteration}" id="pmout{$day@iteration}"></td>
+                                    </tr>
+                                    {/foreach}
                                 </tbody>
                             </table>
+                        </div>
+                        <div class="col-md-12 mt-5">
+                            <div class="form-group" style="float: right;">
+                                <button name="submit" value="submit" class="btn btn-primary">Save Schedule</button>
+                                <a href="#" class="btn btn-secondary" data-dismiss="modal">Cancel</a>
+                            </div>
                         </div>
                     </form>
                 </div>
