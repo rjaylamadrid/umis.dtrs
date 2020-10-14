@@ -23,20 +23,17 @@ class AttendanceController extends Controller {
             if ($from == $to) {
                 $tables[] = ["month" => $month, "table" => $from, "begin" => new DateTime ($arr['from']), "end" => new DateTime ($arr['to'])];
             } else {
-                $tables[] = ["month" => date_create($arr['from'])->format('m'), "table" => $from, "begin" => new DateTime (date_create($arr['from'])->format('Y-m-01')), "end" => new DateTime (date_create($arr['from'])->format('Y-m-31'))];
-                $tables[] = ["month" => date_create($arr['to'])->format('m'), "table" => $to, "begin" => new DateTime (date_create($arr['to'])->format('Y-m-01')), "end" => new DateTime (date_create($arr['to'])->format('Y-m-31'))];
+                $tables[] = ["month" => date_create($arr['from'])->format('m'), "table" => $from, "begin" => new DateTime ($arr['from']), "end" => new DateTime (date_create($arr['from'])->format('Y-m-31'))];
+                $tables[] = ["month" => date_create($arr['to'])->format('m'), "table" => $to, "begin" => new DateTime (date_create($arr['to'])->format('Y-m-01')), "end" => new DateTime ($arr['to'])];
             }
         }
         $i = 0;
-        $month = "";
         foreach ($tables as $table) {
             $end = $table['end'] ->modify( '+1 day');
-            $attendance['month'] = $month == "" ? date_format($end,'F, Y') : $month.date_format($end, ' - F, Y');
-            $month = date_format($end, 'F, Y');
+            $attendance['month'][] = date_format($table['begin'],'F, Y');
 
             $interval = new DateInterval('P1D');
             $daterange = new DatePeriod($table['begin'], $interval ,$end);
-            
             foreach ($daterange as $date) {
                 if (date_format($date, 'm') <= $table['month']) {
                     $attendance[$i]['date'] = date_format($date, 'Y-m-d');
@@ -67,10 +64,9 @@ class AttendanceController extends Controller {
     protected function compute () {
         $attendance = [];
         for ($i=0; $i < sizeof ($this->attendance)-1; $i++) {
-            $attendance['attn'][$i] = $this->attendance[$i];
+            $attendance['attn'][$this->attendance[$i]['date']] = $this->attendance[$i]['attn'];
             $attendance['total'] += $this->attendance[$i]['attn']['total_hours'];
-            $attendance['ut'] += ($this->attendance[$i]['attn']['late'] + $this->attendance[$i]['attn']['undertime']);
-            $attendance['abs'] += $this->attendance[$i]['attn']['is_absent'];
+            $attendance['ut'] += ($this->attendance[$i]['attn']['late'] + $this->attendance[$i]['attn']['undertime']); 
         }
         $attendance['month'] = $this->attendance['month'];
         return $attendance;
@@ -107,5 +103,11 @@ class AttendanceController extends Controller {
 
     protected function to_pdf ($data) {
         PDF::preview ($data);
+    }
+    
+    protected function dtr_data ($vars) {
+        $pdf['content'] = $this->view->render ("pdf/dtr", $vars);
+        $pdf['options'] = ["orientation" => "portrait"];
+        return $pdf;
     }
 }

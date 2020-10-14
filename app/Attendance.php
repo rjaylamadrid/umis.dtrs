@@ -24,11 +24,26 @@ class Attendance extends AttendanceController {
             $attendance = $this->attendance ($this->data['employee_id'], ["from" => $this->data['date_from'], "to" => $this->data['date_to']], ($this->data['period'] - 1))->compute (); // Employee Attendance
             $profile = Employee::find ($this->data['employee_id'])->get ();
             $campus = Employee::get_campus($this->user['campus_id']);
-            $end = date('t', strtotime($attendance['attn'][0]['date']));
-            $vars = ["attendance" => $attendance, "employee" => $profile, "campus" => $campus, "end" => $end, "per_month" => true];
-            $pdf['content'] = $this->view->render ("pdf/dtr", $vars);
-            $pdf['options'] = ["orientation" => "portrait"];
-            $this->to_pdf ($pdf);
+            if ($this->data['per_month']) {
+                for($i = 0; $i < count($attendance['month']); $i++) {
+                    $begin = new DateTime(date_create($attendance['month'][$i])->format('Y-m-01'));
+                    $end = new DateTime(date_create($attendance['month'][$i])->format('Y-m-t'));
+                    $interval = new DateInterval('P1D');
+                    $daterange = new DatePeriod($begin, $interval, $end->modify('+1 day'));
+
+                    $vars = ["attendance" => $attendance, "employee" => $profile, "campus" => $campus, "daterange" => $daterange, "month" => [$attendance['month'][$i]]];
+                    $pdf[] = $this->dtr_data ($vars);
+                }
+            } else {
+                $begin = new DateTime($this->data['date_from']);
+                $end = new DateTime($this->data['date_to']);
+                $interval = new DateInterval('P1D');
+                $daterange = new DatePeriod($begin, $interval, $end->modify('+1 day'));
+
+                $vars = ["attendance" => $attendance, "employee" => $profile, "campus" => $campus, "daterange" => $daterange, "month" => $attendance['month']];
+                $pdf[] = $this->dtr_data ($vars);
+            }
+            $this->to_pdf($pdf);
         }
     }
 
@@ -40,7 +55,12 @@ class Attendance extends AttendanceController {
 
     protected function get_attendance () {
         $attendance = $this->attendance ($this->data['id'], ["from" => $this->data['date_from'], "to" => $this->data['date_to']], ($this->data['period'] - 1))->compute ();
-        $this->view->display ('custom/dtr', ["attendance" => $attendance, "period" => $this->data]);
+        $begin = new DateTime(date_create($this->data['date_from'])->format('Y-m-d'));
+        $end = new DateTime(date_create($this->data['date_to'])->format('Y-m-d'));
+        $interval = new DateInterval('P1D');
+        $daterange = new DatePeriod($begin, $interval, $end->modify('+1 day'));
+
+        $this->view->display ('custom/dtr', ["attendance" => $attendance, "period" => $this->data, "daterange" => $daterange]);
     }
 
     protected function raw_data () {

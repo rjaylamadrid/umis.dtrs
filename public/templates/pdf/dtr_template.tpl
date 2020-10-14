@@ -21,7 +21,7 @@
         <br/>
         <tr>
             <td colspan="6">BRANCH: Admin<br/>
-                For the month of {$attendance.month}<br/>
+                For the month of {$month[0]} {if $month[1]}- {$month[1]}{/if}<br/>
                 Official hours for arrival ( Regular Days 23 )<br/>
                 and departure ( Saturdays 4 )<br/></td>
         </tr>
@@ -46,36 +46,46 @@
             </tr>
         </thead>
         <tbody>
-            {foreach $attendance['attn'] as $attn}
-                {if $attn.attn}
-                    {$attn = $attn.attn}
+            {$attendance.abs = 0}
+            {$attendance.ut = 0}
+            {$attendance.total = 0}
+            {foreach $daterange as $date}
+                {if $attendance['attn'][$date|date_format:"%Y-%m-%d"]}
+                    {$attn = $attendance['attn'][$date|date_format:"%Y-%m-%d"]}
                     <tr class="border">
-                        <td><b>{$attn.date|trim|date_format:"%d"}</b></td>
+                        <td><b>{$attn.date|date_format:"%d"}</b></td>
                         <td>{if $attn.am_in != ":"}{$attn.am_in|substr:0:-1|trim}{else}{$attn.am_in}{/if}</td>
                         <td>{if $attn.am_out != ":"}{$attn.am_out|substr:0:-1|trim}{else}{$attn.am_out}{/if}</td>
                         <td>{if $attn.pm_in != ":"}{$attn.pm_in|substr:0:-1|trim}{else}{$attn.pm_in}{/if}</td>
                         <td>{if $attn.pm_out != ":"}{$attn.pm_out|substr:0:-1|trim}{else}{$attn.pm_out}{/if}</td>
                         <td>{$attn.ot_in|substr:0:-1|trim}</td>
                         <td>{$attn.ot_out|substr:0:-1|trim}</td>
+                        {$attendance.ut = $attendance.ut + ($attn.late + $attn.undertime)}
+                        {$attendance.abs = $attendance.abs + $attn.is_absent}
+                        {$attendance.total = $attendance.total + $attn.total_hours}
                         <td> {$attn.is_absent} </td>
                         <td>{$attn.late + $attn.undertime}</td>
                     </tr>
                 {else}
-                    {if $attn.date|date_format:"w" == 0 || $attn.date|date_format:"w" == 6}
+                    {if $date|date_format:"w" == 0 || $date|date_format:"w" == 6}
                         <tr class="border">
-                            <td><b>{$attn.date|trim|date_format:"%d"}</b></td>
-                            <td colspan="8" style="letter-spacing: 10px;">{$attn.date|trim|date_format:"%A"|upper}</td>
+                            <td><b>{$date|date_format:"%d"}</b></td>
+                            <td colspan="8" style="letter-spacing: 10px;">{$date|date_format:"%A"|upper}</td>
                         </tr>
                     {else}
-                        {$attendance.abs = $attendance.abs + 1}
-                        <tr class="border"><td><b>{$attn.date|trim|date_format:"%d"}</b></td>
+                        <tr class="border"><td><b>{$date|date_format:"%d"}</b></td>
                         <td> : </td>
                         <td> : </td>
                         <td> : </td>
                         <td> : </td>
                         <td>   </td>
                         <td>   </td>
-                        <td> 1.00 </td>
+                        {if $date|date_format:"%Y-%m-%d"|array_key_exists:$attendance['attn']}
+                            {$attendance.abs = $attendance.abs + 1}
+                            <td> 1.00 </td>
+                        {else}
+                            <td> 0.00 </td>
+                        {/if}
                         <td> 0 </td>
                         </tr>
                     {/if}
