@@ -65,8 +65,12 @@ function confirm_delete(no, id, tab, other_info_col='', other_info_data='', admi
         location.href = "/employees/profile/" + id + "/" + tab;
       });
     }
+    else if(tab=='service_record') {
+      f({action: 'delete_row', no:no, tab:'status'}, "text", "/employees").then( function (data) {
+        location.href = "/employees/employment-update/" + id + "/" + tab;
+      });
+    }
     else {
-      console.log(id);
       f({action: 'delete_row', no:no, tab:tab}, "text", "/employees").then( function (data) {
         location.href = "/employees/profile/" + id + "/" + tab;
       });
@@ -100,6 +104,7 @@ function init_pos(type) {
     type = 1;
   }
   f({action: 'get_position', type:type}, "json", "/employees").then( function (positions) {
+    // console.log(type);
     $('#positions').html("<option selected disabled>Position</option>");
     positions.forEach(function (position){
         $('#positions').append("<option value='" + position['no'] + "'>" + position['position_desc'] + "</option>");
@@ -168,5 +173,20 @@ function create_date (date, range_type = 'day', range = 0) {
   m = dt.getMonth() + 1;
   d = dt.getDate();
   return y + '-' + (m >= 9 ? m : '0'+ m) + '-' + (d >= 9 ? d : '0'+ d); 
+}
+
+function create_sched (ctr) {
+  if(document.getElementById("day"+ctr).checked) {
+    $("#amin"+ctr).show(0);
+    $("#amout"+ctr).show(0);
+    $("#pmin"+ctr).show(0);
+    $("#pmout"+ctr).show(0);
+  }
+  else {
+    $("#amin"+ctr).hide(0);
+    $("#amout"+ctr).hide(0);
+    $("#pmin"+ctr).hide(0);
+    $("#pmout"+ctr).hide(0);
+  }
 }
 // OTHER FUNCTIONS :: END

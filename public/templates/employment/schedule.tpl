@@ -24,7 +24,7 @@
                 </select>
                 <div class="col-md-6">
                     <div class="form-group" style="float: right;">
-                        <a href="javascript:get_schedule('create')" class="btn btn-secondary">Create new schedule</a>
+                        <a href="javascript:get_schedule('create')" class="btn btn-secondary">Create New Schedule</a>
                     </div>
                 </div>
             </div>

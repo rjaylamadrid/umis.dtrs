@@ -287,7 +287,7 @@ class EmployeesController extends Controller {
             header ("location: /employees/employment-update/{$this->data['employee_id']}/employment_info/success");
         }
         else if ($this->data['type'] == "new") {
-            $this->data['emp_status'] += ['date_added' => date('Y-m-d')];
+            $this->data['emp_status'] += ['active_status' => 0];
             $set = DB::insert ("INSERT INTO tbl_employee_status SET ". DB::stmt_builder ($this->data['emp_status']), $this->data['emp_status']);
             header ("location: /employees/employment/{$this->data['emp_status']['employee_id']}/service_record/success");
         }
@@ -312,8 +312,29 @@ class EmployeesController extends Controller {
     }
 
     public static function update_status ($data, $id) {
+        $old_data = DB::fetch_row ("SELECT privilege,department_id,date_start,position_id,etype_id FROM tbl_employee_status WHERE employee_id = ? AND active_status = '1'",$id);
+        $frm = array('privilege' => $data['privilege'], 'department_id' => $data['department_id'], 'date_start' => $data['date_start'], 'position_id' => $data['position_id'], 'etype_id' => $data['etype_id']);
+        $diff = self::get_array_differences($old_data, $frm);
+        $updated_vals = array('updated_action'=>0,'updated_table'=>'current_employment_info','updated_old_data'=>$diff[0],'updated_new_data'=>$diff[1],'updated_employee_id'=>$id,'updated_admin_id'=>1,'updated_date'=>date("Y-m-d"));
+        DB::insert ("INSERT INTO tbl_employee_update_delete SET ".DB::stmt_builder ($updated_vals),$updated_vals);
         return DB::update ("UPDATE tbl_employee_status SET ".DB::stmt_builder ($data)." WHERE no = (SELECT no FROM tbl_employee_status WHERE employee_id = ".$id." ORDER BY date_start DESC LIMIT 0,1)", $data);
     }
 
+    public function create_sched_preset() {
+        $scheds = DB::fetch_row ("SELECT COUNT(*)AS COUNT FROM tbl_schedule_preset");
+        $this->data['schedule_preset'] += ['sched_code' => "SCHED".str_pad($scheds['COUNT']+1,4,'0',STR_PAD_LEFT)];
+
+        DB::insert ("INSERT INTO tbl_schedule_preset SET ". DB::stmt_builder ($this->data['schedule_preset']),$this->data['schedule_preset']);
+        foreach ($this->data['day'] as $key => $days) {
+            $inout = array('sched_code' => $this->data['schedule_preset']['sched_code'], 'weekday' => $days);
+            if ($this->data['amin'.$key] != '') {$inout += ['am_in' => date("H:i:s",strtotime($this->data['amin'.$key]))];}
+            if ($this->data['amout'.$key] != '') {$inout += ['am_out' => date("H:i:s",strtotime($this->data['amout'.$key]))];}
+            if ($this->data['pmin'.$key] != '') {$inout += ['pm_in' => date("H:i:s",strtotime($this->data['pmin'.$key]))];}
+            if ($this->data['pmout'.$key] != '') {$inout += ['pm_out' => date("H:i:s",strtotime($this->data['pmout'.$key]))];}
+            DB::insert ("INSERT INTO tbl_schedule SET ". DB::stmt_builder ($inout),$inout);
+        }
+        $id=$this->data['id'];
+        header ("location: /employees/employment-update/$id/schedule/success");
+    }
     //END OF EMPLOYMENT MODULE
 }

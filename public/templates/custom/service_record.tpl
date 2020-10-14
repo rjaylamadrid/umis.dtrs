@@ -20,15 +20,12 @@
                 <td>{$record.etype_desc}</td>
             </tr>
             <tr>
-                <td>Salary</td>
-                <td>Php {if $record.jo == 0} {$record.step_increment|number_format:2:".":","} <div class="small text-muted">Salary Grade: {$record.salary_grade} - Step {$record.step} </div> {else} {$cos_pay = explode(";",$record.step_increment)} {$cos_pay[1]|lower} {$cos_pay[0]|lower} {/if}</td>
-            </tr>
-            <tr>
                 <td>Station / Place of Assignment</td>
                 <td>CBSUA - {$record.campus_name}</td>
             </tr>
             <tr>
-                
+                <td>Salary</td>
+                <td>Php {if $record.jo == 0} {$record.step_increment|number_format:2:".":","} <div class="small text-muted">Salary Grade: {$record.salary_grade} - Step {$record.step} </div> {else} {$cos_pay = explode(";",$record.step_increment)} {$cos_pay[1]|lower} {$cos_pay[0]|lower} {/if}</td>
             </tr>
         {/foreach}
 
