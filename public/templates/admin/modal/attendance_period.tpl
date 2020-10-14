@@ -22,11 +22,11 @@
                                 <div class="row">
                                     <div class="col-lg-6">
                                         <label style="justify-content: flex-start">Date From&nbsp;</label>
-                                        <input type="date" name="date_from" class="form-control" style="width: 100%" value="{date('Y-m-')}01">
+                                        <input type="date" name="date_from" class="form-control" style="width: 100%" value="{date('Y-m-')}01" onchange = "javascript:set_from(this.value)" id="from">
                                     </div>
                                     <div class="col-lg-6">
                                         <label style="justify-content: flex-start">Date To&nbsp;</label>
-                                        <input type="date" name="date_to" class="form-control" style="width: 100%" value="{date('Y-m-d')}">
+                                        <input type="date" name="date_to" class="form-control" style="width: 100%" value="{date('Y-m-01', strtotime('+ 28 days'))}" min="{date('Y-m-01', strtotime('+ 1 days'))}" max="{date('Y-m-01', strtotime('+ 1 months'))}" id ="to">
                                     </div>
                                 </div>
                             </div>

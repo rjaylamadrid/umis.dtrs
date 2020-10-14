@@ -12,26 +12,44 @@ class AttendanceController extends Controller {
     public $attendance;
 
     protected function attendance ($id, $arr, $period = 2) {
-        $table = $arr['month'].'-'.$arr['year'];
-        $begin = new DateTime ($arr['year'].'-'.$arr['month'].'-'.$this->period[$period][0]);
-        $end = new DateTime ($arr['year'].'-'.$arr['month'].'-'.$this->period[$period][1]);
-        $end = $end->modify( '+1 day');
-
-        $interval = new DateInterval('P1D');
-        $daterange = new DatePeriod($begin, $interval ,$end);
-        
-        $i = 0;
-        foreach ($daterange as $date) {
-            if (date_format($date, 'm') <= $arr['month']) {
-                $attendance[$i]['date'] = date_format($date, 'Y-m-d');
-                $attendance[$i]['attn'] = DB::db("db_attendance")->fetch_all ("SELECT * FROM `$table` WHERE emp_id = ? AND date = ?", [$id, date_format($date, 'Y-m-d')])[0];
-                $attendance[$i]['attn'] = $this->authenticate($attendance[$i]['attn']);
+        if (!($period == '3')) {
+            $year = date_create($arr['from'])->format('Y');
+            $month = date_create($arr['from'])->format('m');
+            $tables[] = ["month" => $month, "table" => $month.'-'.$year , "begin" => new DateTime ($year.'-'.$month.'-'.$this->period[$period][0]), "end" => new DateTime ($year.'-'.$month.'-'.$this->period[$period][1])];
+        } else {
+            $from = date_create($arr['from'])->format('m-Y');
+            $to = date_create($arr['to'])->format('m-Y');
+            $month = date_create($arr['from'])->format('m');
+            if ($from == $to) {
+                $tables[] = ["month" => $month, "table" => $from, "begin" => new DateTime ($arr['from']), "end" => new DateTime ($arr['to'])];
+            } else {
+                $tables[] = ["month" => date_create($arr['from'])->format('m'), "table" => $from, "begin" => new DateTime (date_create($arr['from'])->format('Y-m-01')), "end" => new DateTime (date_create($arr['from'])->format('Y-m-31'))];
+                $tables[] = ["month" => date_create($arr['to'])->format('m'), "table" => $to, "begin" => new DateTime (date_create($arr['to'])->format('Y-m-01')), "end" => new DateTime (date_create($arr['to'])->format('Y-m-31'))];
             }
-            $i++;
+        }
+        $i = 0;
+        $month = "";
+        foreach ($tables as $table) {
+            $end = $table['end'] ->modify( '+1 day');
+            $attendance['month'] = $month == "" ? date_format($end,'F, Y') : $month.date_format($end, ' - F, Y');
+            $month = date_format($end, 'F, Y');
+
+            $interval = new DateInterval('P1D');
+            $daterange = new DatePeriod($table['begin'], $interval ,$end);
+            
+            foreach ($daterange as $date) {
+                if (date_format($date, 'm') <= $table['month']) {
+                    $attendance[$i]['date'] = date_format($date, 'Y-m-d');
+                    $attendance[$i]['attn'] = DB::db("db_attendance")->fetch_all ("SELECT * FROM `".$table['table']."` WHERE emp_id = ? AND date = ?", [$id, date_format($date, 'Y-m-d')])[0];
+                    $attendance[$i]['attn'] = $this->authenticate($attendance[$i]['attn']);
+                }
+                $i++;
+            }
         }
         $this->attendance = $attendance;
         return $this;
     }
+
 
     protected function authenticate($attn){
         if ($attn) {
@@ -48,12 +66,13 @@ class AttendanceController extends Controller {
 
     protected function compute () {
         $attendance = [];
-        for ($i=0; $i < sizeof ($this->attendance); $i++) {
+        for ($i=0; $i < sizeof ($this->attendance)-1; $i++) {
             $attendance['attn'][$i] = $this->attendance[$i];
             $attendance['total'] += $this->attendance[$i]['attn']['total_hours'];
             $attendance['ut'] += ($this->attendance[$i]['attn']['late'] + $this->attendance[$i]['attn']['undertime']);
             $attendance['abs'] += $this->attendance[$i]['attn']['is_absent'];
         }
+        $attendance['month'] = $this->attendance['month'];
         return $attendance;
     }
 

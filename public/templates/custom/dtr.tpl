@@ -30,6 +30,12 @@
         <tbody>
             {if $attendance}
             {foreach $attendance.attn as $attn}
+                {if $month != $attn.date|date_format:"%m"}
+                    <tr>
+                        <td colspan="11"><b>{$attn.date|date_format:"%B %Y"|upper}</b></td>
+                    </tr>
+                    {$month = $attn.date|date_format:"%m"}
+                {/if}
             {if $attn.attn}
             {$attn = $attn.attn}
             <tr class="" {if $attn.auth == "false"} style="background-color: #ff00001a" {/if}>
@@ -85,6 +91,8 @@
         <input type="hidden" name="period" value={$period.period}>
         <input type="hidden" name="month" value={$period.month}>
         <input type="hidden" name="year" value={$period.year}>
+        <input type="hidden" name="date_from" value={$period.date_from}>
+        <input type="hidden" name="date_to" value={$period.date_to}>
         {if $user.is_admin}
         <div class="text-right">
             <button type="submit" class="btn btn-primary">Print DTR</button>

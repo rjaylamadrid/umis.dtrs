@@ -26,7 +26,8 @@
             <input type="hidden" id="year" value="{$period.year}">
             <input type="hidden" id="period" value="{$period.period}">
             <input type="hidden" id="emp_type" value="{$period.emp_type}">
-            <input type="hidden" id="emp_active" value="">
+            <input type="hidden" id="date_from" value="{$period.date_from}">
+            <input type="hidden" id="date_to" value="{$period.date_to}">
             <div class="col-md-6 col-lg-3">
       	        <div class="card">
                     <div class="card-status bg-green"></div>
@@ -55,13 +56,9 @@
                             <select id="emp_type" class="form-control custom-select" onchange="load_employees (this.value);">
                                 <option value="">All employees</option>
                                 <option value="0">All regular/casual</option>
-                                {* <?php 
-                                    $emp_type = exec_query("SELECT * FROM tbl_employee_type",$master);
-                                    foreach ($emp_type as $value) {
-                                    $selected = $req['emp_type']==$value['etype_id']?'Selected':'';
-                                    echo "<option value='".$value['etype_id']."'".$selected.">".$value['etype_desc']."</option>";
-                                    }
-                                ?> *}
+                                {foreach $emp_type as $e}
+                                    <option value="{$e.etype_id}" {if $e.etype_id == $period.emp_type}selected{/if}>{$e.etype_desc}</option>
+                                {/foreach}
                             </select>
                             <div style="float: right;">
                                 <div class="item-action dropdown form-control">
@@ -122,7 +119,7 @@
                         <div class="row">
                             <div class="form-group col-md-6 pl-0">
                                 <label>Date</label>
-                                <input type="date" class="form-control" name="Event[EventDate]" min ="<?php echo $date_start;?>" max ="<?php echo $date_end;?>" value="<?php echo $date_start;?>" required>
+                                <input type="date" class="form-control" name="Event[EventDate]" required>
                             </div>
                             <div class="form-group col-md-6 pl-0">
                                 <label>DTR code</label>

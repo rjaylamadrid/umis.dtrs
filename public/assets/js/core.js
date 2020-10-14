@@ -11,6 +11,7 @@ async function f (data = {}, type = 'json', url = path) {
 
 // START::ATTENDANCE
 function init_dtr(id) {
+  var from, to;
   $("#cover-spin").show(0);
   if (id == 0) {
     $("#dtr").html("");
@@ -19,8 +20,25 @@ function init_dtr(id) {
     var month = document.getElementById("month").value;
     var year = document.getElementById("year").value;
     var period = document.getElementById("period").value;
-
-    f({action: 'get_attendance', id:id, month:month, year:year, period:period}, "text").then( function(html){
+    switch(period) {
+      case '1':
+        from = create_date(year+'-'+month+'-01');
+        to = create_date(year+'-'+month+'-15');
+        break;
+      case '2':
+        from = create_date(year+'-'+month+'-16');
+        to = create_date(year+'-'+month+'-01', 'month');
+        break;
+      case '4':
+        from = document.getElementById("date_from").value;
+        to = document.getElementById("date_to").value;
+        break;
+      default:
+        from = create_date(year+'-'+month+'-01');
+        to = create_date(year+'-'+month+'-01', 'month');
+        break;
+    }
+    f({action: 'get_attendance', id:id, date_from:from, date_to:to, period:period}, "text").then( function(html){
       $("#dtr").html(html);
     });
   }
@@ -128,5 +146,27 @@ function customDate (is_custom) {
     $('#preset').removeClass("d-none");
     $('#custom').addClass("d-none");
   }
+}
+
+function set_from (from) {
+  $('#to').attr('min',create_date (from,'day', 1));
+  $('#to').attr('max',create_date (from, 'day',30));
+  $('#to').attr('value',create_date (from, 'day',30));
+}
+
+function create_date (date, range_type = 'day', range = 0) {
+  var dt = new Date (date);
+  var y = dt.getFullYear();
+  var m = dt.getMonth() + 1;
+  var d = dt.getDate();
+  if (range_type == 'day') {
+    dt.setDate(dt.getDate() + range);
+  } else if (range_type == 'month') {
+    dt = new Date(y, m, 0);
+  }
+  y = dt.getFullYear();
+  m = dt.getMonth() + 1;
+  d = dt.getDate();
+  return y + '-' + (m >= 9 ? m : '0'+ m) + '-' + (d >= 9 ? d : '0'+ d); 
 }
 // OTHER FUNCTIONS :: END

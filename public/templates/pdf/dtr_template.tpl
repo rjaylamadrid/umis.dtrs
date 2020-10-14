@@ -21,7 +21,7 @@
         <br/>
         <tr>
             <td colspan="6">BRANCH: Admin<br/>
-                For the month of July, 2020<br/>
+                For the month of {$attendance.month}<br/>
                 Official hours for arrival ( Regular Days 23 )<br/>
                 and departure ( Saturdays 4 )<br/></td>
         </tr>
@@ -47,38 +47,39 @@
         </thead>
         <tbody>
             {foreach $attendance['attn'] as $attn}
-            {if $attn.attn}
-            {$attn = $attn.attn}
-            <tr class="border">
-                <td><b>{$attn.date|trim|date_format:"%d"}</b></td>
-                <td>{if $attn.am_in != ":"}{$attn.am_in|substr:0:-1|trim}{else}{$attn.am_in}{/if}</td>
-                <td>{if $attn.am_out != ":"}{$attn.am_out|substr:0:-1|trim}{else}{$attn.am_out}{/if}</td>
-                <td>{if $attn.pm_in != ":"}{$attn.pm_in|substr:0:-1|trim}{else}{$attn.pm_in}{/if}</td>
-                <td>{if $attn.pm_out != ":"}{$attn.pm_out|substr:0:-1|trim}{else}{$attn.pm_out}{/if}</td>
-                <td>{$attn.ot_in|substr:0:-1|trim}</td>
-                <td>{$attn.ot_out|substr:0:-1|trim}</td>
-                <td> {$attn.is_absent} </td>
-                <td>{$attn.late + $attn.undertime}</td>
-            </tr>
-            {else}
-                {if $attn.date|date_format:"w" == 0 || $attn.date|date_format:"w" == 6}
-            <tr class="border">
-                <td><b>{$attn.date|trim|date_format:"%d"}</b></td>
-                <td colspan="8" style="letter-spacing: 10px;">{$attn.date|trim|date_format:"%A"|upper}</td>
-            </tr>
+                {if $attn.attn}
+                    {$attn = $attn.attn}
+                    <tr class="border">
+                        <td><b>{$attn.date|trim|date_format:"%d"}</b></td>
+                        <td>{if $attn.am_in != ":"}{$attn.am_in|substr:0:-1|trim}{else}{$attn.am_in}{/if}</td>
+                        <td>{if $attn.am_out != ":"}{$attn.am_out|substr:0:-1|trim}{else}{$attn.am_out}{/if}</td>
+                        <td>{if $attn.pm_in != ":"}{$attn.pm_in|substr:0:-1|trim}{else}{$attn.pm_in}{/if}</td>
+                        <td>{if $attn.pm_out != ":"}{$attn.pm_out|substr:0:-1|trim}{else}{$attn.pm_out}{/if}</td>
+                        <td>{$attn.ot_in|substr:0:-1|trim}</td>
+                        <td>{$attn.ot_out|substr:0:-1|trim}</td>
+                        <td> {$attn.is_absent} </td>
+                        <td>{$attn.late + $attn.undertime}</td>
+                    </tr>
                 {else}
-                <tr class="border"><td><b>{$attn.date|trim|date_format:"%d"}</b></td>
-                <td> : </td>
-                <td> : </td>
-                <td> : </td>
-                <td> : </td>
-                <td>   </td>
-                <td>   </td>
-                <td> 0.00 </td>
-                <td> 0 </td>
-            </tr>
+                    {if $attn.date|date_format:"w" == 0 || $attn.date|date_format:"w" == 6}
+                        <tr class="border">
+                            <td><b>{$attn.date|trim|date_format:"%d"}</b></td>
+                            <td colspan="8" style="letter-spacing: 10px;">{$attn.date|trim|date_format:"%A"|upper}</td>
+                        </tr>
+                    {else}
+                        {$attendance.abs = $attendance.abs + 1}
+                        <tr class="border"><td><b>{$attn.date|trim|date_format:"%d"}</b></td>
+                        <td> : </td>
+                        <td> : </td>
+                        <td> : </td>
+                        <td> : </td>
+                        <td>   </td>
+                        <td>   </td>
+                        <td> 1.00 </td>
+                        <td> 0 </td>
+                        </tr>
+                    {/if}
                 {/if}
-            {/if}
             {/foreach}
             <tr class="border">
                 <td colspan="7" style="text-align: left;">TOTAL HOURS: <b>{$attendance.total}</b> OVERTIME: <b>0.00</b></td>

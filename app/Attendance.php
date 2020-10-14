@@ -21,12 +21,11 @@ class Attendance extends AttendanceController {
 
     public function print_preview () {
         if ($this->data) {
-            $attendance = $this->attendance ($this->data['employee_id'], ["month" => $this->data['month'], "year" => $this->data['year']])->compute (); // Employee Attendance
+            $attendance = $this->attendance ($this->data['employee_id'], ["from" => $this->data['date_from'], "to" => $this->data['date_to']], ($this->data['period'] - 1))->compute (); // Employee Attendance
             $profile = Employee::find ($this->data['employee_id'])->get ();
             $campus = Employee::get_campus($this->user['campus_id']);
-            
-            $vars = ["attendance" => $attendance, "employee" => $profile, "campus" => $campus];
-            
+            $end = date('t', strtotime($attendance['attn'][0]['date']));
+            $vars = ["attendance" => $attendance, "employee" => $profile, "campus" => $campus, "end" => $end, "per_month" => true];
             $pdf['content'] = $this->view->render ("pdf/dtr", $vars);
             $pdf['options'] = ["orientation" => "portrait"];
             $this->to_pdf ($pdf);
@@ -40,7 +39,7 @@ class Attendance extends AttendanceController {
     }
 
     protected function get_attendance () {
-        $attendance = $this->attendance ($this->data['id'], ["month" => $this->data['month'], "year" => $this->data['year']], ($this->data['period'] - 1))->compute ();
+        $attendance = $this->attendance ($this->data['id'], ["from" => $this->data['date_from'], "to" => $this->data['date_to']], ($this->data['period'] - 1))->compute ();
         $this->view->display ('custom/dtr', ["attendance" => $attendance, "period" => $this->data]);
     }
 
