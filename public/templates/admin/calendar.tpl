@@ -2,22 +2,28 @@
 {block name=content}
     <div class="my-3 my-md-5">
         <div class="container">
-            <div class="dimmer active" id="loading_spinner" style="display: none;">
+            {* <div class="dimmer active" id="loading_spinner" style="display: none;">
                 <div class="loader"></div>
                 <div class="dimmer-content"></div>
-            </div>
+            </div> *}
             <div class="row">
                 <div class="col-md-3">
                     <div class="card mb-2">
                         <div class="card-body">
-                            <form action="" method="POST">
+                            <form action="/calendar" method="POST">
+                            <input type="hidden" name="action" value="get_calendar">
                                 <label class="form-label">Set Period:</label>
                                 <div class="row">
                                     <select name="month" class="col-md-6 form-control custom-select" id="month">
-                                    <option value="" selected="" disabled="">Month</option>
-                                    {include file="custom/select_month.tpl"}
+                                        <option value="" selected="" disabled="">Month</option>
+                                        {include file="custom/select_month.tpl"}
                                     </select>
                                     <input name="year" type="number" class="col-md-5 form-control ml-4" placeholder="Year" value="{date('Y')}" id="year">
+                                </div>
+                                <div class="col-md-12 mt-5">
+                                    <div class="form-group" style="float: right;">
+                                        <button name="submit" value="submit" class="btn btn-primary">Submit</button>
+                                    </div>
                                 </div>
                             </form>
                         </div>

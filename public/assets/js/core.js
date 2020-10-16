@@ -79,6 +79,14 @@ function confirm_delete(no, id, tab, other_info_col='', other_info_data='', admi
 }
 // EMPLOYEE PROFILE :: END
 
+// CALENDAR :: START
+  function get_events(id) {
+    f({action: 'get_events', id:id}, "text", "/calendar").then( function (data) {
+      // location.href = "/calendar/event";
+    });
+  }
+// CALENDAR :: END
+
 // OTHER FUNCTIONS :: START
 function colours(size) {
   var color = [];
