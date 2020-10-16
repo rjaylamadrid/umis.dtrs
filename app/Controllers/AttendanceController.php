@@ -8,40 +8,28 @@ use DatePeriod;
 use View\PDF;
 
 class AttendanceController extends Controller {
-    private $period = [[1, 15], [16, 31], [1, 31]];
+    private $period = [['01', '15'], ['16', '31'], ['01', '31']];
     public $attendance;
 
     protected function attendance ($id, $arr, $period = 2) {
         if (!($period == '3')) {
-            $year = date_create($arr['from'])->format('Y');
-            $month = date_create($arr['from'])->format('m');
-            $tables[] = ["month" => $month, "table" => $month.'-'.$year , "begin" => new DateTime ($year.'-'.$month.'-'.$this->period[$period][0]), "end" => new DateTime ($year.'-'.$month.'-'.$this->period[$period][1])];
+            if (($period == '2') || ($period == '1')) $this->period[$period][1] = date_create($arr['from'])->format('t');
+            $tables[] = ["table" =>  date_create($arr['from'])->format('m-Y') , "begin" => date_create($arr['from'])->format('Y-m-'.$this->period[$period][0]), "end" => date_create($arr['from'])->format('Y-m-'.$this->period[$period][1])];
         } else {
-            $from = date_create($arr['from'])->format('m-Y');
-            $to = date_create($arr['to'])->format('m-Y');
-            $month = date_create($arr['from'])->format('m');
-            if ($from == $to) {
-                $tables[] = ["month" => $month, "table" => $from, "begin" => new DateTime ($arr['from']), "end" => new DateTime ($arr['to'])];
+            $table1 = date_create($arr['from'])->format('m-Y');
+            $table2 = date_create($arr['to'])->format('m-Y');
+            if ($table1 == $table2) {
+                $tables[] = ["table" => $table1, "begin" => $arr['from'], "end" => $arr['to']];
             } else {
-                $tables[] = ["month" => date_create($arr['from'])->format('m'), "table" => $from, "begin" => new DateTime ($arr['from']), "end" => new DateTime (date_create($arr['from'])->format('Y-m-31'))];
-                $tables[] = ["month" => date_create($arr['to'])->format('m'), "table" => $to, "begin" => new DateTime (date_create($arr['to'])->format('Y-m-01')), "end" => new DateTime ($arr['to'])];
+                $tables[] = ["table" => $table1, "begin" => $arr['from'], "end" => date_create($arr['from'])->format('Y-m-t')];
+                $tables[] = ["table" => $table2, "begin" => date_create($arr['to'])->format('Y-m-01'), "end" => $arr['to']];
             }
         }
-        $i = 0;
         foreach ($tables as $table) {
-            $end = $table['end'] ->modify( '+1 day');
-            $attendance['month'][] = date_format($table['begin'],'F, Y');
-
-            $interval = new DateInterval('P1D');
-            $daterange = new DatePeriod($table['begin'], $interval ,$end);
-            foreach ($daterange as $date) {
-                if (date_format($date, 'm') <= $table['month']) {
-                    $attendance[$i]['date'] = date_format($date, 'Y-m-d');
-                    $attendance[$i]['attn'] = DB::db("db_attendance")->fetch_all ("SELECT * FROM `".$table['table']."` WHERE emp_id = ? AND date = ?", [$id, date_format($date, 'Y-m-d')])[0];
-                    $attendance[$i]['attn'] = $this->authenticate($attendance[$i]['attn']);
-                }
-                $i++;
-            }
+            $attendance['month'][] =date_create($table['begin'])->format('F, Y');
+            $dtr = DB::db("db_attendance")->fetch_all ("SELECT * FROM `".$table['table']."` WHERE emp_id = ? AND `date` >= ? AND `date` <= ?", [$id, $table['begin'], $table['end']]);
+            if (($dtr) && ($attendance['attn'])) $attendance['attn'] = array_merge($attendance['attn'], $dtr);
+            if (!$attendance['attn']) $attendance['attn'] = $dtr;
         }
         $this->attendance = $attendance;
         return $this;
@@ -53,23 +41,25 @@ class AttendanceController extends Controller {
             $data = $attn['date'].$attn['emp_id'].$attn['am_in'].$attn['am_out'].$attn['pm_in'].$attn['pm_out'].$attn['ot_in'].$attn['ot_out'];
             $data = md5(utf8_encode($data), TRUE);
             if(base64_encode($data) == $attn['signature']){
-                $attn['auth'] = "true";
+                $result = "true";
             }else{
-                $attn['auth'] = "false";
+                $result = "false";
             }
         }
-        return $attn;
+        return $result;
     }
 
     protected function compute () {
         $attendance = [];
-        for ($i=0; $i < sizeof ($this->attendance)-1; $i++) {
-            $attendance['attn'][$this->attendance[$i]['date']] = $this->attendance[$i]['attn'];
+        for ($i=0; $i < sizeof ($this->attendance['attn']); $i++) {
+            $this->attendance['attn'][$i]['auth'] = $this->authenticate($this->attendance['attn'][$i]);
+            $attendance['attn'][$this->attendance['attn'][$i]['date']] = $this->attendance['attn'][$i];
             $attendance['total'] += $this->attendance[$i]['attn']['total_hours'];
             $attendance['ut'] += ($this->attendance[$i]['attn']['late'] + $this->attendance[$i]['attn']['undertime']); 
         }
         $attendance['month'] = $this->attendance['month'];
-        return $attendance;
+        $this->attendance = $attendance;
+        return $this->attendance;
     }
 
     protected function is_posted ($period) {

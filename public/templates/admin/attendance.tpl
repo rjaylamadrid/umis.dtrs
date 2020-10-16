@@ -79,9 +79,18 @@
                                             <i class="dropdown-icon fe fe-bookmark"></i> Events 
                                         </a>
                                         <div class="dropdown-divider"></div>
-                                        <a id="generate_pdf" href="" target="_blank" class="dropdown-item">
-                                            <i class="dropdown-icon fe fe-printer"></i> Print all DTR
-                                        </a>
+                                       <form target="_blank" action="/attendance/print" method="POST">
+                                            <input type="hidden" name="period" value={$period.period}>
+                                            <input type="hidden" name="month" value={$period.month}>
+                                            <input type="hidden" name="year" value={$period.year}>
+                                            <input type="hidden" name="date_from" value={$period.date_from}>
+                                            <input type="hidden" name="date_to" value={$period.date_to}>
+                                            <input type="hidden" name="emp_type" value="{$period.emp_type}">
+                                            <input type ="hidden" name="per_month" value="on">
+                                            <button target="_blank" class="dropdown-item">
+                                                <i class="dropdown-icon fe fe-printer"></i> Print all DTR
+                                            </button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>

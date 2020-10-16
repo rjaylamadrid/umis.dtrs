@@ -13,6 +13,8 @@ class DB {
     ];
 
     public static function connect ($db) {
+        ini_set('max_execution_time', 300);
+        ini_set('memory_limit', '512M');
         $server = "mysql:host=".$db[0].";dbname=".$db[1].";charset=utf8mb4";
         try {
             self::$db = new PDO ($server, $db[2], $db[3], $options);

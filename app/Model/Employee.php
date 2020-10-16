@@ -33,7 +33,7 @@ class Employee {
     }
 
     public static function employees () {
-        self::$employees = DB::fetch_all ("SELECT a.employee_id as employee_id, a.no as employee_no, first_name, last_name, gender, birthdate, active_status, b.* FROM tbl_employee a, tbl_employee_status b WHERE a.no = b.employee_id AND b.no = (SELECT no FROM tbl_employee_status WHERE employee_id = a.no ORDER BY date_start DESC LIMIT 0,1) ORDER BY last_name ASC");
+        self::$employees = DB::fetch_all ("SELECT a.no as employee_no, first_name, last_name, gender, birthdate, active_status, b.*, a.employee_id as employee_id FROM tbl_employee a, tbl_employee_status b WHERE a.no = b.employee_id AND b.no = (SELECT no FROM tbl_employee_status WHERE employee_id = a.no ORDER BY date_start DESC LIMIT 0,1) ORDER BY last_name ASC");
         return new self();
     }
 
@@ -50,7 +50,7 @@ class Employee {
     }
 
     public static function find ($id) {
-        self::$employee = DB::db("db_master")->fetch_row ("SELECT a.first_name, a.middle_name, a.last_name, b.*, a.employee_id  FROM tbl_employee a, tbl_employee_status b WHERE a.no = b.employee_id AND b.employee_id = ? GROUP BY a.employee_id", $id);
+        self::$employee = DB::db("db_master")->fetch_row ("SELECT a.no as employee_no,a.first_name, a.middle_name, a.last_name, b.*, a.employee_id  FROM tbl_employee a, tbl_employee_status b WHERE a.no = b.employee_id AND b.employee_id = ? GROUP BY a.employee_id", $id);
         return new static();
     }
 
@@ -64,6 +64,10 @@ class Employee {
             }
             return DB::fetch_all ("SELECT * FROM $profile WHERE employee_id = ? $stmt", self::$employee['id']);
         }
+    }
+    
+    public static function getAll_id () {
+        return DB::fetch_all ("SELECT a.no as employee_no FROM tbl_employee a, tbl_employee_status b WHERE a.no = b.employee_id AND b.no = (SELECT no FROM tbl_employee_status WHERE employee_id = a.no ORDER BY date_start DESC LIMIT 0,1) ORDER BY last_name ASC");
     }
 
     public static function get () {

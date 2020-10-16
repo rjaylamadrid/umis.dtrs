@@ -21,7 +21,7 @@
         <br/>
         <tr>
             <td colspan="6">BRANCH: Admin<br/>
-                For the month of {$month[0]} {if $month[1]}- {$month[1]}{/if}<br/>
+                For the month of {$month}<br/>
                 Official hours for arrival ( Regular Days 23 )<br/>
                 and departure ( Saturdays 4 )<br/></td>
         </tr>
@@ -80,12 +80,13 @@
                         <td> : </td>
                         <td>   </td>
                         <td>   </td>
-                        {if $date|date_format:"%Y-%m-%d"|array_key_exists:$attendance['attn']}
-                            {$attendance.abs = $attendance.abs + 1}
-                            <td> 1.00 </td>
-                        {else}
-                            <td> 0.00 </td>
+                        {$abs = 0}
+                        {if $attendance['attn']}
+                            {if $date|date_format:"%Y-%m-%d"|array_key_exists:$attendance['attn']}
+                                {$attendance.abs = $attendance.abs + 1}
+                            {/if}
                         {/if}
+                        <td> {$abs} </td>
                         <td> 0 </td>
                         </tr>
                     {/if}

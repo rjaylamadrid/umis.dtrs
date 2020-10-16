@@ -14,6 +14,7 @@ class PDF {
     public static function preview ($args) {
         if (!self::$pdf) self::set ();
         self::$pdf->SetPrintHeader(false);
+        self::$pdf->SetPrintFooter(false);
         foreach ($args as $arg) {
             self::$pdf->addPage();
             self::$pdf->writeHTML($arg['content'], true, false, true, false, '');

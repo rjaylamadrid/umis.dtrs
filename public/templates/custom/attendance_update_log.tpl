@@ -18,7 +18,11 @@
 				        <tbody>
 				        	<tr>
 				        		<td>AM IN</td>
-				                <td>{$attn.am_in}</td>
+				                <td>
+									<select name="am_in">
+										<option></option>
+									</select>
+								</td>
 				                <td>AM OUT</td>
 				                <td>{$attn.am_out}</td>
 				            </tr>
