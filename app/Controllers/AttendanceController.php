@@ -2,6 +2,7 @@
 namespace Controllers;
 
 use Database\DB;
+use Model\DTR;
 use DateTime;
 use DateInterval;
 use DatePeriod;
@@ -99,5 +100,24 @@ class AttendanceController extends Controller {
         $pdf['content'] = $this->view->render ("pdf/dtr", $vars);
         $pdf['options'] = ["orientation" => "portrait"];
         return $pdf;
+    }
+
+    protected function save_log () {
+        $attendance = $this->compute_log($this->data['attnd'], $this->data['employee_id'], $this->data['date']);
+
+        // if ($this->data['no']) {
+        //     DB::update("UPDATE `".$this->data['period']."` SET am_in = ?, am_out = ?, pm_in = ?, pm_out = ? WHERE id = ?");
+        // } else {
+        //     $signature = $this->data['date'].$this->data['employee_id'];
+        //     $signature = base64_encode(md5(utf8_encode($signature), TRUE));
+        //     DB::insert ("INSERT `".$this->data['peiod']."` SET am_in = ?, am_out = ?, pm_in = ?, pm_out = ?, 'date' = ?, 'signature' = ?");
+        // }
+    }
+
+    protected function compute_log ($attnd, $id, $date) {
+        $day = date_create($date)->format('D');
+        // $sched = DTR::get_sched($id);
+        // print_r($sched);
+        echo $day;
     }
 }

@@ -2,6 +2,7 @@
 use Controllers\AttendanceController;
 use Model\Employee;
 use Model\Position;
+use Model\DTR;
 
 class Attendance extends AttendanceController {
     private $month;
@@ -74,18 +75,18 @@ class Attendance extends AttendanceController {
         $interval = new DateInterval('P1D');
         $daterange = new DatePeriod($begin, $interval, $end->modify('+1 day'));
 
-        $this->view->display ('custom/dtr', ["attendance" => $attendance, "period" => $this->data, "daterange" => $daterange]);
+        $this->view->display ('custom/dtr', ["attendance" => $attendance, "period" => $this->data, "daterange" => $daterange, "employee_id" => $this->data['id']]);
     }
 
     protected function raw_data () {
-        
         $this->view->display ("custom/attendance_raw_data", ["rawdata" => $this->get_raw_data ($this->data['period'], [$this->data['id'], $this->data['date']])]);
     }
 
     protected function update_log () {
-        $attn = $this->find ($this->data['month'].'-'.$this->data['year'], $this->data['id']);
+        $period = $this->data['month'].'-'.$this->data['year'];
+        $attn = $this->find ($period, $this->data['id']);
         $rawdata = $this->get_raw_data ($this->data['month'].'-'.$this->data['year'], [$this->data['emp_id'], $this->data['date']]);
 
-        $this->view->display ("custom/attendance_update_log", ["attn" => $attn, "rawdata" => $rawdata]);
+        $this->view->display ("custom/attendance_update_log", ["attn" => $attn, "rawdata" => $rawdata, "codes" => DTR::dtr_code(), "period" => $period, "employee_id" => $this->data['emp_id'], "date" => $this->data['date']]);
     }
 }

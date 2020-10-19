@@ -8,10 +8,12 @@
 				vertical-align: middle;
 			}
 		</style>
-		<form action="" method="POST" id="frmLog">
-			<input type="hidden" name="action" value="save">
+		<form action="" method="POST">
+			<input type="hidden" name="action" value="save_log">
 			<input type="hidden" name="period" value="{$period}">
-			<input type="hidden" name="no" value="{$logid}">
+			<input type="hidden" name="no" value="{$attn.id}">
+			<input type="hidden" name="employee_id" value="{$employee_id}">
+			<input type="hidden" name="date" value="{$date}">
 			<div class="card-body">
 				<div class="table-responsive">
 				    <table class="table mb-0 update-log">
@@ -19,18 +21,42 @@
 				        	<tr>
 				        		<td>AM IN</td>
 				                <td>
-									<select name="am_in">
-										<option></option>
-									</select>
+									<input list="attnd1" type="text" name="attnd[]" class="form-control" placeholder="00:00" autocomplete="off" maxlength="8" {if $attn.am_in && $attn.am_in != ':'}value="{$attn.am_in}"{/if}>
+									<datalist id="attnd1">
+										{foreach $codes as $code}
+										<option value="{$code.dtr_code}">
+										{/foreach}
+									</datalist>
 								</td>
 				                <td>AM OUT</td>
-				                <td>{$attn.am_out}</td>
+				                <td>
+									<input list="attnd2" type="text" name="attnd[]" class="form-control" placeholder="00:00" autocomplete="off" maxlength="8" {if $attn.am_out && $attn.am_out != ':'}value="{$attn.am_out}"{/if}>
+									<datalist id="attnd2">
+										{foreach $codes as $code}
+										<option value="{$code.dtr_code}">
+										{/foreach}
+									</datalist>
+								</td>
 				            </tr>
 				            <tr>
 				        		<td>PM IN</td>
-				                <td>{$attn.pm_in}</td>
+				                <td>
+									<input list="attnd3" type="text" name="attnd[]" class="form-control" placeholder="00:00" autocomplete="off" maxlength="8" {if $attn.pm_in && $attn.pm_in != ':'}value="{$attn.pm_in}"{/if}>
+									<datalist id="attnd3">
+										{foreach $codes as $code}
+										<option value="{$code.dtr_code}">
+										{/foreach}
+									</datalist>
+								</td>
 				                <td>PM OUT</td>
-				                <td>{$attn.pm_out}</td>
+				                <td>
+									<input list="attnd4" type="text" name="attnd[]" class="form-control" placeholder="00:00" autocomplete="off" maxlength="8"  {if $attn.pm_out && $attn.pm_out != ':'}value="{$attn.pm_out}"{/if}>
+									<datalist id="attnd4">
+										{foreach $codes as $code}
+										<option value="{$code.dtr_code}">
+										{/foreach}
+									</datalist>
+								</td>
 				            </tr>
 				            <tr>
 				        		<td>OT IN</td>
@@ -42,7 +68,7 @@
 				    </table>
 				    <hr class="mt-0">
 				    <div class="form-group">
-				    	<select name="dtr[year]" class="form-control custom-select">
+				    	<select class="form-control custom-select">
                             <option selected>Raw Log Data</option>
                             {if $rawdata}
                             {assign var=type value=['', 'IN', 'OUT', 'OT-IN', 'OT-OUT']}
@@ -57,14 +83,13 @@
 			<div class="card-footer text-right">
 			    <div class="d-flex">
 			        <a href="javascript:void(0)" class="btn btn-link" data-dismiss="modal">Cancel</a>
-			        <a href="javascript:modify_log(\''.$emp_id.'\', \''.$date.'\')" class="btn btn-primary ml-auto">Update Log</a>
+			        <button class="btn btn-primary ml-auto">Update Log</button>
 			    </div>
 			</div>
 		</form>
 
 		<script type="text/javascript">
-			require(['input-mask']);
-
+			require(['inputmask']);
 			function modify_log (id, period) {
 				var form = $('#frmLog').serialize()+"&id="+id+"&date="+period;
 	            $.ajax({

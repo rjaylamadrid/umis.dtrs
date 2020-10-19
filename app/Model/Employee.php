@@ -50,7 +50,7 @@ class Employee {
     }
 
     public static function find ($id) {
-        self::$employee = DB::db("db_master")->fetch_row ("SELECT a.no as employee_no,a.first_name, a.middle_name, a.last_name, b.*, a.employee_id  FROM tbl_employee a, tbl_employee_status b WHERE a.no = b.employee_id AND b.employee_id = ? GROUP BY a.employee_id", $id);
+        self::$employee = DB::db("db_master")->fetch_row ("SELECT a.no as employee_no, a.first_name, a.middle_name, a.last_name, b.*, a.employee_id  FROM tbl_employee a, tbl_employee_status b WHERE a.no = b.employee_id AND b.employee_id = ? GROUP BY a.employee_id", $id);
         return new static();
     }
 

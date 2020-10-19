@@ -50,7 +50,7 @@
                         <td>{$attn.late + $attn.undertime}</td>
                         <td></td>
                         {if $user.is_admin}
-                        <td><a href="javascript:view_raw_data('{$attn.emp_id}', '{$attn.date|date_format:"%Y-%m-%d"}');" class="icon" title="View Raw Data"><i class="fe fe-eye"></i></a><a href="javascript:update_log('{$attn.id}', '{$attn.emp_id}', '{$attn.date|date_format:"%Y-%m-%d"}');" class="icon" title="Edit Log"><i class="fe fe-edit"></i></a></td>
+                        <td><a href="javascript:view_raw_data('{$employee_id}', '{$attn.date|date_format:"%Y-%m-%d"}');" class="icon" title="View Raw Data"><i class="fe fe-eye"></i></a><a href="javascript:update_log('{$attn.id}', '{$employee_id}', '{$attn.date|date_format:"%Y-%m-%d"}');" class="icon" title="Edit Log"><i class="fe fe-edit"></i></a></td>
                         {/if}
                     </tr>
                 {else}
@@ -59,7 +59,7 @@
                             <td><b>{$date|date_format:"%d"}</b></td>
                             <td colspan="9" style="text-align: center; letter-spacing: 60px;">{$date|date_format:"%A"|upper}</td>
                             {if $user.is_admin}
-                            <td><a href="javascript:view_raw_data('{$attn.emp_id}', '{$date|date_format:"%Y-%m-%d"}');" class="icon" title="View Raw Data"><i class="fe fe-eye"></i></a><a href="javascript:update_log('{$attn.id}', '{$attn.emp_id}', '{$attn.date|date_format:"%Y-%m-%d"}');" class="icon" title="Edit Log"><i class="fe fe-edit"></i></a></td>
+                            <td><a href="javascript:view_raw_data('{$employee_id}', '{$date|date_format:"%Y-%m-%d"}');" class="icon" title="View Raw Data"><i class="fe fe-eye"></i></a><a href="javascript:update_log('0', '{$employee_id}', '{$date|date_format:"%Y-%m-%d"}');" class="icon" title="Edit Log"><i class="fe fe-edit"></i></a></td>
                             {/if}    
                         </tr>
                             {else}
@@ -75,7 +75,7 @@
                             <td> 0  </td>
                             <td></td>
                             {if $user.is_admin}
-                            <td><a href="javascript:view_raw_data('{$attn.emp_id}', '{$attn.date|date_format:"%Y-%m-%d"}');" class="icon" title="View Raw Data"><i class="fe fe-eye"></i></a><a href="javascript:update_log('{$attn.id}', '{$attn.emp_id}', '{$attn.date|date_format:"%Y-%m-%d"}');" class="icon" title="Edit Log"><i class="fe fe-edit"></i></a></td>
+                            <td><a href="javascript:view_raw_data('{$employee_id}', '{$date|date_format:"%Y-%m-%d"}');" class="icon" title="View Raw Data"><i class="fe fe-eye"></i></a><a href="javascript:update_log('0', '{$employee_id}', '{$date|date_format:"%Y-%m-%d"}');" class="icon" title="Edit Log"><i class="fe fe-edit"></i></a></td>
                             {/if}
                         </tr>
                     {/if}
