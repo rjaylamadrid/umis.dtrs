@@ -1,3 +1,5 @@
+{extends file="layout.tpl"}
+{block name=content}
 <br /><br /><br />
 <div class="page-content">
     <div class="container text-center">
@@ -9,3 +11,4 @@
         </a>
     </div>
 </div>
+{/block}
