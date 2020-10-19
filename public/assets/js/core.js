@@ -198,4 +198,12 @@ function create_sched (ctr) {
     $("#pmout"+ctr).hide(0);
   }
 }
+
+function modify_log () {
+  var attnd = $('input[name="attnd[]"]').map(function() { return this.value;}).get();
+  f({action:"save_log", attnd}, "text", "/attendance").then( function(html){
+    console.log(html);
+  });
+  // $('#update-log-modal').modal('hide');
+}
 // OTHER FUNCTIONS :: END

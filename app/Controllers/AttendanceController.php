@@ -103,21 +103,59 @@ class AttendanceController extends Controller {
     }
 
     protected function save_log () {
-        $attendance = $this->compute_log($this->data['attnd'], $this->data['employee_id'], $this->data['date']);
-
+        // $period =  $this->data['period'];
+        // $attendance = $this->compute_log($this->data['attnd'], $this->data['employee_id'], $this->data['date']);
         // if ($this->data['no']) {
-        //     DB::update("UPDATE `".$this->data['period']."` SET am_in = ?, am_out = ?, pm_in = ?, pm_out = ? WHERE id = ?");
+        //     DB::db('db_attendance')->update("UPDATE `$period` SET ". DB::stmt_builder($attendance), $attendance);
         // } else {
         //     $signature = $this->data['date'].$this->data['employee_id'];
-        //     $signature = base64_encode(md5(utf8_encode($signature), TRUE));
-        //     DB::insert ("INSERT `".$this->data['peiod']."` SET am_in = ?, am_out = ?, pm_in = ?, pm_out = ?, 'date' = ?, 'signature' = ?");
+        //     $attendance['signature'] = base64_encode(md5(utf8_encode($signature), TRUE));
+        //     $attendance['emp_id'] = $this->data['employee_id'];
+        //     $attendance['date'] = $this->data['date'];
+        //     DB::db('db_attendance')->insert ("INSERT INTO `$period` SET ". DB::stmt_builder($attendance), $attendance);
         // }
+        print_r($this->data['attnd']);
+        echo $this->data['attnd'][0];
     }
 
     protected function compute_log ($attnd, $id, $date) {
-        $day = date_create($date)->format('D');
-        // $sched = DTR::get_sched($id);
-        // print_r($sched);
-        echo $day;
+        $preset = ["am_in", "am_out", "pm_in", "pm_out", "ot_in", "ot_out"];
+        $attendance = ["is_absent" => 0, "total_hours" => 0, "late" => 0, "undertime" => 0];
+        $day = date_create($date)->format('l');
+        $sched = DTR::get_sched($id, $day);
+        if ($sched) {
+            for ($i = 0; $i < 6; $i++) {
+                if ($i < 4) { 
+                    $payable = DTR::is_payable($attnd[$i], $id);
+                    if ($payable) {
+                        $code = $attnd[$i];
+                        $attnd[$i] = $sched[0][$preset[$i]];
+                    }
+                    if (($attnd[$i]) && (date_create($attnd[$i]))) {
+                        $schedule = date_create($sched[0][$preset[$i]]);
+                        $log = date_create($attnd[$i]);
+                        if (($i == 0) || ($i == 2)) {
+                            if ($attnd[$i+1]) {
+                                $attendance['late'] += $log > $schedule ? (strtotime($attnd[$i]) - strtotime($sched[0][$preset[$i]]))/60 : 0;
+                            }
+                        } else {
+                            if ($attnd[$i-1]) {
+                                $attendance['undertime'] += $log < $schedule ? (strtotime($sched[0][$preset[$i]]) - strtotime($attnd[$i]))/60 : 0;
+                                if (date_create($attnd[$i-1]) && date_create($attnd[$i])) {
+                                    $attendance['total_hours'] += ((strtotime($attnd[$i]) - strtotime($attnd[$i-1]))/60)/60;
+                                    $attendance['is_absent'] += .5;
+                                }
+                            }
+                        }
+                        $attendance[$preset[$i]] = $payable ? $code : $log -> format("g:iA");
+                    } else { 
+                        $attendance[$preset[$i]] = ":";
+                    }
+                } else {
+                    $attendance[$preset[$i]] = $attnd[$i];
+                }
+            }
+        }
+        return $attendance;
     }
 }
