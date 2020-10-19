@@ -66,8 +66,8 @@ $router->group(['before' => 'auth'], function ($router) {
         $router->group(["prefix" => "calendar"], function ($router) {
             $router->get('/', ['Calendar', 'index']);
             $router->post('/', ['Calendar', 'do_action']);
-            // $router->get('/events/{year}/{month}/{day}?',['Calendar', 'show_calendar']);
             $router->get('/{tab}?', ['Calendar', 'tab']);
+            $router->post('/show-events',['Calendar','show_events']);
         });
 
         // Settings

@@ -8,7 +8,9 @@ class Calendar extends CalendarController {
         // $this->date = date('YYYY-M-D');
         // $this->count = array_search(date_format($this->date,'l'),$this->days);
         // $this->get_calendar();
-        $this->view->display ('admin/calendar', ["tab" => $this->tab, "date" => $this->date, "count" => $this->count, "days" => $this->days, "lastday" => $this->lastday]);
+        print_r($this->date);
+        $this->view->display ('admin/calendar', ["tab" => $this->tab, "date" => $this->date, "count" => $this->count, "days" => $this->days, "lastday" => $this->lastday, "month" => $this->data['month']]);
+        
     }
 
     public function do_action () {
@@ -19,9 +21,15 @@ class Calendar extends CalendarController {
         } 
     }
 
-    // public function show_calendar($year,$month,$day) {
-
-    // }
+    public function show_events() {
+        try {
+            $this->{$this->data['action']} ($this->data['day'], $this->data['month'], $this->data['year']);
+        } catch (\Throwable $th) {
+            $this->index();
+        }
+        // $this->view->display ('admin/calendar/show_events', ["date" => $this->data['day']]);
+        // $this->view->display ('admin/calendar/show_events', ["date" => date_create('2020-01-01')]);
+    }
 
     public function tab ($tab = "event") {
         $this->tab = $tab;

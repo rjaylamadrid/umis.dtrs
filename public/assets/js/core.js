@@ -80,9 +80,10 @@ function confirm_delete(no, id, tab, other_info_col='', other_info_data='', admi
 // EMPLOYEE PROFILE :: END
 
 // CALENDAR :: START
-  function get_events(id) {
-    f({action: 'get_events', id:id}, "text", "/calendar").then( function (data) {
-      // location.href = "/calendar/event";
+  function get_events(day,month,year) {
+    f({action: 'get_events', day:day, month:month, year:year}, "text", "/calendar/show-events").then( function (data) {
+      $('#tbl-event').html(data);
+      console.log(data);
     });
   }
 // CALENDAR :: END
