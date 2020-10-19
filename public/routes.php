@@ -56,10 +56,18 @@ $router->group(['before' => 'auth'], function ($router) {
             $router->post('/print', ['Attendance', 'print_preview']);
         });
 
+        //Payroll
+        $router->group(["prefix" => "payroll"], function ($router) {
+            $router->get('/', ['Payroll', 'index']);
+            $router->get('/{tab}?', ['Payroll', 'tab']);
+        });
+
         //Calendar
         $router->group(["prefix" => "calendar"], function ($router) {
             $router->get('/', ['Calendar', 'index']);
-            $router->get('/{tab}', ['Calendar', 'tab']);
+            $router->post('/', ['Calendar', 'do_action']);
+            $router->get('/{tab}?', ['Calendar', 'tab']);
+            $router->post('/show-events',['Calendar','show_events']);
         });
 
         // Settings
