@@ -86,7 +86,6 @@ function confirm_delete(no, id, tab, other_info_col='', other_info_data='', admi
     document.getElementById('event_date').value = year+'-'+month+'-'+day;
     f({action: 'get_events', day:day, month:month, year:year}, "text", "/calendar/show-events").then( function (data) {
       $('#tbl-event').html(data);
-      console.log(data);
     });
   }
 // CALENDAR :: END
@@ -203,10 +202,10 @@ function create_sched (ctr) {
 }
 
 function modify_log () {
-  var attnd = $('input[name="attnd[]"]').map(function() { return this.value;}).get();
-  f({action:"save_log", attnd}, "text", "/attendance").then( function(html){
-    console.log(html);
+  var form = $('#formLog').serialize();
+  f(form, "text", "/attendance").then( function(html){
+    $('#update-log-modal').modal('hide');
+    init_dtr($('#id').val());
   });
-  // $('#update-log-modal').modal('hide');
 }
 // OTHER FUNCTIONS :: END

@@ -103,19 +103,17 @@ class AttendanceController extends Controller {
     }
 
     protected function save_log () {
-        // $period =  $this->data['period'];
-        // $attendance = $this->compute_log($this->data['attnd'], $this->data['employee_id'], $this->data['date']);
-        // if ($this->data['no']) {
-        //     DB::db('db_attendance')->update("UPDATE `$period` SET ". DB::stmt_builder($attendance), $attendance);
-        // } else {
-        //     $signature = $this->data['date'].$this->data['employee_id'];
-        //     $attendance['signature'] = base64_encode(md5(utf8_encode($signature), TRUE));
-        //     $attendance['emp_id'] = $this->data['employee_id'];
-        //     $attendance['date'] = $this->data['date'];
-        //     DB::db('db_attendance')->insert ("INSERT INTO `$period` SET ". DB::stmt_builder($attendance), $attendance);
-        // }
-        print_r($this->data['attnd']);
-        echo $this->data['attnd'][0];
+        $period =  $this->data['period'];
+        $attendance = $this->compute_log($this->data['attnd'], $this->data['employee_id'], $this->data['date']);
+        if ($this->data['no']) {
+            DB::db('db_attendance')->update("UPDATE `$period` SET ". DB::stmt_builder($attendance)." WHERE id = ".$this->data['no'], $attendance);
+        } else {
+            $signature = $this->data['date'].$this->data['employee_id'];
+            $attendance['signature'] = base64_encode(md5(utf8_encode($signature), TRUE));
+            $attendance['emp_id'] = $this->data['employee_id'];
+            $attendance['date'] = $this->data['date'];
+            DB::db('db_attendance')->insert ("INSERT INTO `$period` SET ". DB::stmt_builder($attendance), $attendance);
+        }
     }
 
     protected function compute_log ($attnd, $id, $date) {

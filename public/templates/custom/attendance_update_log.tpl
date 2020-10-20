@@ -9,9 +9,10 @@
 			}
 		</style>
 		<form action="" method="POST" id="formLog">
+			<input type="hidden" name="action" value="save_log">
 			<input type="hidden" name="period" value="{$period}">
 			<input type="hidden" name="no" value="{$attn.id}">
-			<input type="hidden" name="employee_id" value="{$employee_id}">
+			<input type="hidden" name="employee_id" value="{$employee_id}" id="id">
 			<input type="hidden" name="date" value="{$date}">
 			<div class="card-body">
 				<div class="table-responsive">

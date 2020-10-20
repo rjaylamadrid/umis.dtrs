@@ -54,10 +54,10 @@
                     {$attn = $attendance['attn'][$date|date_format:"%Y-%m-%d"]}
                     <tr class="border">
                         <td><b>{$attn.date|date_format:"%d"}</b></td>
-                        <td>{if $attn.am_in != ":"}{$attn.am_in|substr:0:-1|trim}{else}{$attn.am_in}{/if}</td>
-                        <td>{if $attn.am_out != ":"}{$attn.am_out|substr:0:-1|trim}{else}{$attn.am_out}{/if}</td>
-                        <td>{if $attn.pm_in != ":"}{$attn.pm_in|substr:0:-1|trim}{else}{$attn.pm_in}{/if}</td>
-                        <td>{if $attn.pm_out != ":"}{$attn.pm_out|substr:0:-1|trim}{else}{$attn.pm_out}{/if}</td>
+                        <td>{if $attn.am_in|count_characters > 5}{$attn.am_in|substr:0:-1|trim}{else}{$attn.am_in}{/if}</td>
+                        <td>{if $attn.am_out|count_characters > 5}{$attn.am_out|substr:0:-1|trim}{else}{$attn.am_out}{/if}</td>
+                        <td>{if $attn.pm_in|count_characters > 5}{$attn.pm_in|substr:0:-1|trim}{else}{$attn.pm_in}{/if}</td>
+                        <td>{if $attn.pm_out|count_characters > 5}{$attn.pm_out|substr:0:-1|trim}{else}{$attn.pm_out}{/if}</td>
                         <td>{$attn.ot_in|substr:0:-1|trim}</td>
                         <td>{$attn.ot_out|substr:0:-1|trim}</td>
                         {$attendance.ut = $attendance.ut + ($attn.late + $attn.undertime)}
