@@ -81,12 +81,25 @@ function confirm_delete(no, id, tab, other_info_col='', other_info_data='', admi
 
 // CALENDAR :: START
   function get_events(day,month,year) {
+    $('.date').removeClass('selected');
+    $('#'+day).addClass('selected');
     day = (day < 10 ? "0" : "") + day;
     month = (month < 10 ? "0" : "") + month;
     document.getElementById('event_date').value = year+'-'+month+'-'+day;
+    // document.getElementById('event_date_edit').value = year+'-'+month+'-'+day;
     f({action: 'get_events', day:day, month:month, year:year}, "text", "/calendar/show-events").then( function (data) {
       $('#tbl-event').html(data);
+      // console.log(data);
     });
+  }
+
+  function delete_event(no) {
+    if(confirm("Are you sure you want to delete this event?" + no)) {
+      f({action: 'delete_event', no:no}, "text", "/calendar/delete-event").then( function (data) {
+        location.href = "/calendar";
+        // console.log(data);
+      });
+    }
   }
 // CALENDAR :: END
 
