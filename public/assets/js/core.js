@@ -81,6 +81,9 @@ function confirm_delete(no, id, tab, other_info_col='', other_info_data='', admi
 
 // CALENDAR :: START
   function get_events(day,month,year) {
+    day = (day < 10 ? "0" : "") + day;
+    month = (month < 10 ? "0" : "") + month;
+    document.getElementById('event_date').value = year+'-'+month+'-'+day;
     f({action: 'get_events', day:day, month:month, year:year}, "text", "/calendar/show-events").then( function (data) {
       $('#tbl-event').html(data);
       console.log(data);

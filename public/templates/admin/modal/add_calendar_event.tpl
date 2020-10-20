@@ -3,7 +3,7 @@
     <div class="modal-content">
       <div class="card">
         <div class="card-header">
-          <h3 class="card-title">Add new event {date_format($event_date,'F d, Y')}</h3>
+          <h3 class="card-title">Add new event {date_format($date,'F d, Y')}</h3>
         </div>
         <div class="card-body">
           <form action="/calendar" method="post" id="frm-event">
@@ -18,7 +18,7 @@
                 <input type="date" class="form-control" name="Event[EventDate]" value="<?php echo $now;?>" required readonly>
               </div>
               <div class="form-group col-md-6 pl-0">
-                <label>DTR code</label>
+                <label>DTR code {print_r($selected_date)}</label>
                 <select class="form-control" name="Event[dtc_no]" required>
                   <option value="" selected disabled>Code</option>
                   <?php
