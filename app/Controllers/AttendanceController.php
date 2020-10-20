@@ -3,6 +3,7 @@ namespace Controllers;
 
 use Database\DB;
 use Model\DTR;
+use Model\Employee;
 use DateTime;
 use DateInterval;
 use DatePeriod;
@@ -103,17 +104,7 @@ class AttendanceController extends Controller {
     }
 
     protected function save_log () {
-        $period =  $this->data['period'];
-        $attendance = $this->compute_log($this->data['attnd'], $this->data['employee_id'], $this->data['date']);
-        if ($this->data['no']) {
-            DB::db('db_attendance')->update("UPDATE `$period` SET ". DB::stmt_builder($attendance)." WHERE id = ".$this->data['no'], $attendance);
-        } else {
-            $signature = $this->data['date'].$this->data['employee_id'];
-            $attendance['signature'] = base64_encode(md5(utf8_encode($signature), TRUE));
-            $attendance['emp_id'] = $this->data['employee_id'];
-            $attendance['date'] = $this->data['date'];
-            DB::db('db_attendance')->insert ("INSERT INTO `$period` SET ". DB::stmt_builder($attendance), $attendance);
-        }
+        change_log ($this->data['no'], $this->data['employee_id'], $this->data['attnd'],$this->data['period'], $this->data['date']);
     }
 
     protected function compute_log ($attnd, $id, $date) {
@@ -156,4 +147,28 @@ class AttendanceController extends Controller {
         }
         return $attendance;
     }
+
+    protected function set_default ($data = 'sched') {
+        if ($this->data['emp_type']) $employees = Employee::type ($this->data['emp_type']);
+        else $employees = Employee::getAll();
+
+        foreach ($employees as $employee) {
+            if ($data == 'sched') {
+                $attnd = DTR::get_sched($employee['employee_no']);
+            }
+        }
+    }
+
+    protected function change_log ($log_no = NULL, $id, $attnd, $period, $date) {
+        $attendance = $this->compute_log($attnd, $id, $date);
+        if ($this->data['no']) {
+            DB::db('db_attendance')->update("UPDATE `$period` SET ". DB::stmt_builder($attendance)." WHERE id = ".$log_no, $attendance);
+        } else {
+            $signature = $date.$id;
+            $attendance['signature'] = base64_encode(md5(utf8_encode($signature), TRUE));
+            $attendance['emp_id'] = $this->data['employee_id'];
+            $attendance['date'] = $this->data['date'];
+            DB::db('db_attendance')->insert ("INSERT INTO `$period` SET ". DB::stmt_builder($attendance), $attendance);
+        }
+    } 
 }

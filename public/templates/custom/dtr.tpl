@@ -32,7 +32,7 @@
             {foreach $daterange as $date}
                 {if $month != $date|date_format:"%m"}
                     <tr>
-                        <td colspan="11"><b>{$date|date_format:"%B %Y"|upper}</b></td>
+                        <td colspan="11" style="background-color: #00c4ff1a"><b>{$date|date_format:"%B %Y"|upper}</b></td>
                     </tr>
                     {$month = $date|date_format:"%m"}
                 {/if}

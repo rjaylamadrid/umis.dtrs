@@ -22,12 +22,6 @@
         </div>
         {else}
         <div class="row row-cards" id="attendance-content">
-            <input type="hidden" id="month" value="{$period.month}">
-            <input type="hidden" id="year" value="{$period.year}">
-            <input type="hidden" id="period" value="{$period.period}">
-            <input type="hidden" id="emp_type" value="{$period.emp_type}">
-            <input type="hidden" id="date_from" value="{$period.date_from}">
-            <input type="hidden" id="date_to" value="{$period.date_to}">
             <div class="col-md-6 col-lg-3">
       	        <div class="card">
                     <div class="card-status bg-green"></div>
@@ -51,15 +45,24 @@
             <div class="col-md-6 col-lg-9">
                 <div class="card">
                     <div class="card-body">
+                        <form action="" method="POST" id="generate">
+                        <input type="hidden" name="action" value="generate">
+                        <input type="hidden" id="month" name="month" value="{$period.month}">
+                        <input type="hidden" id="year" name="year" value="{$period.year}">
+                        <input type="hidden" id="period" name="period" value="{$period.period}">
+                        <input type="hidden" id="emp_type" name="emp_type" value="{$period.emp_type}">
+                        <input type="hidden" id="date_from" name="date_from" value="{$period.date_from}">
+                        <input type="hidden" id="date_to" name="date_to" value="{$period.date_to}">
                         <div class="form-group form-inline">
                             <label style="display: inline-block;">Filter employee:&nbsp;</label>
-                            <select id="emp_type" class="form-control custom-select" onchange="load_employees (this.value);">
+                            <select name="emp_type" class="form-control custom-select" onchange="$('#generate').submit();">
                                 <option value="">All employees</option>
                                 <option value="0">All regular/casual</option>
                                 {foreach $emp_type as $e}
                                     <option value="{$e.etype_id}" {if $e.etype_id == $period.emp_type}selected{/if}>{$e.etype_desc}</option>
                                 {/foreach}
                             </select>
+                        </form>
                             <div style="float: right;">
                                 <div class="item-action dropdown form-control">
                                     <a href="javascript:void(0)" data-toggle="dropdown" class="icon" aria-expanded="false">
@@ -71,6 +74,9 @@
                                         </a>
                                         <a href="javascript:void(0)" class="dropdown-item">
                                             <i class="dropdown-icon fe fe-refresh-cw"></i> Update attendance 
+                                        </a>
+                                        <a href="javascript:set_presets('{$period.emp_type}')" class="dropdown-item">
+                                            <i class="dropdown-icon fe fe-upload"></i> Set Default Logs
                                         </a>
                                         <a href="javascript:add_event()" class="dropdown-item">
                                             <i class="dropdown-icon fe fe-bookmark"></i> Add event 
