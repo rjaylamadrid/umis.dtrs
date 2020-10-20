@@ -86,7 +86,6 @@ class Attendance extends AttendanceController {
         $period = $this->data['month'].'-'.$this->data['year'];
         $attn = $this->find ($period, $this->data['id']);
         $rawdata = $this->get_raw_data ($this->data['month'].'-'.$this->data['year'], [$this->data['emp_id'], $this->data['date']]);
-
         $this->view->display ("custom/attendance_update_log", ["attn" => $attn, "rawdata" => $rawdata, "codes" => DTR::dtr_code(), "period" => $period, "employee_id" => $this->data['emp_id'], "date" => $this->data['date']]);
     }
 }
