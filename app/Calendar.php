@@ -28,4 +28,12 @@ class Calendar extends CalendarController {
         $this->tab = $tab;
         $this->index();
     }
+
+    public function del_event() {
+        try {
+            $this->{$this->data['action']} ($this->data['no']);
+        } catch (\Throwable $th) {
+            $this->index();
+        }
+    }
 }

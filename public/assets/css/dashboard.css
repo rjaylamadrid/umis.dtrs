@@ -14229,6 +14229,24 @@ a.icon:hover {
   border-top: 0;
 }
 
+td.date {
+  color: #467fcf;
+}
+
+td.date.selected {
+  background-color: #467fcf;
+  color: #fff;
+  border-color: #467fcf;
+  border-radius: 5px;
+}
+
+td.date:hover {
+  background-color: #58a5ec;
+  color: #fff;
+  border-color: #467fcf;
+  border-radius: 5px;
+}
+
 .table-calendar-link {
   line-height: 2rem;
   min-width: calc(2rem + 2px);

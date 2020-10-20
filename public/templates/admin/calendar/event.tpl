@@ -13,7 +13,7 @@
 <div class="row">
 	<div class="col-md-7">
 		<div class="table-responsive">
-		  <table class="table table-bordered" id="tbl-calendar">
+		  <table class="table table-calendar table-bordered " id="tbl-calendar">
 				<thead>
 					<tr><td colspan="7" style="text-align: center; font-weight: bold">Calendar of Events {if $date != ''} ({date_format($date,'F Y')}) {/if}</td></tr>
 					<tr>
@@ -29,9 +29,9 @@
 						{/for}
 						{$count=$count+1}
 						{for $i=1 to $lastday}
-							{if $count == 1} <tr><td class="first {$i}" id="{$i}">{$i}</td>
-							{else if $count == 7 || $count == 14 || $count == 21 || $count == 28 || $count == 35}  <td onclick="javascript:get_events ({$i},{date_format($date,'m')},{date_format($date,'Y')})" id="{$i}"><a>{$i}</a></td></tr>
-							{else} <td onclick="javascript:get_events ({$i},{date_format($date,'m')},{date_format($date,'Y')})" id="{$i}"><a>{$i}</a></td> {/if}
+							{if $count == 1} <tr><td class="date " id="{$i}">{$i}</td>
+							{else if $count == 7 || $count == 14 || $count == 21 || $count == 28 || $count == 35}  <td class="date " onclick="javascript:get_events ({$i},{date_format($date,'m')},{date_format($date,'Y')})" id="{$i}">{$i}</td></tr>
+							{else} <td class="date " onclick="javascript:get_events ({$i},{date_format($date,'m')},{date_format($date,'Y')})" id="{$i}">{$i}</td> {/if}
 							{$count=$count+1}
 						{/for}
 				</tbody>
@@ -100,7 +100,7 @@
   </div>
 </div>
 
-<div class="modal fade margin-top-70" id="edit-event-modal" role="dialog" tabindex="-1" style="margin-left:-50px;">
+{* <div class="modal fade margin-top-70" id="edit-event-modal" role="dialog" tabindex="-1" style="margin-left:-50px;">
   <div class="modal-dialog" id="raw-data" role="document">
     <div class="modal-content">
       <div class="card">
@@ -118,7 +118,7 @@
             <div class="row">
               <div class="form-group col-md-6 pl-0">
                 <label>Date</label>
-                <input type="date" class="form-control" id="event_date" name="Event[event_date]" value="" required readonly>
+                <input type="date" class="form-control" id="event_date_edit" name="Event[event_date]" value="" required readonly>
               </div>
               <div class="form-group col-md-6 pl-0">
                 <label>DTR code</label>
@@ -151,4 +151,4 @@
       </div>
     </div>
   </div>
-</div>
+</div> *}
