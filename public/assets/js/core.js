@@ -12,13 +12,13 @@ async function f (data = {}, type = 'json', url = path) {
 // START::ATTENDANCE
 function init_dtr(id) {
   var from, to;
-  var period = document.getElementById("period").value;
   
   $("#cover-spin").show(0);
   if (id == 0) {
     $("#dtr").html("");
     $("#cover-spin").hide(0);
   } else {
+    var period = document.getElementById("period").value;
     var month = document.getElementById("month").value;
     var year = document.getElementById("year").value;
     switch(period) {
@@ -41,6 +41,7 @@ function init_dtr(id) {
     }
     f({action: 'get_attendance', id:id, date_from:from, date_to:to, period:period}, "text").then( function(html){
       $("#dtr").html(html);
+      $("#cover-spin").hide(0);
     });
   }
 }
@@ -225,8 +226,31 @@ function modify_log () {
 }
 
 function set_presets (type) {
-  f({action:"set_default", emp_type:type}, "text", "/attendance").then( function(html){
-    console.log(html);
+  $("#cover-spin").show(0);
+  var period = document.getElementById("period").value;
+  var month = document.getElementById("month").value;
+  var year = document.getElementById("year").value;
+    switch(period) {
+      case '1':
+        from = create_date(year+'-'+month+'-01');
+        to = create_date(year+'-'+month+'-15');
+        break;
+      case '2':
+        from = create_date(year+'-'+month+'-16');
+        to = create_date(year+'-'+month+'-01', 'month');
+        break;
+      case '4':
+        from = document.getElementById("date_from").value;
+        to = document.getElementById("date_to").value;
+        break;
+      default:
+        from = create_date(year+'-'+month+'-01');
+        to = create_date(year+'-'+month+'-01', 'month');
+        break;
+    }
+  f({action:"set_default", emp_type:type, date_from:from, date_to:to }, "text", "/attendance").then( function(html){
+    $("#cover-spin").hide(0);
+    location.reload(true);
   });
 }
 // OTHER FUNCTIONS :: END

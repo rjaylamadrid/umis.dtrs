@@ -30,22 +30,22 @@ class DTR {
         }
     }
 
-    public static function change_log ($log_no = NULL, $id, $attnd, $period, $date) {
+    public static function change_log ($id, $attnd, $period, $date, $log_no = NULL) {
         $attendance = self::compute_log ($attnd, $id, $date);
         if ($log_no) {
             DB::db('db_attendance')->update("UPDATE `$period` SET ". DB::stmt_builder($attendance)." WHERE id = ".$log_no, $attendance);
         } else {
             $signature = $date.$id;
             $attendance['signature'] = base64_encode(md5(utf8_encode($signature), TRUE));
-            $attendance['emp_id'] = $this->data['employee_id'];
-            $attendance['date'] = $this->data['date'];
-            DB::db('db_attendance')->insert ("INSERT INTO `$period` SET ". DB::stmt_builder($attendance), $attendance);
+            $attendance['emp_id'] = $id;
+            $attendance['date'] = $date;
+            DB::db('db_attendance')->insert ("INSERT IGNORE INTO `$period` SET ". DB::stmt_builder($attendance), $attendance);
         }
     } 
 
     public static function compute_log ($attnd, $id, $date) {
         $preset = ["am_in", "am_out", "pm_in", "pm_out", "ot_in", "ot_out"];
-        $attendance = ["is_absent" => 0, "total_hours" => 0, "late" => 0, "undertime" => 0];
+        $attendance = ["is_absent" => 1, "total_hours" => 0, "late" => 0, "undertime" => 0];
         $day = date_create($date)->format('l');
         $sched = self::get_sched($id, $day);
         if ($sched) {
@@ -68,7 +68,7 @@ class DTR {
                                 $attendance['undertime'] += $log < $schedule ? (strtotime($sched[0][$preset[$i]]) - strtotime($attnd[$i]))/60 : 0;
                                 if (date_create($attnd[$i-1]) && date_create($attnd[$i])) {
                                     $attendance['total_hours'] += ((strtotime($attnd[$i]) - strtotime($attnd[$i-1]))/60)/60;
-                                    $attendance['is_absent'] += .5;
+                                    $attendance['is_absent'] -= .5;
                                 }
                             }
                         }

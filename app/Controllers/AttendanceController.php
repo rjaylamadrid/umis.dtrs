@@ -27,8 +27,9 @@ class AttendanceController extends Controller {
                 $tables[] = ["table" => $table2, "begin" => date_create($arr['to'])->format('Y-m-01'), "end" => $arr['to']];
             }
         }
+
         foreach ($tables as $table) {
-            $attendance['month'][] =date_create($table['begin'])->format('F, Y');
+            $attendance['month'][] = date_create($table['begin'])->format('F, Y');
             $dtr = DB::db("db_attendance")->fetch_all ("SELECT * FROM `".$table['table']."` WHERE emp_id = ? AND `date` >= ? AND `date` <= ?", [$id, $table['begin'], $table['end']]);
             if (($dtr) && ($attendance['attn'])) $attendance['attn'] = array_merge($attendance['attn'], $dtr);
             if (!$attendance['attn']) $attendance['attn'] = $dtr;
@@ -104,16 +105,26 @@ class AttendanceController extends Controller {
     }
 
     protected function save_log () {
-        DTR::change_log ($this->data['no'], $this->data['employee_id'], $this->data['attnd'],$this->data['period'], $this->data['date']);
+        DTR::change_log ($this->data['employee_id'], $this->data['attnd'],$this->data['period'], $this->data['date'], $this->data['no']);
     }
 
     protected function set_default () {
-        print_r($this->data);
         if ($this->data['emp_type']) $employees = Employee::type ($this->data['emp_type']);
         else $employees = Employee::getAll();
+        $interval = new DateInterval('P1D');
+        $date_from = new DateTime($this->data['date_from']);
+        $date_to = new DateTime($this->data['date_to']);
 
+        $daterange = new DatePeriod($date_from, $interval, $date_to->modify('+1 day'));
         foreach ($employees as $employee) {
-            $attnd = DTR::get_sched($employee['employee_no']);
+            foreach ($daterange as $date) {
+                $period = date_format($date, 'm-Y');
+                $sched = DTR::get_sched($employee['employee_no'], date_format($date, 'l'));
+                if ($sched) {
+                    $attnd = [$sched[0]['am_in'],$sched[0]['am_out'],$sched[0]['pm_in'],$sched[0]['pm_out']];
+                    DTR::change_log ($employee['employee_no'], $attnd, $period, date_format($date, 'Y-m-d'));
+                }
+            }
         }
     }
 

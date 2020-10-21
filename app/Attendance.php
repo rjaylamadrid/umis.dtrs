@@ -24,7 +24,7 @@ class Attendance extends AttendanceController {
         if ($this->data) {
             
             $begin = date_create($this->data['date_from']);
-            $end = date_create($this->data['date_to'])->modify('+1 day');
+            $end = date_create($this->data['date_to']);
             if ($this->data['month']) {
                 $begin = date_create($this->data['year']."-".$this->data['month']."-01");
                 $end = date_create($this->data['year']."-".$this->data['month'])->format('Y-m-t+1');
@@ -40,21 +40,23 @@ class Attendance extends AttendanceController {
             $month = ['0'=> $begin->format('F, Y'), '1' => $end->format('F, Y')];
             if ($this->data['per_month']) {
                 $daterange = new DatePeriod(new DateTime($begin->format('Y-m-01')), $interval, new DateTime($begin->format('Y-m-t+1')));
-                $datas[] = ["month" => $month[0], "daterange" => $daterange];
+                $datas[] = ["month" => $month[0], "daterange" => $daterange, "from" => $begin, "to" =>$end->modify('+1')];
                 if (!($month[0] == $month[1])) {
+                    $datas[0]['to'] = new DateTime($begin->format('Y-m-t'));
                     $daterange = new DatePeriod(new DateTime($end->format('Y-m-01')), $interval, new DateTime($end->format('Y-m-t+1')));
-                    $datas[] = ["month" => $month[1], "daterange" => $daterange];
+                    $datas[] = ["month" => $month[1], "daterange" => $daterange, "from" => new DateTime($end->format('Y-m-01')), "to" =>$end];
                 }
             } else {
                 $daterange = new DatePeriod(new DateTime($begin->format('Y-m-d')), $interval, new DateTime($end->format('Y-m-d')));
                 if (!($month[0] == $month[1])) $month[0] = $month[0]." - ".$month[1];
-                $datas[] = ["month" => $month[0], "daterange" => $daterange];
+                $datas[] = ["month" => $month[0], "daterange" => $daterange, "from" => $begin, "to" =>$end->modify('+1')];
             }
             $campus = Employee::get_campus($this->user['campus_id']);
             foreach ($employees as $profile) {
                 $attendance = $this->attendance ($profile['employee_no'], ["from" => $begin->format('Y-m-d'), "to" => $end->format('Y-m-d')], ($this->data['period'] - 1))->compute (); // Employee Attendance
                 foreach($datas as $data) {
-                    $vars = ["attendance" => $attendance, "employee" => $profile, "campus" => $campus, "daterange" => $data['daterange'], "month" => $data['month']];
+                    $days = $data['to']->diff($data['from'])->format('%a');
+                    $vars = ["attendance" => $attendance, "employee" => $profile, "campus" => $campus, "daterange" => $data['daterange'], "from" => $begin, "to" => $end, "month" => $data['month'], "days" => $data['to']->format('d')];
                     $pdf[] = $this->dtr_data ($vars);
                 }
             }
