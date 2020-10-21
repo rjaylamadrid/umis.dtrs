@@ -104,71 +104,18 @@ class AttendanceController extends Controller {
     }
 
     protected function save_log () {
-        change_log ($this->data['no'], $this->data['employee_id'], $this->data['attnd'],$this->data['period'], $this->data['date']);
+        DTR::change_log ($this->data['no'], $this->data['employee_id'], $this->data['attnd'],$this->data['period'], $this->data['date']);
     }
 
-    protected function compute_log ($attnd, $id, $date) {
-        $preset = ["am_in", "am_out", "pm_in", "pm_out", "ot_in", "ot_out"];
-        $attendance = ["is_absent" => 0, "total_hours" => 0, "late" => 0, "undertime" => 0];
-        $day = date_create($date)->format('l');
-        $sched = DTR::get_sched($id, $day);
-        if ($sched) {
-            for ($i = 0; $i < 6; $i++) {
-                if ($i < 4) { 
-                    $payable = DTR::is_payable($attnd[$i], $id);
-                    if ($payable) {
-                        $code = $attnd[$i];
-                        $attnd[$i] = $sched[0][$preset[$i]];
-                    }
-                    if (($attnd[$i]) && (date_create($attnd[$i]))) {
-                        $schedule = date_create($sched[0][$preset[$i]]);
-                        $log = date_create($attnd[$i]);
-                        if (($i == 0) || ($i == 2)) {
-                            if ($attnd[$i+1]) {
-                                $attendance['late'] += $log > $schedule ? (strtotime($attnd[$i]) - strtotime($sched[0][$preset[$i]]))/60 : 0;
-                            }
-                        } else {
-                            if ($attnd[$i-1]) {
-                                $attendance['undertime'] += $log < $schedule ? (strtotime($sched[0][$preset[$i]]) - strtotime($attnd[$i]))/60 : 0;
-                                if (date_create($attnd[$i-1]) && date_create($attnd[$i])) {
-                                    $attendance['total_hours'] += ((strtotime($attnd[$i]) - strtotime($attnd[$i-1]))/60)/60;
-                                    $attendance['is_absent'] += .5;
-                                }
-                            }
-                        }
-                        $attendance[$preset[$i]] = $payable ? $code : $log -> format("g:iA");
-                    } else { 
-                        $attendance[$preset[$i]] = ":";
-                    }
-                } else {
-                    $attendance[$preset[$i]] = $attnd[$i];
-                }
-            }
-        }
-        return $attendance;
-    }
-
-    protected function set_default ($data = 'sched') {
+    protected function set_default () {
+        print_r($this->data);
         if ($this->data['emp_type']) $employees = Employee::type ($this->data['emp_type']);
         else $employees = Employee::getAll();
 
         foreach ($employees as $employee) {
-            if ($data == 'sched') {
-                $attnd = DTR::get_sched($employee['employee_no']);
-            }
+            $attnd = DTR::get_sched($employee['employee_no']);
         }
     }
 
-    protected function change_log ($log_no = NULL, $id, $attnd, $period, $date) {
-        $attendance = $this->compute_log($attnd, $id, $date);
-        if ($this->data['no']) {
-            DB::db('db_attendance')->update("UPDATE `$period` SET ". DB::stmt_builder($attendance)." WHERE id = ".$log_no, $attendance);
-        } else {
-            $signature = $date.$id;
-            $attendance['signature'] = base64_encode(md5(utf8_encode($signature), TRUE));
-            $attendance['emp_id'] = $this->data['employee_id'];
-            $attendance['date'] = $this->data['date'];
-            DB::db('db_attendance')->insert ("INSERT INTO `$period` SET ". DB::stmt_builder($attendance), $attendance);
-        }
-    } 
+    
 }
