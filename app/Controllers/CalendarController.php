@@ -3,6 +3,7 @@ namespace Controllers;
 
 use Database\DB;
 use Model\Calendar;
+use Model\DTR;
 
 class CalendarController extends Controller {
     public $days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -31,11 +32,8 @@ class CalendarController extends Controller {
         $this->view->display ('admin/calendar/show_events', ["event_date" => $event_date, "events" => $events, "selected_date" => $this->selected_date]);
     }
 
-    // public static function get_dtr_code() {
-    //     $this->dtr_code = DB::fetch_all("SELECT * FROM tbl_dtr_code");
-    // }
-
     public function add_event() {
+        // self::attendance_event($this->data['event_date'], $this->data['dtr_code_id']);
         DB::insert ("INSERT INTO tbl_event SET ". DB::stmt_builder($this->data['Event']),$this->data['Event']);
         header ("location: /calendar");
     }
@@ -47,6 +45,40 @@ class CalendarController extends Controller {
         DB::insert ("INSERT INTO tbl_employee_update_delete SET ". DB::stmt_builder ($data_array),$data_array);
         DB::delete ("DELETE FROM tbl_event WHERE no = ?", $id);
     }
+
+    public function attendance_event($date, $dtr_code_id) {
+        $monthtable = date_create($date)->format('m-Y');
+        $date = date_create($date)->format('Y-m-d');
+        $employee_scheds = DB::fetch_all ("SELECT a.* FROM tbl_employee_sched a WHERE a.no = (SELECT MAX(b.no) FROM tbl_employee_sched b WHERE b.employee_id = a.employee_id)");
+        $attnd = DB::fetch_row("SELECT * FROM tbl_dtr_code WHERE no = ?",$dtr_code_id);
+        $attnd_logs = [$attnd['dtr_code'], $attnd['dtr_code'], $attnd['dtr_code'], $attnd['dtr_code'], $attnd['dtr_code'], $attnd['dtr_code']];
+        foreach ($employee_scheds as $value) {
+            $date_logs = DB::db('db_attendance')->fetch_row("SELECT * FROM `$monthtable` WHERE date = $date AND emp_id = ?",$value['employee_id']);
+
+            if($date_logs) {
+                DTR::change_log($value['employee_id'], $attnd_logs, $monthtable, $date, $date_logs['id']);
+            } else {
+                DTR::change_log($value['employee_id'], $attnd_logs, $monthtable, $date);
+            }
+        }
+    }
+
+    // public function attendance_event($date) {
+    //     $logs = ["am_in", "am_out", "pm_in", "pm_out", "ot_in", "ot_out"];
+    //     $monthtable = date_format("MM-YY",$date);
+    //     $employee_scheds = DB::fetch_all ("SELECT a.* FROM tbl_employee_sched a WHERE a.no = (SELECT MAX(b.no) FROM tbl_employee_sched b WHERE b.employee_id = a.employee_id)");
+    //     $date_logs = DB::db('db_attendance')->fetch_all("SELECT * FROM `$monthtable` WHERE date = $date");
+        
+    //     foreach ($employee_scheds as $value) {
+    //         if(in_array($value['employee_id'],$date_logs['emp_id'])) {
+    //             // UPDATE
+
+    //             for ($i=0;$i<6;$i++) {
+    //                 if($date_logs[])
+    //             }
+    //         }
+    //     }
+    // }
 
     // public function prepare_qry ($row) {
     //     foreach ($row as $key => $data) {

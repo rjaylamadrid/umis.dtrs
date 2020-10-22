@@ -59,9 +59,8 @@
                         {else}
                             <div class="page-content">
                                 <div class="container text-center">
-                                    {* <div class="display-1 text-muted mb-5">Select month and year</div> *}
                                     <h1 class="h2 mb-3">Select Month and Year.</h1>
-                                    <p class="h4 text-muted font-weight-normal mb-7">Please key in the month and year you wanted to view or edit.</p>
+                                    <p class="h4 text-muted font-weight-normal mb-7">Please select the month and year you wanted to view or edit.</p>
                                 </div>
                             </div>
                         {/if}
