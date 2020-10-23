@@ -96,7 +96,7 @@ function confirm_delete(no, id, tab, other_info_col='', other_info_data='', admi
   }
 
   function delete_event(no) {
-    if(confirm("Are you sure you want to delete this event?" + no)) {
+    if(confirm("Are you sure you want to delete this event?")) {
       f({action: 'delete_event', no:no}, "text", "/calendar/delete-event").then( function (data) {
         location.href = "/calendar";
         // console.log(data);
