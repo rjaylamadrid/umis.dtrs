@@ -18,17 +18,17 @@
                             <div class="col-lg-3 col-md-6 col-sm-12">
                                 <div class="form-group label-floating">
                                 <label class="form-label">First Name</label>
-                                <input type="text" required class="form-control" name="emp[first_name]" value="">
+                                <input type="text" required class="form-control" name="emp[first_name]" value="" required>
                                 </div>
                             </div>
                             <div class="col-lg-3 col-md-6 col-sm-12">
                                 <label class="form-label">Middle Name</label>
-                                <input type="text" class="form-control" name="emp[middle_name]" value="">
+                                <input type="text" class="form-control" name="emp[middle_name]" value="" required>
                             </div>
                             <div class="col-lg-4 col-md-7 col-sm-12">
                                 <div class="form-group label-floating">
                                     <label class="form-label">Last Name</label>
-                                    <input type="text" required class="form-control" name="emp[last_name]" value="">
+                                    <input type="text" required class="form-control" name="emp[last_name]" value="" required>
                                 </div>
                             </div>
                             <div class="col-lg-2 col-md-5 col-sm-12">
@@ -52,7 +52,7 @@
                             <div class="col-lg-5 col-md-5 col-sm-12">
                                 <div class="form-group label-floating">
                                     <label class="form-label">Birthday</label>
-                                    <input type="date" class="form-control" name="emp[birthdate]" max="<?php echo $date_now; ?>">
+                                    <input type="date" class="form-control" name="emp[birthdate]" max="<?php echo $date_now; ?>" required>
                                 </div>
                             </div>
                             <div class="col-lg-7 col-md-7 col-sm-12">
@@ -66,7 +66,7 @@
                             <div class="col-lg-6 col-md-6 col-sm-12">
                                 <div class="form-group label-floating">
                                     <label class="form-label" for="gender">Gender</label>
-                                    <select required class="selectpicker form-control" data-style="btn btn-success btn-round" name="emp[gender]">
+                                    <select required class="selectpicker form-control" data-style="btn btn-success btn-round" name="emp[gender]" required>
                                         <option value="" selected="true" disabled>Gender</option>
                                         <option value="Male">Male</option>
                                         <option value="Female">Female</option>
@@ -76,7 +76,7 @@
                             <div class="col-lg-6 col-md-6 col-sm-12">
                                 <div class="form-group label-floating">
                                     <label class="form-label" for="civil_stat">Marital Status</label>
-                                    <select required class="selectpicker form-control" data-style="btn btn-success btn-round" name="emp[marital_status]">
+                                    <select required class="selectpicker form-control" data-style="btn btn-success btn-round" name="emp[marital_status]" required>
                                         <option value="" selected="true" disabled>Civil Status</option>
                                         <option value="Single">Single</option>
                                         <option value="Married">Married</option>
@@ -105,7 +105,7 @@
                             <div class="col-lg-9 col-md-6 col-sm-12">
                                 <div class="form-group label-floating">
                                     <label class="form-label">Schedule</label>
-                                    <select class="form-control" name="sched_code">
+                                    <select class="form-control" name="sched_code" required>
                                         <option selected disabled>Schedule</option>
                                         {foreach from = $schedules item = schedule}
                                             <option value = "{$schedule.sched_code}">{$schedule.sched_day} ({$schedule.sched_time})</option>
@@ -116,7 +116,7 @@
                             <div class="col-lg-7 col-md-12 col-sm-12">
                                 <div class="form-group label-floating">
                                     <label class="form-label">Department</label>
-                                    <select class="form-control" name="emp_status[department_id]">
+                                    <select class="form-control" name="emp_status[department_id]" required>
                                         <option selected disabled>Department</option>
                                         {foreach from = $departments item = department}
                                             <option value = "{$department.no}">{$department.department_desc}</option>
@@ -127,7 +127,7 @@
                             <div class="col-lg-5 col-md-12 col-sm-12">
                                 <div class="form-group label-floating">
                                     <label class="form-label">Designation</label>
-                                    <select class="form-control" name="emp_status[privilege]">
+                                    <select class="form-control" name="emp_status[privilege]" required>
                                         <option selected disabled>Designation</option>
                                         {foreach from = $designations item = designation}
                                             <option value = "{$designation.priv_level}">{$designation.priv_desc}</option>
@@ -140,7 +140,7 @@
                                     <div class="col-md-6 col-sm-12">
                                         <div class="form-group label-floating">
                                             <label class="form-label">Date Hired (*current position)</label>
-                                            <input type="date" class="form-control" name="emp_status[date_start]">
+                                            <input type="date" class="form-control" name="emp_status[date_start]" required>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-sm-12">
@@ -159,7 +159,7 @@
                             <div class="col-lg-6 col-md-12 col-sm-12">
                                 <div class="form-group label-floating">
                                     <label class="form-label">Position</label>
-                                    <select class="form-control" name="emp_status[position_id]" id="positions">
+                                    <select class="form-control" name="emp_status[position_id]" id="positions" required>
                                         <option selected disabled>Position</option>
                                         {foreach from=$positions item=position}
                                         <option value="{$position.no}">{$position.position_desc}</option>

@@ -28,7 +28,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="media">
-                            <span class="avatar avatar-xxl mr-5" style="background-image: url(img/profile_temp.jpeg)"></span>
+                            <span class="avatar avatar-xxl mr-5" style="background-image: url({$server}/assets/employee_picture/{if $employee->info.employee_picture}{$employee->info.employee_picture}{else}0.jpeg{/if})"></span>
                             <div class="media-body">
                                 <h4 class="m-0">{$employee->info.first_name} {$employee->info.last_name}</h4>
                                 <p class="text-muted mb-0">{$employee->position.position_desc}</p> 
@@ -49,9 +49,9 @@
                         <a href="{$server}{if $user.is_admin}/employees/profile/{$employee->id}/other-info{else}/profile/other-info{/if}" class="list-group-item list-group-item-action d-flex align-items-center {if $tab == 'other-info'} active {/if}"><span class="icon mr-3"><i class="fe fe-file-text"></i></span>Other Info</a>
                     </div>
                 </div>
-                <form method="POST" action="export.php"  target="_blank">
-                    <button class="btn btn-success btn-block" style="margin-top: 10px; margin-bottom: 10px;">Generate Personal Data Sheet</button>
-                </form>
+                {* <form method="POST" action="{$server}/employees/profile/{$employee->id}/export"> *}
+                    <a href="{$server}/employees/{$employee->id}/export" class="btn btn-success btn-block" style="margin-top: 10px; margin-bottom: 10px; color: white;">Generate Personal Data Sheet</a>
+                {* </form> *}
             </div>
 {/if}
             <div class="{if $view == 'update'}col-md-10{else}col-md-8{/if} col-sm-12">

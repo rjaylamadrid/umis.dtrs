@@ -2,13 +2,13 @@
     <div class="card-status bg-secondary"></div>
     <div class="container" style="padding-right: 0.75rem; padding-left: 0.75rem;">
         <div class="d-flex">
-            <a class="header-brand" href="./index.html">
+            <a class="header-brand" href="{$server}/dashboard">
                 <img src="{$server}/assets/img/logo.png" class="header-brand-img" alt="cbsua umis logo">
             </a>
             <div class="d-flex order-lg-2 ml-auto">
                 <div class="dropdown">
                     <a href="#" class="nav-link pr-0 leading-none" data-toggle="dropdown">
-                        <span><img class="avatar" style="object-fit: cover;" src="assets/images/employees/{if $user.employee_picture}{$user.employee_picture}{else}profile_temp.jpeg{/if}"></span>
+                        <span><img class="avatar" style="object-fit: cover;" src="{$server}/assets/employee_picture/{if $user.employee_picture}{$user.employee_picture}{else}0.jpeg{/if}"></span>
                         <span class="ml-2 d-none d-lg-block">
                             <span class="text-default">{$user.first_name|upper} {$user.last_name|upper}</span>
                             <small class="text-muted d-block mt-1">{$user.position}</small>

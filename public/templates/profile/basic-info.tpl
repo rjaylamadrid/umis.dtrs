@@ -45,7 +45,7 @@
                 <div class="col-sm-12 col-lg-4 col-md-4 mb-4 text-center btn-square">
                     <div class="form-group">
                         <div style="text-align: center; border: 2; width: 100%; align-content: center" id="thumb-output">
-                            <img style="text-align: center; border: 1;" src="../../assets/employee_picture/{$employee->basic_info.employee_picture}"  >
+                            <img style="text-align: center; border: 1;" src="{$server}/assets/employee_picture/{if $employee->basic_info.employee_picture}{$employee->basic_info.employee_picture}{else}0.jpeg{/if}"  >
                         </div>
                     </div>
                     <div class="form-group">

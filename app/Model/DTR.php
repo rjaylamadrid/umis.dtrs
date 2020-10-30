@@ -41,7 +41,7 @@ class DTR {
             $attendance['date'] = $date;
             DB::db('db_attendance')->insert ("INSERT IGNORE INTO `$period` SET ". DB::stmt_builder($attendance), $attendance);
         }
-    } 
+    }  
 
     public static function compute_log ($attnd, $id, $date) {
         $preset = ["am_in", "am_out", "pm_in", "pm_out", "ot_in", "ot_out"];

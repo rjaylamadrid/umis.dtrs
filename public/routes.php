@@ -47,6 +47,7 @@ $router->group(['before' => 'auth'], function ($router) {
             $router->get('/registration/{success}?', ['Employees', 'registration']);
             $router->get('/employment/{id}/{tab}/{result}?', ['Employees', 'employment']);
             $router->get('/employment-update/{id}/{tab}/{result}?', ['Employees', 'employment_update']);
+            $router->get('/{id}/export', ['Employees', 'export']);
         });
 
         // Attendance

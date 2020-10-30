@@ -83,6 +83,7 @@ function confirm_delete(no, id, tab, other_info_col='', other_info_data='', admi
 
 // CALENDAR :: START
   function get_events(day,month,year) {
+    $('.spinner1').show(0);
     $('.date').removeClass('selected');
     $('#'+day).addClass('selected');
     day = (day < 10 ? "0" : "") + day;
@@ -90,6 +91,7 @@ function confirm_delete(no, id, tab, other_info_col='', other_info_data='', admi
     document.getElementById('event_date').value = year+'-'+month+'-'+day;
     // document.getElementById('event_date_edit').value = year+'-'+month+'-'+day;
     f({action: 'get_events', day:day, month:month, year:year}, "text", "/calendar/show-events").then( function (data) {
+      $('.spinner1').hide(0);
       $('#tbl-event').html(data);
       // console.log(data);
     });
@@ -97,9 +99,11 @@ function confirm_delete(no, id, tab, other_info_col='', other_info_data='', admi
 
   function delete_event(no) {
     if(confirm("Are you sure you want to delete this event?")) {
+      $('#cover-spin').show(0);
       f({action: 'delete_event', no:no}, "text", "/calendar/delete-event").then( function (data) {
-        location.href = "/calendar";
+        $('#cover-spin').hide(0);
         // console.log(data);
+        location.href = "/calendar";
       });
     }
   }

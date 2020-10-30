@@ -34,7 +34,7 @@ class EmployeeProfile {
     }
 
     public function info () {
-        $this->info = DB::fetch_row ("SELECT a.first_name, a.middle_name, a.last_name, b.* FROM tbl_employee a, tbl_employee_status b WHERE a.no = b.employee_id AND b.employee_id = ?  AND b.no = (SELECT no FROM tbl_employee_status WHERE employee_id = a.no ORDER BY date_start DESC LIMIT 0,1)", $this->id);
+        $this->info = DB::fetch_row ("SELECT a.first_name, a.middle_name, a.last_name, a.employee_picture, b.* FROM tbl_employee a, tbl_employee_status b WHERE a.no = b.employee_id AND b.employee_id = ?  AND b.no = (SELECT no FROM tbl_employee_status WHERE employee_id = a.no ORDER BY date_start DESC LIMIT 0,1)", $this->id);
     }
 
     public function basic_info () {

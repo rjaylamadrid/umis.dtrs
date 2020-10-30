@@ -10,7 +10,7 @@
 
 <div class="row" id="salary">
     <div class="col-lg-12">
-        <label class="form-label" style="float: right;">* Click on table row to update salary grade</label>
+        {* <label class="form-label" style="float: right;">* Click on table row to update salary grade</label> *}
         <div class="table-responsive">
             <table id="salary-grade" class="table table-hover card-table table-vcenter text-nowrap datatable dataTable no-footer">
                 <thead>
@@ -28,7 +28,7 @@
                 </thead>
                 <tbody>
                 {foreach $var as $salary}
-                    <tr class="sgrade" onclick="edit_salary({$salary.no})">
+                    <tr class="sgrade">
                         <td>{$salary.no}</td>
                         {foreach $salary.step_increment as $step}
                         <td>{$step|number_format:2}</td>
@@ -38,6 +38,5 @@
                 </tbody>
             </table>
         </div>
-
     </div>
 </div>

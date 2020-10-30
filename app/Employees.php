@@ -75,4 +75,8 @@ class Employees extends EmployeesController {
         $positions = Position::positions()->type ($this->employee->info['etype_id']);
         $this->view->display ('admin/employee_employment', ['positions' => $positions, 'emp_type' => Position::emp_type(), 'employee' => $this->employee, 'tab' => $tab, 'view' => $view, 'presets' => $presets , 'departments' => $this->departments(), 'designations' => $this->designations(), 'message' => $message]);
     }
+
+    public function export () {
+        $this->view->display('profile/export');
+    }
 }

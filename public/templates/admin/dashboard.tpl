@@ -23,7 +23,7 @@
                             <i class="fe fe-briefcase"></i>
                         </span>
                         <div>
-                            <h4 class="m-0"><a href="?a=payroll">132 <small>Payroll</small></a></h4>
+                            <h4 class="m-0"><a href="#">132 <small>Payroll</small></a></h4>
                             <small class="text-muted">12 waiting payments</small>
                         </div>
                     </div>
@@ -36,7 +36,7 @@
                             <i class="fe fe-file-text"></i>
                         </span>
                         <div>
-                            <h4 class="m-0"><a href="?a=attendance">0 <small>DTR</small></a></h4>
+                            <h4 class="m-0"><a href="#">0 <small>DTR</small></a></h4>
                             <small class="text-muted">For the month of September</small>
                         </div>
                     </div>
@@ -49,7 +49,7 @@
                             <i class="fe fe-message-square"></i>
                         </span>
                         <div>
-                            <h4 class="m-0"><a href="?a=forms&amp;status=0&amp;response=0">12 <small>Request Forms</small></a></h4>
+                            <h4 class="m-0"><a href="#">12 <small>Request Forms</small></a></h4>
                             <small class="text-muted"> For checking</small>
                         </div>
                     </div>
@@ -68,11 +68,11 @@
                         <li class="list-separated-item">
                             <div class="row align-items-center">
                                 <div class="col-auto">
-                                    <span class="avatar avatar-md d-block" style="background-image: url(assets/images/employees/{$celebrant.profile_picture})"></span>
+                                    <span class="avatar avatar-md d-block" style="background-image: url({$server}/assets/employee_picture/{if $celebrant.employee_picture}{$celebrant.employee_picture}{else}0.jpeg{/if})"></span>
                                 </div>
                                 <div class="col">
                                     <div>
-                                        <a href="javascript:void(0)" class="text-inherit">{$celebrant.first_name} {$celebrant.last_name} @ {$celebrant.Age}</a>
+                                        <a class="text-inherit">{$celebrant.first_name} {$celebrant.last_name} @ {$celebrant.Age}</a>
                                     </div>
                                     <small class="d-block item-except text-sm text-muted h-1x">{$celebrant.BDate} - {$celebrant.Araw}</small>
                                 </div>

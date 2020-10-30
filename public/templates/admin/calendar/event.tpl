@@ -10,6 +10,14 @@
 		padding-bottom: 2px;
 	}
 </style>
+<div id="cover-spin" style="display: none;">
+  <div class="page-content" style="margin-top: 28rem;">
+      <div class="container text-center">
+          <h1 class="h2 mb-3">Saving data...</h1>
+          <p class="h4 text-muted font-weight-normal mb-7">Please wait, this might take a few minutes.</p>
+      </div>
+  </div>
+</div>
 <div class="row">
 	<div class="col-md-7">
 		<div class="table-responsive">
@@ -40,6 +48,7 @@
 	</div>
 
 	<div class="col-md-5">
+  <div id="cover-spin" style="display: none; position:absolute;" class="spinner1"></div>
 		<div class="table-responsive">
 		  <table class="table table-bordered" id="tbl-event">
       </table>
@@ -89,7 +98,7 @@
             </div>
             <div class="form-group">
               <span style="float: right;">
-                <input type="submit" name="submit" class="btn btn-primary" value ="Submit">
+                <input type="submit" name="submit" class="btn btn-primary" value ="Submit" onclick="$('#cover-spin').show(0)">
                 <a href="#" class="btn btn-secondary" data-dismiss="modal" id="close">Cancel</a>
               </span>
             </div>

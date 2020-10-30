@@ -12,13 +12,13 @@
                         <div class="card-body">
                             <form action="/calendar" method="POST">
                             <input type="hidden" name="action" value="get_calendar">
-                                <label class="form-label">Set Period:</label>
+                                <label class="form-label">Set Period: {$result}</label>
                                 <div class="row">
-                                    <select name="month" class="col-md-6 form-control custom-select" id="month">
+                                    <select name="month" class="col-md-6 form-control custom-select" id="month" required>
                                         <option value="" selected="" disabled="" readonly>Month</option>
                                         {include file="custom/select_month.tpl"}
                                     </select>
-                                    <input name="year" type="number" class="col-md-5 form-control ml-4" placeholder="Year" value="{date_format($date,'Y')}" id="year">
+                                    <input name="year" type="number" class="col-md-5 form-control ml-4" placeholder="Year" value="{date_format($date,'Y')}" id="year" required>
                                 </div>
                                 <div class="col-md-12 mt-5">
                                     <div class="form-group" style="float: right;">
