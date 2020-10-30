@@ -10,9 +10,10 @@ class DTR {
         return DB::db("db_master")->fetch_all("SELECT * FROM tbl_dtr_code ORDER BY dtr_code ASC");
     }
 
-    public static function get_sched ($id, $day = NULL) {
-        if ($day) {
-            $sched = DB::db("db_master")->fetch_all("SELECT * FROM tbl_schedule  WHERE sched_code = (SELECT sched_code FROM tbl_employee_sched WHERE employee_id = ? ORDER BY `date` DESC LIMIT 0,1) AND weekday = ?", [$id,$day]);
+    public static function get_sched ($id, $date = NULL) {
+        if ($date) {
+            $day = date_format($date,'l');
+            $sched = DB::db("db_master")->fetch_all("SELECT * FROM tbl_schedule  WHERE sched_code = (SELECT sched_code FROM tbl_employee_sched WHERE employee_id = ? AND `date` <= ? ORDER BY `date` DESC LIMIT 0,1) AND weekday = ?", [$id, $date->format('Y-m-d'), $day]);
         } else {
             $sched = DB::db("db_master")->fetch_all("SELECT * FROM tbl_schedule WHERE sched_code = (SELECT sched_code FROM tbl_employee_sched WHERE employee_id = ? ORDER BY `date` DESC LIMIT 0,1)", $id);
         }
@@ -20,14 +21,17 @@ class DTR {
     }
 
     public static function is_payable ($code, $id) {
-        if (($code == "BO:BO")||($code == "OB:OB")) {
-            return True;
+        $result = False;
+        $pay = DB::db('db_master')->fetch_row ("SELECT * FROM tbl_dtr_code WHERE dtr_code = ?",$code);
+        if (($pay['payable'] == "1") && ($pay['affected'] == "1")) {
+            $result = True;
         } else {
-            $type = DB::fetch_row ("SELECT etype_id FROM tbl_employee_status WHERE employee_id = ? ORDER BY date_start DESC LIMIT 0,1", $id)['etype_id'];
-            $pay = DB::fetch_row ("SELECT payable FROM tbl_dtr_code WHERE dtr_code = ?",$code)['payable'];
-            if (($type <= 4) & ($pay == 1)) return True;
-            else return False;
+            $type = DB::db('db_master')->fetch_row ("SELECT a.jo FROM tbl_employee_type a, tbl_employee_status b WHERE employee_id = ? AND a.etype_id = b.etype_id ORDER BY date_start DESC LIMIT 0,1", $id);
+            if ($type['jo'] == "0") {
+                $result = True;
+            }
         }
+        return $result;
     }
 
     public static function change_log ($id, $attnd, $period, $date, $log_no = NULL) {
@@ -46,8 +50,7 @@ class DTR {
     public static function compute_log ($attnd, $id, $date) {
         $preset = ["am_in", "am_out", "pm_in", "pm_out", "ot_in", "ot_out"];
         $attendance = ["is_absent" => 1, "total_hours" => 0, "late" => 0, "undertime" => 0];
-        $day = date_create($date)->format('l');
-        $sched = self::get_sched($id, $day);
+        $sched = self::get_sched($id, $date);
         if ($sched) {
             for ($i = 0; $i < 6; $i++) {
                 if ($i < 4) { 
@@ -82,5 +85,9 @@ class DTR {
             }
         }
         return $attendance;
+    }
+     
+    public function get_log ($period, $args) {
+        return DB::db("db_attendance")->fetch_row ("SELECT * FROM `$period` WHERE emp_id = ? AND date = ?", $args);
     }
 }

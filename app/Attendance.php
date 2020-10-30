@@ -22,52 +22,56 @@ class Attendance extends AttendanceController {
 
     public function print_preview () {
         if ($this->data) {
-            
+            $interval = new DateInterval('P1D');
             $begin = date_create($this->data['date_from']);
             $end = date_create($this->data['date_to']);
-            if ($this->data['month']) {
-                $begin = date_create($this->data['year']."-".$this->data['month']."-01");
-                $end = date_create($this->data['year']."-".$this->data['month'])->format('Y-m-t+1');
-                $end = date_create($end);
-            }
+            
             if ($this->data['employee_id']) {
                 $employees[] = Employee::find ($this->data['employee_id'])->get();
             } else {
-                if ($this->data['emp_type']) $employees = Employee::type ($this->data['emp_type']);
-                else $employees = Employee::getAll();
+                $employees = $this->data['emp_type'] ? Employee::type ($this->data['emp_type']) : Employee::getAll();
             }
-            $interval = new DateInterval('P1D');
+
             $month = ['0'=> $begin->format('F, Y'), '1' => $end->format('F, Y')];
             if ($this->data['per_month']) {
                 $daterange = new DatePeriod(new DateTime($begin->format('Y-m-01')), $interval, new DateTime($begin->format('Y-m-t+1')));
-                $datas[] = ["month" => $month[0], "daterange" => $daterange, "from" => $begin, "to" =>$end->modify('+1')];
+                $datas[] = ["month" => $month[0], "daterange" => $daterange, "from" => $begin, "to" =>$end];
                 if (!($month[0] == $month[1])) {
                     $datas[0]['to'] = new DateTime($begin->format('Y-m-t'));
                     $daterange = new DatePeriod(new DateTime($end->format('Y-m-01')), $interval, new DateTime($end->format('Y-m-t+1')));
                     $datas[] = ["month" => $month[1], "daterange" => $daterange, "from" => new DateTime($end->format('Y-m-01')), "to" =>$end];
                 }
             } else {
-                $daterange = new DatePeriod(new DateTime($begin->format('Y-m-d')), $interval, new DateTime($end->format('Y-m-d')));
+                $daterange = new DatePeriod(new DateTime($begin->format('Y-m-d')), $interval, new DateTime($end->format('Y-m-d+1')));
                 if (!($month[0] == $month[1])) $month[0] = $month[0]." - ".$month[1];
-                $datas[] = ["month" => $month[0], "daterange" => $daterange, "from" => $begin, "to" =>$end->modify('+1')];
+                $datas[] = ["month" => $month[0], "daterange" => $daterange, "from" => $begin, "to" =>$end];
             }
+
             $campus = Employee::get_campus($this->user['campus_id']);
             foreach ($employees as $profile) {
                 $attendance = $this->attendance ($profile['employee_no'], ["from" => $begin->format('Y-m-d'), "to" => $end->format('Y-m-d')], ($this->data['period'] - 1))->compute (); // Employee Attendance
                 foreach($datas as $data) {
-                    $days = $data['to']->diff($data['from'])->format('%a');
-                    $vars = ["attendance" => $attendance, "employee" => $profile, "campus" => $campus, "daterange" => $data['daterange'], "from" => $begin, "to" => $end, "month" => $data['month'], "days" => $data['to']->format('d')];
+                    $tdays = $data['to']->diff($data['from'])->format('%a')+1;
+                    $cdays = ($tdays + intval($data['from']->format('w')))-1;
+                    $sat = intval($cdays/7);
+                    $days = $tdays - (2 * $sat);
+                    if (($cdays % 7) >= 6) { 
+                        $sat++;
+                        $days--;
+                    }
+                    $vars = ["attendance" => $attendance, "employee" => $profile, "campus" => $campus, "daterange" => $data['daterange'], "from" => $begin, "to" => $end, "month" => $data['month'], "days" => $days, "sat" => $sat];
                     $pdf[] = $this->dtr_data ($vars);
                 }
             }
-            $this->to_pdf($pdf);
+            $this->to_pdf($pdf); 
         }
     }
 
     protected function generate () {
-        if ($this->data['emp_type']) $employees = Employee::type ($this->data['emp_type']);
-        else $employees = Employee::getAll();
-        $this->view->display ('attendance', ["period" => $this->data, "emp_type" => Position::emp_type(), "employees" => $employees, "posted" => $this->is_posted ($this->data), "month" => $this->data['month']]);
+        $employees = $this->data['emp_type'] ? Employee::type ($this->data['emp_type']) : Employee::getAll();
+        $emp_type = Position::emp_type();
+
+        $this->view->display ('attendance', ["period" => $this->data, "emp_type" => $emp_type, "employees" => $employees, "posted" => $this->is_posted ($this->data)]);
     }
 
     protected function get_attendance () {
@@ -81,13 +85,18 @@ class Attendance extends AttendanceController {
     }
 
     protected function raw_data () {
-        $this->view->display ("custom/attendance_raw_data", ["rawdata" => $this->get_raw_data ($this->data['period'], [$this->data['id'], $this->data['date']])]);
+        $period = date_create($this->data['date'])->format('m-Y');
+        $this->view->display ("custom/attendance_raw_data", ["rawdata" => $this->get_raw_data ($period, [$this->data['id'], $this->data['date']])]);
     }
 
     protected function update_log () {
-        $period = $this->data['month'].'-'.$this->data['year'];
+        $period = date_create($this->data['date'])->format('m-Y');
         $attn = $this->find ($period, $this->data['id']);
-        $rawdata = $this->get_raw_data ($this->data['month'].'-'.$this->data['year'], [$this->data['emp_id'], $this->data['date']]);
+        $rawdata = $this->get_raw_data ($period, [$this->data['emp_id'], $this->data['date']]);
         $this->view->display ("custom/attendance_update_log", ["attn" => $attn, "rawdata" => $rawdata, "codes" => DTR::dtr_code(), "period" => $period, "employee_id" => $this->data['emp_id'], "date" => $this->data['date']]);
+    }
+
+    protected function sync_attendance () {
+        print_r($this->data);
     }
 }

@@ -10,35 +10,15 @@ async function f (data = {}, type = 'json', url = path) {
 }
 
 // START::ATTENDANCE
-function init_dtr(id) {
-  var from, to;
-  
+function init_dtr(id) {  
   $("#cover-spin").show(0);
   if (id == 0) {
     $("#dtr").html("");
     $("#cover-spin").hide(0);
   } else {
-    var period = document.getElementById("period").value;
-    var month = document.getElementById("month").value;
-    var year = document.getElementById("year").value;
-    switch(period) {
-      case '1':
-        from = create_date(year+'-'+month+'-01');
-        to = create_date(year+'-'+month+'-15');
-        break;
-      case '2':
-        from = create_date(year+'-'+month+'-16');
-        to = create_date(year+'-'+month+'-01', 'month');
-        break;
-      case '4':
-        from = document.getElementById("date_from").value;
-        to = document.getElementById("date_to").value;
-        break;
-      default:
-        from = create_date(year+'-'+month+'-01');
-        to = create_date(year+'-'+month+'-01', 'month');
-        break;
-    }
+    period = document.getElementById("period").value;
+    from = document.getElementById("date_from").value;
+    to = document.getElementById("date_to").value;
     f({action: 'get_attendance', id:id, date_from:from, date_to:to, period:period}, "text").then( function(html){
       $("#dtr").html(html);
       $("#cover-spin").hide(0);
@@ -168,19 +148,36 @@ function get_salary () {
   var position = $('#positions').val();
   var date = $('#date-start').val();
   var campus = $('#campus').val();
-  f({action: 'get_salary', position_id:position, date_start:date, campus_id:campus}, "text", "/employees").then( function(html){
+  f ({
+    action: 'get_salary', position_id:position, date_start:date, campus_id:campus
+  }, "text", "/employees").then( function(html) {
     $('#salary').val("Php " + html.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,'));
   });
 }
 
-function customDate (is_custom) {
-  if (is_custom == "4") {
+function customDate () {
+  var period = $('#period_type').val();
+  var presets = [['01','15'], ['16', '31'], ['01', '31']];
+
+  if (period == "4") {
     $('#preset').addClass("d-none");
     $('#custom').removeClass("d-none");
   } else {
+    var month = $('#mon').val();
+    var year = $('#yr').val();
+    $('#from').val(date_create(year, month, presets[period-1][0]));
+    $('#to').val(date_create(year, month, presets[period-1][1]));
     $('#preset').removeClass("d-none");
     $('#custom').addClass("d-none");
   }
+}
+
+function date_create(year, month, day) {
+  var date = day == '31' ? new Date(year,month,0) : new Date(year,month,day);
+  y = date.getFullYear();
+  m = day == '31' ? date.getMonth() + 1 : date.getMonth();
+  d = date.getDate();
+  return y + '-' + (m > 9 ? m : '0'+ m) + '-' + (d > 9 ? d : '0'+ d); 
 }
 
 function set_from (from) {
@@ -222,39 +219,26 @@ function create_sched (ctr) {
 
 function modify_log () {
   var form = $('#formLog').serialize();
-  f(form, "text", "/attendance").then( function(html){
+  f (form, "text", "/attendance").then( function(html){
     console.log(html);
     $('#update-log-modal').modal('hide');
     init_dtr($('#id').val());
   });
 }
 
-function set_presets (type) {
+function set_presets (type, emp_id = "") {
   $("#cover-spin").show(0);
-  var period = document.getElementById("period").value;
-  var month = document.getElementById("month").value;
-  var year = document.getElementById("year").value;
-    switch(period) {
-      case '1':
-        from = create_date(year+'-'+month+'-01');
-        to = create_date(year+'-'+month+'-15');
-        break;
-      case '2':
-        from = create_date(year+'-'+month+'-16');
-        to = create_date(year+'-'+month+'-01', 'month');
-        break;
-      case '4':
-        from = document.getElementById("date_from").value;
-        to = document.getElementById("date_to").value;
-        break;
-      default:
-        from = create_date(year+'-'+month+'-01');
-        to = create_date(year+'-'+month+'-01', 'month');
-        break;
-    }
-  f({action:"set_default", emp_type:type, date_from:from, date_to:to }, "text", "/attendance").then( function(html){
+  from = document.getElementById("date_from").value;
+  to = document.getElementById("date_to").value;
+  f({
+    action:"set_default", emp_type:type, date_from:from, date_to:to, employee_id:emp_id 
+  }, "text", "/attendance").then( function (html) {
     $("#cover-spin").hide(0);
-    location.reload(true);
+    if (emp_id) {
+      init_dtr(emp_id);
+    } else {
+      location.reload(true);
+    }
   });
 }
 // OTHER FUNCTIONS :: END

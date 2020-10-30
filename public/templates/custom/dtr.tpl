@@ -24,10 +24,23 @@
             <td>Hours</td>
             <td>Tardy</td>
             <td>Remarks</td>
-            {if $user.is_admin}<td></td>{/if}
+            {if $user.is_admin}<td>
+                <div class="item-action dropdown">
+                    <a href="javascript:void(0)" data-toggle="dropdown" class="icon" aria-expanded="false">
+                        <i class="fe fe-settings"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; transform: translate3d(-181px, 20px, 0px); top: 0px; left: 0px; will-change: transform;">
+                        <a href="javascript:set_presets('{$period.emp_type}', '{$employee_id}')" class="dropdown-item">
+                            <i class="dropdown-icon fe fe-upload"></i> Set Default Logs
+                        </a>
+                    </div>
+                </div>
+            </td>{/if}
             </tr>
         </thead>
         <tbody>
+            {$attendance.ut = 0}
+            {$attendance.total = 0}
             {if $attendance}
             {foreach $daterange as $date}
                 {if $month != $date|date_format:"%m"}
@@ -48,6 +61,8 @@
                         <td>{$attn.ot_out}</td>
                         <td>{$attn.total_hours}</td>
                         <td>{$attn.late + $attn.undertime}</td>
+                        {$attendance.ut = $attendance.ut + ($attn.late + $attn.undertime)}
+                        {$attendance.total = $attendance.total + $attn.total_hours}
                         <td></td>
                         {if $user.is_admin}
                         <td><a href="javascript:view_raw_data('{$employee_id}', '{$attn.date|date_format:"%Y-%m-%d"}');" class="icon" title="View Raw Data"><i class="fe fe-eye"></i></a><a href="javascript:update_log('{$attn.id}', '{$employee_id}', '{$attn.date|date_format:"%Y-%m-%d"}');" class="icon" title="Edit Log"><i class="fe fe-edit"></i></a></td>
@@ -89,8 +104,6 @@
     <form target="_blank" action="/attendance/print" method="POST">
         <input type="hidden" name="employee_id" value="{$period.id}">
         <input type="hidden" name="period" value={$period.period}>
-        <input type="hidden" name="month" value={$period.month}>
-        <input type="hidden" name="year" value={$period.year}>
         <input type="hidden" name="date_from" value={$period.date_from}>
         <input type="hidden" name="date_to" value={$period.date_to}>
         {if $user.is_admin}

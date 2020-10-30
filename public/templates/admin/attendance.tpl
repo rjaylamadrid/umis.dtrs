@@ -10,10 +10,10 @@
         {if $posted}
         <div class="card">
             <div id="sync" class="card-body">
-                <input type="hidden" id="month" value="{$period.month}">
-                <input type="hidden" id="year" value="{$period.year}">
+                <input type="hidden" id="month" value="{$posted.month}">
+                <input type="hidden" id="year" value="{$posted.year}">
                 <div class="text-center">
-                    <p>Attendance not yet posted or uploaded. <b>PERIOD: {$posted}</b></p>
+                    <p>Attendance not yet posted or uploaded. <b>PERIOD: {$posted.month}-{$posted.year}</b></p>
                     <button onclick="sync_now()" class="btn btn-outline-primary">Update Attendance Now</button>
                     <div id="sync-result">
                     </div>
@@ -47,8 +47,6 @@
                     <div class="card-body">
                         <form action="" method="POST" id="generate">
                         <input type="hidden" name="action" value="generate">
-                        <input type="hidden" id="month" name="month" value="{$period.month}">
-                        <input type="hidden" id="year" name="year" value="{$period.year}">
                         <input type="hidden" id="period" name="period" value="{$period.period}">
                         <input type="hidden" id="emp_type" name="emp_type" value="{$period.emp_type}">
                         <input type="hidden" id="date_from" name="date_from" value="{$period.date_from}">
@@ -78,17 +76,9 @@
                                         <a href="javascript:set_presets('{$period.emp_type}')" class="dropdown-item">
                                             <i class="dropdown-icon fe fe-upload"></i> Set Default Logs
                                         </a>
-                                        <a href="javascript:add_event()" class="dropdown-item">
-                                            <i class="dropdown-icon fe fe-bookmark"></i> Add event 
-                                        </a>
-                                        <a href="#" data-toggle="modal" data-target="#event-modal" class="dropdown-item">
-                                            <i class="dropdown-icon fe fe-bookmark"></i> Events 
-                                        </a>
                                         <div class="dropdown-divider"></div>
                                        <form target="_blank" action="/attendance/print" method="POST">
-                                            <input type="hidden" name="period" value={$period.period}>
-                                            <input type="hidden" name="month" value={$period.month}>
-                                            <input type="hidden" name="year" value={$period.year}>
+                                            <input type="hidden" name="period" value="{$period.period}">
                                             <input type="hidden" name="date_from" value={$period.date_from}>
                                             <input type="hidden" name="date_to" value={$period.date_to}>
                                             <input type="hidden" name="emp_type" value="{$period.emp_type}">
@@ -226,9 +216,8 @@
     }
 
     function view_raw_data (id, date) {
-        var period = document.getElementById("month").value + '-' + document.getElementById("year").value;
         f ({
-            action: 'raw_data', id: id, period: period, date: date
+            action: 'raw_data', id: id, date: date
         }, 'text').then (function (html) {
             $("#raw-data").html(html);
 	        $("#raw-data-modal").modal('show');
@@ -236,10 +225,8 @@
     }
 
     function update_log (id, emp_id, date) {
-        var month = document.getElementById("month").value
-        var year = document.getElementById("year").value;
         f ({
-            action: 'update_log', id: id, emp_id: emp_id, month: month, year: year, date: date
+            action: 'update_log', id: id, emp_id: emp_id, date: date
         }, 'text').then (function (html) {
             $("#update-log").html(html);
             $("#update-log-modal").modal('show');
@@ -247,7 +234,13 @@
     }
 
     function sync_now () {
-        
+        var month = document.getElementById("month").value
+        var year = document.getElementById("year").value;
+        f ({
+            action: 'sync_attendance', month:month, year:year
+        }, 'text').then (function (html) {
+            console.log(html);
+        });
     }
 </script>
 {/block}

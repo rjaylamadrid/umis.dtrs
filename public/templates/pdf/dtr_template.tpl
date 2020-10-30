@@ -23,7 +23,7 @@
             <td colspan="6">BRANCH: Admin<br/>
                 For the month of {$month}<br/>
                 Official hours for arrival ( Regular Days {$days} )<br/>
-                and departure ( Saturdays 4 )<br/></td>
+                and departure ( Saturdays {$sat} )<br/></td>
         </tr>
     </table>
     <table class="table">

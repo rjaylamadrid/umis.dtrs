@@ -11,7 +11,7 @@
                             <input type="hidden" name="action" value="generate">
                             <label style="display: inline-block;">Select DTR period:&nbsp;</label>
                             <div class="form-group mb-2">
-                                <select name="period" class="form-control custom-select" onchange="javascript:customDate(this.value)">
+                                <select name="period" id="period_type" class="form-control custom-select" onchange="javascript:customDate()">
                                     <option value="1">First Half (1 - 15)</option>
                                     <option value="2">Second Half (16 - 31)</option>
                                     <option value="3">Whole Month (1 - 31)</option>
@@ -22,11 +22,11 @@
                                 <div class="row">
                                     <div class="col-lg-6">
                                         <label style="justify-content: flex-start">Date From&nbsp;</label>
-                                        <input type="date" name="date_from" class="form-control" style="width: 100%" value="{date('Y-m-')}01" onchange = "javascript:set_from(this.value)" id="from">
+                                        <input type="date" name="date_from" class="form-control" style="width: 100%" value="{date('Y-m-01')}" onchange = "javascript:set_from(this.value)" id="from">
                                     </div>
                                     <div class="col-lg-6">
                                         <label style="justify-content: flex-start">Date To&nbsp;</label>
-                                        <input type="date" name="date_to" class="form-control" style="width: 100%" value="{date('Y-m-01', strtotime('+ 28 days'))}" min="{date('Y-m-01', strtotime('+ 1 days'))}" max="{date('Y-m-01', strtotime('+ 1 months'))}" id ="to">
+                                        <input type="date" name="date_to" class="form-control" style="width: 100%" value="{date('Y-m-15')}" id ="to">
                                     </div>
                                 </div>
                             </div>
@@ -34,14 +34,14 @@
                                 <div class="row">
                                     <div class="col-lg-6">
                                         <label style="justify-content: flex-start">Month&nbsp;</label>
-                                        <select name="month" class="form-control custom-select" style="width: 100%" required>
+                                        <select name="month" class="form-control custom-select" style="width: 100%" required onchange="javascript:customDate()" id="mon">
                                             <option value="00" disabled="">Month</option>
                                             {include file="custom/select_month.tpl"}
                                         </select>
                                     </div>
                                     <div class="col-lg-6">
                                         <label style="justify-content: flex-start">Year&nbsp;</label>
-                                        <input type="number" name="year" class="form-control" placeholder="Year" value="{date('Y')}" style="width: 100%">
+                                        <input type="number" name="year" class="form-control" placeholder="Year" value="{date('Y')}" style="width: 100%" onchange="javascript:customDate()" id="yr">
                                     </div>
                                 </div>
                             </div>

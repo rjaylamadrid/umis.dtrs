@@ -66,24 +66,18 @@ class AttendanceController extends Controller {
     }
 
     protected function is_posted ($period) {
-        $tbls = "";
-        if ($period['period'] == "4") {
-            $start = date_create($period['date_from'])->format('m-Y');
-            $end = date_create($period['date_to'])->format('m-Y');
-            for ($y = intval(substr($start, 3)); $y <= intval(substr($end, 3)); $y++) {
-                for ($i = intval(substr($start, 0, 2)); $i <= intval(substr($end, 0, 2)); $i++) {
-                    if ($i < 10) $i = '0'.$i;
-                    $table = $i.'-'.$y;
-                    $posted = DB::db("db_attendance")->fetch_row ("SELECT COUNT(*) AS count FROM `$table`");
-                    if (!($posted['count'])) $tbls .= $table ." ";
-                }
+        $tables = [];
+        $start = date_create($period['date_from'])->format('m-Y');
+        $end = date_create($period['date_to'])->format('m-Y');
+        for ($y = intval(substr($start, 3)); $y <= intval(substr($end, 3)); $y++) {
+            for ($i = intval(substr($start, 0, 2)); $i <= intval(substr($end, 0, 2)); $i++) {
+                if ($i < 10) $i = '0'.$i;
+                $table = $i.'-'.$y;
+                $posted = DB::db("db_attendance")->fetch_row ("SHOW tables LIKE '$table'");
+                if (!($posted)) $tables = ["month" => $i, "year" => $y];
             }
-        } else {
-            $table = $period['month'].'-'.$period['year'];
-            $posted = DB::db("db_attendance")->fetch_row ("SELECT COUNT(*) AS count FROM `$table`");
-            if (!($posted['count'])) $tbls = $table;
         }
-        return $tbls;
+        return $tables;
     }
 
     protected function get_raw_data ($period, $args) {
@@ -109,24 +103,36 @@ class AttendanceController extends Controller {
     }
 
     protected function set_default () {
-        if ($this->data['emp_type']) $employees = Employee::type ($this->data['emp_type']);
-        else $employees = Employee::getAll();
         $interval = new DateInterval('P1D');
         $date_from = new DateTime($this->data['date_from']);
         $date_to = new DateTime($this->data['date_to']);
-
         $daterange = new DatePeriod($date_from, $interval, $date_to->modify('+1 day'));
-        foreach ($employees as $employee) {
+        
+        if ($this->data['employee_id']) {
             foreach ($daterange as $date) {
                 $period = date_format($date, 'm-Y');
-                $sched = DTR::get_sched($employee['employee_no'], date_format($date, 'l'));
-                if ($sched) {
+                $sched = DTR::get_sched ($this->data['employee_id'], $date);
+                $logs = DTR::get_log ($period, [$this->data['employee_id'], date_format($date, 'Y-m-d')]);
+                if (($sched) && (!($logs))) {
                     $attnd = [$sched[0]['am_in'],$sched[0]['am_out'],$sched[0]['pm_in'],$sched[0]['pm_out']];
-                    DTR::change_log ($employee['employee_no'], $attnd, $period, date_format($date, 'Y-m-d'));
+                    DTR::change_log ($this->data['employee_id'], $attnd, $period, date_format($date, 'Y-m-d'));
+                }
+            }
+        } else {
+            if ($this->data['emp_type']) $employees = Employee::type ($this->data['emp_type']);
+            else $employees = Employee::getAll();
+            foreach ($employees as $employee) {
+                foreach ($daterange as $date) {
+                    $period = date_format($date, 'm-Y');
+                    $sched = DTR::get_sched($employee['employee_no'], $date);
+                    $logs = DTR::get_log ($period, [$employee['employee_no'], date_format($date, 'Y-m-d')]);
+                    if (($sched) && (!($logs))) {
+                        $attnd = [$sched[0]['am_in'],$sched[0]['am_out'],$sched[0]['pm_in'],$sched[0]['pm_out']];
+                        DTR::change_log ($employee['employee_no'], $attnd, $period, date_format($date, 'Y-m-d'));
+                    }
                 }
             }
         }
     }
 
-    
 }
