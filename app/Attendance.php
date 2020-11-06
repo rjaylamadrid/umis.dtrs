@@ -71,7 +71,7 @@ class Attendance extends AttendanceController {
         $employees = $this->data['emp_type'] ? Employee::type ($this->data['emp_type']) : Employee::getAll();
         $emp_type = Position::emp_type();
 
-        $this->view->display ('attendance', ["period" => $this->data, "emp_type" => $emp_type, "employees" => $employees, "posted" => $this->is_posted ($this->data)]);
+        $this->view->display ('attendance', ["period" => $this->data, "emp_type" => $emp_type, "employees" => $employees, "posted" => $this->is_posted ($this->data), "month" => $this->data['month']]);
     }
 
     protected function get_attendance () {
@@ -97,6 +97,7 @@ class Attendance extends AttendanceController {
     }
 
     protected function sync_attendance () {
-        print_r($this->data);
-    }
+        $period = $this->data['month']."-".$this->data['year'];
+        DTR::create_table($period);
+    } 
 }

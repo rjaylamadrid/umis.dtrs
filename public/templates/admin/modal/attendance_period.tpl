@@ -12,25 +12,25 @@
                             <label style="display: inline-block;">Select DTR period:&nbsp;</label>
                             <div class="form-group mb-2">
                                 <select name="period" id="period_type" class="form-control custom-select" onchange="javascript:customDate()">
-                                    <option value="1">First Half (1 - 15)</option>
-                                    <option value="2">Second Half (16 - 31)</option>
-                                    <option value="3">Whole Month (1 - 31)</option>
-                                    <option value="4">Customize</option>
+                                    <option value="1" {if $period.period == '1'}selected{/if}>First Half (1 - 15)</option>
+                                    <option value="2" {if $period.period == '2'}selected{/if}>Second Half (16 - 31)</option>
+                                    <option value="3" {if $period.period == '3'}selected{/if}>Whole Month (1 - 31)</option>
+                                    <option value="4" {if $period.period == '4'}selected{/if}>Customize</option>
                                 </select>
                             </div>
-                            <div class="form-group form-inline d-none" id="custom">
+                            <div class="form-group form-inline {if $period.period != '4'}d-none{/if}" id="custom">
                                 <div class="row">
                                     <div class="col-lg-6">
                                         <label style="justify-content: flex-start">Date From&nbsp;</label>
-                                        <input type="date" name="date_from" class="form-control" style="width: 100%" value="{date('Y-m-01')}" onchange = "javascript:set_from(this.value)" id="from">
+                                        <input type="date" name="date_from" class="form-control" style="width: 100%" value="{if $period.date_from}{$period.date_from}{else}{date('Y-m-01')}{/if}" onchange = "javascript:set_from(this.value)" id="from">
                                     </div>
                                     <div class="col-lg-6">
                                         <label style="justify-content: flex-start">Date To&nbsp;</label>
-                                        <input type="date" name="date_to" class="form-control" style="width: 100%" value="{date('Y-m-15')}" id ="to">
+                                        <input type="date" name="date_to" class="form-control" style="width: 100%" value="{if $period.date_to}{$period.date_to}{else}{date('Y-m-15')}{/if}" id ="to">
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group form-inline" id="preset">
+                            <div class="form-group form-inline {if $period.period == '4'}d-none{/if}" id="preset">
                                 <div class="row">
                                     <div class="col-lg-6">
                                         <label style="justify-content: flex-start">Month&nbsp;</label>
@@ -41,16 +41,15 @@
                                     </div>
                                     <div class="col-lg-6">
                                         <label style="justify-content: flex-start">Year&nbsp;</label>
-                                        <input type="number" name="year" class="form-control" placeholder="Year" value="{date('Y')}" style="width: 100%" onchange="javascript:customDate()" id="yr">
+                                        <input type="number" name="year" class="form-control" placeholder="Year" value="{if $period.year}{$period.year}{else}{date('Y')}{/if}" style="width: 100%" onchange="javascript:customDate()" id="yr">
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <select name="emp_type" class="form-control custom-select">
                                     <option value="">All employees</option>
-                                    <option value="0">All regular/casual</option>
                                     {foreach $emp_type as $e}
-                                    <option value="{$e.etype_id}">{$e.etype_desc}</option>
+                                    <option value="{$e.etype_id}" {if $e.etype_id == $period.emp_type}selected{/if}>{$e.etype_desc}</option>
                                     {/foreach}
                                 </select>
                             </div>

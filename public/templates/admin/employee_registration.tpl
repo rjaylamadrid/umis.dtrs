@@ -12,6 +12,7 @@
             <div class="card ">
                 <form class="user ml-5 mr-5" method="post" action="/employees" enctype="multipart/form-data">
                     <input type="hidden" name="action" value="register">
+                    <input type="hidden" name="emp[no]" value="{$no}">
                     <div class="card-body">
                         <h1 class="card-title">Register Employee</h1>
                         <div class="row">
@@ -130,7 +131,7 @@
                                     <select class="form-control" name="emp_status[privilege]" required>
                                         <option selected disabled>Designation</option>
                                         {foreach from = $designations item = designation}
-                                            <option value = "{$designation.priv_level}">{$designation.priv_desc}</option>
+                                            <option value = "{$designation.priv_level}" {if $designation.priv_level == 0}selected{/if}>{$designation.priv_desc}</option>
                                         {/foreach}
                                     </select>
                                 </div>
@@ -146,7 +147,7 @@
                                     <div class="col-md-6 col-sm-12">
                                         <div class="form-group label-floating">
                                             <label class="form-label">Employment Status</label>
-                                            <select class="form-control" name="emp_status1[etype_id]" required onchange="javascript:init_pos (this.value)">
+                                            <select class="form-control" name="emp_status[etype_id]" required onchange="javascript:init_pos (this.value)">
                                                 <option selected disabled>Employment Status</option>
                                                 {foreach from=$emp_type item=type}
                                                 <option value="{$type.etype_id}">{$type.etype_desc}</option>

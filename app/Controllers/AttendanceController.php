@@ -112,7 +112,7 @@ class AttendanceController extends Controller {
             foreach ($daterange as $date) {
                 $period = date_format($date, 'm-Y');
                 $sched = DTR::get_sched ($this->data['employee_id'], $date);
-                $logs = DTR::get_log ($period, [$this->data['employee_id'], date_format($date, 'Y-m-d')]);
+                $logs = DTR::get_log ($period, [$this->data['employee_id'],date_format($date, 'Y-m-d')]);
                 if (($sched) && (!($logs))) {
                     $attnd = [$sched[0]['am_in'],$sched[0]['am_out'],$sched[0]['pm_in'],$sched[0]['pm_out']];
                     DTR::change_log ($this->data['employee_id'], $attnd, $period, date_format($date, 'Y-m-d'));

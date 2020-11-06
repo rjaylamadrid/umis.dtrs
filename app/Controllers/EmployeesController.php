@@ -38,13 +38,12 @@ class EmployeesController extends Controller {
     }
 
     protected function designations () {
-        return DB::fetch_all ("SELECT * FROM tbl_privilege ORDER BY priv_desc");
+        return DB::fetch_all ("SELECT * FROM tbl_privilege ORDER BY priv_level");
     }
 
     public function new_id ($e = NULL) {
-        $year = date('y');
         $count = count(Employee::employees ()->getAll())+1;
-        $id = $year.'-'.$count;
+        $id = date('y').'-'.$count;
         if ($e) {
             return $id;
         }  else {
@@ -52,14 +51,28 @@ class EmployeesController extends Controller {
         };
     }
 
+    public function employee_no() {
+        $count = count(Employee::employees ()->getAll())+1;
+        $no = $this->user['campus_id'].$count;
+        return $no;
+    }
+
     protected function register () {
         $id = DB::insert ("INSERT INTO tbl_employee SET ".DB::stmt_builder ($this->data['emp']), $this->data['emp']);
+        $result = True;
         if ($id) {
             $this->data['emp_status']['campus_id'] = $this->user['campus_id'];
             $this->data['emp_status']['employee_id'] = $id;
-            if (!(self::add_status ($this->data['emp_status']))) header ("location: /employees/registration");
-            if (!(self::set_schedule ($this->data['sched_code'], $id))) header ("location: /employees/registration");
-            header ("location: /employees/registration/success");
+            if (!(self::add_status ($this->data['emp_status']))) $result = False;
+            if (!(self::set_schedule ($this->data['sched_code'], $id, $this->data['emp_status']['date_start']))) $result = False;
+        }
+        
+        if ($result) {
+            $message = ['success' => 'success', 'message' => 'New employee has been registered!'];
+            $this->registration($message);
+        } else {
+            $message = ['success' => 'failed', 'message' => 'Employee registration failed!'];
+            $this->registration($message);
         }
     }
 
@@ -303,8 +316,9 @@ class EmployeesController extends Controller {
         $this->view->display ('custom/schedule', ['schedules' => $schedules]);
     }
 
-    public static function set_schedule ($sched, $id){
-        return DB::insert ("INSERT INTO tbl_employee_sched SET sched_code = ?, employee_id = ?", [$sched, $id]);
+    public static function set_schedule ($sched, $id, $date = NULL){
+        if (!($date)) $date = date('Y-m-d');
+        return DB::insert ("INSERT INTO tbl_employee_sched SET sched_code = ?, employee_id = ?, date = ?", [$sched, $id, $date]);
     }
 
     public static function add_status ($data) {
@@ -326,12 +340,13 @@ class EmployeesController extends Controller {
 
         DB::insert ("INSERT INTO tbl_schedule_preset SET ". DB::stmt_builder ($this->data['schedule_preset']),$this->data['schedule_preset']);
         foreach ($this->data['day'] as $key => $days) {
+            $has_sched = False;
             $inout = array('sched_code' => $this->data['schedule_preset']['sched_code'], 'weekday' => $days);
-            if ($this->data['amin'.$key] != '') {$inout += ['am_in' => date("H:i:s",strtotime($this->data['amin'.$key]))];}
-            if ($this->data['amout'.$key] != '') {$inout += ['am_out' => date("H:i:s",strtotime($this->data['amout'.$key]))];}
-            if ($this->data['pmin'.$key] != '') {$inout += ['pm_in' => date("H:i:s",strtotime($this->data['pmin'.$key]))];}
-            if ($this->data['pmout'.$key] != '') {$inout += ['pm_out' => date("H:i:s",strtotime($this->data['pmout'.$key]))];}
-            DB::insert ("INSERT INTO tbl_schedule SET ". DB::stmt_builder ($inout),$inout);
+            if ($this->data['amin'.$key] != '') {$inout += ['am_in' => date("H:i:s",strtotime($this->data['amin'.$key]))]; $has_sched = True;}
+            if ($this->data['amout'.$key] != '') {$inout += ['am_out' => date("H:i:s",strtotime($this->data['amout'.$key]))]; $has_sched = True;}
+            if ($this->data['pmin'.$key] != '') {$inout += ['pm_in' => date("H:i:s",strtotime($this->data['pmin'.$key]))]; $has_sched = True;}
+            if ($this->data['pmout'.$key] != '') {$inout += ['pm_out' => date("H:i:s",strtotime($this->data['pmout'.$key]))]; $has_sched = True;}
+            if ($has_sched) { DB::insert ("INSERT INTO tbl_schedule SET ". DB::stmt_builder ($inout),$inout); }
         }
         $id=$this->data['id'];
         header ("location: /employees/employment-update/$id/schedule/success");

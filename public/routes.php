@@ -44,7 +44,7 @@ $router->group(['before' => 'auth'], function ($router) {
             $router->post('/save/{id}/{tab}/{result}?', ['Employees', 'save']);
             $router->post('/add_profile_info/{id}/{tab}?', ['Employees', 'add_profile_info']);
             $router->post('/', ['Employees', 'do_action']);
-            $router->get('/registration/{success}?', ['Employees', 'registration']);
+            $router->get('/registration', ['Employees', 'registration']);
             $router->get('/employment/{id}/{tab}/{result}?', ['Employees', 'employment']);
             $router->get('/employment-update/{id}/{tab}/{result}?', ['Employees', 'employment_update']);
             $router->get('/{id}/export', ['Employees', 'export']);

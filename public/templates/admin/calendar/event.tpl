@@ -89,11 +89,11 @@
             <div class="row">
               <div class="form-group col-md-6 pl-0">
                 <label>Time Start</label>
-                <input type="time" class="form-control" name="Event[event_start]" required autocomplete="off" maxlength="8">
+                <input type="time" class="form-control" name="Event[event_start]" required autocomplete="off" maxlength="8" value="07:30">
               </div>
               <div class="form-group col-md-6 pr-0">
                 <label>Time End</label>
-                <input type="time" class="form-control" name="Event[event_end]" required autocomplete="off" maxlength="8">
+                <input type="time" class="form-control" name="Event[event_end]" required autocomplete="off" maxlength="8" value="17:00">
               </div>
             </div>
             <div class="form-group">

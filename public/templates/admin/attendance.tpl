@@ -29,10 +29,10 @@
                         <h3 class="card-title"><b>LIST</b> of Employees</h3>
                     </div>
       	        	<div id="employee-list" class="selectgroup selectgroup-vertical w-100 o-auto" style="max-height: 60rem;">
-                        <label class="selectgroup-item">
+                        {* <label class="selectgroup-item">
                             <input type="radio" name="employee_id" value="0" class="selectgroup-input" checked="" onclick="init_dtr (0);">
                             <span class="selectgroup-button" style="text-align: left;">Blank DTR</span>
-                        </label>
+                        </label> *}
                         {foreach $employees as $employee}
       	        	  	<label class="selectgroup-item">
       	        	  	    <input type="radio" name="employee_id" value="{$employee.employee_no}" class="selectgroup-input" onclick="init_dtr (this.value);">
@@ -55,7 +55,6 @@
                             <label style="display: inline-block;">Filter employee:&nbsp;</label>
                             <select name="emp_type" class="form-control custom-select" onchange="$('#generate').submit();">
                                 <option value="">All employees</option>
-                                <option value="0">All regular/casual</option>
                                 {foreach $emp_type as $e}
                                     <option value="{$e.etype_id}" {if $e.etype_id == $period.emp_type}selected{/if}>{$e.etype_desc}</option>
                                 {/foreach}
@@ -234,12 +233,13 @@
     }
 
     function sync_now () {
+        $("#cover-spin").show(0);
         var month = document.getElementById("month").value
         var year = document.getElementById("year").value;
         f ({
             action: 'sync_attendance', month:month, year:year
         }, 'text').then (function (html) {
-            console.log(html);
+           location.reload(true);
         });
     }
 </script>

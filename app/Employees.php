@@ -55,10 +55,10 @@ class Employees extends EmployeesController {
         header ("location: /employees/update/$id/$tab");
     }
 
-    public function registration ($success = NULL) {
+    public function registration ($message = NULL) { 
         $positions = Position::positions()->all ();
         $presets = Schedule::presets()->all ();
-        $this->view->display ('admin/employee_registration', ['positions' => $positions, 'emp_type' => Position::emp_type(), 'schedules' => $presets , 'departments' => $this->departments(), 'designations' => $this->designations(), 'id' => $this->new_id ('1'), 'message' => $message]);
+        $this->view->display ('admin/employee_registration', ['positions' => $positions, 'emp_type' => Position::emp_type(), 'schedules' => $presets , 'departments' => $this->departments(), 'designations' => $this->designations(), 'id' => $this->new_id ('1'), 'no' => $this->employee_no(), 'message' => $message]);
     }
 
     public function employment ($id, $tab = 'employment_info', $view = 'view', $message = NULL) {

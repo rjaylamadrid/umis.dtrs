@@ -34,7 +34,7 @@ class CalendarController extends Controller {
     public function add_event() {
         DB::db('db_master')->insert ("INSERT INTO tbl_event SET ". DB::stmt_builder($this->data['Event']),$this->data['Event']);
         self::attendance_event($this->data['Event']['event_date'], $this->data['Event']['dtr_code_id'], $this->data['Event']['event_start'], $this->data['Event']['event_end']);
-        header ("location: /calendar");
+        // header ("location: /calendar");
     }
 
     public function delete_event($id) {
@@ -68,17 +68,17 @@ class CalendarController extends Controller {
 
         foreach ($employee_scheds as $value) {
             $attnd_logs = self::check_logs ($value['employee_id'], $monthtable, $date, $dtr_code['dtr_code'], $value['sched_code'], $start, $end);
-
-            if(array_search($value['employee_id'], array_column($date_logs,'emp_id')) !== false) {
-                foreach ($date_logs as $logs) {
-                    if($value['employee_id'] == $logs['emp_id']) {
-                        DTR::change_log($value['employee_id'], $attnd_logs, $monthtable, $date, $logs['id']);
-                    }
-                }
-            }
-            else {
-                DTR::change_log($value['employee_id'], $attnd_logs, $monthtable, $date);
-            }
+            print_r($attnd_logs);
+            // if(array_search($value['employee_id'], array_column($date_logs,'emp_id')) !== false) {
+            //     foreach ($date_logs as $logs) {
+            //         if($value['employee_id'] == $logs['emp_id']) {
+            //             DTR::change_log($value['employee_id'], $attnd_logs, $monthtable, $date, $logs['id']);
+            //         }
+            //     }
+            // }
+            // else {
+            //     DTR::change_log($value['employee_id'], $attnd_logs, $monthtable, $date);
+            // }
         }
     }
 
