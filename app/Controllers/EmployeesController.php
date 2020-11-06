@@ -83,11 +83,29 @@ class EmployeesController extends Controller {
         if($tab == 'tbl_employee_other_info') {
             foreach ($employeeinfo as $key => $value) {
                 $other_row=DB::fetch_row ("SELECT $key FROM $tab WHERE employee_id = $id");
-                $other_row["$key"] = $other_row["$key"] == '' ? $value : $other_row["$key"].";".$value;
-                $inserted_vals = array('updated_action'=>2,'updated_table'=>$tab,'updated_old_data'=>'','updated_new_data'=>$key."=".$value,'updated_employee_id'=>$id,'updated_admin_id'=>1,'updated_date'=>date("Y-m-d"));
-                // print_r($user);
-                DB::insert ("INSERT INTO tbl_employee_update_delete SET ". DB::stmt_builder($inserted_vals),$inserted_vals);
-                return DB::update ("UPDATE $tab SET ".DB::stmt_builder($employeeinfo). " WHERE employee_id = $id",$other_row);
+                if ($other_row) {
+                    $other_row["$key"] = $other_row["$key"] == '' ? $value : $other_row["$key"].";".$value;
+                    $inserted_vals = array('updated_action'=>2,'updated_table'=>$tab,'updated_old_data'=>'','updated_new_data'=>$key."=".$value,'updated_employee_id'=>$id,'updated_admin_id'=>1,'updated_date'=>date("Y-m-d"));
+                    DB::insert ("INSERT INTO tbl_employee_update_delete SET ". DB::stmt_builder($inserted_vals),$inserted_vals);
+                    return DB::update ("UPDATE $tab SET ".DB::stmt_builder($employeeinfo). " WHERE employee_id = $id",$other_row);
+                } else {
+                        // print_r("<pre>");
+                        // print_r($id);
+                        // print_r("<br />");
+                        // print_r($employeeinfo);
+                        // print_r("</pre>");
+                        $inserted_vals = array('updated_action'=>2,'updated_table'=>$tab,'updated_old_data'=>'','updated_new_data'=>$key."=".$value,'updated_employee_id'=>$id,'updated_admin_id'=>1,'updated_date'=>date("Y-m-d"));
+                        // print_r("<pre>");
+                        // print_r($inserted_vals);
+                        // print_r("</pre>");
+                        // array_push($employeeinfo,["employee_id" => $id]);
+                    DB::insert ("INSERT INTO tbl_employee_update_delete SET ". DB::stmt_builder($inserted_vals),$inserted_vals);
+                    return DB::insert ("INSERT INTO $tab SET employee_id = ?, $key = ?",[$id,$employeeinfo["$key"]]);
+                    // $temp = DB::insert ("INSERT INTO $tab SET employee_id = ?, $key = ? WHERE employee_id = $id",[$id,$employeeinfo["$key"]]);
+                    // print_r("<pre>");
+                    // print_r($temp);
+                    // print_r("</pre>");
+                }
             }
         }
         else {
@@ -106,12 +124,6 @@ class EmployeesController extends Controller {
             $inserted_vals = array('updated_action'=>2,'updated_table'=>$tab,'updated_old_data'=>'','updated_new_data'=>$inserted_data,'updated_employee_id'=>$id,'updated_admin_id'=>1,'updated_date'=>date("Y-m-d"));
             DB::insert ("INSERT INTO tbl_employee_update_delete SET ". DB::stmt_builder($inserted_vals),$inserted_vals);
             return DB::insert("INSERT INTO $tab SET ".DB::stmt_builder ($employeeinfo), $employeeinfo);
-            // $temp = DB::insert("INSERT INTO $tab SET ".DB::stmt_builder ($employeeinfo), $employeeinfo);
-            // print_r("<pre>");
-            // print_r($temp);
-            // print_r($inserted_data);
-            // print_r($employeeinfo);
-            // print_r("</pre>");
         }
     }
 
