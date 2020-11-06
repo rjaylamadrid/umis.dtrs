@@ -99,7 +99,11 @@ class CalendarController extends Controller {
                     $value[$i] = $date_logs[$in_out[$i]];
                 }
             } else {
-                $value[$i] = $date_logs[$in_out[$i]];
+                if((strtotime($emp_sched[$in_out[$i]]) >= strtotime($start)) && (strtotime($emp_sched[$in_out[$i]]) <= strtotime($end))) {
+                    $value[$i] = $dtr_code;
+                } else {
+                    $value[$i] = ':';
+                } 
             }
         }
         return $value;

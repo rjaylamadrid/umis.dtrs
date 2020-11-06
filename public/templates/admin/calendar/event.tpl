@@ -37,7 +37,7 @@
 						{/for}
 						{$count=$count+1}
 						{for $i=1 to $lastday}
-							{if $count == 1} <tr><td class="date " id="{$i}">{$i}</td>
+							{if $count == 1} <tr><td class="date " onclick="javascript:get_events ({$i},{date_format($date,'m')},{date_format($date,'Y')})" id="{$i}">{$i}</td>
 							{else if $count == 7 || $count == 14 || $count == 21 || $count == 28 || $count == 35}  <td class="date " onclick="javascript:get_events ({$i},{date_format($date,'m')},{date_format($date,'Y')})" id="{$i}">{$i}</td></tr>
 							{else} <td class="date " onclick="javascript:get_events ({$i},{date_format($date,'m')},{date_format($date,'Y')})" id="{$i}">{$i}</td> {/if}
 							{$count=$count+1}

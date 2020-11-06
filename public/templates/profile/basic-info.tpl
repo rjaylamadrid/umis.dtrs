@@ -14,8 +14,8 @@
     <div class="table-responsive">
         <table class="table card-table table-striped">
             <tr class="row-header"><td colspan="2">Personal Information</td></tr>
-            <tr><td>Name</td><td>{$employee->basic_info.first_name} {$employee->basic_info.middle_name} {$employee->basic_info.last_name}</td></tr>
-            <tr><td>Birthdate</td><td>{$employee->basic_info.birthdate}</td></tr>
+            <tr><td>Name</td><td>{$employee->basic_info.first_name} {$employee->basic_info.middle_name} {$employee->basic_info.last_name} {$employee->basic_info.ext_name}</td></tr>
+            <tr><td>Birthdate</td><td>{$employee->basic_info.birthdate|date_format:'F d, Y'}</td></tr>
             <tr><td>Birthplace</td><td>{$employee->basic_info.birthplace}</td></tr>
             <tr><td>Sex</td><td>{$employee->basic_info.gender}</td></tr>
             <tr><td>Civil Status</td><td>{$employee->basic_info.marital_status}</td></tr>
@@ -23,8 +23,9 @@
             <tr><td>Weight (kg)</td><td>{$employee->basic_info.weight}</td></tr>
             <tr><td>Blood Type</td><td>{$employee->basic_info.blood_type}</td></tr>
             <tr><td>Citizenship</td><td>{$employee->basic_info.citizenship}</td></tr>
-            <tr><td>Residential Address</td><td>{$employee->basic_info.resadd_house_block_no}, {$employee->basic_info.resadd_street}</td></tr>
-            <tr><td>Permanent Address</td><td>{$employee->basic_info.peradd_house_block_no}, {$employee->basic_info.peradd_street}</td></tr>
+            {if $employee->basic_info.dual_citizen}<tr><td>Other Citizenship</td><td>{$employee->basic_info.dual_citizen}</td></tr>{/if}
+            <tr><td>Residential Address</td><td>{if $employee->basic_info.resadd_house_block_no != ''}{$employee->basic_info.resadd_house_block_no}{/if} {if $employee->basic_info.resadd_street != ''}{$employee->basic_info.resadd_street}, {/if} {if $employee->basic_info.resadd_sub_village}{$employee->basic_info.resadd_sub_village}, {/if}{if $employee->basic_info.resadd_brgy}{$employee->basic_info.resadd_brgy}, {/if}{if $employee->basic_info.resadd_mun_city}{$employee->basic_info.resadd_mun_city}, {/if}{if $employee->basic_info.resadd_province}{$employee->basic_info.resadd_province} {/if}{if $employee->basic_info.resadd_zip_code}{$employee->basic_info.resadd_zip_code}{/if}</td></tr>
+            <tr><td>Permanent Address</td><td>{if $employee->basic_info.peradd_house_block_no != ''}{$employee->basic_info.peradd_house_block_no}{/if} {if $employee->basic_info.peradd_street != ''}{$employee->basic_info.peradd_street}, {/if} {if $employee->basic_info.peradd_sub_village}{$employee->basic_info.peradd_sub_village}, {/if}{if $employee->basic_info.peradd_brgy}{$employee->basic_info.peradd_brgy}, {/if}{if $employee->basic_info.peradd_mun_city}{$employee->basic_info.peradd_mun_city}, {/if}{if $employee->basic_info.peradd_province}{$employee->basic_info.peradd_province} {/if}{if $employee->basic_info.peradd_zip_code}{$employee->basic_info.peradd_zip_code}{/if}</td></tr>
             <tr class="row-header"><td colspan="2">Other Information</td></tr>
             <tr><td>GSIS ID No</td><td>{$employee->basic_info.gsis_no}</td></tr>
             <tr><td>PAG-IBIG ID No</td><td>{$employee->basic_info.pagibig_no}</td></tr>
@@ -220,22 +221,18 @@
                 <div class="col-sm-12 col-lg-4">
                     <div class="form-group label-floating">
                         <label class="form-label" for="civil_stat">Citizenship</label>
-                        <select  class="selectpicker form-control" data-style="btn btn-success btn-round" name="employeeinfo[citizenship]">
+                        <select  class="selectpicker form-control" data-style="btn btn-success btn-round" name="employeeinfo[citizenship]" onchange="javascript:dual_citizenship(this.value)" required>
                             <option value="" disabled selected="">Select Citizenship</option>
                             <option value="Filipino" {if $employee->basic_info.citizenship == "Filipino"} selected {/if}>Filipino</option>
-                            <option value="Dual Citizenship - by birth">Dual Citizenship - by birth</option>
-                            <option value="Dual Citizenship - by naturalization">Dual Citizenship - by naturalization</option>
+                            <option value="Dual Citizenship - by birth" {if $employee->basic_info.citizenship == "Dual Citizenship - by birth"} selected {/if}>Dual Citizenship - by birth</option>
+                            <option value="Dual Citizenship - by naturalization" {if $employee->basic_info.citizenship == "Dual Citizenship - by naturalization"} selected {/if}>Dual Citizenship - by naturalization</option>
                         </select>
                     </div>
                 </div>
                 <div class="col-sm-12 col-lg-4">
                     <div class="form-group label-floating">
-                        <label class="form-label" for="civil_stat">Pls. indicate country</label>
-                        <select  class="selectpicker form-control" data-style="btn btn-success btn-round" name="marital_stat">
-                            <option value="" disabled selected="">Select Country</option>
-                            <option value="Afganistan">Afganistan</option>
-                            <option value="America">America</option>
-                        </select>
+                        <label class="form-label" for="dual_citizen">Pls. indicate country (if dual citizen)</label>
+                        <input class="form-control" type="text" id="dual_citizen" name="employeeinfo[dual_citizen]" {if $employee->basic_info.dual_citizen == "Filipino"} readonly {else}value="{$employee->basic_info.dual_citizen}" {/if} {if $employee->basic_info.dual_citizen != "Filipino"} required {/if}>
                     </div>
                 </div>
                 <div class="col-sm-12 col-lg-4">
@@ -253,37 +250,37 @@
                 <div class="col-sm-12 col-lg-4">
                     <div class="form-group label-floating">
                         <label class="form-label">Blood Type</label>
-                        <input readonly class="form-control" type="text" name="employeeinfo[blood_type]" value="{$employee->basic_info.blood_type}">
+                        <input class="form-control" type="text" name="employeeinfo[blood_type]" value="{$employee->basic_info.blood_type}">
                     </div>
                 </div>
                 <div class="col-sm-12 col-lg-4">
                     <div class="form-group label-floating">
                         <label class="form-label">GSIS ID No.</label>
-                        <input readonly type="text" class="form-control" name="employeeinfo[gsis_no]" value="{$employee->basic_info.gsis_no}">
+                        <input type="text" class="form-control" name="employeeinfo[gsis_no]" value="{$employee->basic_info.gsis_no}">
                     </div>
                 </div>
                 <div class="col-sm-12 col-lg-4">
                     <div class="form-group label-floating">
                         <label class="form-label">PAG-IBIG ID No.</label>
-                        <input readonly class="form-control" type="text" name="employeeinfo[pagibig_no]" value="{$employee->basic_info.pagibig_no}">
+                        <input class="form-control" type="text" name="employeeinfo[pagibig_no]" value="{$employee->basic_info.pagibig_no}">
                     </div>
                 </div>
                 <div class="col-sm-12 col-lg-4">
                     <div class="form-group label-floating">
                         <label class="form-label">PHILHEALTH No.</label>
-                        <input readonly class="form-control" type="text" name="employeeinfo[philhealth_no]" value="{$employee->basic_info.philhealth_no}">
+                        <input class="form-control" type="text" name="employeeinfo[philhealth_no]" value="{$employee->basic_info.philhealth_no}">
                     </div>
                 </div>
                 <div class="col-sm-12 col-lg-4">
                     <div class="form-group label-floating">
                         <label class="form-label">SSS No.</label>
-                        <input readonly  type="text" class="form-control" name="employeeinfo[sss_no]" value="{$employee->basic_info.sss_no}">
+                        <input  type="text" class="form-control" name="employeeinfo[sss_no]" value="{$employee->basic_info.sss_no}">
                     </div>
                 </div>
                 <div class="col-sm-12 col-lg-4">
                     <div class="form-group label-floating">
                         <label class="form-label">TIN No.</label>
-                        <input readonly class="form-control" type="text" name="employeeinfo[tin_no]" value="{$employee->basic_info.tin_no}">
+                        <input class="form-control" type="text" name="employeeinfo[tin_no]" value="{$employee->basic_info.tin_no}">
                     </div>
                 </div>
                 <div class="col-sm-12 col-lg-4">

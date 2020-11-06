@@ -59,6 +59,17 @@ function confirm_delete(no, id, tab, other_info_col='', other_info_data='', admi
     }
   }
 }
+
+function dual_citizenship(value) {
+  console.log(value);
+  if(value != 'Filipino') {
+    $('#dual_citizen').attr('readonly',false);
+  }
+  else {
+    $('#dual_citizen').attr('readonly',true);
+    $('#dual_citizen').attr('required',true);
+  }
+}
 // EMPLOYEE PROFILE :: END
 
 // CALENDAR :: START

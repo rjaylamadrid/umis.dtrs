@@ -13,7 +13,7 @@
                     <td>Position/Title</td>
                     <td>
                         <div>{$employment.position}</div>
-                        <div class="small text-muted">{$employment.date_from} to {if $employment.date_to}{$employment.date_to}{else}PRESENT{/if}</div>
+                        <div class="small text-muted">{$employment.date_from|date_format:'F d, Y'} - {if $employment.date_to}{$employment.date_to|date_format:'F d, Y'}{else}PRESENT{/if}</div>
                     </td>
                 </tr>
                 <tr>
@@ -73,7 +73,7 @@
                                 </td>
                                 <td>
                                     <div>{$employment.salary|number_format:2}</div>
-                                    <div class="small text-muted">Salary Grade: SAMPLE</div>
+                                    <div class="small text-muted">Salary Grade: {if $employment.salary_grade}{$employment.salary_grade}{else}N/A{/if}</div>
                                 </td>
                                 <td>
                                     <div>{$employment.appointment}</div>
@@ -110,7 +110,7 @@
                             <div class="col-lg-12 col-md-12 col-sm-12">
                                 <div class="form-group label-floating">
                                     <label class="form-label">Company Name</label>
-                                    <input type="text" class="form-control" name="employeeinfo[company]">
+                                    <input type="text" class="form-control" name="employeeinfo[company]" required>
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12">
@@ -122,13 +122,13 @@
                             <div class="col-lg-6 col-md-6 col-sm-12">
                                 <div class="form-group label-floating">
                                     <label class="form-label">End (*if necessary)</label>
-                                    <input type="date" class="form-control" name="employeeinfo[date_to]">
+                                    <input type="date" class="form-control" name="employeeinfo[date_to]" required="">
                                 </div>
                             </div>
                             <div class="col-lg-4 col-md-4 col-sm-12">
                                 <div class="form-group label-floating">
                                     <label class="form-label">Salary</label>
-                                    <input type="text" class="form-control" name="employeeinfo[salary]">
+                                    <input type="text" class="form-control" name="employeeinfo[salary]" required>
                                 </div>
                             </div>
                             <div class="col-lg-2 col-md-2 col-sm-12">

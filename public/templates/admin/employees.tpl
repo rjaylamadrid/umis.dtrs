@@ -45,7 +45,7 @@
                                         <td>{$employee.employee_id}</td>
                                         <td>{$employee.first_name|upper} {$employee.last_name|upper}</td>
                                         <td>{$employee.gender}</td>
-                                        <td>{$employee.birthdate}</td>
+                                        <td>{$employee.birthdate|date_format:'M. d, Y'}</td>
                                         <td>{$employee.position}</td>
                                         <td class="text-center"><div class="item-action dropdown">
                                             <a href="javascript:void(0)" data-toggle="dropdown" class="icon" aria-expanded="false"><i class="fe fe-more-vertical"></i></a>

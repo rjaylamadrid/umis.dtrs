@@ -34,7 +34,7 @@
                 <th>Date of Birth </th>
             </tr>
             {foreach from = $employee->family_background item = child }
-                {if $child.relationship == 0}<tr><td>{$child.first_name} {$child.middle_name} {$child.last_name} {$child.ext_name}</td><td>{$child.birthdate}</td></tr>{/if}
+                {if $child.relationship == 0}<tr><td>{$child.first_name} {$child.middle_name} {$child.last_name} {$child.ext_name}</td><td>{$child.birthdate|date_format: 'F d, Y'}</td></tr>{/if}
             {/foreach}
         </table>
     </div>

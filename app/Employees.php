@@ -52,6 +52,9 @@ class Employees extends EmployeesController {
 
     public function add_profile_info ($id, $tab = 'basic-info') {
         $empAdd = $this->add_profile($id,$_POST['employeeinfo'],$tab);
+        // print_r("<pre>");
+        // print_r($empAdd);
+        // print_r("</pre>");
         header ("location: /employees/update/$id/$tab");
     }
 

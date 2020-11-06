@@ -16,7 +16,7 @@
                 <tr>
                     <td>Inclusive Dates</td>
                     <td>
-                        <div>{$voluntary_work.date_from} to {$voluntary_work.date_to}</div>
+                        <div>{$voluntary_work.date_from|date_format:'F d, Y'} to {$voluntary_work.date_to|date_format:'F d, Y'}</div>
                         <div class="small text-muted">Hours: {$voluntary_work.total_hours}</div>
                     </td>
                 </tr>

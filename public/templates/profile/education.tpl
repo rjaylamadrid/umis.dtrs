@@ -15,7 +15,7 @@
                 <tr class="row-header"><td colspan="2">{$education.level}</td></tr>
                 <tr><td>School</td><td><div>{$education.school_name}</div><div class="small text-muted">{$education.school_address}</div></td></tr>
                 <tr><td>Basic Education/Degree</td><td><div>{$education.school_degree}</div><div class="small text-muted">{$education.highest_level}</div></td></tr>
-                <tr><td>Year Graduated</td><td><div>{$education.year_graduated}</div><div class="small text-muted">{$education.period_from} - {$education.period_to}</div></td></tr>
+                <tr><td>Year Graduated</td><td><div>{$education.year_graduated}</div><div class="small text-muted">{if $education.period_from != '0000-00-00'}{$education.period_from|date_format: 'F d, Y'}{else}N/A{/if} - {if $education.period_to != '0000-00-00'}{$education.period_to|date_format: 'F d, Y'}{else}N/A{/if}</div></td></tr>
                 <tr><td>Honor</td><td>{$education.academic_honor}</td></tr>
             {/foreach}
         </table>

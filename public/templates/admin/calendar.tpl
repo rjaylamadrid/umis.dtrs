@@ -18,11 +18,11 @@
                                         <option value="" selected="" disabled="" readonly>Month</option>
                                         {include file="custom/select_month.tpl"}
                                     </select>
-                                    <input name="year" type="number" class="col-md-5 form-control ml-4" placeholder="Year" value="{date_format($date,'Y')}" id="year" required>
+                                    <input name="year" type="number" class="col-md-5 form-control ml-4" placeholder="Year" value="{date('Y')}" id="year" required>
                                 </div>
                                 <div class="col-md-12 mt-5">
                                     <div class="form-group" style="float: right;">
-                                        <button name="submit" value="submit" class="btn btn-primary">Submit</button>
+                                        <button id="cal" name="submit" value="submit" class="btn btn-primary">Submit</button>
                                     </div>
                                 </div>
                             </form>
@@ -56,13 +56,13 @@
                                     </a>
                                 </div>
                             </div>
-                        {else}
+                        {* {else}
                             <div class="page-content">
                                 <div class="container text-center">
                                     <h1 class="h2 mb-3">Select Month and Year.</h1>
                                     <p class="h4 text-muted font-weight-normal mb-7">Please select the month and year you wanted to view or edit.</p>
                                 </div>
-                            </div>
+                            </div> *}
                         {/if}
                         </div>
                     </div>
@@ -70,4 +70,13 @@
             </div>
         </div>
     </div>
+<script type="text/javascript">
+    {if $date == NULL}
+        require(['bootstrap','jquery'], function() {
+            $(document).ready(function (){
+            $('#cal').click();
+            });
+        });
+    {/if}
+</script>
 {/block}

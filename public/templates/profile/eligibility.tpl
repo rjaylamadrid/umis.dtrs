@@ -8,11 +8,11 @@
                 {foreach from = $employee->eligibility item = eligibility}
                 <tr class="row-header"><td colspan="2">1</td></tr>
                 <tr><td>Title of ELigibility</td><td>{$eligibility.eligibility_name}<div class="small text-muted">RATING: {$eligibility.eligibility_rating}</div></td></tr>
-                <tr><td>Place & Date of Exam</td><td><div>{$eligibility.eligibility_place_exam}</div><div class="small text-muted">DATE: {$eligibility.eligibility_date_exam}</div></td></tr>
+                <tr><td>Place & Date of Exam</td><td><div>{$eligibility.eligibility_place_exam}</div><div class="small text-muted">DATE: {if $eligibility.eligibility_date_exam}{$eligibility.eligibility_date_exam|date_format: 'F d, Y'}{else}N/A{/if}</div></td></tr>
                 <tr>
                     <td>Licence No</td>
                     <td>
-                        <div>{$eligibility.eligibility_license}</div><div class="small text-muted">VALIDITY: {$eligibility.eligibility_validity}</div></td></tr>
+                        <div>{if $eligibility.eligibility_license}{$eligibility.eligibility_license}{else}N/A{/if}</div><div class="small text-muted">VALIDITY: {if $eligibility.eligibility_validity != '0000-00-00'}{$eligibility.eligibility_validity|date_format: 'F d, Y'}{else}N/A{/if}</div></td></tr>
                 {/foreach}
             {else}
                 <tr class="row-header">
@@ -62,8 +62,8 @@
                                 <div class="small text-muted">Date: {$eligibility.eligibility_date_exam}</div>
                             </td>
                             <td>
-                                <div>{$eligibility.eligibility_license}</div>
-                                <div class="small text-muted">Valid until: {$eligibility.eligibility_validity}</div>
+                                <div>{if $eligibility.eligibility_license}{$eligibility.eligibility_license}{else}N/A{/if}</div>
+                                <div class="small text-muted">Valid until: {if $eligibility.eligibility_validity != '0000-00-00'}{$eligibility.eligibility_validity}{else}N/A{/if}</div>
                             </td>
                             <td style="vertical-align: middle; text-align: center;">
                                     <a type="submit" class="btn btn-outline-danger btn-sm" href="javascript:confirm_delete({$eligibility.no},{$employee->id},'{$tab}')"><i class="fe fe-trash"></i></a>
@@ -80,7 +80,7 @@
         <div class="modal-dialog" id="eligibility-modal" role="document" style="max-width: 600px;">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Add new eligibity</h4>
+                    <h4 class="modal-title">Add New Eligibity</h4>
                 </div>
                 <div class="modal-body">
                     <form action="{$server}{if $user.is_admin}/employees/add_profile_info/{$employee->id}/eligibility{else}/save{/if}" method="POST">
@@ -112,13 +112,13 @@
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12">
                                 <div class="form-group label-floating">
-                                    <label class="form-label">License Number</label>
+                                    <label class="form-label">License Number (if applicable)</label>
                                     <input type="text" class="form-control" name="employeeinfo[eligibility_license]">
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12">
                                 <div class="form-group label-floating">
-                                    <label class="form-label">License Validity</label>
+                                    <label class="form-label">License Validity (if applicable)</label>
                                     <input type="date" class="form-control" name="employeeinfo[eligibility_validity]">
                                 </div>
                             </div>
