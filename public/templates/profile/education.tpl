@@ -16,7 +16,7 @@
                 <tr><td>School</td><td><div>{$education.school_name}</div><div class="small text-muted">{$education.school_address}</div></td></tr>
                 <tr><td>Basic Education/Degree</td><td><div>{$education.school_degree}</div><div class="small text-muted">{$education.highest_level}</div></td></tr>
                 <tr><td>Year Graduated</td><td><div>{$education.year_graduated}</div><div class="small text-muted">{if $education.period_from != '0000-00-00'}{$education.period_from|date_format: 'F d, Y'}{else}N/A{/if} - {if $education.period_to != '0000-00-00'}{$education.period_to|date_format: 'F d, Y'}{else}N/A{/if}</div></td></tr>
-                <tr><td>Honor</td><td>{$education.academic_honor}</td></tr>
+                <tr><td>Honor</td><td>{if $education.academic_honor}{$education.academic_honor}{else}N/A{/if}</td></tr>
             {/foreach}
         </table>
     </div>
@@ -43,7 +43,7 @@
                             <div class="col-sm-12 col-md-12">
                                 <div class="form-group mb-1">
                                     <label class="form-label mb-0">School Name</label>
-                                    <input type="text" class="form-control" name="employeeinfo[{$education.level}][school_name]" value="{$education.school_name}">
+                                    <input type="text" class="form-control" name="employeeinfo[{$education.level}][school_name]" value="{$education.school_name}" required>
                                 </div>
                             </div>
                             <div class="col-sm-12 col-md-4">
@@ -55,13 +55,13 @@
                             <div class="col-sm-12 col-md-4">
                                 <div class="form-group mb-1">
                                     <label class="form-label mb-0">Date Started</label>
-                                    <input type="date" class="form-control" name="employeeinfo[{$education.level}][period_from]" value="{$education.period_from}">
+                                    <input type="date" class="form-control" name="employeeinfo[{$education.level}][period_from]" value="{$education.period_from}" required>
                                 </div>
                             </div>
                             <div class="col-sm-12 col-md-4">
                                 <div class="form-group mb-1">
                                     <label class="form-label mb-0">Date Finished</label>
-                                    <input type="date" class="form-control" name="employeeinfo[{$education.level}][period_to]" value="{$education.period_to}">
+                                    <input type="date" class="form-control" name="employeeinfo[{$education.level}][period_to]" value="{$education.period_to}" required>
                                 </div>
                             </div>
                             <div class="col-sm-12 col-md-4">

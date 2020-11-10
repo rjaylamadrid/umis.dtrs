@@ -8,6 +8,12 @@
     <div class="form-group" style="float: right;">
         <a href="{$server}/employees/employment-update/{$employee->id}/employment_info" class="btn btn-secondary btn-sm ml-2"><i class="fe fe-edit-2"></i> Edit</a>
     </div>
+    {if $employee->info.date_end}
+        <div class="alert card-alert alert-danger alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert"></button>
+            <i class="fe fe-alert-triangle mr-2" aria-hidden="true"></i> Currently inactive employee!
+        </div><br/>
+    {/if}
     <div class="table-responsive">
         <table class="table card-table table-striped">
             {* {foreach from = $employee->position item = position} *}

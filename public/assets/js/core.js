@@ -64,10 +64,11 @@ function dual_citizenship(value) {
   console.log(value);
   if(value != 'Filipino') {
     $('#dual_citizen').attr('readonly',false);
+    $('#dual_citizen').attr('required',true);
   }
   else {
     $('#dual_citizen').attr('readonly',true);
-    $('#dual_citizen').attr('required',true);
+    $('#dual_citizen').val('');
   }
 }
 // EMPLOYEE PROFILE :: END

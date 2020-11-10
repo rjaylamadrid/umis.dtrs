@@ -41,27 +41,11 @@
 {else}
     <form action="{$server}{if $user.is_admin}/employees/save/{$employee->id}/family-background{else}/save{/if}" method="POST">
         <input type="hidden" name="employeeinfo[1][no]" value="{$spouse.no}">
-        <input type="hidden" name="employeeinfo[1][employee_id]" value="{$employee->id}">
-        <input type="hidden" name="employeeinfo[1][relationship]" value="{$spouse.relationship}">
-        <input type="hidden" name="employeeinfo[1][birthdate]" value="{$spouse.birthdate}">
-
-        <input type="hidden" name="employeeinfo[3][no]" value="{$father.no}">
-        <input type="hidden" name="employeeinfo[3][employee_id]" value="{$employee->id}">
-        <input type="hidden" name="employeeinfo[3][relationship]" value="{$father.relationship}">
-        <input type="hidden" name="employeeinfo[3][birthdate]" value="{$father.birthdate}">
-        <input type="hidden" name="employeeinfo[3][occupation]" value="{$father.occupation}">
-        <input type="hidden" name="employeeinfo[3][employer]" value="{$father.employer}">
-        <input type="hidden" name="employeeinfo[3][business_address]" value="{$father.business_address}">
-        <input type="hidden" name="employeeinfo[3][telephone_no]" value="{$father.telephone_no}">
-
-        <input type="hidden" name="employeeinfo[2][no]" value="{$mother.no}">
-        <input type="hidden" name="employeeinfo[2][employee_id]" value="{$employee->id}">
-        <input type="hidden" name="employeeinfo[2][relationship]" value="{$mother.relationship}">
-        <input type="hidden" name="employeeinfo[2][birthdate]" value="{$mother.birthdate}">
-        <input type="hidden" name="employeeinfo[2][occupation]" value="{$mother.occupation}">
-        <input type="hidden" name="employeeinfo[2][employer]" value="{$mother.employer}">
-        <input type="hidden" name="employeeinfo[2][business_address]" value="{$mother.business_address}">
-        <input type="hidden" name="employeeinfo[2][telephone_no]" value="{$mother.telephone_no}">
+        <input type="hidden" name="employeeinfo[2][no]" value="{$father.no}">
+        <input type="hidden" name="employeeinfo[3][no]" value="{$mother.no}">
+        <input type="hidden" name="employeeinfo[1][relationship]" value="1">
+        <input type="hidden" name="employeeinfo[2][relationship]" value="2">
+        <input type="hidden" name="employeeinfo[3][relationship]" value="3">
         <div class="form-group row btn-square">
             <label class="h4">Spouse's Information</label>
             <div class="row">
@@ -182,23 +166,20 @@
                         </tr>
 
                         <tbody>
+                        {$count=4}
                             {foreach from = $employee->family_background item = child }
                                 {if $child.relationship == 0}
                                 <tr id="row">
-                                        <input type="hidden" name="employeeinfo[0][{$child@iteration}][no]" value="{$child.no}">
-                                        <input type="hidden" name="employeeinfo[0][{$child@iteration}][employee_id]" value="{$employee->id}">
-                                        <input type="hidden" name="employeeinfo[0][{$child@iteration}][relationship]" value="{$child.relationship}">
-                                        <input type="hidden" name="employeeinfo[0][{$child@iteration}][occupation]" value="{$child.occupation}">
-                                        <input type="hidden" name="employeeinfo[0][{$child@iteration}][employer]" value="{$child.employer}">
-                                        <input type="hidden" name="employeeinfo[0][{$child@iteration}][business_address]" value="{$child.business_address}">
-                                        <input type="hidden" name="employeeinfo[0][{$child@iteration}][telephone_no]" value="{$child.telephone_no}">
-                                        <td><input type="text" class="form-control" name="employeeinfo[0][{$child@iteration}][first_name]" value="{$child.first_name}"></td>
-                                        <td><input type="text" class="form-control" name="employeeinfo[0][{$child@iteration}][middle_name]" value="{$child.middle_name}"></td>
-                                        <td><input type="text" class="form-control" name="employeeinfo[0][{$child@iteration}][last_name]" value="{$child.last_name}"></td>
-                                        <td><input type="text" class="form-control" name="employeeinfo[0][{$child@iteration}][ext_name]" value="{$child.ext_name}"></td>
-                                        <td><input type="text" class="form-control" name="employeeinfo[0][{$child@iteration}][birthdate]" value="{$child.birthdate}"></td>
+                                        <input type="hidden" name="employeeinfo[{$count}][relationship]" value="0">
+                                        <input type="hidden" name="employeeinfo[{$count}][no]" value="{$child.no}">
+                                        <td><input type="text" class="form-control" name="employeeinfo[{$count}][first_name]" value="{$child.first_name}"></td>
+                                        <td><input type="text" class="form-control" name="employeeinfo[{$count}][middle_name]" value="{$child.middle_name}"></td>
+                                        <td><input type="text" class="form-control" name="employeeinfo[{$count}][last_name]" value="{$child.last_name}"></td>
+                                        <td><input type="text" class="form-control" name="employeeinfo[{$count}][ext_name]" value="{$child.ext_name}"></td>
+                                        <td><input type="text" class="form-control" name="employeeinfo[{$count}][birthdate]" value="{$child.birthdate}"></td>
                                         <td style="vertical-align: middle; text-align: center;"><a class="btn btn-outline-danger btn-sm" href="javascript:confirm_delete({$child.no},{$child.employee_id},'{$tab}')"><i class="fe fe-trash"></i></a></td>
                                 </tr>
+                                {$count++}
                                 {/if}
                             {/foreach}
                         </tbody>

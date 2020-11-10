@@ -9,14 +9,16 @@
                     <form action="/employees" method="POST">
                         <input type="hidden" name="action" value="update_employment_info">
                         <input type="hidden" name="emp_status[campus_id]" id="campus" value="{$employee->info.campus_id}">
-                        <input type="hidden" name="emp_status[employee_id]" value="{$employee->id}">
+                        <input type="hidden" name="emp_status[employee_id]" id="employee_id" value="{$employee->id}">
                         <div class="row">
+                            {if $employee->id}
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label class="form-label">Previous Designation's Last Day of Service</label>
                                     <input type="date" class="form-control" name="date_end">
                                 </div>
                             </div>
+                            {/if}
                             <hr>
                             <div class="col-md-12">
                                 <div class="form-group">

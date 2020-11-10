@@ -22,7 +22,7 @@ class EmployeesController extends Controller {
 
     public function get_salary () {
         $salary = Position::position ($this->data['position_id']) -> get_salary ($this->data['campus_id'], $this->data['date_start']);
-        // print_r($salary['salary']);
+        print_r($salary['salary']);
     }
 
     protected function set_active () {
@@ -124,6 +124,12 @@ class EmployeesController extends Controller {
             $inserted_vals = array('updated_action'=>2,'updated_table'=>$tab,'updated_old_data'=>'','updated_new_data'=>$inserted_data,'updated_employee_id'=>$id,'updated_admin_id'=>1,'updated_date'=>date("Y-m-d"));
             DB::insert ("INSERT INTO tbl_employee_update_delete SET ". DB::stmt_builder($inserted_vals),$inserted_vals);
             return DB::insert("INSERT INTO $tab SET ".DB::stmt_builder ($employeeinfo), $employeeinfo);
+            // $temp = DB::insert("INSERT INTO $tab SET ".DB::stmt_builder ($employeeinfo), $employeeinfo);
+            // print_r("<pre>");
+            // print_r($temp);
+            // print_r($inserted_data);
+            
+            // print_r("</pre>");
         }
     }
 
@@ -207,30 +213,18 @@ class EmployeesController extends Controller {
         }
         // FAMILY_BACKGROUND
         else if ($tab == 'tbl_employee_family_background') {
-            for ($i=0;$i<sizeof($employeeinfo);$i++) {
-                if ($i == 0) {
-                    if($employeeinfo[$i]){
-                        for($j=1;$j<=sizeof($employeeinfo[$i]);$j++) {
-                            $child_row[$j] = DB::fetch_row ("SELECT * FROM $tab WHERE no = ?", $employeeinfo[$i][$j]['no']);
-                            if ((sizeof(array_diff($child_row[$j],$employeeinfo[$i][$j])) > 0) || (sizeof(array_diff($employeeinfo[$i][$j],$child_row[$j])) > 0)) {
-                                // $old_data_child = "no=".$child_row[$j]['no'].";relationship=0;".self::get_array_differences($child_row[$j],$employeeinfo[$i][$j])[0];
-                                $new_data_child = self::get_array_differences($child_row[$j],$employeeinfo[$i][$j]);
-                                $updated_vals_child = array('updated_action'=>0,'updated_table'=>$tab,'updated_old_data'=>"no=".$child_row[$j]['no'].";relationship=0;".$new_data_child[0],'updated_new_data'=>"no=".$child_row[$j]['no'].";relationship=0;".$new_data_child[1],'updated_employee_id'=>$id,'updated_admin_id'=>1,'updated_date'=>date("Y-m-d"));
-                                DB::insert ("INSERT INTO tbl_employee_update_delete SET ". DB::stmt_builder ($updated_vals_child),$updated_vals_child);
-                                $temp = DB::update ("UPDATE $tab SET " . DB::stmt_builder($employeeinfo[$i][$j]) . " WHERE no = ". $employeeinfo[$i][$j]['no'],$employeeinfo[$i][$j]);
-                            }
-                        }
-                    }
-                }
-                else {
-                    $row[$i] = DB::fetch_row ("SELECT * FROM $tab WHERE $id_col = ? AND relationship = '$i'", $id);
-                    if ((sizeof(array_diff($row[$i],$employeeinfo[$i])) > 0) || (sizeof(array_diff($employeeinfo[$i],$row[$i])) > 0)) {
-                        $new_data = self::get_array_differences($row[$i],$employeeinfo[$i]);
-                        $updated_vals = array('updated_action'=>0,'updated_table'=>$tab,'updated_old_data'=>"relationship=$i;".$new_data[0],'updated_new_data'=>"relationship=$i;".$new_data[1],'updated_employee_id'=>$id,'updated_admin_id'=>1,'updated_date'=>date("Y-m-d"));
-                        DB::insert ("INSERT INTO tbl_employee_update_delete SET ". DB::stmt_builder ($updated_vals),$updated_vals);
-                        $temp = DB::update ("UPDATE $tab SET " . DB::stmt_builder($employeeinfo[$i]) . " WHERE $id_col = $id AND relationship = '$i'",$employeeinfo[$i]);
-                    }
-                }
+            for ($i=1; $i<=sizeof($employeeinfo); $i++) {
+                if($employeeinfo[$i]['no']) {
+                    $old = DB::fetch_row ("SELECT * FROM $tab WHERE no = ?", $employeeinfo[$i]['no']);
+                    $new_data = self::get_array_differences($old,$employeeinfo[$i]);
+                    $updated_vals = array('updated_action'=>0,'updated_table'=>$tab,'updated_old_data'=>"no=".$old['no'].";relationship=0;".$new_data[0],'updated_new_data'=>"no=".$employeeinfo[$i]['no'].";relationship=0;".$employeeinfo[$i]['relatioship'],'updated_employee_id'=>$id,'updated_admin_id'=>1,'updated_date'=>date("Y-m-d"));
+                    DB::insert ("INSERT INTO tbl_employee_update_delete SET ". DB::stmt_builder ($updated_vals),$updated_vals);
+                    $temp = DB::update ("UPDATE $tab SET " . DB::stmt_builder($employeeinfo[$i]) . " WHERE no = ". $employeeinfo[$i]['no'],$employeeinfo[$i]);
+                } else if($employeeinfo[$i]['first_name']) {
+                    $employeeinfo[$i][$id_col] = $id;
+                    $employeeinfo[$i]['no'] = NULL;
+                    $temp = DB::insert ("INSERT INTO $tab SET " . DB::stmt_builder($employeeinfo[$i]),$employeeinfo[$i]);
+                } 
             }
         }
         // EDUCATION

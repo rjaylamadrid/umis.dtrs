@@ -75,13 +75,20 @@
     </div>
     <script>
         function set_inactive (id, val = 0) {
-            f({ action: 'set_active', active: val, id: id}, "json", "/employees").then (function (result) {
-                if (result.success) location.reload();
-            });
+            if (val == 0) {
+                f({ action: 'set_active', active: val, id: id}, "json", "/employees").then (function (result) {
+                    if (result.success) location.reload();
+                });
+            }else {
+                $('#campus').val({$user.campus_id});
+                $('#employee_id').val(id);
+                $('#promote-employee-modal').modal('show');
+            }
         }
     </script>
     <div class="modal fade margin-top-70" id="employee-status-modal" role="dialog" tabindex="-1" style="margin-left:-50px;">
         <div class="modal-dialog" role="document">
         </div>
     </div>
+    {include file="admin/modal/promote_employee.tpl"}
 {/block}
