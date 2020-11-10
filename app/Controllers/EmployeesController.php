@@ -247,22 +247,26 @@ class EmployeesController extends Controller {
         }
         // OTHER_INFO
         else if ($tab == 'tbl_employee_other_info') {
-            $row = DB::fetch_row("SELECT * FROM $tab WHERE $id_col = ?",$id);
-            $skill = $employeeinfo['skill'][0] != '' ? implode(";",$employeeinfo['skill']) : $employeeinfo['skill'][0];
-            $recog = $employeeinfo['recog'][0] != '' ? implode(";",$employeeinfo['recog']) : $employeeinfo['recog'][0];
-            $org = $employeeinfo['org'][0] != '' ? implode(";",$employeeinfo['org']) : $employeeinfo['org'][0];
+            if (($employeeinfo['skill']) || ($employeeinfo['recog']) || ($employeeinfo['org'])) {
+                $row = DB::fetch_row("SELECT * FROM $tab WHERE $id_col = ?",$id);
+                $skill = $employeeinfo['skill'][0] != '' ? implode(";",$employeeinfo['skill']) : $employeeinfo['skill'][0];
+                $recog = $employeeinfo['recog'][0] != '' ? implode(";",$employeeinfo['recog']) : $employeeinfo['recog'][0];
+                $org = $employeeinfo['org'][0] != '' ? implode(";",$employeeinfo['org']) : $employeeinfo['org'][0];
 
-            $frm = array('no'=>$employeeinfo['no'],'employee_id'=>$employeeinfo['employee_id'],'other_skill'=>$skill,'other_recognition'=>$recog,'other_organization'=>$org);
-            $new_data = self::get_array_differences($row,$frm);
+                $frm = array('no'=>$employeeinfo['no'],'employee_id'=>$employeeinfo['employee_id'],'other_skill'=>$skill,'other_recognition'=>$recog,'other_organization'=>$org);
+                $new_data = self::get_array_differences($row,$frm);
 
-            foreach ($new_data as $key => $value) {
-               $new_data[$key] = str_replace([";other_recognition",";other_organization"],["|other_recognition","|other_organization"],$value);
-            }
-            $updated_vals = array('updated_action'=>0,'updated_table'=>$tab,'updated_old_data'=>$new_data[0],'updated_new_data'=>$new_data[1],'updated_employee_id'=>$id,'updated_admin_id'=>1,'updated_date'=>date("Y-m-d"));
-            $update_qry = DB::update ("UPDATE $tab SET other_skill = '$skill', other_recognition = '$recog', other_organization = '$org' WHERE $id_col = $id");
-            if ($update_qry != NULL) {
-                DB::insert("INSERT INTO tbl_employee_update_delete SET ". DB::stmt_builder ($updated_vals),$updated_vals);
-                return 'success';
+                foreach ($new_data as $key => $value) {
+                $new_data[$key] = str_replace([";other_recognition",";other_organization"],["|other_recognition","|other_organization"],$value);
+                }
+                $updated_vals = array('updated_action'=>0,'updated_table'=>$tab,'updated_old_data'=>$new_data[0],'updated_new_data'=>$new_data[1],'updated_employee_id'=>$id,'updated_admin_id'=>1,'updated_date'=>date("Y-m-d"));
+                $update_qry = DB::update ("UPDATE $tab SET other_skill = '$skill', other_recognition = '$recog', other_organization = '$org' WHERE $id_col = $id");
+                if ($update_qry != NULL) {
+                    DB::insert("INSERT INTO tbl_employee_update_delete SET ". DB::stmt_builder ($updated_vals),$updated_vals);
+                    return 'success';
+                }
+            } else {
+                return '';
             }
         }
     }

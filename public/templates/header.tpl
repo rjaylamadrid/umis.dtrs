@@ -23,8 +23,8 @@
                         <a class="dropdown-item" href="#">
                             <i class="dropdown-icon fe fe-send"></i> Messages
                         </a>
-                        <a class="dropdown-item" href="#">
-                            <i class="dropdown-icon fe fe-settings"></i> Settings
+                        <a class="dropdown-item" href="/settings/security">
+                            <i class="dropdown-icon fe fe-lock"></i> Change Password
                         </a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="/logout">

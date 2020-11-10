@@ -6,7 +6,7 @@
         <table class="table card-table table-striped">
             {if $employee->eligibility}
                 {foreach from = $employee->eligibility item = eligibility}
-                <tr class="row-header"><td colspan="2">1</td></tr>
+                <tr class="row-header"><td colspan="2">{$eligibility@iteration}</td></tr>
                 <tr><td>Title of ELigibility</td><td>{$eligibility.eligibility_name}<div class="small text-muted">RATING: {$eligibility.eligibility_rating}</div></td></tr>
                 <tr><td>Place & Date of Exam</td><td><div>{$eligibility.eligibility_place_exam}</div><div class="small text-muted">DATE: {if $eligibility.eligibility_date_exam}{$eligibility.eligibility_date_exam|date_format: 'F d, Y'}{else}N/A{/if}</div></td></tr>
                 <tr>

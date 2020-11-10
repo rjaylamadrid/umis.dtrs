@@ -35,6 +35,7 @@ $router->group(['before' => 'auth'], function ($router) {
         // ADMIN START:
         // Dashboard
         $router->get('/dashboard', ['Dashboard', 'index']);
+        $router->post('/dashboard', ['Dashboard', 'do_action']);
 
         // Employees
         $router->group(["prefix" => "employees"], function ($router) {
@@ -75,6 +76,7 @@ $router->group(['before' => 'auth'], function ($router) {
         // Settings
         $router->group(["prefix" => "settings"], function ($router) {
             $router->get("/", ["Settings", "index"]);
+            $router->post('/', ['Settings', 'do_action']);
             $router->get("/{tab}", ["Settings", "tab"]);
         });
 

@@ -37,7 +37,7 @@
                         </span>
                         <div>
                             <h4 class="m-0"><a href="#">0 <small>DTR</small></a></h4>
-                            <small class="text-muted">For the month of September</small>
+                            <small class="text-muted">For the month of {date('F')}</small>
                         </div>
                     </div>
                 </div>

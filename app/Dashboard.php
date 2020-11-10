@@ -17,4 +17,8 @@ class Dashboard extends DashboardController {
             header ('location: /profile');
         }
     }
+
+    public function do_action () {
+        call_user_func_array ([$this, $this->data['action']], $this->data);
+    }
 }
