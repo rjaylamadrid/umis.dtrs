@@ -23,7 +23,7 @@
                 <tr>
                     <td>Salary</td>
                     <td>{$employment.salary|number_format:2}
-                        <div class="small text-muted">Monthly Salary</div>
+                        <div class="small text-muted">{$employment.salary_type}</div>
                     </td>
                 </tr>
                 <tr>
@@ -80,9 +80,15 @@
                                     <div class="small text-muted">Gov't Service: {if $employment.govt_service == "1"}YES{else}NO{/if}</div>
                                 </td>
                                 <td style="vertical-align: middle; text-align: center;">
+                                {if $employment.no}
                                 <a href="javascript:confirm_delete({$employment.no},{$employment.employee_id},'{$tab}')" class="btn btn-outline-danger btn-sm">
                                     <i class="fe fe-trash"></i>
                                 </a>
+                                {else}
+                                <a href="/employees/employment/{$employee->id}/{if $employment.date_to}service_record{else}employment_info{/if}" class="btn btn-outline-success btn-sm">
+                                    <i class="fe fe-edit"></i>
+                                </a>
+                                {/if}
                                 </td>
                             </tr>
                         {/foreach}
@@ -121,7 +127,7 @@
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12">
                                 <div class="form-group label-floating">
-                                    <label class="form-label">End (*if necessary)</label>
+                                    <label class="form-label">End</label>
                                     <input type="date" class="form-control" name="employeeinfo[date_to]" required="">
                                 </div>
                             </div>

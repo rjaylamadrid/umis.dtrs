@@ -107,20 +107,28 @@ class CalendarController extends Controller {
         for ($i=0; $i<4; $i++) {
             if($date_logs) {
                 if(($date_logs[$in_out[$i]] == NULL) || ($date_logs[$in_out[$i]] == ':') || ($date_logs[$in_out[$i]] == '')) {
-                    if((strtotime($emp_sched[$in_out[$i]]) >= strtotime($start)) && (strtotime($emp_sched[$in_out[$i]]) <= strtotime($end))) {
-                        $value[$i] = $dtr_code;
+                    if ((($i == 1) && ($value[0] == ':')) || (($i == 3) && ($value[2] == ':'))) {
+                        $value[$i] = ':';
                     } else {
-                        $value[$i] = $date_logs[$in_out[$i]];
+                        if((strtotime($emp_sched[$in_out[$i]]) >= strtotime($start)) && (strtotime($emp_sched[$in_out[$i]]) <= strtotime($end))) {
+                            $value[$i] = $dtr_code;
+                        } else {
+                            $value[$i] = $date_logs[$in_out[$i]];
+                        }
                     }
                 } else {
                     $value[$i] = $date_logs[$in_out[$i]];
                 }
             } else {
-                if((strtotime($emp_sched[$in_out[$i]]) >= strtotime($start)) && (strtotime($emp_sched[$in_out[$i]]) <= strtotime($end))) {
-                    $value[$i] = $dtr_code;
-                } else {
+                if ((($i == 1) && ($value[0] == ':')) || (($i == 3) && ($value[2] == ':'))) {
                     $value[$i] = ':';
-                } 
+                } else {
+                    if((strtotime($emp_sched[$in_out[$i]]) >= strtotime($start)) && (strtotime($emp_sched[$in_out[$i]]) <= strtotime($end))) {
+                        $value[$i] = $dtr_code;
+                    } else {
+                        $value[$i] = ':';
+                    }
+                }
             }
         }
         return $value;

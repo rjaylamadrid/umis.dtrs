@@ -54,7 +54,33 @@ class EmployeeProfile {
     }
 
     public function employment () {
-        $this->employment = $this->get (["col" => "*, (CASE when date_to IS NULL THEN NOW() ELSE date_to END) AS dateto", "table" => "tbl_employee_employment", "options" => " ORDER BY dateto DESC"]);
+        $this->employment = $this->get (["col" => "*, 'Per month' AS salary_type, (CASE when date_to IS NULL THEN NOW() ELSE date_to END) AS dateto", "table" => "tbl_employee_employment", "options" => " ORDER BY dateto DESC"]);
+        $employment_record = DB::fetch_all ("SELECT a.*, b.*, c.*, d.*, e.* FROM tbl_employee_status a, tbl_position b, tbl_campus c, tbl_salary_grade d, tbl_employee_type e WHERE a.employee_id = ? AND b.no = a.position_id AND a.campus_id = c.id AND b.salary_grade = d.salary_grade AND b.etype_id = e.etype_id ORDER BY a.date_start DESC", $this->id);
+        if ($employment_record) {
+            $temp = sizeof($this->employment);
+            foreach ($employment_record as $value) {
+                $date_end = $value['date_end'] == '' ? date('Y-m-d') : $value['date_end'];
+                $salary_amount = explode(",",$value['step_increment']);
+                $this->employment[$temp]['position'] = $value['position_desc'];
+                $this->employment[$temp]['date_from'] = $value['date_start'];
+                $this->employment[$temp]['date_to'] = $value['date_end'];
+                $this->employment[$temp]['company'] = "CBSUA - ".$value['campus_name'];
+                $this->employment[$temp]['govt_service'] = "1";
+                $this->employment[$temp]['appointment'] = $value['etype_desc'];
+                $this->employment[$temp]['salary_grade'] = $value['salary_grade'];
+                if ($value['jo'] == 1) {
+                    $cos_salary = DB::fetch_row ("SELECT * FROM tbl_cos_salary WHERE position_id = ?", $value['position_id']);
+                    $this->employment[$temp]['salary'] = $cos_salary['salary'];
+                    $this->employment[$temp]['salary_type'] = $cos_salary['salary_type'];
+                } else {
+                    $this->employment[$temp]['salary'] = $salary_amount[Position::step($value['date_start'],$date_end) - 1];
+                    $this->employment[$temp]['salary_type'] = "Per month";
+                }
+                $temp++;
+            }
+        }
+        $keys = array_column($this->employment, 'date_to');
+        array_multisort($keys, SORT_ASC, $this->employment);
     }
 
     public function voluntary_work () {
