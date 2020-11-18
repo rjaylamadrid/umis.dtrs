@@ -111,9 +111,6 @@ class EmployeeProfile {
             }
             $ctr++;
         }
-        // print "<pre>";
-        // print_r($record);
-        // print "</pre>";
         $this->service_record = $record;
     }
     

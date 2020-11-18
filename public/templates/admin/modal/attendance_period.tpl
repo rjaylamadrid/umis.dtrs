@@ -63,7 +63,7 @@
                             <div class="form-group">
                                 <span style="float: right;">
                                 <input type="submit" class="btn btn-primary" value="Generate DTR">
-                                <a href="#" class="btn btn-secondary" data-dismiss="modal">Cancel</a>
+                                <a href="" class="btn btn-secondary" data-dismiss="modal" onclick="{if !$period}javascript:history.back(-2){/if}">Cancel</a>
                                 </span>
                             </div>
                         </form>

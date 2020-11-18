@@ -11,7 +11,6 @@
                     <div class="card mb-2">
                         <div class="card-body">
                             <form action="/calendar" method="POST">
-                            <input type="hidden" name="action" value="get_calendar">
                                 <label class="form-label">Set Period: {$result}</label>
                                 <div class="row">
                                     <select name="month" class="col-md-6 form-control custom-select" id="month" required>
@@ -70,13 +69,15 @@
             </div>
         </div>
     </div>
-<script type="text/javascript">
-    {if $date == NULL}
-        require(['bootstrap','jquery'], function() {
-            $(document).ready(function (){
-            $('#cal').click();
-            });
-        });
+    {if $tab == "event"}
+        <script type = "text/javascript">
+            {if $date == NULL}
+                require(['bootstrap','jquery'], function() {
+                    $(document).ready(function (){
+                        $('#cal').click();
+                    });
+                });
+            {/if}
+        </script> 
     {/if}
-</script>
 {/block}

@@ -1,6 +1,6 @@
 {if $events}
 <thead>
-    <tr><td style="text-align: center;font-weight: bold" colspan="2">{$event_date|date_format:'F d, Y'}</td></tr>
+    <tr><td style="text-align: center;font-weight: bold" colspan="2">{$date|date_format:'F d, Y'}</td></tr>
 </thead>
 
 <tbody>
@@ -15,7 +15,7 @@
 </tbody>
 {else}
 <thead>
-    <tr><td style="text-align: center;font-weight: bold" colspan="2">{$event_date|date_format:'F d, Y'}</td></tr>
+    <tr><td style="text-align: center;font-weight: bold" colspan="2">{$date|date_format:'F d, Y'}</td></tr>
 </thead>
 <tbody>
         <tr><td>No events found.</td></tr>

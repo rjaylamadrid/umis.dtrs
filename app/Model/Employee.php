@@ -14,11 +14,15 @@ class Employee {
         return self::$employees;
     }
 
-    public static function type ($type) {
+    public static function type ($type, $status = '1') {
         if (!self::$employees) self::employees ();
         $employees = [];
         foreach (self::$employees as $e) {
-            if ($e['etype_id'] == $type) $employees[] = $e;
+            if ($e['etype_id'] == $type) {
+                if ($status == 1) {
+                    if ($e['active_status'] == $status) $employees[] = $e;
+                }
+            }
         }
         return $employees;
     }

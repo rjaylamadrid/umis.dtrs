@@ -15,7 +15,7 @@
         <link rel="icon" href="{$server}/favicon.ico" type="image/x-icon"/>
         <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
 
-        <title>{block name=title}CBSUA :: HRMS{/block}</title>
+        <title>{block name=title}CBSUA :: HRIS{/block}</title>
         <!-- Dashboard Core -->
         <script src="{$server}/assets/js/require.min.js"></script>
         <script>

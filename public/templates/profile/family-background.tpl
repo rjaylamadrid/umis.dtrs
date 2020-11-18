@@ -179,7 +179,7 @@
                                         <td><input type="text" class="form-control" name="employeeinfo[{$count}][birthdate]" value="{$child.birthdate}"></td>
                                         <td style="vertical-align: middle; text-align: center;"><a class="btn btn-outline-danger btn-sm" href="javascript:confirm_delete({$child.no},{$child.employee_id},'{$tab}')"><i class="fe fe-trash"></i></a></td>
                                 </tr>
-                                {$count++}
+                                {$count = $count +1}
                                 {/if}
                             {/foreach}
                         </tbody>

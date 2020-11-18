@@ -69,8 +69,6 @@ $router->group(['before' => 'auth'], function ($router) {
             $router->get('/', ['Calendar', 'index']);
             $router->post('/', ['Calendar', 'do_action']);
             $router->get('/{tab}?', ['Calendar', 'tab']);
-            $router->post('/show-events',['Calendar','show_events']);
-            $router->post('/delete-event',['Calendar','del_event']);
         });
 
         // Settings

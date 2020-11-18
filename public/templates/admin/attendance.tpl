@@ -51,6 +51,8 @@
                         <input type="hidden" id="emp_type" name="emp_type" value="{$period.emp_type}">
                         <input type="hidden" id="date_from" name="date_from" value="{$period.date_from}">
                         <input type="hidden" id="date_to" name="date_to" value="{$period.date_to}">
+                        <input type="hidden" name="month" value = "{$period.month}">
+                        <input type="hidden" name="year" value="{$period.year}">
                         <div class="form-group form-inline">
                             <label style="display: inline-block;">Filter employee:&nbsp;</label>
                             <select name="emp_type" class="form-control custom-select" onchange="$('#generate').submit();">
@@ -205,7 +207,13 @@
     {if !$period}
     require(['bootstrap', 'jquery'], function () {
         $(document).ready(function () {
-        $("#generate-dtr-modal").modal('show');
+            $("#generate-dtr-modal").modal(
+                {
+                    backdrop: 'static',
+                    keyboard: false,
+                    show: true
+                }
+            );
         });
     });
     {/if}

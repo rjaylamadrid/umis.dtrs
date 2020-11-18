@@ -37,9 +37,9 @@
 						{/for}
 						{$count=$count+1}
 						{for $i=1 to $lastday}
-							{if $count == 1} <tr><td class="date " onclick="javascript:get_events ({$i},{date_format($date,'m')},{date_format($date,'Y')})" id="{$i}">{$i}</td>
-							{else if $count == 7 || $count == 14 || $count == 21 || $count == 28 || $count == 35}  <td class="date " onclick="javascript:get_events ({$i},{date_format($date,'m')},{date_format($date,'Y')})" id="{$i}">{$i}</td></tr>
-							{else} <td class="date " onclick="javascript:get_events ({$i},{date_format($date,'m')},{date_format($date,'Y')})" id="{$i}">{$i}</td> {/if}
+							{if $count == 1} <tr><td class="date {if $i == $seldate}selected{/if}" onclick="javascript:get_events ({$i},{date_format($date,'m')},{date_format($date,'Y')})" id="{$i}">{$i}</td>
+							{else if $count == 7 || $count == 14 || $count == 21 || $count == 28 || $count == 35}  <td class="date  {if $i == $seldate}selected{/if}" onclick="javascript:get_events ({$i},{date_format($date,'m')},{date_format($date,'Y')})" id="{$i}">{$i}</td></tr>
+							{else} <td class="date  {if $i == $seldate}selected{/if}" onclick="javascript:get_events ({$i},{date_format($date,'m')},{date_format($date,'Y')})" id="{$i}">{$i}</td> {/if}
 							{$count=$count+1}
 						{/for}
 				</tbody>
@@ -51,6 +51,7 @@
   <div id="cover-spin" style="display: none; position:absolute;" class="spinner1"></div>
 		<div class="table-responsive">
 		  <table class="table table-bordered" id="tbl-event">
+        {include file="admin/calendar/show_events.tpl"}
       </table>
       </div>
     </div>
@@ -64,7 +65,7 @@
           <h3 class="card-title">Add new event</h3>
         </div>
         <div class="card-body">
-          <form action="/calendar" method="post" id="frm-event">
+          <form action="/calendar" method="post" id="frm-event" onsubmit="javascript:$('#cover-spin').show(0);">
           	<input type="hidden" name="action" value="add_event">
             <input type="hidden" name="Event[campus_id]" value="4">
             <div class="form-group">
@@ -98,7 +99,7 @@
             </div>
             <div class="form-group">
               <span style="float: right;">
-                <input type="submit" name="submit" class="btn btn-primary" value ="Submit" onclick="$('#cover-spin').show(0)">
+                <input type="submit" class="btn btn-primary" value ="Submit">
                 <a href="#" class="btn btn-secondary" data-dismiss="modal" id="close">Cancel</a>
               </span>
             </div>
@@ -160,4 +161,4 @@
       </div>
     </div>
   </div>
-</div> *}
+</div> *} 

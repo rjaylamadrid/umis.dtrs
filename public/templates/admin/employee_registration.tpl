@@ -100,7 +100,7 @@
                             <div class="col-lg-3 col-md-6 col-sm-12">
                                 <div class="form-group label-floating">
                                     <label class="form-label">Employee ID No.</label>
-                                    <input type="text" class="form-control" name="emp[employee_id]" value="{$id}" readonly id="employee_id">
+                                    <input type="text" class="form-control" name="emp[employee_id]" value="{$id}" readonly id="employee_id" required>
                                 </div>
                             </div>
                             <div class="col-lg-9 col-md-6 col-sm-12">

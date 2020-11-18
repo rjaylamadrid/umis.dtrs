@@ -60,7 +60,7 @@
             <div class="col-md-6 col-lg-4">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title"><b>{date('F')}</b> Birthday Celebrants {$bdaycelebrant.first_name}</h3>
+                        <h3 class="card-title"><b>{date('F')}</b> Birthday Celebrants {$bdaycelebrant.first_name} ({sizeof($bdaycelebrant)})</h3>
                     </div>
                     <div class="card-body o-auto" style="height: 20rem">
                     <ul class="list-unstyled list-separated">

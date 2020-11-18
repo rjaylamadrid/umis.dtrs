@@ -82,7 +82,7 @@ function dual_citizenship(value) {
     month = (month < 10 ? "0" : "") + month;
     document.getElementById('event_date').value = year+'-'+month+'-'+day;
     // document.getElementById('event_date_edit').value = year+'-'+month+'-'+day;
-    f({action: 'get_events', day:day, month:month, year:year}, "text", "/calendar/show-events").then( function (data) {
+    f({action: 'show_events', day:day, month:month, year:year}, "text", "/calendar").then( function (data) {
       $('.spinner1').hide(0);
       $('#tbl-event').html(data);
       // console.log(data);
@@ -92,10 +92,9 @@ function dual_citizenship(value) {
   function delete_event(no) {
     if(confirm("Are you sure you want to delete this event?")) {
       $('#cover-spin').show(0);
-      f({action: 'delete_event', no:no}, "text", "/calendar/delete-event").then( function (data) {
+      f({action: 'delete_event', no:no}, "text", "/calendar").then( function (data) {
         $('#cover-spin').hide(0);
         // console.log(data);
-        location.href = "/calendar";
       });
     }
   }
@@ -185,17 +184,19 @@ function customDate () {
 }
 
 function date_create(year, month, day) {
+  month = month - 1;
   var date = day == '31' ? new Date(year,month,0) : new Date(year,month,day);
   y = date.getFullYear();
   m = day == '31' ? date.getMonth() + 1 : date.getMonth();
   d = date.getDate();
+  m  = m+1;
   return y + '-' + (m > 9 ? m : '0'+ m) + '-' + (d > 9 ? d : '0'+ d); 
 }
 
 function set_from (from) {
   $('#to').attr('min',create_date (from,'day', 1));
   $('#to').attr('max',create_date (from, 'day',30));
-  $('#to').attr('value',create_date (from, 'day',30));
+  $('#to').value(create_date (from, 'day',30));
 }
 
 function create_date (date, range_type = 'day', range = 0) {
@@ -232,7 +233,6 @@ function create_sched (ctr) {
 function modify_log () {
   var form = $('#formLog').serialize();
   f (form, "text", "/attendance").then( function(html){
-    console.log(html);
     $('#update-log-modal').modal('hide');
     init_dtr($('#id').val());
   });
