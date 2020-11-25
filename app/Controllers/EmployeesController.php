@@ -365,7 +365,6 @@ class EmployeesController extends Controller {
     public function create_sched_preset() {
         $scheds = DB::fetch_row ("SELECT COUNT(*)AS COUNT FROM tbl_schedule_preset");
         $this->data['schedule_preset'] += ['sched_code' => "SCHED".str_pad($scheds['COUNT']+1,4,'0',STR_PAD_LEFT)];
-
         DB::insert ("INSERT INTO tbl_schedule_preset SET ". DB::stmt_builder ($this->data['schedule_preset']),$this->data['schedule_preset']);
         foreach ($this->data['day'] as $key => $days) {
             $has_sched = False;
@@ -377,7 +376,7 @@ class EmployeesController extends Controller {
             if ($has_sched) { DB::insert ("INSERT INTO tbl_schedule SET ". DB::stmt_builder ($inout),$inout); }
         }
         $id=$this->data['id'];
-        header ("location: /employees/employment-update/$id/schedule/success");
+        header ("location: /employees/employment-update/$id/schedule/success/".$this->data['schedule_preset']['sched_code']);
     }
     //END OF EMPLOYMENT MODULE
 }

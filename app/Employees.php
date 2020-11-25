@@ -40,8 +40,8 @@ class Employees extends EmployeesController {
         $this->profile ($id,$view,'update');
     }
 
-    public function employment_update ($id, $tab = 'employment_info', $result = NULL) {
-        $this->employment ($id,$tab,'update', $result);
+    public function employment_update ($id, $tab = 'employment_info', $result = NULL, $sched = NULL) {
+        $this->employment ($id,$tab,'update', $result, $sched);
     }
 
     public function save ($id, $tab='basic-info') {
@@ -61,8 +61,8 @@ class Employees extends EmployeesController {
         $this->view->display ('admin/employee_registration', ['positions' => $positions, 'emp_type' => Position::emp_type(), 'schedules' => $presets , 'departments' => $this->departments(), 'designations' => $this->designations(), 'id' => $this->new_id ('1'), 'no' => $this->employee_no(), 'message' => $message]);
     }
 
-    public function employment ($id, $tab = 'employment_info', $view = 'view', $message = NULL) {
-        if ($tab == 'schedule') {
+    public function employment ($id, $tab = 'employment_info', $view = 'view', $message = NULL, $sched = NULL) {
+        if ($sched != NULL) {
             if ($message) $message = ['success' => '1', 'message' => 'Work schedule has been successfully saved!'];
         } else {
             if ($message) $message = ['success' => '1', 'message' => 'Employment information has been successfully updated!'];
@@ -75,7 +75,7 @@ class Employees extends EmployeesController {
         }
         $presets = Schedule::presets()->all();
         $positions = Position::positions()->type ($this->employee->info['etype_id']);
-        $this->view->display ('admin/employee_employment', ['positions' => $positions, 'emp_type' => Position::emp_type(), 'employee' => $this->employee, 'tab' => $tab, 'view' => $view, 'presets' => $presets , 'departments' => $this->departments(), 'designations' => $this->designations(), 'message' => $message]);
+        $this->view->display ('admin/employee_employment', ['positions' => $positions, 'emp_type' => Position::emp_type(), 'employee' => $this->employee, 'tab' => $tab, 'view' => $view, 'presets' => $presets , 'departments' => $this->departments(), 'designations' => $this->designations(), 'message' => $message, 'sched' => $sched]);
     }
 
     public function export () {

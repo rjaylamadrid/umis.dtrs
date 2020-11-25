@@ -26,7 +26,8 @@
                 <select class="form-control col-md-6" name="sched_code" onchange ="javascript:get_schedule(this.value)">
                     <option selected disabled>Work Schedule</option>
                     {foreach from = $presets item = preset}
-                        <option value = "{$preset.sched_code}" {if $schedules[0].sched_code == $preset.sched_code}selected{/if}>{$preset.sched_day} ({$preset.sched_time})</option>
+                        <option value = "{$preset.sched_code}" {if $sched && $sched == $preset.sched_code}selected
+                        {else if $schedules[0].sched_code == $preset.sched_code}selected{/if}>{$preset.sched_day} ({$preset.sched_time})</option>
                     {/foreach}
                 </select>
                 <div class="col-md-6">
@@ -46,4 +47,14 @@
         </form>
     </div>
     {include file="admin/modal/create_schedule.tpl"}
+{/if}
+
+{if $sched}
+<script>
+require(['core'], function () {
+    $(document).ready(function(){
+        get_schedule('{$sched}');
+    });
+});
+</script>
 {/if}
