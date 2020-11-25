@@ -54,7 +54,7 @@ class EmployeeProfile {
     }
 
     public function employment () {
-        $this->employment = $this->get (["col" => "*, 'Per month' AS salary_type, (CASE when date_to IS NULL THEN NOW() ELSE date_to END) AS dateto", "table" => "tbl_employee_employment", "options" => " ORDER BY dateto DESC"]);
+        $this->employment = $this->get (["col" => "*, 'Monthly' AS salary_type, (CASE when date_to IS NULL THEN NOW() ELSE date_to END) AS dateto", "table" => "tbl_employee_employment", "options" => " ORDER BY dateto DESC"]);
         $employment_record = DB::fetch_all ("SELECT a.*, b.*, c.*, d.*, e.* FROM tbl_employee_status a, tbl_position b, tbl_campus c, tbl_salary_grade d, tbl_employee_type e WHERE a.employee_id = ? AND b.no = a.position_id AND a.campus_id = c.id AND b.salary_grade = d.salary_grade AND b.etype_id = e.etype_id ORDER BY a.date_start DESC", $this->id);
         if ($employment_record) {
             $temp = sizeof($this->employment);
@@ -74,7 +74,7 @@ class EmployeeProfile {
                     $this->employment[$temp]['salary_type'] = $cos_salary['salary_type'];
                 } else {
                     $this->employment[$temp]['salary'] = $salary_amount[Position::step($value['date_start'],$date_end) - 1];
-                    $this->employment[$temp]['salary_type'] = "Per month";
+                    $this->employment[$temp]['salary_type'] = "Monthly";
                 }
                 $temp++;
             }

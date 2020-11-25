@@ -1,5 +1,6 @@
 {extends file="layout.tpl"}
 {block name=content}
+{if $result == 'success'} <script>alert('Employee has been set to inactive successfully');</script> {/if}
     <div class="my-3 my-md-5">
         <div class="container">
             {include file="admin/employee_stats.tpl"}
@@ -54,8 +55,14 @@
                                                 </a>
                                                 <a href="{$server}/employees/employment/{$employee.employee_no}/employment_info" class="dropdown-item"><i class="dropdown-icon fe fe-user"></i> Employment Status
                                                 </a>
-                                                <a href="javascript:set_inactive('{$employee.employee_no}', '{if $employee.active_status == '0'}1{else}0{/if}');" class="dropdown-item"><i class="dropdown-icon fe fe-tag"></i> Set as {if $employee.active_status == '0'}Active{else}Inactive{/if}
-                                                {* <a href="javascript::" class="dropdown-item"><i class="dropdown-icon fe fe-tag"></i> Set as {if $employee.active_status == '0'}Active{else}Inactive{/if} *}
+                                                {* <a href="javascript:set_inactive('{$employee.employee_no}', '{if $employee.active_status == '0'}1{else}0{/if}');" class="dropdown-item"><i class="dropdown-icon fe fe-tag"></i> Set as {if $employee.active_status == '0'}Active{else}Inactive{/if} *}
+                                                {* <a href="#" class="btn btn-sm float-right btn-outline-success" data-toggle="modal" data-target="#add-event-modal"><i class="fe fe-plus"></i>Add Event</a> *}
+                                                {* <a href="#" class="dropdown-item" data-toggle="modal" data-target="#set-employee-inactive-modal"><i class="dropdown-icon fe fe-tag"></i> Set as {if $employee.active_status == '0'}Active{else}Inactive{/if} *}
+                                                {if $employee.active_status == '1'}
+                                                    <a href="javascript:set_emp_inactive('{$employee.employee_no}', '{if $employee.active_status == '0'}1{else}0{/if}','{$employee.first_name|upper} {$employee.last_name|upper}','{$employee.position}');" class="dropdown-item"><i class="dropdown-icon fe fe-tag"></i> Set as {if $employee.active_status == '0'}Active{else}Inactive{/if}
+                                                {else}
+                                                    <a href="javascript:set_inactive('{$employee.employee_no}', '{if $employee.active_status == '0'}1{else}0{/if}');" class="dropdown-item"><i class="dropdown-icon fe fe-tag"></i> Set as {if $employee.active_status == '0'}Active{else}Inactive{/if}
+                                                {/if}
                                                 </a>
                                             </div>
                                         </td>
@@ -75,15 +82,18 @@
     </div>
     <script>
         function set_inactive (id, val = 0) {
-            if (val == 0) {
-                f({ action: 'set_active', active: val, id: id}, "json", "/employees").then (function (result) {
-                    if (result.success) location.reload();
-                });
-            }else {
-                $('#campus').val({$user.campus_id});
-                $('#employee_id').val(id);
-                $('#promote-employee-modal').modal('show');
-            }
+            status = val == 0 ? 'inactive' : 'active';
+            //if(confirm("Are you sure you want to set this employee " + status + "?")) {
+                if (val == 0) {
+                    f({ action: 'set_active', active: val, id: id}, "json", "/employees").then (function (result) {
+                        if (result.success) location.reload();
+                    });
+                } else {
+                    $('#campus').val({$user.campus_id});
+                    $('#employee_id').val(id);
+                    $('#promote-employee-modal').modal('show');
+                }
+            //}
         }
     </script>
     <div class="modal fade margin-top-70" id="employee-status-modal" role="dialog" tabindex="-1" style="margin-left:-50px;">
@@ -91,4 +101,5 @@
         </div>
     </div>
     {include file="admin/modal/promote_employee.tpl"}
+    {include file="admin/modal/set_employee_inactive.tpl"}
 {/block}

@@ -1,6 +1,6 @@
 <div class="table-responsive">
     <table class="table card-table table-striped">
-        <tr class="row-header"><td colspan="5">Schedule</td>
+        <tr class="row-header"><td colspan="5">Work Schedule</td>
         {foreach from = $schedules item = schedule}
             <tr>
                 <td>{$schedule.weekday}</td>

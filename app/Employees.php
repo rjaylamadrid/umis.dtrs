@@ -14,7 +14,7 @@ class Employees extends EmployeesController {
         $status  = $this->data['inactive'] ? 0 : 1;
         $this->stats = EmployeeStats::campus ($this->user['campus_id'])->get_stats ();
         $employees = Employee::employees()->position()->status($status, $this->user['campus_id']);
-        $this->view->display ('admin/employees', ["stats" => $this->stats, "employees" => $employees,'emp_type' => Position::emp_type(),'departments' => $this->departments(), 'designations' => $this->designations(), "status" => $status]);
+        $this->view->display ('admin/employees', ["stats" => $this->stats, "employees" => $employees,'emp_type' => Position::emp_type(),'departments' => $this->departments(), 'designations' => $this->designations(), "status" => $status, "result" => $this->result]);
     }
 
     public function profile ($id = null, $tab = 'basic-info', $view='view', $message=NULL) {
@@ -52,9 +52,6 @@ class Employees extends EmployeesController {
 
     public function add_profile_info ($id, $tab = 'basic-info') {
         $empAdd = $this->add_profile($id,$_POST['employeeinfo'],$tab);
-        // print_r("<pre>");
-        // print_r($empAdd);
-        // print_r("</pre>");
         header ("location: /employees/update/$id/$tab");
     }
 
@@ -65,13 +62,15 @@ class Employees extends EmployeesController {
     }
 
     public function employment ($id, $tab = 'employment_info', $view = 'view', $message = NULL) {
-        if ($message) $message = ['success' => '1', 'message' => 'Employment information has been successfully updated!'];
+        if ($tab == 'schedule') {
+            if ($message) $message = ['success' => '1', 'message' => 'Work schedule has been successfully saved!'];
+        } else {
+            if ($message) $message = ['success' => '1', 'message' => 'Employment information has been successfully updated!'];
+        }
         $this->employee = new EmployeeProfile ($id);
-        // print_r($this->employee);
         try {
             $this->employee->{str_replace ("-", "_", $tab)}();
         } catch (\Throwable $th) {
-            // $tab = 'employment_info';
             $this->employee->info ();
         }
         $presets = Schedule::presets()->all();

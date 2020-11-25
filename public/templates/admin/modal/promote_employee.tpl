@@ -14,7 +14,7 @@
                             {if $employee->id}
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label class="form-label">Last Day on Previous Position</label>
+                                    <label class="form-label">Last Day of Service in the Previous Position</label>
                                     <input type="date" class="form-control" name="date_end">
                                 </div>
                             </div>

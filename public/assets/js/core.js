@@ -71,6 +71,14 @@ function dual_citizenship(value) {
     $('#dual_citizen').val('');
   }
 }
+
+function set_emp_inactive(id,status,name,pos) {
+  $('#emp_id').val(id);
+  $('#status').val(status);
+  $('#emp_name').val(name);
+  $('#emp_pos').val(pos);
+  $('#set-employee-inactive-modal').modal('show');
+}
 // EMPLOYEE PROFILE :: END
 
 // CALENDAR :: START

@@ -11,13 +11,13 @@
                     <div class="card mb-2">
                         <div class="card-body">
                             <form action="/calendar" method="POST">
-                                <label class="form-label">Set Period: {$result}</label>
+                                <label class="form-label">Set Period:</label>
                                 <div class="row">
                                     <select name="month" class="col-md-6 form-control custom-select" id="month" required>
                                         <option value="" selected="" disabled="" readonly>Month</option>
                                         {include file="custom/select_month.tpl"}
                                     </select>
-                                    <input name="year" type="number" class="col-md-5 form-control ml-4" placeholder="Year" value="{date('Y')}" id="year" required>
+                                    <input name="year" type="number" class="col-md-5 form-control ml-4" placeholder="Year" value="{if $date}{$date|date_format: 'Y'}{else}{date('Y')}{/if}" id="year" required>
                                 </div>
                                 <div class="col-md-12 mt-5">
                                     <div class="form-group" style="float: right;">
@@ -55,13 +55,6 @@
                                     </a>
                                 </div>
                             </div>
-                        {* {else}
-                            <div class="page-content">
-                                <div class="container text-center">
-                                    <h1 class="h2 mb-3">Select Month and Year.</h1>
-                                    <p class="h4 text-muted font-weight-normal mb-7">Please select the month and year you wanted to view or edit.</p>
-                                </div>
-                            </div> *}
                         {/if}
                         </div>
                     </div>

@@ -24,14 +24,14 @@
                 <input type="hidden" id="action" name="action" value="update_schedule">
                 <input type="hidden" name="employee_id" value="{$employee->id}">
                 <select class="form-control col-md-6" name="sched_code" onchange ="javascript:get_schedule(this.value)">
-                    <option selected disabled>Schedule</option>
+                    <option selected disabled>Work Schedule</option>
                     {foreach from = $presets item = preset}
                         <option value = "{$preset.sched_code}" {if $schedules[0].sched_code == $preset.sched_code}selected{/if}>{$preset.sched_day} ({$preset.sched_time})</option>
                     {/foreach}
                 </select>
                 <div class="col-md-6">
                     <div class="form-group" style="float: right;">
-                        <a href="javascript:get_schedule('create')" class="btn btn-secondary">Create New Schedule</a>
+                        <a href="javascript:get_schedule('create')" class="btn btn-secondary">Create New Work Schedule</a>
                     </div>
                 </div>
             </div>

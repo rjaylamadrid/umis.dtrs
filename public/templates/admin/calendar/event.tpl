@@ -13,7 +13,7 @@
 <div id="cover-spin" style="display: none;">
   <div class="page-content" style="margin-top: 28rem;">
       <div class="container text-center">
-          <h1 class="h2 mb-3">Saving data...</h1>
+          <h1 class="h2 mb-3">Saving...</h1>
           <p class="h4 text-muted font-weight-normal mb-7">Please wait, this might take a few minutes.</p>
       </div>
   </div>
@@ -62,22 +62,22 @@
     <div class="modal-content">
       <div class="card">
         <div class="card-header">
-          <h3 class="card-title">Add new event</h3>
+          <h3 class="card-title">Add New Event</h3>
         </div>
         <div class="card-body">
           <form action="/calendar" method="post" id="frm-event" onsubmit="javascript:$('#cover-spin').show(0);">
           	<input type="hidden" name="action" value="add_event">
             <input type="hidden" name="Event[campus_id]" value="4">
-            <div class="form-group">
+            <div class="form-group row">
               <label>Title</label>
               <input type="text" class="form-control" name="Event[event_name]" placeholder="Title Name" required>
             </div>
             <div class="row">
               <div class="form-group col-md-6 pl-0">
                 <label>Date</label>
-                <input type="date" class="form-control" id="event_date" name="Event[event_date]" value="" required readonly>
+                <input type="date" class="form-control" id="event_date" name="Event[event_date]" value="{if $date}{$date|date_format: 'Y-m-d'}{/if}" required readonly>
               </div>
-              <div class="form-group col-md-6 pl-0">
+              <div class="form-group col-md-6" style="padding-right: 0px;">
                 <label>DTR code</label>
                 <select class="form-control" name="Event[dtr_code_id]" required>
                   <option value="" selected disabled>Code</option>
@@ -89,11 +89,11 @@
             </div>
             <div class="row">
               <div class="form-group col-md-6 pl-0">
-                <label>Time Start</label>
+                <label>Start</label>
                 <input type="time" class="form-control" name="Event[event_start]" required autocomplete="off" maxlength="8" value="07:30">
               </div>
               <div class="form-group col-md-6 pr-0">
-                <label>Time End</label>
+                <label>End</label>
                 <input type="time" class="form-control" name="Event[event_end]" required autocomplete="off" maxlength="8" value="17:00">
               </div>
             </div>

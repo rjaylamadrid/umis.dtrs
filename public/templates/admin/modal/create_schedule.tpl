@@ -3,7 +3,7 @@
         <div class="modal-content" style="width:800px;">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Create New Schedule</h3>
+                    <h3 class="card-title">Create New Work Schedule</h3>
                 </div>
                 <div class="card-body">
                     <form action="/employees" method="POST">
@@ -12,14 +12,14 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="form-label">Schedule Preset Name</label>
-                                    <input type="text" class="form-control" name="schedule_preset[sched_day]" value="" placeholder="i.e. EVERYDAY">
+                                    <label class="form-label">Work Schedule Preset Name</label>
+                                    <input type="text" class="form-control" name="schedule_preset[sched_day]" value="" placeholder="i.e. EVERYDAY" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="form-label">Schedule Preset Time</label>
-                                    <input type="text" class="form-control" name="schedule_preset[sched_time]" value="" placeholder="i.e. 7:30 - 12:00 | 1:00 - 5:00">
+                                    <label class="form-label">Work Schedule Preset Time</label>
+                                    <input type="text" class="form-control" name="schedule_preset[sched_time]" value="" placeholder="i.e. 7:30 - 12:00 | 1:00 - 5:00" required>
                                 </div>
                             </div>
                         </div>
@@ -41,10 +41,12 @@
                                     {/foreach}
                                 </tbody>
                             </table>
+                            <br />
+                            <i>Tick or untick the check boxes to include or remove the corresponding day in the work schedule preset being created.</i>
                         </div>
                         <div class="col-md-12 mt-5">
                             <div class="form-group" style="float: right;">
-                                <button name="submit" value="submit" class="btn btn-primary">Save Schedule</button>
+                                <button name="submit" value="submit" class="btn btn-primary">Save Work Schedule</button>
                                 <a href="#" class="btn btn-secondary" data-dismiss="modal">Cancel</a>
                             </div>
                         </div>

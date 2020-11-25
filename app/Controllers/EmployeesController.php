@@ -10,6 +10,7 @@ use Model\Schedule;
 class EmployeesController extends Controller {
     public $employees;
     public $profile;
+    public $result;
     
     public function bday_celebrant () {
         return DB::fetch_all ("SELECT first_name, last_name, DATE_FORMAT(birthdate, '%M %d') AS BDate, (YEAR(NOW()) - YEAR(birthdate)) AS Age, DAYNAME(DATE_FORMAT(birthdate, '$this->year-%m-%d')) AS Araw, employee_picture FROM tbl_employee a, tbl_employee_status b WHERE a.no = b.employee_id AND b.active_status = 1 AND b.campus_id = ? AND MONTH(a.birthdate) = ? AND DAY(birthdate) BETWEEN 1 AND 31 ORDER BY BDate", [$this->user['campus_id'], $this->year]);
@@ -31,6 +32,12 @@ class EmployeesController extends Controller {
             if ($set) $result = ['success' => date('Y-m-d')];
         }
         echo json_encode($result);
+    }
+
+    public function set_inactive () {
+        $set = DB::update ("UPDATE tbl_employee_status SET date_end = ?, active_status = ? WHERE employee_id = ?", [$this->data['date_end'], $this->data['status'], $this->data['emp_id']]);
+        if ($set) $this->result = 'success';
+        $this->view->index();
     }
     
     protected function departments () {

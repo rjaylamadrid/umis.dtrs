@@ -32,6 +32,7 @@ class CalendarController extends Controller {
 
     public function get_events() {
         $this->events = DB::db('db_master')->fetch_all("SELECT a.no,a.event_name,a.event_date,a.event_start,a.event_end,b.dtr_code,b.dtr_code_desc FROM tbl_event a, tbl_dtr_code b WHERE a.event_date = '". date_format($this->date, 'Y-m-d') ."' AND a.dtr_code_id = b.no");
+        // print_r($this->selected_date);
         return $this;
     }
 
@@ -76,6 +77,10 @@ class CalendarController extends Controller {
         $date = date_create($date)->format('Y-m-d');
         $employee_scheds = DB::db('db_master')->fetch_all ("SELECT a.* FROM tbl_employee_sched a WHERE a.no = (SELECT MAX(b.no) FROM tbl_employee_sched b WHERE b.employee_id = a.employee_id)");
         $date_logs = DB::db('db_attendance')->fetch_all("SELECT * FROM `$monthtable` WHERE date = '$date'");
+        if (!$date_logs) {
+            $create = DTR::create_table($monthtable);
+            $date_logs = DB::db('db_attendance')->fetch_all("SELECT * FROM `$monthtable` WHERE date = '$date'");
+        } 
         $dtr_code = DB::db('db_master')->fetch_row("SELECT * FROM tbl_dtr_code WHERE no = ?",$dtr_code_id);
 
         foreach ($employee_scheds as $value) {
