@@ -15,8 +15,8 @@
         <table class="table card-table table-striped">
             <tr class="row-header"><td colspan="2">Personal Information</td></tr>
             <tr><td>Name</td><td>{$employee->basic_info.first_name} {$employee->basic_info.middle_name} {$employee->basic_info.last_name} {$employee->basic_info.ext_name}</td></tr>
-            <tr><td>Birthdate</td><td>{$employee->basic_info.birthdate|date_format:'F d, Y'}</td></tr>
-            <tr><td>Birthplace</td><td>{$employee->basic_info.birthplace}</td></tr>
+            <tr><td>Date of Birth</td><td>{$employee->basic_info.birthdate|date_format:'F d, Y'}</td></tr>
+            <tr><td>Place of Birth</td><td>{$employee->basic_info.birthplace}</td></tr>
             <tr><td>Sex</td><td>{$employee->basic_info.gender}</td></tr>
             <tr><td>Civil Status</td><td>{$employee->basic_info.marital_status}</td></tr>
             <tr><td>Height (m)</td><td>{$employee->basic_info.height}</td></tr>
@@ -27,13 +27,13 @@
             <tr><td>Residential Address</td><td>{if $employee->basic_info.resadd_house_block_no != ''}{$employee->basic_info.resadd_house_block_no}{/if} {if $employee->basic_info.resadd_street != ''}{$employee->basic_info.resadd_street}, {/if} {if $employee->basic_info.resadd_sub_village}{$employee->basic_info.resadd_sub_village}, {/if}{if $employee->basic_info.resadd_brgy}{$employee->basic_info.resadd_brgy}, {/if}{if $employee->basic_info.resadd_mun_city}{$employee->basic_info.resadd_mun_city}, {/if}{if $employee->basic_info.resadd_province}{$employee->basic_info.resadd_province} {/if}{if $employee->basic_info.resadd_zip_code}{$employee->basic_info.resadd_zip_code}{/if}</td></tr>
             <tr><td>Permanent Address</td><td>{if $employee->basic_info.peradd_house_block_no != ''}{$employee->basic_info.peradd_house_block_no}{/if} {if $employee->basic_info.peradd_street != ''}{$employee->basic_info.peradd_street}, {/if} {if $employee->basic_info.peradd_sub_village}{$employee->basic_info.peradd_sub_village}, {/if}{if $employee->basic_info.peradd_brgy}{$employee->basic_info.peradd_brgy}, {/if}{if $employee->basic_info.peradd_mun_city}{$employee->basic_info.peradd_mun_city}, {/if}{if $employee->basic_info.peradd_province}{$employee->basic_info.peradd_province} {/if}{if $employee->basic_info.peradd_zip_code}{$employee->basic_info.peradd_zip_code}{/if}</td></tr>
             <tr class="row-header"><td colspan="2">Other Information</td></tr>
-            <tr><td>GSIS ID No</td><td>{$employee->basic_info.gsis_no}</td></tr>
-            <tr><td>PAG-IBIG ID No</td><td>{$employee->basic_info.pagibig_no}</td></tr>
-            <tr><td>SSS No</td><td>{$employee->basic_info.sss_no}</td></tr>
-            <tr><td>TIN No</td><td>{$employee->basic_info.tin_no}</td></tr>
-            <tr><td>Agency Employee No</td><td>{$employee->basic_info.employee_id}</td></tr>
-            <tr><td>Telephone No</td><td>{$employee->basic_info.telephone_no}</td></tr>
-            <tr><td>Mobile No</td><td>{$employee->basic_info.cellphone_no}</td></tr>
+            <tr><td>GSIS ID No.</td><td>{$employee->basic_info.gsis_no}</td></tr>
+            <tr><td>PAG-IBIG ID No.</td><td>{$employee->basic_info.pagibig_no}</td></tr>
+            <tr><td>SSS No.</td><td>{$employee->basic_info.sss_no}</td></tr>
+            <tr><td>TIN No.</td><td>{$employee->basic_info.tin_no}</td></tr>
+            <tr><td>Agency Employee No.</td><td>{$employee->basic_info.employee_id}</td></tr>
+            <tr><td>Telephone No.</td><td>{$employee->basic_info.telephone_no}</td></tr>
+            <tr><td>Mobile No.</td><td>{$employee->basic_info.cellphone_no}</td></tr>
             <tr><td>E-mail Address</td><td>{$employee->basic_info.email_address}</td></tr>
         </table>
     </div>
@@ -76,14 +76,14 @@
                         <div class="col-sm-12 col-md-6">
                             <div class="form-group">
                                 <div class="label-floating">
-                                    <label class="form-label">Extension Name (Jr,Sr)</label>
+                                    <label class="form-label">Extension Name (Jr.,Sr.)</label>
                                     <input type="text" class="form-control" name="employeeinfo[ext_name]" value="{$employee->basic_info.ext_name}">
                                 </div>
                             </div>
                         </div>
                         <div class="col-sm-12 col-md-6">
                             <div class=" label-floating">
-                                <label class="form-label" for="gender">Gender</label>
+                                <label class="form-label" for="gender">Sex</label>
                                 <select  class="selectpicker form-control" data-style="btn btn-success btn-round" name="employeeinfo[gender]">
                                     <option value="" disabled></option>
                                     <option value="Male" {if $employee->basic_info.gender == 'Male'} selected {/if}>Male</option>
@@ -93,13 +93,13 @@
                         </div>
                         <div class="col-sm-12 col-md-6">
                             <div class="form-group label-floating">
-                                <label class="form-label">Birthday</label>
+                                <label class="form-label">Date of Birth</label>
                                 <input type="date" class="form-control" name="employeeinfo[birthdate]" value="{$employee->basic_info.birthdate}" max="">
                             </div>
                         </div>
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="form-group label-floating">
-                                <label class="form-label">Birthplace</label>
+                                <label class="form-label">Place of Birth</label>
                                 <input type="text" class="form-control" name="employeeinfo[birthplace]" value="{$employee->basic_info.birthplace}">
                             </div>
                         </div>
@@ -208,7 +208,7 @@
                 <hr style="width: 100%; margin: 10px 1px;">
                 <div class="col-sm-12 col-lg-4">
                     <div class="form-group label-floating">
-                        <label class="form-label" for="civil_stat">Marital Status</label>
+                        <label class="form-label" for="civil_stat">Civil Status</label>
                         <select  class="selectpicker form-control" data-style="btn btn-success btn-round" name="employeeinfo[marital_status]">
                             <option value="" disabled>Civil Status</option>
                             <option value="Single" {if $employee->basic_info.marital_status == 'Single'} selected {/if}>Single</option>
@@ -232,7 +232,7 @@
                 <div class="col-sm-12 col-lg-4">
                     <div class="form-group label-floating">
                         <label class="form-label" for="dual_citizen">Pls. indicate country (if dual citizen)</label>
-                        <input class="form-control" type="text" id="dual_citizen" name="employeeinfo[dual_citizen]" {if $employee->basic_info.citizenship == "Filipino"} readonly {else}value="{$employee->basic_info.dual_citizen}" {/if} {if $employee->basic_info.citizenship != "Filipino"} required {/if}>
+                        <input class="form-control" type="text" id="dual_citizen" name="employeeinfo[dual_citizen]" {if !$employee->basic_info.dual_citizen} readonly {else}value="{$employee->basic_info.dual_citizen}" {/if} {if $employee->basic_info.citizenship != "Filipino"} required {/if}>
                     </div>
                 </div>
                 <div class="col-sm-12 col-lg-4">
@@ -291,7 +291,7 @@
                 </div>
                 <div class="col-sm-12 col-lg-4">
                     <div class="form-group label-floating">
-                        <label class="form-label">Email Address</label>
+                        <label class="form-label">E-mail Address</label>
                         <input type="email"  class="form-control" name="employeeinfo[email_address]" value="{$employee->basic_info.email_address}">
                     </div>
                 </div>

@@ -9,7 +9,7 @@
                     <div class="form-group">
                         <form action="" method="POST">
                             <input type="hidden" name="action" value="generate">
-                            <label style="display: inline-block;">Select DTR period:&nbsp;</label>
+                            <label style="display: inline-block;">Select DTR Period:&nbsp;</label>
                             <div class="form-group mb-2">
                                 <select name="period" id="period_type" class="form-control custom-select" onchange="javascript:customDate()">
                                     <option value="1" {if $period.period == '1'}selected{/if}>First Half (1 - 15)</option>
@@ -47,7 +47,7 @@
                             </div>
                             <div class="form-group">
                                 <select name="emp_type" class="form-control custom-select">
-                                    <option value="">All employees</option>
+                                    <option value="">All Employees</option>
                                     {foreach $emp_type as $e}
                                     <option value="{$e.etype_id}" {if $e.etype_id == $period.emp_type}selected{/if}>{$e.etype_desc}</option>
                                     {/foreach}
@@ -57,7 +57,7 @@
                                 <label class="custom-switch">
                                     <input type="checkbox" name="inactive" class="custom-switch-input">
                                     <span class="custom-switch-indicator"></span>
-                                    <span class="custom-switch-description">Include inactive employees</span>
+                                    <span class="custom-switch-description">Include Inactive Employees</span>
                                 </label>
                             </div>
                             <div class="form-group">

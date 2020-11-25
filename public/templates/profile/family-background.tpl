@@ -20,7 +20,7 @@
             <tr><td>Occupation</td><td>{$spouse.occupation}</td></tr>
             <tr><td>Employer/Business</td><td>{$spouse.employer}</td></tr>
             <tr><td>Business Address</td><td>{$spouse.business_address}</td></tr>
-            <tr><td>Telephone No</td><td>{$spouse.telephone_no}</td></tr>
+            <tr><td>Telephone No.</td><td>{$spouse.telephone_no}</td></tr>
             <tr class="row-header"><td colspan="2">Parents' Information</td></tr>
             <tr><td>Father's Name</td><td>{$father.first_name} {$father.middle_name} {$father.last_name} {$father.ext_name}</td></tr>
             <tr><td>Mother's Name</td><td>{$mother.first_name} {$mother.middle_name} {$mother.last_name} {$mother.ext_name}</td></tr>

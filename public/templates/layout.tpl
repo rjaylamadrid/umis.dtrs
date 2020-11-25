@@ -12,10 +12,10 @@
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="HandheldFriendly" content="True">
         <meta name="MobileOptimized" content="320">
-        <link rel="icon" href="{$server}/favicon.ico" type="image/x-icon"/>
+        <link rel="icon" href="{$server}/assets/img/icon.ico" type="image/x-icon"/>
         <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
 
-        <title>{block name=title}CBSUA :: HRIS{/block}</title>
+        <title>{block name=title}CBSUA HRIS{/block}</title>
         <!-- Dashboard Core -->
         <script src="{$server}/assets/js/require.min.js"></script>
         <script>

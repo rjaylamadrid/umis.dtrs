@@ -12,7 +12,7 @@
                 <td>{$record.date_start} to {if $record.active_status == 0} {$record.date_end} {else} Present {/if}</td>
             </tr>
             <tr>
-                <td>Designation</td>
+                <td>Position</td>
                 <td>{$record.position_desc}</td>
             </tr>
             <tr>

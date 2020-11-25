@@ -121,5 +121,5 @@
             </div>
         {/if}
     </form>
-    <p>{$attendance.total} Total rendered hours (in hours) {$attendance.ut} Tardy (in minutes)</p>
+    <p>Total rendered hours: {$attendance.total} hours <br> Tardy: {$attendance.ut} minutes</p>
   </div>

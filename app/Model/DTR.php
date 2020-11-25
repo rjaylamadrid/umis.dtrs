@@ -4,7 +4,7 @@ namespace Model;
 use Database\DB;
 use Model\Employee;
 
-class DTR {
+class DTR {     
 
     public static function dtr_code () {
         return DB::db("db_master")->fetch_all("SELECT * FROM tbl_dtr_code ORDER BY dtr_code ASC");
@@ -35,22 +35,29 @@ class DTR {
     }
 
     public static function change_log ($id, $attnd, $period, $date, $log_no = NULL) {
-        $attendance = self::compute_log ($attnd, $id, $date);
+        $attendance = self::compute_log ($attnd, $id, $date, $period);
         if ($log_no) {
+            if ($attendance['null']){
+                self::delete_log($period, $log_no);
+            }
             DB::db('db_attendance')->update("UPDATE `$period` SET ". DB::stmt_builder($attendance)." WHERE id = ".$log_no, $attendance);
         } else {
-            $signature = $date.$id;
-            $attendance['signature'] = base64_encode(md5(utf8_encode($signature), TRUE));
-            $attendance['emp_id'] = $id;
-            $attendance['date'] = $date;
-            DB::db('db_attendance')->insert ("INSERT IGNORE INTO `$period` SET ". DB::stmt_builder($attendance), $attendance);
+            if (!$attendance['null']) {
+                $signature = $date.$id;
+                $attendance['signature'] = base64_encode(md5(utf8_encode($signature), TRUE));
+                $attendance['emp_id'] = $id;
+                $attendance['date'] = $date;
+                DB::db('db_attendance')->insert ("INSERT IGNORE INTO `$period` SET ". DB::stmt_builder($attendance), $attendance);
+            }
         }
     }  
 
-    public static function compute_log ($attnd, $id, $date) {
+    public static function compute_log ($attnd, $id, $date, $period) {
         $preset = ["am_in", "am_out", "pm_in", "pm_out", "ot_in", "ot_out"];
         $attendance = ["is_absent" => 1, "total_hours" => 0, "late" => 0, "undertime" => 0];
         $sched = self::get_sched($id, date_create($date));
+        $logs = self::get_log($period, [$id, $date]);
+        $is_null = $logs[0] == '' ? true :false;
         if ($sched) {
             for ($i = 0; $i < 6; $i++) {
                 if ($i < 4) { 
@@ -60,6 +67,7 @@ class DTR {
                         $attnd[$i] = $sched[0][$preset[$i]];
                     }
                     if (($attnd[$i]) && (date_create($attnd[$i]))) {
+                        $is_null = false;
                         $schedule = date_create($sched[0][$preset[$i]]);
                         $log = date_create($attnd[$i]);
                         if (($i == 0) || ($i == 2)) {
@@ -84,15 +92,40 @@ class DTR {
                         $attendance[$preset[$i]] = ":";
                     }
                 } else {
-                    $attendance[$preset[$i]] = $attnd[$i];
+                    if ($attnd[$i]) {
+                        $is_null = false;
+                        $attendance[$preset[$i]] = $attnd[$i];
+                    }
                 }
             }
+        } else {
+            for ($i = 0; $i < 6; $i++) {
+                if ($attnd[$i]) {
+                    $is_null = false;
+                    if ($log = date_create($attnd[$i])) {
+                       $attnd[$i] = $log -> format("g:iA");
+                    }
+                }
+                if ($i < 4) {
+                    if (!$attnd[$i]){
+                        $attnd[$i] = ":";
+                    }
+                }
+                $attendance[$preset[$i]] = $attnd[$i];
+            }
+        }
+        if ($is_null) {
+            $attendance['null'] = true;
         }
         return $attendance;
     }
      
     public static function get_log ($period, $args) {
         return DB::db("db_attendance")->fetch_row ("SELECT * FROM `$period` WHERE emp_id = ? AND date = ?", $args);
+    }
+
+    public function delete_log ($period, $no) {
+        DB::db("db_attendance")->delete("DELETE FROM `$period` WHERE id = ?", $no);
     }
 
     public static function create_table ($period) {

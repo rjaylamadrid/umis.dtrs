@@ -18,7 +18,7 @@
                     <td>{$training_seminar.training_sponsor}</td>
                 </tr>
                 <tr>
-                    <td>No of hours</td>
+                    <td>No. of hours</td>
                     <td>
                         <div>{$training_seminar.training_hours}<div class="small text-muted">{$training_seminar.training_from|date_format:'F d, Y'} - {$training_seminar.training_to|date_format:'F d, Y'}</div>
                     </td>

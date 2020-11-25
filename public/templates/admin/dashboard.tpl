@@ -11,7 +11,7 @@
                         </span>
                         <div>
                             <h4 class="m-0"><a href="/employees">{$employee.total} <small>Employees</small></a></h4>
-                            <small class="text-muted">0 newly hired</small>
+                            <small class="text-muted">0 Newly Hired</small>
                         </div>
                     </div>
                 </div>
@@ -24,7 +24,7 @@
                         </span>
                         <div>
                             <h4 class="m-0"><a href="#">132 <small>Payroll</small></a></h4>
-                            <small class="text-muted">12 waiting payments</small>
+                            <small class="text-muted">12 Pending</small>
                         </div>
                     </div>
                 </div>
@@ -36,8 +36,8 @@
                             <i class="fe fe-file-text"></i>
                         </span>
                         <div>
-                            <h4 class="m-0"><a href="#">0 <small>DTR</small></a></h4>
-                            <small class="text-muted">For the month of {date('F')}</small>
+                            <h4 class="m-0"><a href="#">0 <small>Daily Time Records</small></a></h4>
+                            <small class="text-muted">For the Month of {date('F')}</small>
                         </div>
                     </div>
                 </div>
@@ -50,7 +50,7 @@
                         </span>
                         <div>
                             <h4 class="m-0"><a href="#">12 <small>Request Forms</small></a></h4>
-                            <small class="text-muted"> For checking</small>
+                            <small class="text-muted"> For Review</small>
                         </div>
                     </div>
                 </div>
@@ -74,7 +74,7 @@
                                     <div>
                                         <a class="text-inherit">{$celebrant.first_name} {$celebrant.last_name} @ {$celebrant.Age}</a>
                                     </div>
-                                    <small class="d-block item-except text-sm text-muted h-1x">{$celebrant.BDate} - {$celebrant.Araw}</small>
+                                    <small class="d-block item-except text-sm text-muted h-1x">{$celebrant.BDate} - {$celebrant.Araw|date_format: '%A'}</small>
                                 </div>
                             </div>
                         </li>
@@ -84,7 +84,7 @@
                 </div>
             </div>
             <div class="col-md-6 col-lg-8">
-                <div class="alert alert-primary">Employee Statistics</div>
+                <div class="alert alert-primary">Employees' Statistics</div>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="card">

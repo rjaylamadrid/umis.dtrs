@@ -178,16 +178,24 @@ function customDate () {
     var year = $('#yr').val();
     $('#from').val(date_create(year, month, presets[period-1][0]));
     $('#to').val(date_create(year, month, presets[period-1][1]));
+    console.log(date_create(year, month, presets[period-1][1]));
     $('#preset').removeClass("d-none");
     $('#custom').addClass("d-none");
   }
 }
 
+function setDate () {
+  var month = $('#month').val();
+  var year = $('#year').val();
+  $('#date_from').val(date_create(year, month, 01));
+  $('#date_to').val(date_create(year, month, 31));
+}
+
 function date_create(year, month, day) {
   month = month - 1;
-  var date = day == '31' ? new Date(year,month,0) : new Date(year,month,day);
+  var date = day == '31' ? new Date(year,month+1,0) : new Date(year,month,day);
   y = date.getFullYear();
-  m = day == '31' ? date.getMonth() + 1 : date.getMonth();
+  m = date.getMonth();
   d = date.getDate();
   m  = m+1;
   return y + '-' + (m > 9 ? m : '0'+ m) + '-' + (d > 9 ? d : '0'+ d); 

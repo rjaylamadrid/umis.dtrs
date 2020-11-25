@@ -54,9 +54,9 @@
                         <input type="hidden" name="month" value = "{$period.month}">
                         <input type="hidden" name="year" value="{$period.year}">
                         <div class="form-group form-inline">
-                            <label style="display: inline-block;">Filter employee:&nbsp;</label>
+                            <label style="display: inline-block;">Employment Status:&nbsp;</label>
                             <select name="emp_type" class="form-control custom-select" onchange="$('#generate').submit();">
-                                <option value="">All employees</option>
+                                <option value="">All Employees</option>
                                 {foreach $emp_type as $e}
                                     <option value="{$e.etype_id}" {if $e.etype_id == $period.emp_type}selected{/if}>{$e.etype_desc}</option>
                                 {/foreach}
@@ -69,10 +69,10 @@
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; transform: translate3d(-181px, 20px, 0px); top: 0px; left: 0px; will-change: transform;">
                                         <a href="javascript:new_period()" class="dropdown-item">
-                                            <i class="dropdown-icon fe fe-calendar"></i> New period 
+                                            <i class="dropdown-icon fe fe-calendar"></i> New Period 
                                         </a>
                                         <a href="javascript:void(0)" class="dropdown-item">
-                                            <i class="dropdown-icon fe fe-refresh-cw"></i> Update attendance 
+                                            <i class="dropdown-icon fe fe-refresh-cw"></i> Update Attendance 
                                         </a>
                                         <a href="javascript:set_presets('{$period.emp_type}')" class="dropdown-item">
                                             <i class="dropdown-icon fe fe-upload"></i> Set Default Logs
@@ -85,7 +85,7 @@
                                             <input type="hidden" name="emp_type" value="{$period.emp_type}">
                                             <input type ="hidden" name="per_month" value="on">
                                             <button target="_blank" class="dropdown-item">
-                                                <i class="dropdown-icon fe fe-printer"></i> Print all DTR
+                                                <i class="dropdown-icon fe fe-printer"></i> Print All DTR
                                             </button>
                                         </form>
                                     </div>

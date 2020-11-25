@@ -2,9 +2,13 @@
     <div class="card-status bg-secondary"></div>
     <div class="container" style="padding-right: 0.75rem; padding-left: 0.75rem;">
         <div class="d-flex">
-            <a class="header-brand" href="{$server}/dashboard">
-                <img src="{$server}/assets/img/logo.png" class="header-brand-img" alt="cbsua umis logo">
+            <a class="header-brand mr-1" href="{$server}/dashboard">
+                <img src="{$server}/assets/img/cbsua_logosmall.png" class="header-brand-img" alt="cbsua umis logo" style="height:50px">
             </a>
+            <div class="header-title d-lg-block">
+                <h2 class="title-default">CBSUA</h2>
+                <label class="title-muted">Human Resource Information System</label>
+            </div>
             <div class="d-flex order-lg-2 ml-auto">
                 <div class="dropdown">
                     <a href="#" class="nav-link pr-0 leading-none" data-toggle="dropdown">
@@ -55,13 +59,13 @@
                             <a href="/payroll" class="nav-link {if $page == 'payroll'}active{/if}"><i class="fe fe-credit-card"></i> Payroll</a>
                         </li>
                         <li class="nav-item">
-                            <a href="/attendance" class="nav-link {if $page == 'attendance'}active{/if}"><i class="fe fe-clock"></i> Daily Time Record</a>
+                            <a href="/attendance" class="nav-link {if $page == 'attendance'}active{/if}"><i class="fe fe-clock"></i> Daily Time Records</a>
                         </li>
                         <li class="nav-item">
                             <a href="/calendar" class="nav-link {if $page == 'calendar'}active{/if}"><i class="fe fe-calendar"></i> Calendar</a>
                         </li>
                         <li class="nav-item">
-                            <a href="/request" class="nav-link {if $page == 'request'}active{/if}"><i class="fe fe-mail"></i> Leave Request</a>
+                            <a href="/request" class="nav-link {if $page == 'request'}active{/if}"><i class="fe fe-mail"></i> Leave Requests</a>
                             <span><div class="notif"></div></span>
                         </li>
                         <li class="nav-item">
@@ -75,7 +79,7 @@
                             <a href="/payroll" class="nav-link {if $frm.a == 'payroll'}active{/if}"><i class="fe fe-credit-card"></i> Payroll</a>
                         </li>
                         <li class="nav-item">
-                            <a href="{$server}/dtr" class="nav-link {if $frm.a == 'attendance'}active{/if}"><i class="fe fe-clock"></i> Daily Time Record</a>
+                            <a href="{$server}/dtr" class="nav-link {if $frm.a == 'attendance'}active{/if}"><i class="fe fe-clock"></i> Daily Time Records</a>
                         </li>
                     {/if}
                 </ul>

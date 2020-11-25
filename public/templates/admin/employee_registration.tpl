@@ -14,7 +14,7 @@
                     <input type="hidden" name="action" value="register">
                     <input type="hidden" name="emp[no]" value="{$no}">
                     <div class="card-body">
-                        <h1 class="card-title">Register Employee</h1>
+                        <h1 class="card-title">Employee Registration</h1>
                         <div class="row">
                             <div class="col-lg-3 col-md-6 col-sm-12">
                                 <div class="form-group label-floating">
@@ -24,7 +24,7 @@
                             </div>
                             <div class="col-lg-3 col-md-6 col-sm-12">
                                 <label class="form-label">Middle Name</label>
-                                <input type="text" class="form-control" name="emp[middle_name]" value="" required>
+                                <input type="text" class="form-control" name="emp[middle_name]" value="">
                             </div>
                             <div class="col-lg-4 col-md-7 col-sm-12">
                                 <div class="form-group label-floating">
@@ -40,7 +40,7 @@
                             </div>
                             <div class="col-lg-6 col-md-12">
                                 <div class="form-group label-floating">
-                                    <label class="form-label">Email Address</label>
+                                    <label class="form-label">E-mail Address</label>
                                     <input required type="email" required class="form-control" name="emp[email_address]" value="">
                                 </div>
                             </div>
@@ -52,13 +52,13 @@
                             </div>
                             <div class="col-lg-5 col-md-5 col-sm-12">
                                 <div class="form-group label-floating">
-                                    <label class="form-label">Birthday</label>
+                                    <label class="form-label">Date of Birth</label>
                                     <input type="date" class="form-control" name="emp[birthdate]" max="<?php echo $date_now; ?>" required>
                                 </div>
                             </div>
                             <div class="col-lg-7 col-md-7 col-sm-12">
                                 <div class="form-group label-floating">
-                                    <label class="form-label">Birthplace</label>
+                                    <label class="form-label">Place of Birth</label>
                                     <input type="text" class="form-control" name="emp[birthplace]">
                                 </div>
                             </div>
@@ -66,9 +66,9 @@
                         <div class="row">
                             <div class="col-lg-6 col-md-6 col-sm-12">
                                 <div class="form-group label-floating">
-                                    <label class="form-label" for="gender">Gender</label>
+                                    <label class="form-label" for="gender">Sex</label>
                                     <select required class="selectpicker form-control" data-style="btn btn-success btn-round" name="emp[gender]" required>
-                                        <option value="" selected="true" disabled>Gender</option>
+                                        <option value="" selected="true" disabled>Select</option>
                                         <option value="Male">Male</option>
                                         <option value="Female">Female</option>
                                     </select>
@@ -76,13 +76,13 @@
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12">
                                 <div class="form-group label-floating">
-                                    <label class="form-label" for="civil_stat">Marital Status</label>
+                                    <label class="form-label" for="civil_stat">Civil Status</label>
                                     <select required class="selectpicker form-control" data-style="btn btn-success btn-round" name="emp[marital_status]" required>
-                                        <option value="" selected="true" disabled>Civil Status</option>
+                                        <option value="" selected="true" disabled>Select</option>
                                         <option value="Single">Single</option>
                                         <option value="Married">Married</option>
-                                        <option value="Widowed">Widowed</option>
-                                        <option value="Separated">Separated</option>
+                                        <option value="Widowed">Widowed / Widower</option>
+                                        <option value="Separated">Legally   Separated</option>
                                     </select>
                                 </div>
                             </div>
@@ -107,7 +107,7 @@
                                 <div class="form-group label-floating">
                                     <label class="form-label">Schedule</label>
                                     <select class="form-control" name="sched_code" required>
-                                        <option selected disabled>Schedule</option>
+                                        <option selected disabled>Select</option>
                                         {foreach from = $schedules item = schedule}
                                             <option value = "{$schedule.sched_code}">{$schedule.sched_day} ({$schedule.sched_time})</option>
                                         {/foreach}
@@ -140,7 +140,7 @@
                                 <div class="row">
                                     <div class="col-md-6 col-sm-12">
                                         <div class="form-group label-floating">
-                                            <label class="form-label">Date Hired (*current position)</label>
+                                            <label class="form-label">Date Hired (current position)</label>
                                             <input type="date" class="form-control" name="emp_status[date_start]" required>
                                         </div>
                                     </div>
@@ -148,7 +148,7 @@
                                         <div class="form-group label-floating">
                                             <label class="form-label">Employment Status</label>
                                             <select class="form-control" name="emp_status[etype_id]" required onchange="javascript:init_pos (this.value)">
-                                                <option selected disabled>Employment Status</option>
+                                                <option selected disabled>Select</option>
                                                 {foreach from=$emp_type item=type}
                                                 <option value="{$type.etype_id}">{$type.etype_desc}</option>
                                                 {/foreach}
@@ -161,10 +161,7 @@
                                 <div class="form-group label-floating">
                                     <label class="form-label">Position</label>
                                     <select class="form-control" name="emp_status[position_id]" id="positions" required>
-                                        <option selected disabled>Position</option>
-                                        {foreach from=$positions item=position}
-                                        <option value="{$position.no}">{$position.position_desc}</option>
-                                        {/foreach}
+                                        <option selected disabled>Select</option>
                                     </select>
                                 </div>
                             </div>
@@ -173,7 +170,7 @@
                     <div class="card-footer text-right">
                         <div class="d-flex">
                             <a href="/employees" class="btn btn-link">Cancel</a>
-                            <button type="submit" class="btn btn-primary ml-auto">Register Employee</button>
+                            <button type="submit" class="btn btn-primary ml-auto">Register</button>
                         </div>
                     </div>
                 </form>

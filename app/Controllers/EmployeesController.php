@@ -68,7 +68,7 @@ class EmployeesController extends Controller {
         }
         
         if ($result) {
-            $message = ['success' => 'success', 'message' => 'New employee has been registered!'];
+            $message = ['success' => 'success', 'message' => 'Employee registration has been successful!'];
             $this->registration($message);
         } else {
             $message = ['success' => 'failed', 'message' => 'Employee registration failed!'];

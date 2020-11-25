@@ -28,16 +28,11 @@ class CalendarController extends Controller {
         $this->count = array_search(date_format($this->date,'l'),$this->days);
         $this->selected_date = date_format($this->date, 'd');
         $this->get_events();
-        // $this->view->display ('admin/calendar/event', ["tab" => $this->tab, "date" => $this->date, "count" => $this->count, "lastday" => $this->lastday, "seldate" => 1, "dtr_code" => $this->dtr_code, "events" => $this->events]);
     }
 
     public function get_events() {
-        // $this->selected_date = date_create($year.'-'.$month.'-'.$day);
-        // $this->$selected_date = date_create($year.'-'.$month.'-'.$day);
-        // $this->selected_date = date_format($event_date, 'Y-m-d');
         $this->events = DB::db('db_master')->fetch_all("SELECT a.no,a.event_name,a.event_date,a.event_start,a.event_end,b.dtr_code,b.dtr_code_desc FROM tbl_event a, tbl_dtr_code b WHERE a.event_date = '". date_format($this->date, 'Y-m-d') ."' AND a.dtr_code_id = b.no");
         return $this;
-        // $this->view->display ('admin/calendar/show_events', ["event_date" => $event_date, "events" => $events, "selected_date" => $this->selected_date]);
     }
 
     public function show_events () {
@@ -85,8 +80,7 @@ class CalendarController extends Controller {
 
         foreach ($employee_scheds as $value) {
             $attnd_logs = self::check_logs ($value['employee_id'], $monthtable, $date, $dtr_code['dtr_code'], $value['sched_code'], $start, $end);
-            // print_r($attnd_logs);
-            if(array_search($value['employee_id'], array_column($date_logs,'emp_id')) !== false) {
+            if (array_search($value['employee_id'], array_column($date_logs,'emp_id')) !== false) {
                 foreach ($date_logs as $logs) {
                     if($value['employee_id'] == $logs['emp_id']) {
                         DTR::change_log($value['employee_id'], $attnd_logs, $monthtable, $date, $logs['id']);

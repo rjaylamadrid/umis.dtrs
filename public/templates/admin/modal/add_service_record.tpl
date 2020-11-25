@@ -30,7 +30,7 @@
                                 <div class="form-group">
                                     <label class="form-label">Employment Status</label>
                                     <select class="form-control" name="emp_status[etype_id]" required onchange="javascript:init_pos (this.value)">
-                                        <option selected disabled>Employment Status</option>
+                                        <option selected disabled>Select</option>
                                         {foreach from=$emp_type item=type}
                                         <option value="{$type.etype_id}">{$type.etype_desc}</option>
                                         {/foreach}
@@ -41,10 +41,8 @@
                                 <div class="form-group">
                                     <label class="form-label">Position</label>
                                     <select class="form-control" name="emp_status[position_id]" id="positions" onchange="get_salary()">
-                                        <option selected disabled>Position</option>
-                                        {foreach from=$positions item=position}
-                                        <option value="{$position.no}"</option>
-                                        {/foreach}
+                                        <option selected disabled>Select</option>
+                            
                                     </select>
                                 </div>
                             </div>
@@ -58,7 +56,7 @@
                                 <div class="form-group">
                                     <label class="form-label">Department</label>
                                     <select class="form-control" name="emp_status[department_id]" required>
-                                        <option selected disabled>Department</option>
+                                        <option selected disabled>Select</option>
                                         {foreach from=$departments item=dept}
                                         <option value="{$dept.no}">{$dept.department_desc}</option>
                                         {/foreach}
@@ -69,9 +67,8 @@
                                 <div class="form-group">
                                     <label class="form-label">Designation</label>
                                     <select class="form-control" name="emp_status[privilege]">
-                                        <option selected disabled>Designation</option>
                                         {foreach from=$designations item=designation}
-                                        <option value="{$designation.priv_level}">{$designation.priv_desc}</option>
+                                        <option value="{$designation.priv_level}" {if $designation.priv_level == '0'}selected {/if}>{$designation.priv_desc}</option>
                                         {/foreach}
                                     </select>
                                 </div>

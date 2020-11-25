@@ -23,7 +23,7 @@
                 <table class="table table-hover table-outline table-vcenter text-nowrap card-table" id="eligibility_table">
                     <thead>
                         <tr>
-                        <th>Designation</th>
+                        <th>Position</th>
                         <th>Status</th>
                         <th>Salary</th>
                         <th>Station/Place of Assignment</th>

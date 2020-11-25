@@ -18093,3 +18093,20 @@ to {transform:rotate(360deg);}
   -webkit-animation: spin .8s linear infinite;
   animation: spin .8s linear infinite;
 }
+
+.title-default {
+  margin: 0px;
+  color: #136834;
+  font-weight: 700;
+  font-size: 38px;
+  line-height: 28px;
+  letter-spacing: -1px;
+}
+
+.title-muted {
+  margin: 0px;
+  color: #136834;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 8px;
+}

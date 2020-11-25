@@ -23,7 +23,7 @@
                                     <input type="hidden" id="period" value="3">
                                     <div class="form-group">
                                         <label class="form-label">Select Month</label>
-                                        <select name="dtr_month" id="month" class="form-control custom-select" onchange="javascript:customDate()">
+                                        <select name="dtr_month" id="month" class="form-control custom-select" onchange="javascript:setDate()">
                                             <option value="00" disabled="">Month</option>
                                             {include file="custom/select_month.tpl"}
                                         </select>
@@ -31,7 +31,7 @@
 
                                     <div class="form-group">
                                         <label class="form-label">Select Year</label>
-                                        <input type="number" name="year" id="year" class="form-control" value = "{date('Y')}" onchange="javascript:customDate()">
+                                        <input type="number" name="year" id="year" class="form-control" value = "{date('Y')}" onchange="javascript:setDate()">
                                     </div>
 
                                     <div class="form-group">

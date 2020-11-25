@@ -54,11 +54,13 @@ class AttendanceController extends Controller {
 
     protected function compute () {
         $attendance = [];
-        for ($i=0; $i < sizeof ($this->attendance['attn']); $i++) {
-            $this->attendance['attn'][$i]['auth'] = $this->authenticate($this->attendance['attn'][$i]);
-            $attendance['attn'][$this->attendance['attn'][$i]['date']] = $this->attendance['attn'][$i];
-            $attendance['total'] += $this->attendance[$i]['attn']['total_hours'];
-            $attendance['ut'] += ($this->attendance[$i]['attn']['late'] + $this->attendance[$i]['attn']['undertime']); 
+        if ($this->attendance['attn']) {
+            for ($i=0; $i < sizeof ($this->attendance['attn']); $i++) {
+                $this->attendance['attn'][$i]['auth'] = $this->authenticate($this->attendance['attn'][$i]);
+                $attendance['attn'][$this->attendance['attn'][$i]['date']] = $this->attendance['attn'][$i];
+                $attendance['total'] += $this->attendance[$i]['attn']['total_hours'];
+                $attendance['ut'] += ($this->attendance[$i]['attn']['late'] + $this->attendance[$i]['attn']['undertime']); 
+            }
         }
         $attendance['month'] = $this->attendance['month'];
         $this->attendance = $attendance;
@@ -73,11 +75,15 @@ class AttendanceController extends Controller {
             for ($i = intval(substr($start, 0, 2)); $i <= intval(substr($end, 0, 2)); $i++) {
                 if ($i < 10) $i = '0'.$i;
                 $table = $i.'-'.$y;
-                $posted = DB::db("db_attendance")->fetch_row ("SHOW tables LIKE '$table'");
+                $posted = $this->check_table($table);
                 if (!($posted)) $tables = ["month" => $i, "year" => $y];
             }
         }
         return $tables;
+    }
+
+    protected function check_table ($table) {
+        return DB::db("db_attendance")->fetch_row ("SHOW tables LIKE '$table'");
     }
 
     protected function get_raw_data ($period, $args) {
@@ -110,29 +116,28 @@ class AttendanceController extends Controller {
         
         if ($this->data['employee_id']) {
             foreach ($daterange as $date) {
-                $period = date_format($date, 'm-Y');
-                $sched = DTR::get_sched ($this->data['employee_id'], $date);
-                $logs = DTR::get_log ($period, [$this->data['employee_id'],date_format($date, 'Y-m-d')]);
-                if (($sched) && (!($logs))) {
-                    $attnd = [$sched[0]['am_in'],$sched[0]['am_out'],$sched[0]['pm_in'],$sched[0]['pm_out']];
-                    DTR::change_log ($this->data['employee_id'], $attnd, $period, date_format($date, 'Y-m-d'));
-                }
+                $this->send_default($this->data['employee_id'], $date, date_format($date, 'm-Y'));
             }
         } else {
             if ($this->data['emp_type']) $employees = Employee::type ($this->data['emp_type']);
             else $employees = Employee::getAll();
             foreach ($employees as $employee) {
                 foreach ($daterange as $date) {
-                    $period = date_format($date, 'm-Y');
-                    $sched = DTR::get_sched($employee['employee_no'], $date);
-                    $logs = DTR::get_log ($period, [$employee['employee_no'], date_format($date, 'Y-m-d')]);
-                    if (($sched) && (!($logs))) {
-                        $attnd = [$sched[0]['am_in'],$sched[0]['am_out'],$sched[0]['pm_in'],$sched[0]['pm_out']];
-                        DTR::change_log ($employee['employee_no'], $attnd, $period, date_format($date, 'Y-m-d'));
-                    }
+                    $this->send_default($employee['employee_no'], $date, date_format($date, 'm-Y'));
                 }
             }
         }
     }
 
+    protected function send_default($id, $date, $period) {
+        $period = date_format($date, 'm-Y');
+        $sched = DTR::get_sched ($id, $date);
+        if ($sched) {
+            $logs = DTR::get_log ($period, [$id,date_format($date, 'Y-m-d')]);
+            if (($sched) && (!($logs))) {
+                $attnd = [$sched[0]['am_in'],$sched[0]['am_out'],$sched[0]['pm_in'],$sched[0]['pm_out']];
+                DTR::change_log ($id, $attnd, $period, date_format($date, 'Y-m-d'));
+            }
+        }
+    }  
 }

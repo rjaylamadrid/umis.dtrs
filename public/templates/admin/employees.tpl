@@ -8,7 +8,7 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="form-group form-inline">
-                                <a href="/employees/registration" class="btn btn-primary"><i class="fe fe-user-plus"></i> New employee</a>
+                                <a href="/employees/registration" class="btn btn-primary"><i class="fe fe-user-plus"></i> New Employee</a>
                                 <div style="float: right;">
                                     <form action="" method="POST" id="frm_inactive">
                                         <div class="form-group" style="margin-bottom: 0px;">
@@ -33,8 +33,8 @@
                                 <tr>
                                 <th>ID</th>
                                 <th>Name</th>
-                                <th>Gender</th>
-                                <th>BirthDate</th>
+                                <th>Sex</th>
+                                <th>Date of Birth</th>
                                 <th>Position</th>
                                 <th></th>
                                 </tr>
@@ -45,14 +45,14 @@
                                         <td>{$employee.employee_id}</td>
                                         <td>{$employee.first_name|upper} {$employee.last_name|upper}</td>
                                         <td>{$employee.gender}</td>
-                                        <td>{$employee.birthdate|date_format:'M. d, Y'}</td>
+                                        <td>{$employee.birthdate|date_format:'M d, Y'}</td>
                                         <td>{$employee.position}</td>
                                         <td class="text-center"><div class="item-action dropdown">
                                             <a href="javascript:void(0)" data-toggle="dropdown" class="icon" aria-expanded="false"><i class="fe fe-more-vertical"></i></a>
                                             <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; transform: translate3d(-181px, 20px, 0px); top: 0px; left: 0px; will-change: transform;">
-                                                <a href="{$server}/employees/profile/{$employee.employee_no}/basic-info" class="dropdown-item"><i class="dropdown-icon fe fe-tag"></i> View Profile 
+                                                <a href="{$server}/employees/profile/{$employee.employee_no}/basic-info" class="dropdown-item"><i class="dropdown-icon fe fe-tag"></i> Profile 
                                                 </a>
-                                                <a href="{$server}/employees/employment/{$employee.employee_no}/employment_info" class="dropdown-item"><i class="dropdown-icon fe fe-user"></i> View Employment 
+                                                <a href="{$server}/employees/employment/{$employee.employee_no}/employment_info" class="dropdown-item"><i class="dropdown-icon fe fe-user"></i> Employment Status
                                                 </a>
                                                 <a href="javascript:set_inactive('{$employee.employee_no}', '{if $employee.active_status == '0'}1{else}0{/if}');" class="dropdown-item"><i class="dropdown-icon fe fe-tag"></i> Set as {if $employee.active_status == '0'}Active{else}Inactive{/if}
                                                 {* <a href="javascript::" class="dropdown-item"><i class="dropdown-icon fe fe-tag"></i> Set as {if $employee.active_status == '0'}Active{else}Inactive{/if} *}
