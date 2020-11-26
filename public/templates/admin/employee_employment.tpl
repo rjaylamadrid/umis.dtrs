@@ -39,8 +39,8 @@
 	          	<div class="list-group list-group-transparent mb-0">
 	            	<a href="{$server}/employees/employment/{$employee->id}/employment_info" class="list-group-item list-group-item-action d-flex align-items-center {if $tab == 'employment_info'}active{else if $tab == ''}active{/if}"><span class="icon mr-3"><i class="fe fe-user"></i></span>Employment</a>
 	            	<a href="{$server}/employees/employment/{$employee->id}/schedule" class="list-group-item list-group-item-action d-flex align-items-center {if $tab == 'schedule'}active{/if}"><span class="icon mr-3"><i class="fe fe-clock"></i></span>Work Schedule</a>
-	            	<a href="{$server}/employees/employment/{$employee->id}/payroll" class="list-group-item list-group-item-action d-flex align-items-center {if $tab == 'payroll'}active{/if}"><span class="icon mr-3"><i class="fe fe-credit-card"></i></span>Payroll</a>
-	          		<a href="{$server}/employees/employment/{$employee->id}/leave-record" class="list-group-item list-group-item-action d-flex align-items-center {if $tab == 'leave-record'}active{/if}"><span class="icon mr-3"><i class="fe fe-clipboard"></i></span>Leave Record</a>
+	            	{* <a href="{$server}/employees/employment/{$employee->id}/payroll" class="list-group-item list-group-item-action d-flex align-items-center {if $tab == 'payroll'}active{/if}"><span class="icon mr-3"><i class="fe fe-credit-card"></i></span>Payroll</a>
+	          		<a href="{$server}/employees/employment/{$employee->id}/leave-record" class="list-group-item list-group-item-action d-flex align-items-center {if $tab == 'leave-record'}active{/if}"><span class="icon mr-3"><i class="fe fe-clipboard"></i></span>Leave Record</a> *}
 	            	<a href="{$server}/employees/employment/{$employee->id}/service_record" class="list-group-item list-group-item-action d-flex align-items-center {if $tab == 'service_record'} active {/if}"><span class="icon mr-3"><i class="fe fe-layers"></i></span>Service Record</a>
 				</div>
 	          </div>
