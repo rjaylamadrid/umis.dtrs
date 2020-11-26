@@ -24,9 +24,9 @@
                             <i class="dropdown-icon fe fe-user"></i> Account
                         </a>
                         {/if}
-                        <a class="dropdown-item" href="#">
+                        {* <a class="dropdown-item" href="#">
                             <i class="dropdown-icon fe fe-send"></i> Messages
-                        </a>
+                        </a> *}
                         <a class="dropdown-item" href="/settings/security">
                             <i class="dropdown-icon fe fe-lock"></i> Change Password
                         </a>
@@ -55,19 +55,19 @@
                         <li class="nav-item">
                             <a href="/employees" class="nav-link {if $page == 'employees'}active{/if}"><i class="fe fe-users"></i> Employees</a>
                         </li>
-                        <li class="nav-item">
+                        {* <li class="nav-item">
                             <a href="/payroll" class="nav-link {if $page == 'payroll'}active{/if}"><i class="fe fe-credit-card"></i> Payroll</a>
-                        </li>
+                        </li> *}
                         <li class="nav-item">
                             <a href="/attendance" class="nav-link {if $page == 'attendance'}active{/if}"><i class="fe fe-clock"></i> Daily Time Records</a>
                         </li>
                         <li class="nav-item">
                             <a href="/calendar" class="nav-link {if $page == 'calendar'}active{/if}"><i class="fe fe-calendar"></i> Calendar</a>
                         </li>
-                        <li class="nav-item">
+                        {* <li class="nav-item">
                             <a href="/request" class="nav-link {if $page == 'request'}active{/if}"><i class="fe fe-mail"></i> Leave Requests</a>
                             <span><div class="notif"></div></span>
-                        </li>
+                        </li> *}
                         <li class="nav-item">
                             <a href="/settings" class="nav-link {if $page == 'settings'}active{/if}"><i class="fe fe-settings"></i> Settings</a>
                         </li>

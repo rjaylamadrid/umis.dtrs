@@ -2,7 +2,7 @@
 use Controllers\SettingsController;
 
 class Settings extends SettingsController {
-    private $tab = "general";
+    private $tab = "security";
     private $tabs = ["connection", "security", "salary-grade", "payroll", "position", "w-tax"];
     private $vars;
 
@@ -14,7 +14,7 @@ class Settings extends SettingsController {
         call_user_func_array ([$this, $this->data['action']], $this->data);
     }
 
-    public function tab ($tab = "general") {
+    public function tab ($tab = "security") {
         if (in_array ($tab, $this->tabs)) {
             $this->tab = $tab;
             $this->vars = call_user_func_array ([$this, str_replace ("-", "_", $this->tab)], []);

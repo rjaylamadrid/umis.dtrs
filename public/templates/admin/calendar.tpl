@@ -27,16 +27,16 @@
                             </form>
                         </div>
                     </div>
-                    <div class="list-group list-group-transparent mb-0">
+                    {* <div class="list-group list-group-transparent mb-0">
                         <a href="{$server}/calendar/event" class="list-group-item list-group-item-action d-flex align-items-center {if $tab == "event"}active{/if}">
                             <span class="icon mr-3"><i class="fe fe-calendar"></i></span>Event 
                         </a>
-                    </div>
-                    <div class="list-group list-group-transparent mb-0">
+                    </div> *}
+                    {* <div class="list-group list-group-transparent mb-0">
                         <a href="{$server}/calendar/overtime" class="list-group-item list-group-item-action d-flex align-items-center {if $tab == "overtime"}active{/if}">
                             <span class="icon mr-3"><i class="fe fe-clock"></i></span>Overtime
                         </a>
-                    </div>
+                    </div> *}
                 </div>
                 
                 <div class="col-md-9">
