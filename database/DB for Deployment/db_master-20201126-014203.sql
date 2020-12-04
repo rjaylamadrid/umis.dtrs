@@ -434,7 +434,7 @@ CREATE TABLE `tbl_user_employee` (
 LOCK TABLES `tbl_campus` WRITE;
 ALTER TABLE `tbl_campus` DISABLE KEYS;
 
-INSERT INTO `tbl_campus` (`id`,`campus_name`,`campus_code`,`campus_address`,`campus_email`,`campus_telephone`) VALUES (1,'Calabanga','CAL','Calabanga, Camarines Sur 4405',NULL,NULL),(2,'Pasacao','PAS','Pasacao, Camarines Sur',NULL,NULL),(3,'Pili','PIL','San Jose, Pili, Camarines Sur',NULL,NULL),(4,'Sipocot','SIP','Impig, Sipocot, Camarines Sur 4408','cbsua.sipocot@yahoo.com','(054) 881-6681');
+INSERT INTO `tbl_campus` (`id`,`campus_name`,`campus_code`,`campus_address`,`campus_email`,`campus_telephone`) VALUES (1,'Pili','PIL','San Jose, Pili, Camarines Sur',NULL,NULL),(2,'Pasacao','PAS','Pasacao, Camarines Sur',NULL,NULL),(3,'Calabanga','CAL','Calabanga, Camarines Sur 4405',NULL,NULL),(4,'Sipocot','SIP','Impig, Sipocot, Camarines Sur 4408','cbsua.sipocot@yahoo.com','(054) 881-6681');
 
 ALTER TABLE `tbl_campus` ENABLE KEYS;
 UNLOCK TABLES;
@@ -449,18 +449,6 @@ ALTER TABLE `tbl_cos_salary` DISABLE KEYS;
 INSERT INTO `tbl_cos_salary` (`no`,`position_id`,`salary_type`,`salary`,`date_implemented`,`campus_id`) VALUES (1,156,'Per month',11914,'2018-07-03',4),(0,158,'Per month',19895,'2020-07-01',4),(0,15,'Per hour',295,'2020-01-01',4);
 
 ALTER TABLE `tbl_cos_salary` ENABLE KEYS;
-UNLOCK TABLES;
-COMMIT;
-
---
--- Data for table: tbl_department
---
-LOCK TABLES `tbl_department` WRITE;
-ALTER TABLE `tbl_department` DISABLE KEYS;
-
-INSERT INTO `tbl_department` (`no`,`department_code`,`department_desc`,`campus_id`,`is_project`) VALUES (1,'SIP-D001','Accounting Department',4,0),(2,'SIP-D002','Admin and Finance Department',4,0),(3,'COE','College of Education',4,0),(4,'CIT','College of Information Technology',4,0),(5,'COC','College of Criminology',4,0),(6,'CindT','College of Industrial Technology',4,0),(7,'SIP-D007','Support to Students',4,0),(8,'SIP-D008','General Support & Services',4,0),(9,'UMIS','University Management and Information System',4,1);
-
-ALTER TABLE `tbl_department` ENABLE KEYS;
 UNLOCK TABLES;
 COMMIT;
 
