@@ -100,6 +100,7 @@
     <div class="modal fade margin-top-70" id="learning-development-info" role="dialog" tabindex="-1" style="margin-left:-50px;">
         <div class="modal-dialog" id="learning-development-modal" role="document" style="max-width: 600px;">
             <form method="POST" action="{$server}{if $user.is_admin}/employees/add_profile_info/{$employee->id}/training-seminar{else}/save{/if}">
+                <input type="hidden" name="admin_id" value="{$user.employee_id}">
                 <input type="hidden" name="employeeinfo[employee_id]" value="{$employee->id}">
                 <div class="modal-content">
                     <div class="modal-header">

@@ -40,6 +40,7 @@
     </div>
 {else}
     <form action="{$server}{if $user.is_admin}/employees/save/{$employee->id}/family-background{else}/save{/if}" method="POST">
+        <input type="hidden" name="admin_id" value="{$user.employee_id}">
         <input type="hidden" name="employeeinfo[1][no]" value="{$spouse.no}">
         <input type="hidden" name="employeeinfo[2][no]" value="{$father.no}">
         <input type="hidden" name="employeeinfo[3][no]" value="{$mother.no}">

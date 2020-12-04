@@ -41,6 +41,7 @@
     <form action="{$server}{if $user.is_admin}/employees/save/{$employee->id}/basic-info{else}/save{/if}" method="POST" enctype="multipart/form-data" accept-charset="UTF-8">
         <input type="hidden" name="employeeinfo[no]" value="{$employee->basic_info.no}">
         <input type="hidden" name="employeeinfo[employee_id]" value="{$employee->basic_info.employee_id}">
+        <input type="hidden" name="admin_id" value="{$user.employee_id}">
         <div class="form-group row btn-square">
             <div class="row">
                 <div class="col-sm-12 col-lg-4 col-md-4 mb-4 text-center btn-square">

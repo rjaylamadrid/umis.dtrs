@@ -83,7 +83,7 @@ class EmployeesController extends Controller {
         }
     }
 
-    public static function add_profile($id,$employeeinfo,$tab) {
+    public static function add_profile($id,$employeeinfo,$tab,$admin_id) {
         $tab = 'tbl_employee_'.str_replace ("-","_",$tab);
         $inserted_data='';
         $ctr=1;
@@ -92,7 +92,7 @@ class EmployeesController extends Controller {
                 $other_row=DB::fetch_row ("SELECT $key FROM $tab WHERE employee_id = $id");
                 if ($other_row) {
                     $other_row["$key"] = $other_row["$key"] == '' ? $value : $other_row["$key"].";".$value;
-                    $inserted_vals = array('updated_action'=>2,'updated_table'=>$tab,'updated_old_data'=>'','updated_new_data'=>$key."=".$value,'updated_employee_id'=>$id,'updated_admin_id'=>1,'updated_date'=>date("Y-m-d"));
+                    $inserted_vals = array('updated_action'=>2,'updated_table'=>$tab,'updated_old_data'=>'','updated_new_data'=>$key."=".$value,'updated_employee_id'=>$id,'updated_admin_id'=>$admin_id,'updated_date'=>date("Y-m-d"));
                     DB::insert ("INSERT INTO tbl_employee_update_delete SET ". DB::stmt_builder($inserted_vals),$inserted_vals);
                     return DB::update ("UPDATE $tab SET ".DB::stmt_builder($employeeinfo). " WHERE employee_id = $id",$other_row);
                 } else {
@@ -101,7 +101,7 @@ class EmployeesController extends Controller {
                         // print_r("<br />");
                         // print_r($employeeinfo);
                         // print_r("</pre>");
-                        $inserted_vals = array('updated_action'=>2,'updated_table'=>$tab,'updated_old_data'=>'','updated_new_data'=>$key."=".$value,'updated_employee_id'=>$id,'updated_admin_id'=>1,'updated_date'=>date("Y-m-d"));
+                        $inserted_vals = array('updated_action'=>2,'updated_table'=>$tab,'updated_old_data'=>'','updated_new_data'=>$key."=".$value,'updated_employee_id'=>$id,'updated_admin_id'=>$admin_id,'updated_date'=>date("Y-m-d"));
                         // print_r("<pre>");
                         // print_r($inserted_vals);
                         // print_r("</pre>");
@@ -128,7 +128,7 @@ class EmployeesController extends Controller {
             if (($tab == 'tbl_employee_eligibility') && ($employeeinfo['eligibility_validity'] == '')) {
                 $employeeinfo['eligibility_validity'] = '0000-00-00';
             }
-            $inserted_vals = array('updated_action'=>2,'updated_table'=>$tab,'updated_old_data'=>'','updated_new_data'=>$inserted_data,'updated_employee_id'=>$id,'updated_admin_id'=>1,'updated_date'=>date("Y-m-d"));
+            $inserted_vals = array('updated_action'=>2,'updated_table'=>$tab,'updated_old_data'=>'','updated_new_data'=>$inserted_data,'updated_employee_id'=>$id,'updated_admin_id'=>$admin_id,'updated_date'=>date("Y-m-d"));
             DB::insert ("INSERT INTO tbl_employee_update_delete SET ". DB::stmt_builder($inserted_vals),$inserted_vals);
             return DB::insert("INSERT INTO $tab SET ".DB::stmt_builder ($employeeinfo), $employeeinfo);
             // $temp = DB::insert("INSERT INTO $tab SET ".DB::stmt_builder ($employeeinfo), $employeeinfo);
@@ -147,7 +147,7 @@ class EmployeesController extends Controller {
             $key = array_search($this->data['other_info_data'], $data_array);
             array_splice($data_array, $key, 1);
             DB::update ("UPDATE tbl_employee_other_info SET ". $this->data['other_info_col'] ."= ? WHERE no = ". $this->data['no'], [implode(";",$data_array)]);
-            DB::insert ("INSERT INTO tbl_employee_update_delete SET updated_action = ?, updated_table = ?, updated_old_data = ?, updated_new_data = ?, updated_employee_id = ?, updated_admin_id = ?, updated_date = ?", [1,$this->data['tab'],$this->data['other_info_col'].";".$this->data['other_info_data'],'',$row['employee_id'],$this->data['admin_id'],date("Y-m-d")]);
+            DB::insert ("INSERT INTO tbl_employee_update_delete SET updated_action = ?, updated_table = ?, updated_old_data = ?, updated_new_data = ?, updated_employee_id = ?, updated_admin_id = ?, updated_date = ?", [1,$this->data['tab'],$this->data['other_info_col'].";".$this->data['other_info_data'],'',$row['employee_id'],$this->user['employee_id'],date("Y-m-d")]);
         }
         else {
             if ($row) {
@@ -161,14 +161,14 @@ class EmployeesController extends Controller {
                     }
                     $i++;
                 }
-                $values = array(updated_action=>1,updated_table=>$this->data['tab'],updated_old_data=>$data,updated_new_data=>'',updated_employee_id=>$row['employee_id'],updated_admin_id=>1,updated_date=>date("Y-m-d"));
+                $values = array(updated_action=>1,updated_table=>$this->data['tab'],updated_old_data=>$data,updated_new_data=>'',updated_employee_id=>$row['employee_id'],updated_admin_id=>$this->user['employee_id'],updated_date=>date("Y-m-d"));
                 DB::insert ("INSERT INTO tbl_employee_update_delete SET ". DB::stmt_builder ($values), $values);
                 DB::delete ("DELETE FROM tbl_employee_". str_replace ("-","_",$this->data['tab']) ." WHERE no = ?", $this->data['no']);
             }
         }
     }  
 
-    public static function update_profile($id, $employeeinfo, $picture='', $tab) {
+    public static function update_profile($id, $employeeinfo, $picture='', $tab, $admin_id) {
         $tab = 'tbl_employee_'.str_replace ("-","_",$tab);
         $tab = $tab == 'tbl_employee_basic_info' ? 'tbl_employee' : $tab;
         $id_col = $tab == 'tbl_employee' ? 'no' : 'employee_id';
@@ -210,7 +210,7 @@ class EmployeesController extends Controller {
                     $new_data .= ";".$key."=".$value;
                 }
             }
-            $updated_vals = array('updated_action'=>0,'updated_table'=>$tab,'updated_old_data'=>$old_data,'updated_new_data'=>$new_data,'updated_employee_id'=>$id,'updated_admin_id'=>1,'updated_date'=>date("Y-m-d"));
+            $updated_vals = array('updated_action'=>0,'updated_table'=>$tab,'updated_old_data'=>$old_data,'updated_new_data'=>$new_data,'updated_employee_id'=>$id,'updated_admin_id'=>$admin_id,'updated_date'=>date("Y-m-d"));
             
             $update_qry = DB::update ("UPDATE " . $tab . " SET " .  DB::stmt_builder($employeeinfo) . " WHERE ". $id_col . "=" . $id,$employeeinfo);
             if ($update_qry != NULL) {
@@ -224,7 +224,7 @@ class EmployeesController extends Controller {
                 if($employeeinfo[$i]['no']) {
                     $old = DB::fetch_row ("SELECT * FROM $tab WHERE no = ?", $employeeinfo[$i]['no']);
                     $new_data = self::get_array_differences($old,$employeeinfo[$i]);
-                    $updated_vals = array('updated_action'=>0,'updated_table'=>$tab,'updated_old_data'=>"no=".$old['no'].";relationship=0;".$new_data[0],'updated_new_data'=>"no=".$employeeinfo[$i]['no'].";relationship=0;".$employeeinfo[$i]['relatioship'],'updated_employee_id'=>$id,'updated_admin_id'=>1,'updated_date'=>date("Y-m-d"));
+                    $updated_vals = array('updated_action'=>0,'updated_table'=>$tab,'updated_old_data'=>"no=".$old['no'].";relationship=0;".$new_data[0],'updated_new_data'=>"no=".$employeeinfo[$i]['no'].";relationship=0;".$employeeinfo[$i]['relatioship'],'updated_employee_id'=>$id,'updated_admin_id'=>$admin_id,'updated_date'=>date("Y-m-d"));
                     DB::insert ("INSERT INTO tbl_employee_update_delete SET ". DB::stmt_builder ($updated_vals),$updated_vals);
                     $temp = DB::update ("UPDATE $tab SET " . DB::stmt_builder($employeeinfo[$i]) . " WHERE no = ". $employeeinfo[$i]['no'],$employeeinfo[$i]);
                 } else if($employeeinfo[$i]['first_name']) {
@@ -242,7 +242,7 @@ class EmployeesController extends Controller {
                     $row[$value] = DB::fetch_row ("SELECT * FROM $tab WHERE no = ?", $employeeinfo[$value]['no']);
                     if ((sizeof(array_diff($row[$value],$employeeinfo[$value])) > 0) || (sizeof(array_diff($employeeinfo[$value],$row[$value])) > 0)) {
                         $new_data = self::get_array_differences($row[$value],$employeeinfo[$value]);
-                        $updated_vals = array('updated_action'=>0,'updated_table'=>$tab,'updated_old_data'=>"no=".$row[$value]['no'].";".$new_data[0],'updated_new_data'=>"no=".$row[$value]['no'].";".$new_data[1],'updated_employee_id'=>$id,'updated_admin_id'=>1,'updated_date'=>date("Y-m-d"));
+                        $updated_vals = array('updated_action'=>0,'updated_table'=>$tab,'updated_old_data'=>"no=".$row[$value]['no'].";".$new_data[0],'updated_new_data'=>"no=".$row[$value]['no'].";".$new_data[1],'updated_employee_id'=>$id,'updated_admin_id'=>$admin_id,'updated_date'=>date("Y-m-d"));
                         $update_qry = DB::update ("UPDATE $tab SET " . DB::stmt_builder($employeeinfo[$value]) . " WHERE $id_col = $id AND level = '$value'",$employeeinfo[$value]);
                         if ($update_qry != NULL) {
                             DB::insert ("INSERT INTO tbl_employee_update_delete SET ". DB::stmt_builder ($updated_vals),$updated_vals);
@@ -266,7 +266,7 @@ class EmployeesController extends Controller {
                 foreach ($new_data as $key => $value) {
                 $new_data[$key] = str_replace([";other_recognition",";other_organization"],["|other_recognition","|other_organization"],$value);
                 }
-                $updated_vals = array('updated_action'=>0,'updated_table'=>$tab,'updated_old_data'=>$new_data[0],'updated_new_data'=>$new_data[1],'updated_employee_id'=>$id,'updated_admin_id'=>1,'updated_date'=>date("Y-m-d"));
+                $updated_vals = array('updated_action'=>0,'updated_table'=>$tab,'updated_old_data'=>$new_data[0],'updated_new_data'=>$new_data[1],'updated_employee_id'=>$id,'updated_admin_id'=>$admin_id,'updated_date'=>date("Y-m-d"));
                 $update_qry = DB::update ("UPDATE $tab SET other_skill = '$skill', other_recognition = '$recog', other_organization = '$org' WHERE $id_col = $id");
                 if ($update_qry != NULL) {
                     DB::insert("INSERT INTO tbl_employee_update_delete SET ". DB::stmt_builder ($updated_vals),$updated_vals);
@@ -357,7 +357,7 @@ class EmployeesController extends Controller {
         $old_data = DB::fetch_row ("SELECT privilege,department_id,date_start,position_id,etype_id FROM tbl_employee_status WHERE employee_id = ? AND active_status = '1'",$id);
         $frm = array('privilege' => $data['privilege'], 'department_id' => $data['department_id'], 'date_start' => $data['date_start'], 'position_id' => $data['position_id'], 'etype_id' => $data['etype_id']);
         $diff = self::get_array_differences($old_data, $frm);
-        $updated_vals = array('updated_action'=>0,'updated_table'=>'current_employment_info','updated_old_data'=>$diff[0],'updated_new_data'=>$diff[1],'updated_employee_id'=>$id,'updated_admin_id'=>1,'updated_date'=>date("Y-m-d"));
+        $updated_vals = array('updated_action'=>0,'updated_table'=>'current_employment_info','updated_old_data'=>$diff[0],'updated_new_data'=>$diff[1],'updated_employee_id'=>$id,'updated_admin_id'=>$this->user['employee_id'],'updated_date'=>date("Y-m-d"));
         DB::insert ("INSERT INTO tbl_employee_update_delete SET ".DB::stmt_builder ($updated_vals),$updated_vals);
         return DB::update ("UPDATE tbl_employee_status SET ".DB::stmt_builder ($data)." WHERE no = (SELECT no FROM tbl_employee_status WHERE employee_id = ".$id." ORDER BY date_start DESC LIMIT 0,1)", $data);
     }

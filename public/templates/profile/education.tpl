@@ -28,6 +28,7 @@
     </div>
 {else}
 <form method = "POST" action="{$server}{if $user.is_admin}/employees/save/{$employee->id}/education{else}/save{/if}">
+    <input type="hidden" name="admin_id" value="{$user.employee_id}">
     <div class="form-group row btn-square">
         <label class="h4">Educational Background</label>
         <div style="float: right;">

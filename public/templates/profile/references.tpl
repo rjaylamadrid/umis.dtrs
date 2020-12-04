@@ -72,6 +72,7 @@
                 </div>
                 <div class="modal-body">
                     <form action="{$server}{if $user.is_admin}/employees/add_profile_info/{$employee->id}/references{else}/save{/if}" method="POST">
+                        <input type="hidden" name="admin_id" value="{$user.employee_id}">
                         <input type="hidden" name="employeeinfo[employee_id]" value="{$employee->id}">
                         <div class="row">
                             <div class="col-lg-12 col-md-12 col-sm-12">

@@ -45,13 +45,13 @@ class Employees extends EmployeesController {
     }
 
     public function save ($id, $tab='basic-info') {
-        $result = $this->update_profile($id,$_POST['employeeinfo'],$_FILES['profile_picture'],$tab);
+        $result = $this->update_profile($id,$_POST['employeeinfo'],$_FILES['profile_picture'],$tab,$_POST['admin_id']);
         if ($result == 'success') $message = ['success' => 'success', 'message' => 'Employee\'s profile was successfully updated!'];
         $this->profile ($id,$tab,'view',$message);
     }
 
     public function add_profile_info ($id, $tab = 'basic-info') {
-        $empAdd = $this->add_profile($id,$_POST['employeeinfo'],$tab);
+        $empAdd = $this->add_profile($id,$_POST['employeeinfo'],$tab,$_POST['admin_id']);
         header ("location: /employees/update/$id/$tab");
     }
 

@@ -77,7 +77,8 @@
 
     <div class="modal fade margin-top-70" id="voluntary-work-info" role="dialog" tabindex="-1" style="margin-left:-50px;">
         <div class="modal-dialog" id="voluntary-work-modal" role="document" style="max-width: 600px;">
-            <form method="POST" action="{$server}{if $user.is_admin}/employees/add_profile_info/{$employee->id}/voluntary-work{else}/save{/if}">  
+            <form method="POST" action="{$server}{if $user.is_admin}/employees/add_profile_info/{$employee->id}/voluntary-work{else}/save{/if}">
+                <input type="hidden" name="admin_id" value="{$user.employee_id}">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">Add new voluntary work</h4>
