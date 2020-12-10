@@ -203,6 +203,7 @@
                 </div>
                 <div class="modal-body">
                     <form action="{$server}{if $user.is_admin}/employees/add_profile_info/{$employee->id}/family-background{else}/save{/if}" method="POST">
+                    <input type="hidden" name="admin_id" value="{$user.employee_id}">
                     <input type="hidden" name="employeeinfo[employee_id]" value="{$employee->id}">
                     <input type="hidden" name="employeeinfo[relationship]" value="0">
                         <div class="row">
