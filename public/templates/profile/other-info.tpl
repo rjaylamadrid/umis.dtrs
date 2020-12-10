@@ -72,6 +72,7 @@
     </div>
 {else}
     <form method="POST" action="{$server}{if $user.is_admin}/employees/save/{$employee->id}/other-info{else}/save{/if}">
+        <input type="hidden" name="admin_id" value="{$user.employee_id}">
         <div class="row">
             {if $employee->other_info}
                 {foreach from=$employee->other_info item=other_info}
@@ -184,6 +185,7 @@
                 </div>
                 <div class="modal-body">
                     <form action="{$server}{if $user.is_admin}/employees/add_profile_info/{$employee->id}/other-info{else}/save{/if}" method="POST">
+                        <input type="hidden" name="admin_id" value="{$user.employee_id}">
                         <div class="row">
                             <div class="col-lg-12 col-md-12 col-sm-12">
                                 <div class="form-group label-floating">
@@ -210,6 +212,7 @@
                 </div>
                 <div class="modal-body">
                     <form action="{$server}{if $user.is_admin}/employees/add_profile_info/{$employee->id}/other-info{else}/save{/if}" method="POST">
+                        <input type="hidden" name="admin_id" value="{$user.employee_id}">
                         <div class="row">
                             <div class="col-lg-12 col-md-12 col-sm-12">
                                 <div class="form-group label-floating">
@@ -236,6 +239,7 @@
                 </div>
                 <div class="modal-body">
                     <form action="{$server}{if $user.is_admin}/employees/add_profile_info/{$employee->id}/other-info{else}/save{/if}" method="POST">
+                        <input type="hidden" name="admin_id" value="{$user.employee_id}">
                         <div class="row">
                             <div class="col-lg-12 col-md-12 col-sm-12">
                                 <div class="form-group label-floating">

@@ -40,6 +40,7 @@
         <input type="hidden" id="campus" value="{$employee->info.campus_id}">
         <input type="hidden" name="employee_id" value="{$employee->id}">
         <input type="hidden" name="type" value="current">
+        <input type="hidden" name="admin_id" value="{$user.employee_id}">
         <div class="form-group row btn-square">
             <div class="row p-5">
                 <div class="col-md-6">
@@ -67,7 +68,7 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label class="form-label">Effectivity Date</label>
-                        <input type="date" class="form-control" name="emp_status[date_start]" value="{$employee->info.date_start}" id="date-start" onchange="javascript:get_salary()">
+                        <input type="date" class="form-control" name="emp_status[date_start]" value="{$employee->info.date_start}" id="date-start" onchange="javascript:get_salary()" required>
                     </div>
                 </div>
                 <div class="col-md-6">
