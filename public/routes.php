@@ -92,6 +92,7 @@ $router->group(['before' => 'auth'], function ($router) {
     $router->get('/update/{view}?', ['Profile', 'update']);
     $router->get('/dtr', ['DTR', 'index']);
     $router->post('/dtr', ['DTR', 'do_action']);
+    $router->get('/leave', ['Leave', 'index']);
     // EMPLOYEE END
 });
 
