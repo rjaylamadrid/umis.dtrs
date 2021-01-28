@@ -20,7 +20,7 @@ class Employee {
         foreach (self::$employees as $e) {
             if ($e['etype_id'] == $type) {
                 if ($status == 1) {
-                    if ($e['active_status'] == $status) $employees[] = $e;
+                    if ($e['is_active'] == $status) $employees[] = $e;
                 }
             }
         }
@@ -31,13 +31,13 @@ class Employee {
         if (!self::$employees) self::employees ();
         $employees = [];
         foreach (self::$employees as $e) {
-            if ($e['active_status'] == $status && $e['campus_id'] == $campus) $employees[] = $e;
+            if ($e['is_active'] == $status && $e['campus_id'] == $campus) $employees[] = $e;
         }
         return $employees;
     }
 
     public static function employees () {
-        self::$employees = DB::fetch_all ("SELECT a.no as employee_no, first_name, last_name, gender, birthdate, active_status, b.*, a.employee_id as employee_id FROM tbl_employee a, tbl_employee_status b WHERE a.no = b.employee_id AND b.no = (SELECT no FROM tbl_employee_status WHERE employee_id = a.no ORDER BY date_start DESC LIMIT 0,1) ORDER BY last_name ASC");
+        self::$employees = DB::fetch_all ("SELECT a.no as employee_no, first_name, last_name, gender, birthdate, is_active, b.*, a.employee_id as employee_id FROM tbl_employee a, tbl_employee_status b WHERE a.no = b.employee_id AND b.no = (SELECT no FROM tbl_employee_status WHERE employee_id = a.no ORDER BY date_start DESC LIMIT 0,1) ORDER BY last_name ASC");
         return new self();
     }
 

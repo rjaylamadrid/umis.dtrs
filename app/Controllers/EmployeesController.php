@@ -59,7 +59,7 @@ class EmployeesController extends Controller {
     }
 
     public function employee_no() {
-        $count = count(Employee::employees ()->getAll())+1;
+        $count = str_pad(count(Employee::employees ()->getAll())+1, 4, '0', STR_PAD_LEFT);
         $no = $this->user['campus_id'].$count;
         return $no;
     }

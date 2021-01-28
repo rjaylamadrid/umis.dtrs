@@ -36,7 +36,7 @@
                         {foreach $employees as $employee}
       	        	  	<label class="selectgroup-item">
       	        	  	    <input type="radio" name="employee_id" value="{$employee.employee_no}" class="selectgroup-input" onclick="init_dtr (this.value);">
-      	        	  	    <span class="selectgroup-button" style="text-align: left;"><b>{$employee.last_name|upper}, {$employee.first_name|upper}</b></span>
+      	        	  	    <span class="selectgroup-button" style="text-align: left;padding-top:3px; padding-bottom:3px"><b>{$employee.last_name|upper}, {$employee.first_name|upper}</b></span>
                         </label>
                         {/foreach}
       	        	</div>

@@ -8,7 +8,7 @@ class LoginController extends Controller {
     private $tmp_user;
 
     protected function find ($id) {
-        $user = DB::fetch_row ("SELECT * FROM tbl_user_employee a, tbl_employee_status b WHERE a.employee_username = ? and a.employee_id = b.employee_id AND b.active_status = '1' ORDER BY b.date_added DESC", $id);
+        $user = DB::fetch_row ("SELECT * FROM tbl_user_employee a, tbl_employee_status b WHERE a.employee_username = ? and a.employee_id = b.employee_id AND b.is_active = '1' ORDER BY b.date_added DESC", $id);
         if ($user) {
             $this->tmp_user = $user;
             return $user;

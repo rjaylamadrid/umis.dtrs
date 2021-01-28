@@ -45,13 +45,13 @@
             {foreach $daterange as $date}
                 {if $month != $date|date_format:"%m"}
                     <tr>
-                        <td colspan="11" style="background-color: #00c4ff1a"><b>{$date|date_format:"%B %Y"|upper}</b></td>
+                        <td colspan="11" style="background-color: #00c4ff1a; line-height: 15px"><b>{$date|date_format:"%B %Y"|upper}</b></td>
                     </tr>
                     {$month = $date|date_format:"%m"}
                 {/if}
                 {if $attendance['attn'][$date|date_format: "%Y-%m-%d"]}
                     {$attn = $attendance['attn'][$date|date_format: "%Y-%m-%d"]}
-                    <tr class="" {if $attn.auth == "false"} style="background-color: #ff00001a" {/if}>
+                    <tr class="" {if $attn.auth == "false"} style="background-color: #ff00001a; line-height: 15px" {/if}>
                         <td><b>{$attn.date|date_format:"%d"}</b></td>
                         <td>{$attn.am_in}</td>
                         <td>{$attn.am_out}</td>
@@ -70,7 +70,7 @@
                     </tr>
                 {else}
                     {if $date|date_format:"w" == 0 || $date|date_format:"w" == 6}
-                        <tr>
+                        <tr style="line-height: 13px">
                             <td><b>{$date|date_format:"%d"}</b></td>
                             <td colspan="9" style="text-align: center; letter-spacing: 60px;">{$date|date_format:"%A"|upper}</td>
                             {if $user.is_admin}
@@ -78,7 +78,7 @@
                             {/if}    
                         </tr>
                             {else}
-                        <tr>
+                        <tr style="line-height: 15px">
                             <td><b>{$date|date_format:"%d"}</b></td>
                             <td> : </td>
                             <td> : </td>
