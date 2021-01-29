@@ -73,9 +73,9 @@ $router->group(['before' => 'auth'], function ($router) {
 
         // Settings
         $router->group(["prefix" => "settings"], function ($router) {
-            $router->get("/", ["Settings", "index"]);
+            $router->get('/', ['Settings', 'index']);
             $router->post('/', ['Settings', 'do_action']);
-            $router->get("/{tab}", ["Settings", "tab"]);
+            $router->get('/{tab}?', ["Settings", "tab"]);
         });
 
         // Request

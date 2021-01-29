@@ -2,24 +2,23 @@
 use Controllers\SettingsController;
 
 class Settings extends SettingsController {
-    private $tab = "security";
-    private $tabs = ["connection", "security", "salary-grade", "payroll", "position", "w-tax"];
+    private $tabs = ["connection", "security", "salary-grade", "position", "payroll", "w-tax"];
     private $vars;
 
-    public function index () {
-        $this->view->display ("admin/settings", ["tab" => $this->tab, "var" => $this->vars]);
-    }
-    
-    public function do_action () {
-        call_user_func_array ([$this, $this->data['action']], $this->data);
+    public function index() {
+        $this->tab();
     }
 
     public function tab ($tab = "security") {
         if (in_array ($tab, $this->tabs)) {
-            $this->tab = $tab;
-            $this->vars = call_user_func_array ([$this, str_replace ("-", "_", $this->tab)], []);
+            $this->vars = call_user_func_array ([$this, str_replace ("-", "_", $tab)], []);
+            $this->vars['tab'] = $tab;
         }
-        $this->index ();
+        $this->view->display ("admin/settings", $this->vars);
+    }
+    
+    public function do_action () {
+        call_user_func_array ([$this, $this->data['action']], $this->data);
     }
 
     public function change_pass () {
@@ -30,4 +29,4 @@ class Settings extends SettingsController {
         }
         $this->view->display ("admin/settings", ["tab" => 'security', "message" => $message]);
     }
-}
+} 

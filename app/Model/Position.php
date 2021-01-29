@@ -37,22 +37,23 @@ class Position {
         return self::$position;
     }
 
-    public static function get_salary ($campus, $date_start, $date = NULL) {
+    public static function get_salary ($date = NULL) {
         if (!$date) $date = date('Y-m-d');
         if (self::$position['salary_grade'] == 0) {
-            $salary  = DB::fetch_row ("SELECT * FROM tbl_cos_salary WHERE position_id = ? AND date_implemented < ?  AND campus_id = ? ORDER BY date_implemented DESC", [self::$position['no'], $date, $campus]);
-            self::$position['salary'] = $salary['salary'];
-            self::$position['salary_type'] = $salary['salary_type'];
+            // $salary  = DB::fetch_row ("SELECT * FROM tbl_cos_salary WHERE position_id = ? AND date_implemented < ?  AND campus_id = ? ORDER BY date_implemented DESC", [self::$position['no'], $date, $campus]);
+            // self::$position['salary'] = $salary['salary'];
+            // self::$position['salary_type'] = $salary['salary_type'];
         }else{
-            $salary  = DB::fetch_row ("SELECT step_increment as salary FROM tbl_salary_grade WHERE salary_grade = ? AND date_implemented < ?  AND campus_id = ? ORDER BY date_implemented DESC", [self::$position['salary_grade'], $date, $campus])['salary'];
-            $steps = explode (',' , $salary);
-            self::$position['increment'] = self::step ($date_start, $date);
-            self::$position['salary'] = $steps[self::$position['increment'] - 1];
+            // $salary  = DB::fetch_row ("SELECT step_increment as salary FROM tbl_salary_grade WHERE salary_grade = ? AND date_implemented < ?  AND campus_id = ? ORDER BY date_implemented DESC", [self::$position['salary_grade'], $date, $campus])['salary'];
+            // $steps = explode (',' , $salary);
+            // self::$position['increment'] = self::step ($date);
+            // self::$position['salary'] = $steps[self::$position['increment'] - 1];
         }
-        return self::$position;
+        return "hello world";
     }
 
-    public static function step ($date_start, $date) {
+    public static function step ($date_start) {
+        $date = date('Y-m-d');
         $diff = date_diff(date_create($date), date_create($date_start));
         $step = floor($diff->format('%y')/3) + 1;
         $step = $step > 8 ? 8 : $step;

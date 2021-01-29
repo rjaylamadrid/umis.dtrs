@@ -1,52 +1,60 @@
-<div class="col-md-12">
-    <div class="row">
-        <div class="col-md-9">
-            <h4>Positions Offered</h4>
-        </div>
-        <div class="col-md-3">
-            <button class="btn btn-primary col-md-12" data-toggle="modal" onclick="editposition()"><i class="fe fe-plus"></i>Add Position</button>
-        </div>
-    </div>
-</div>
-<div class="col-md-12 mt-3">
-    <form action="" method="POST">
-        <div class="row row-cards row-deck">
-            <div class="col-12">
-                <div class="card">
-                    <div class="table-responsive">
-                        <table class="table table-hover card-table table-vcenter text-nowrap datatable dataTable no-footer" id="tbl-positions">
-                            <thead>
-                                <tr>
-                                    <th>Code</th>
-                                    <th>Position Name</th>
-                                    <th>Salary Grade</th>
-                                    <th>Base Salary</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            {foreach $var as $position}
-                                <tr onclick='editposition({$position.position_code})'>
-                                    <td>{$position.position_code}</td>
-                                    <td>{$position.position_desc}</td>
-                                    <td>{$position.salary_grade}</td>
-                                    <td>{$position.salary}</td>
-                                </tr>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <form>
+                    <div class="form-group form-inline m-0">
+                        <select class="custom-select">
+                            {foreach $emp_types as $type}
+                                <option value="GET">{$type.etype_desc}</option> 
                             {/foreach}
-                            </tbody>
-                        </table>
-                        <script>
-                            require (['core', 'datatables'], function ($, datatable) {
-                                $(document).ready (function() {
-                                    $("#tbl-positions").DataTable();
-                                })
-                            })
-                        </script>
+                        </select>   
                     </div>
-                </div>
+                </form>
             </div>
-    </form>
-</div>
-<div class="modal fade margin-top-70" id="position-modal" role="dialog" tabindex="-1" style="margin-left:-50px;">
-    <div class="modal-dialog" id="position" role="document" style="max-width: 500px;">
+        </div>
     </div>
 </div>
+<div class="row row-cards row-deck">
+    <div class="col-12">
+        <div class="card">
+            <div class="table-responsive">
+                <table style=" font-family:  Arial;" class="table table-hover card-table table-vcenter text-nowrap datatable dataTable no-footer" id="tbl-positions">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Position Name</th>
+                            <th>Salary Grade</th>
+                            <th>Base Salary</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {foreach $positions as $position}
+                        <tr onclick='editposition({$position.position_code})'>
+                            <td>{$position.position_code}</td>
+                            <td>{$position.position_desc}</td>
+                            <td>{$position.salary_grade}</td>
+                            <td>{$position.salary}</td>
+                            <td class="text-center"><div class="item-action dropdown">
+                                <a href="javascript:void(0)" data-toggle="dropdown" class="icon" aria-expanded="false"><i class="fe fe-more-vertical"></i></a>
+                                <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; transform: translate3d(-181px, 20px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                    <a href="#" class="dropdown-item"><i class="dropdown-icon fe fe-edit"></i> Edit 
+                                    </a>
+                                    <a href="#" class="dropdown-item"><i class="dropdown-icon fe fe-trash"></i> Remove
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    {/foreach}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    require (['datatables'], function () {
+        $("#tbl-positions").DataTable();
+    })
+</script>

@@ -28,14 +28,14 @@ class EmployeesController extends Controller {
 
     protected function set_active () {
         if ($this->data['active'] == '0') {
-            $set = DB::update ("UPDATE tbl_employee_status SET date_end = ? , active_status = 0 WHERE employee_id = ? AND active_status = 1", [date('Y-m-d'), $this->data['id']]);
+            $set = DB::update ("UPDATE tbl_employee_status SET date_end = ? , is_active = 0 WHERE employee_id = ? AND is_active = 1", [date('Y-m-d'), $this->data['id']]);
             if ($set) $result = ['success' => date('Y-m-d')];
         }
         echo json_encode($result);
     }
 
     public function set_inactive () {
-        $set = DB::update ("UPDATE tbl_employee_status SET date_end = ?, active_status = ? WHERE employee_id = ?", [$this->data['date_end'], $this->data['status'], $this->data['emp_id']]);
+        $set = DB::update ("UPDATE tbl_employee_status SET date_end = ?, is_active = ? WHERE employee_id = ?", [$this->data['date_end'], $this->data['status'], $this->data['emp_id']]);
         if ($set) $this->result = 'success';
         $this->view->index();
     }
