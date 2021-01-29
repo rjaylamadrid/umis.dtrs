@@ -254,6 +254,13 @@ function modify_log () {
   });
 }
 
+function show_list () {
+  var form = $('#frmData').serialize();
+  f (form, "text", "/settings").then( function(html){
+    $('#settings_tab').html(html);
+  });
+}
+
 function set_presets (type, emp_id = "") {
   $("#cover-spin").show(0);
   from = document.getElementById("date_from").value;

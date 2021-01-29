@@ -16,13 +16,8 @@
           	</div>
         </div>
     </div>
-    <div class="col-md-9">
+    <div class="col-md-9" id="settings_tab">
         {include file="admin/settings/{$tab}.tpl"}
-        {* <div class="card">
-          	<div class="card-body" id="setting">
-          		{include file="admin/settings/{$tab}.tpl"}
-          	</div>
-        </div> *}
     </div>
 </div>
 </div>

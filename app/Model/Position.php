@@ -44,12 +44,11 @@ class Position {
             // self::$position['salary'] = $salary['salary'];
             // self::$position['salary_type'] = $salary['salary_type'];
         }else{
-            // $salary  = DB::fetch_row ("SELECT step_increment as salary FROM tbl_salary_grade WHERE salary_grade = ? AND date_implemented < ?  AND campus_id = ? ORDER BY date_implemented DESC", [self::$position['salary_grade'], $date, $campus])['salary'];
-            // $steps = explode (',' , $salary);
-            // self::$position['increment'] = self::step ($date);
-            // self::$position['salary'] = $steps[self::$position['increment'] - 1];
+            $salary  = DB::fetch_row ("SELECT a.step_increment as salary FROM tbl_salary_grade a, tbl_salary_tranche b WHERE a.sg_id = b.sg_id AND a.salary_grade = ? AND b.date <= ? ORDER BY b.date DESC", [self::$position['salary_grade'], $date])['salary'];
+            $steps = explode (',' , $salary);
+            self::$position['salary'] = $steps[self::step ($date)-1];
         }
-        return "hello world";
+        return self::$position;
     }
 
     public static function step ($date_start) {

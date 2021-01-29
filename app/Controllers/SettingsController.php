@@ -3,6 +3,7 @@ namespace Controllers;
 
 use Database\DB;
 use Model\Position;
+use Model\SalaryGrade;
 
 class SettingsController extends Controller {
     private $positions;
@@ -15,29 +16,40 @@ class SettingsController extends Controller {
         return $connection;
     }
 
-    protected function salary_grade () {
-        $sg = DB::fetch_all ("SELECT * FROM tbl_salary_grade WHERE 1");
-        for ($i=0; $i < sizeof($sg); $i++) {
-            $salary[$sg[$i]['no']]['no'] = $sg[$i]['no'];
-            $salary[$sg[$i]['no']]['step_increment'] = explode (",", $sg[$i]['step_increment']);
+    protected function salary_grade ($sg_id = NULL) {
+        $data['tranches'] = SalaryGrade::salary_tranche();
+        $ssl = SalaryGrade::tranche($sg_id);
+        $data['active'] = $ssl;
+        $salary = SalaryGrade::salary_grade($ssl['sg_id']);
+        for($i = 0;$i<count($salary);$i++) {
+            $data['salaries'][$i]['salary_grade'] = $salary[$i]['salary_grade'];
+            $data['salaries'][$i]['steps'] = explode(',', $salary[$i]['step_increment']);  
         }
-        return $salary;
+        return $data;
+    } 
+
+    protected function show_salary () {
+        $data = $this->salary_grade($this->data['tranche']);
+        $this->view->display('admin/settings/salary-grade', $data);
     }
 
     protected function security () {
 
     }
 
-    protected function position () {
-        $this->positions = [];
-        $positions = Position::positions()->all();
+    public function position ($emp_type = 1) {
+        $positions = Position::positions()->type($emp_type);
         foreach ($positions as $position) {
-            $position['salary'] = Position::position($position['no'])->get_salary(4, date_create()->format('Y-m-d'));
-            $this->positions[] = $position;
+            $data['positions'][] = Position::position($position['no'])->get_salary(date_create()->format('Y-m-d'));
         }
-        $data['positions'] = $this->positions;
-        $data['emp_types'] = Position::emp_type();
         return $data;
+    }
+
+    public function show_position (){
+        $type = $this->data['emp_type'];
+        $data = $this->position($type);
+        $data['type'] = $type;
+        $this->view->display ("admin/settings/position", $data);
     }
 
     protected function w_tax () {

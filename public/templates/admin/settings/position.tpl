@@ -2,12 +2,15 @@
     <div class="col-lg-12">
         <div class="card">
             <div class="card-body">
-                <form>
+                <form action='' method = 'POST' id="frmData">
+                    <input type="hidden" name="action" value="show_position">
                     <div class="form-group form-inline m-0">
-                        <select class="custom-select">
-                            {foreach $emp_types as $type}
-                                <option value="GET">{$type.etype_desc}</option> 
-                            {/foreach}
+                        <select class="custom-select" name="emp_type" onchange="show_list()">
+                            <option value="1" {if $type == '1'}selected{/if}>Permanent | Teaching</option> 
+                            <option value="2" {if $type == '2'}selected{/if}>Permanent | Non-Teaching</option> 
+                            <option value="5" {if $type == '5'}selected{/if}>COS | Teaching</option>
+                            <option value="6" {if $type == '6'}selected{/if}>COS | Non-Teaching</option>
+                            <option value="7" {if $type == '7'}selected{/if}>Project-based</option>
                         </select>   
                     </div>
                 </form>
@@ -35,7 +38,7 @@
                             <td>{$position.position_code}</td>
                             <td>{$position.position_desc}</td>
                             <td>{$position.salary_grade}</td>
-                            <td>{$position.salary}</td>
+                            <td>{$position.salary|number_format:2:".":","}</td>
                             <td class="text-center"><div class="item-action dropdown">
                                 <a href="javascript:void(0)" data-toggle="dropdown" class="icon" aria-expanded="false"><i class="fe fe-more-vertical"></i></a>
                                 <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; transform: translate3d(-181px, 20px, 0px); top: 0px; left: 0px; will-change: transform;">
@@ -58,3 +61,7 @@
         $("#tbl-positions").DataTable();
     })
 </script>
+{* <div class="modal fade margin-top-70" id="position-modal" role="dialog" tabindex="-1" style="margin-left:-50px;">
+    <div class="modal-dialog" id="position" role="document" style="max-width: 500px;">
+    </div>
+</div> *}
