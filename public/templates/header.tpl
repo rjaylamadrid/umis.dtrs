@@ -82,7 +82,7 @@
                             <a href="{$server}/dtr" class="nav-link {if $page == 'dtr'}active{/if}"><i class="fe fe-clock"></i> Daily Time Records</a>
                         </li>
                         <li class="nav-item">
-                            <a href="{$server}/leave" class="nav-link {if $page == 'leave'}active{/if}"><i class="fe fe-clock"></i> Leave Record</a>
+                            <a href="{$server}/leave" class="nav-link {if $page == 'leave'}active{/if}"><i class="fe fe-clock"></i> Leave Management</a>
                         </li>
                     {/if}
                 </ul>

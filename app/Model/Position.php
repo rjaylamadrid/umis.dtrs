@@ -53,8 +53,8 @@ class Position {
 
     public static function step ($date_start) {
         $date = date('Y-m-d');
-        $diff = date_diff(date_create($date), date_create($date_start));
-        $step = floor($diff->format('%y')/3) + 1;
+        // $diff = date_diff(date_create($date), date_create($date_start));
+        // $step = floor($diff->format('%y')/3) + 1;
         $step = $step > 8 ? 8 : $step;
         return $step;
     }
