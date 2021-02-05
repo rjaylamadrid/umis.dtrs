@@ -141,6 +141,9 @@
 			</div>
 		</div>
 	</div>
+	{print_r("<pre>")}
+	{print_r($attendance)}
+	{print_r("</pre>")}
 <div class="flex-fill">
   <div class="my-3 my-md-5">
     <div class="container">
