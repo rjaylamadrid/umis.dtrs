@@ -8,8 +8,10 @@ class Attendance extends AttendanceController {
     private $month;
 
     public function index () {
+        $position = new Position();
+        $position->emp_types();
         if (!($this->month)) $this->month = date('m');
-        $this->view->display ('attendance', ["emp_type" => Position::emp_type(), "month" => $this->month]);
+        $this->view->display ('attendance', ["emp_type" => $position->emp_types, "month" => $this->month]);
     }
 
     public function do_action () {

@@ -16,14 +16,13 @@
         }
         </style>
         <div class="row">
-        {* {var_dump($employee->id)} *}
-{if $view == "update"}
+        {if $view == "update"}
             <div class="col-md-2">
                 <div class="list-group list-group-transparent mb-0">
                   <a href="{$server}{if $user.is_admin}/employees/profile/{$employee->id}/{$tab}{else}/profile/{$tab}{/if}" class="list-group-item list-group-item-action d-flex align-items-center active"><span class="icon mr-3"><i class="fe fe-back"></i></span> Back to profile</a>
                 </div>
               </div>
-{else}
+        {else}
             <div class="col-md-4 col-sm-12">
                 <div class="card">
                     <div class="card-body">
@@ -54,7 +53,7 @@
                     <a href="{$server}/employees/{$employee->id}/export" class="btn btn-success btn-block" style="margin-top: 10px; margin-bottom: 10px; color: white;">Generate Personal Data Sheet</a>
                 {* </form> *}
             </div>
-{/if}
+        {/if}
             <div class="{if $view == 'update'}col-md-10{else}col-md-8{/if} col-sm-12">
                 <div class="card p-2" style="min-height: 600px;">
                     <div class="card-body profile-content">

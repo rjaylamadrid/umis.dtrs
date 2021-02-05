@@ -27,7 +27,7 @@
 	          <div class="card">
 	          	<div class="card-body">
 	              <div class="media">
-	              	<span class="avatar avatar-xxl mr-5" style="background-image: url(<?php echo $emp['EmpPicture'] ? '../assets/images/employees/avatar/'.$emp['EmpPicture'] : 'img/profile_temp.jpeg'; ?>)"></span>
+	              	<span class="avatar avatar-xxl mr-5" style="background-image:  url({$server}/assets/employee_picture/{if $employee->info.employee_picture}{$employee->info.employee_picture}{else}0.jpeg{/if})"></span>
 	              	<div class="media-body">
 	                	<h4 class="m-0">{$employee->info.first_name} {$employee->info.last_name}</h4>
 	                	<p class="text-muted mb-0">{$employee->position.position_desc}</p>

@@ -4,12 +4,19 @@
             <div class="card-body">
                 <form action='' method = 'POST' id="frmData">
                     <input type="hidden" name="action" value="show_salary">
-                    <div class="form-group form-inline m-0">
-                        <select class="custom-select" name="tranche" onchange="show_list()">
-                            {foreach $tranches as $tranche}
-                                <option value="{$tranche.sg_id}" {if $tranche.sg_id == $active.sg_id}selected{/if}>{$tranche.title}</option>
-                            {/foreach}
-                        </select>   
+                    <div class="d-flex">
+                        <div class="form-group col-md-4">
+                            <label class="form-label">Title</label>
+                            <select class="custom-select form-control" name="tranche" onchange="show_list()">
+                                {foreach $sg->tranches as $tranche}
+                                    <option value="{$tranche.sg_id}" {if $tranche.sg_id == $sg->tranche.sg_id}selected{/if}>{$tranche.title}</option>
+                                {/foreach}
+                            </select>   
+                        </div>
+                        <div class="col-md-8 d-flex mt-6">
+                            <label class="form-label">Effectivity Date:</label>
+                            <p class="pl-2"> {$sg->tranche.date|date_format:'%B %d, %Y'} </p>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -34,7 +41,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                    {foreach $salaries as $salary}
+                    {foreach $sg->salarygrades as $salary}
                         <tr>
                             <td>{$salary.salary_grade}</td>
                             <td>{$salary.steps[0]|number_format:2:".":","}</td>

@@ -11,10 +11,12 @@ class Employees extends EmployeesController {
     public $employee;
 
     public function index () {
+        $this->position = new Position();
+        $this->position->emp_types();
         $status  = $this->data['inactive'] ? 0 : 1;
         $this->stats = EmployeeStats::campus ($this->user['campus_id'])->get_stats ();
         $employees = Employee::employees()->position()->status($status, $this->user['campus_id']);
-        $this->view->display ('admin/employees', ["stats" => $this->stats, "employees" => $employees,'emp_type' => Position::emp_type(),'departments' => $this->departments(), 'designations' => $this->designations(), "status" => $status, "result" => $this->result]);
+        $this->view->display ('admin/employees', ["stats" => $this->stats, "employees" => $employees,'emp_type' => $this->position->emp_types,'departments' => $this->departments(), 'designations' => $this->designations(), "status" => $status, "result" => $this->result]);
     }
 
     public function profile ($id = null, $tab = 'basic-info', $view='view', $message=NULL) {
@@ -55,10 +57,11 @@ class Employees extends EmployeesController {
         header ("location: /employees/update/$id/$tab");
     }
 
-    public function registration ($message = NULL) { 
-        $positions = Position::positions()->all ();
+    public function registration ($message = NULL) {
+        $this->position = new Position();
+        $this->position->emp_types(); 
         $presets = Schedule::presets()->all ();
-        $this->view->display ('admin/employee_registration', ['positions' => $positions, 'emp_type' => Position::emp_type(), 'schedules' => $presets , 'departments' => $this->departments(), 'designations' => $this->designations(), 'id' => $this->new_id ('1'), 'no' => $this->employee_no(), 'message' => $message]);
+        $this->view->display ('admin/employee_registration', ['emp_type' => $this->position->emp_types, 'schedules' => $presets , 'departments' => $this->departments(), 'designations' => $this->designations(), 'id' => $this->new_id ('1'), 'no' => $this->employee_no(), 'message' => $message]);
     }
 
     public function employment ($id, $tab = 'employment_info', $view = 'view', $message = NULL, $sched = NULL) {
@@ -68,14 +71,16 @@ class Employees extends EmployeesController {
             if ($message) $message = ['success' => '1', 'message' => 'Employment information has been successfully updated!'];
         }
         $this->employee = new EmployeeProfile ($id);
+        $position = new Position();
+        $position->emp_types();
+        $position->positions($this->employee->info['etype_id']);
         try {
             $this->employee->{str_replace ("-", "_", $tab)}();
         } catch (\Throwable $th) {
             $this->employee->info ();
         }
         $presets = Schedule::presets()->all();
-        $positions = Position::positions()->type ($this->employee->info['etype_id']);
-        $this->view->display ('admin/employee_employment', ['positions' => $positions, 'emp_type' => Position::emp_type(), 'employee' => $this->employee, 'tab' => $tab, 'view' => $view, 'presets' => $presets , 'departments' => $this->departments(), 'designations' => $this->designations(), 'message' => $message, 'sched' => $sched]);
+        $this->view->display ('admin/employee_employment', ['positions' => $position->positions, 'emp_type' => $position->emp_types, 'employee' => $this->employee, 'tab' => $tab, 'view' => $view, 'presets' => $presets , 'departments' => $this->departments(), 'designations' => $this->designations(), 'message' => $message, 'sched' => $sched]);
     }
 
     public function export () {

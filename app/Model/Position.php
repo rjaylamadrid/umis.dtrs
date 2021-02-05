@@ -2,72 +2,95 @@
 namespace Model;
 
 use Database\DB;
+use Model\SalaryGrade;
 class Position {
-    static $positions;
-    static $salary;
-    static $position;
+    public $id;
+    public $sg_id;
+    public $date;
+    public $date_start;
+    public $emp_type;
+    public $emp_types;
+    public $position;
+    public $positions;
+    public $step;
+    public $salarygrade;
+    public $type;
 
-    public static function type ($type) {
-        if(!self::$positions) self::positions ();
+    public function __construct($id = null, $date_start = null, $emp_type = null, $date = null) {
+        $this->id = $id;
+        $this->date = $date;
+        $this->date_start = $date_start;
+        $this->emp_type = $emp_type;
+        $this->step = 0;
+        $this->position();
+    }
+
+    public function positions($emp_type = null) {
+        $this->salary_grade();
+        $i = 0;
         $positions = [];
-        foreach(self::$positions as $position) {
-            if($position['etype_id'] == $type) $positions[] = $position;
+        if ($emp_type) {
+            $this->emp_type = $emp_type;
+            $this->emp_type();
+            $this->positions = DB::fetch_all("SELECT * FROM tbl_position WHERE etype_id = ? ORDER BY position_desc ASC", $this->emp_type['type_id']);
+        } else {
+            $this->positions = DB::fetch_all("SELECT * FROM tbl_position ORDER BY position_desc ASC");
+        } 
+        foreach ($this->positions as $position) {
+            $positions[$i] = $position;
+            $positions[$i]['salary'] = $this->get_salary($position['salary_grade'], $position['no']);
+            if ($position['salary_grade'] == 0) {
+                $positions[$i]['salary_grade'] = 'N/A';
+                $positions[$i]['salary_type'] = $this->type;
+            }
+            $i++;
         }
-        return $positions;
+        $this->positions = $positions;
     }
 
-    public static function all () {
-        return self::$positions;
-    }
-
-    public static function positions () {
-        self::$positions = DB::fetch_all ("SELECT * FROM tbl_position WHERE 1 ORDER BY position_code ASC");
-        return new self();
-    }
-    
-    public static function position ($id) {
-        if(!self::$positions) self::positions ();
-        foreach(self::$positions as $position) {
-            if ($position['no'] == $id) self::$position = $position;
+    public function position() {
+        if($this->id) {
+            $this->emp_type();
+            $this->position = DB::fetch_row("SELECT * FROM tbl_position WHERE no = ? ORDER BY position_desc ASC", $this->id);
+            if ($this->emp_type['isRegular'] == '1') { $this->step(); }
+            $this->salary_grade();
+            $this->position['salary'] = $this->get_salary($this->position['salary_grade'], $this->id);
+            $this->position['type'] = $this->type;
+            $this->position['emp_type'] = $this->emp_type['type_desc'];
         }
-        return new self();
     }
 
-    public static function find () {
-        return self::$position;
+    public function salary_grade() {
+        if (!$this->date) $this->date = date('Y-m-d');
+        $tranche = new SalaryGrade($this->sg_id, $this->date);
+        $this->salarygrade = $tranche->salarygrades;
     }
 
-    public static function get_salary ($date = NULL) {
-        if (!$date) $date = date('Y-m-d');
-        if (self::$position['salary_grade'] == 0) {
-            // $salary  = DB::fetch_row ("SELECT * FROM tbl_cos_salary WHERE position_id = ? AND date_implemented < ?  AND campus_id = ? ORDER BY date_implemented DESC", [self::$position['no'], $date, $campus]);
-            // self::$position['salary'] = $salary['salary'];
-            // self::$position['salary_type'] = $salary['salary_type'];
-        }else{
-            $salary  = DB::fetch_row ("SELECT a.step_increment as salary FROM tbl_salary_grade a, tbl_salary_tranche b WHERE a.sg_id = b.sg_id AND a.salary_grade = ? AND b.date <= ? ORDER BY b.date DESC", [self::$position['salary_grade'], $date])['salary'];
-            $steps = explode (',' , $salary);
-            self::$position['salary'] = $steps[self::step ($date)-1];
-        }
-        return self::$position;
+    public function emp_type(){
+        $this->emp_type = DB::fetch_row("SELECT * FROM tbl_employee_type WHERE id = ?", $this->emp_type);
     }
 
-    public static function step ($date_start) {
-        $date = date('Y-m-d');
-        // $diff = date_diff(date_create($date), date_create($date_start));
-        // $step = floor($diff->format('%y')/3) + 1;
+    public function emp_types() {
+        $this->emp_types = DB::fetch_all("SELECT * FROM tbl_employee_type");
+    }
+
+    public function step() {
+        $diff = date_diff(date_create(), date_create($this->date_start));
+        $step = floor($diff->format('%y')/3) + 1;
         $step = $step > 8 ? 8 : $step;
-        return $step;
+        $this->position['step'] = $step;
+        $this->step = $step;
     }
 
-    public static function department ($dept_id) {
-        return DB::fetch_row ("SELECT department_desc as department FROM tbl_department WHERE no = ?", $dept_id)['department'];
-    }
-
-    public static function designation ($priv_level) {
-        return DB::fetch_row ("SELECT priv_desc as designation FROM tbl_privilege WHERE priv_id = ?", $priv_level)['designation'];
-    }
-    
-    public static function emp_type () {
-        return DB::fetch_all ("SELECT * FROM tbl_employee_type");
+    public function get_salary($sg_id, $position_id = null) {
+        foreach($this->salarygrade as $salarygrade) {
+            if ($sg_id == $salarygrade['salary_grade']) $result = number_format($salarygrade['steps'][$this->step],2,".",",");
+        }
+        if ($sg_id == 0) {
+            $salary = DB::fetch_row("SELECT * FROM tbl_cos_salary WHERE position_id = ?", $position_id);
+            $result = number_format($salary['salary'],2,".",",");
+            $this->type = $salary['salary_type'];
+        }
+        return $result;
     }
 }

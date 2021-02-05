@@ -6,7 +6,8 @@ use Model\Position;
 use Model\SalaryGrade;
 
 class SettingsController extends Controller {
-    private $positions;
+    public $positions;
+    public $salary_grade;
 
     protected function connection () {
         $result = DB::fetch_all ("SELECT * FROM tbl_settings WHERE keyword LIKE '%server%'");
@@ -17,14 +18,9 @@ class SettingsController extends Controller {
     }
 
     protected function salary_grade ($sg_id = NULL) {
-        $data['tranches'] = SalaryGrade::salary_tranche();
-        $ssl = SalaryGrade::tranche($sg_id);
-        $data['active'] = $ssl;
-        $salary = SalaryGrade::salary_grade($ssl['sg_id']);
-        for($i = 0;$i<count($salary);$i++) {
-            $data['salaries'][$i]['salary_grade'] = $salary[$i]['salary_grade'];
-            $data['salaries'][$i]['steps'] = explode(',', $salary[$i]['step_increment']);  
-        }
+        $this->salary_grade = new SalaryGrade($sg_id);
+        $this->salary_grade->salary_tranches();
+        $data['sg'] = $this->salary_grade;
         return $data;
     } 
 
@@ -38,17 +34,15 @@ class SettingsController extends Controller {
     }
 
     public function position ($emp_type = 1) {
-        $positions = Position::positions()->type($emp_type);
-        foreach ($positions as $position) {
-            $data['positions'][] = Position::position($position['no'])->get_salary(date_create()->format('Y-m-d'));
-        }
+        $this->positions = new Position();
+        $this->positions->positions($emp_type);
+        $data['positions'] = $this->positions;
         return $data;
     }
 
     public function show_position (){
         $type = $this->data['emp_type'];
         $data = $this->position($type);
-        $data['type'] = $type;
         $this->view->display ("admin/settings/position", $data);
     }
 

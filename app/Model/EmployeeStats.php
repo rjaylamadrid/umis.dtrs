@@ -29,7 +29,7 @@ class EmployeeStats {
     }
 
     public static function employees_status () {
-        return DB::fetch_row ("SELECT COUNT(CASE WHEN b.jo=0 THEN 1 END) Permanent, COUNT(CASE WHEN b.jo=1 THEN 1 END) COS FROM tbl_employee_status a, tbl_employee_type b, tbl_position c WHERE a.is_active = 1 AND a.campus_id = ? AND a.position_id = c.no AND c.etype_id = b.etype_id", self::$campus);
+        return DB::fetch_row ("SELECT COUNT(CASE WHEN b.isJobOrder=0 THEN 1 END) Permanent, COUNT(CASE WHEN b.isJobOrder=1 THEN 1 END) COS FROM tbl_employee_status a, tbl_employee_type b, tbl_position c WHERE a.is_active = 1 AND a.campus_id = ? AND a.position_id = c.no AND c.etype_id = b.id", self::$campus);
     }
 
     public static function employees_gender () {

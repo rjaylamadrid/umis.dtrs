@@ -49,7 +49,7 @@
                                 <select name="emp_type" class="form-control custom-select">
                                     <option value="">All Employees</option>
                                     {foreach $emp_type as $e}
-                                    <option value="{$e.etype_id}" {if $e.etype_id == $period.emp_type}selected{/if}>{$e.etype_desc}</option>
+                                    <option value="{$e.id}" {if $e.id == $period.emp_type}selected{/if}>{$e.type_desc}</option>
                                     {/foreach}
                                 </select>
                             </div>

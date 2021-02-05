@@ -133,10 +133,10 @@ function init_pos(type) {
     type = 1;
   }
   f({action: 'get_position', type:type}, "json", "/employees").then( function (positions) {
-    // console.log(type);
     $('#positions').html("<option selected disabled>Position</option>");
     positions.forEach(function (position){
         $('#positions').append("<option value='" + position['no'] + "'>" + position['position_desc'] + "</option>");
+        $('#salary').val("Php 0.00");
     });
   });
 }
@@ -166,11 +166,11 @@ function get_schedule (sched_code) {
 function get_salary () {
   var position = $('#positions').val();
   var date = $('#date-start').val();
-  var campus = $('#campus').val();
+  var emp_type = $('#emp_type').val();
   f ({
-    action: 'get_salary', position_id:position, date_start:date, campus_id:campus
+    action: 'get_salary', position_id:position, date_start:date, emp_type:emp_type
   }, "text", "/employees").then( function(html) {
-    $('#salary').val("Php " + html.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,'));
+    $('#salary').val("Php " + html.toString());
   });
 }
 

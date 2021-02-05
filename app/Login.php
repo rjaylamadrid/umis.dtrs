@@ -14,7 +14,7 @@ class Login extends LoginController {
     }
 
     public function do_action () {
-        call_user_func_array ([$this, $this->data['action']], $this->data);
+        call_user_func_array([$this, $this->data['action']], $this->data);
     }
 
     public function do_login () {

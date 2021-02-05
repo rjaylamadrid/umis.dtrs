@@ -17,13 +17,14 @@ class EmployeesController extends Controller {
     }
 
     public function get_position () {
-        $positions = Position::positions()->type ($this->data['type']);
-        echo json_encode($positions);
+        $this->position = new Position();
+        $this->position->positions($this->data['type']);
+        echo json_encode($this->position->positions);
     }
 
     public function get_salary () {
-        $salary = Position::position ($this->data['position_id']) -> get_salary ($this->data['campus_id'], $this->data['date_start']);
-        print_r($salary['salary']);
+        $position = new Position($this->data['position_id'], $this->data['date_start'], $this->data['emp_type']);
+        echo $position->position['salary'];
     }
 
     protected function set_active () {

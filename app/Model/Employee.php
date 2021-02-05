@@ -45,9 +45,11 @@ class Employee {
         if (!self::$employees) self::employees ();
         $employees = [];
         foreach (self::$employees as $e) {
-            $position = Position::position($e['position_id'])->find(); 
-            $e['position'] = $position['position_desc'];
-            $employees[] = $e;
+            if($e['position_id']) {
+                $position = new Position($e['position_id'], $e['date_start'], $e['etype_id']);
+                $e['position'] = $position->position['position_desc'];
+                $employees[] = $e;
+            }
         }
         self::$employees = $employees;
         return new self();

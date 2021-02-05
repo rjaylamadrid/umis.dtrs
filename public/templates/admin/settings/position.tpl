@@ -6,11 +6,11 @@
                     <input type="hidden" name="action" value="show_position">
                     <div class="form-group form-inline m-0">
                         <select class="custom-select" name="emp_type" onchange="show_list()">
-                            <option value="1" {if $type == '1'}selected{/if}>Permanent | Teaching</option> 
-                            <option value="2" {if $type == '2'}selected{/if}>Permanent | Non-Teaching</option> 
-                            <option value="5" {if $type == '5'}selected{/if}>COS | Teaching</option>
-                            <option value="6" {if $type == '6'}selected{/if}>COS | Non-Teaching</option>
-                            <option value="7" {if $type == '7'}selected{/if}>Project-based</option>
+                            <option value="1" {if $positions->emp_type == '1'}selected{/if}>Permanent | Teaching</option> 
+                            <option value="2" {if $positions->emp_type == '2'}selected{/if}>Permanent | Non-Teaching</option> 
+                            <option value="5" {if $positions->emp_type == '5'}selected{/if}>COS | Teaching</option>
+                            <option value="6" {if $positions->emp_type == '6'}selected{/if}>COS | Non-Teaching</option>
+                            <option value="7" {if $positions->emp_type == '7'}selected{/if}>Project-based</option>
                         </select>   
                     </div>
                 </form>
@@ -33,21 +33,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                    {foreach $positions as $position}
-                        <tr onclick='editposition({$position.position_code})'>
+                    {foreach $positions->positions as $position}
+                        <tr>
                             <td>{$position.position_code}</td>
                             <td>{$position.position_desc}</td>
                             <td>{$position.salary_grade}</td>
-                            <td>{$position.salary|number_format:2:".":","}</td>
-                            <td class="text-center"><div class="item-action dropdown">
-                                <a href="javascript:void(0)" data-toggle="dropdown" class="icon" aria-expanded="false"><i class="fe fe-more-vertical"></i></a>
-                                <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; transform: translate3d(-181px, 20px, 0px); top: 0px; left: 0px; will-change: transform;">
-                                    <a href="#" class="dropdown-item"><i class="dropdown-icon fe fe-edit"></i> Edit 
-                                    </a>
-                                    <a href="#" class="dropdown-item"><i class="dropdown-icon fe fe-trash"></i> Remove
-                                    </a>
-                                </div>
-                            </td>
+                            <td>{$position.salary}{if $position.salary_type}/{$position.salary_type}{/if}</td>
+                            <td class="float-right"><a href="#" class="icon" aria-expanded="false"><i class="fe fe-edit"></i></td>
                         </tr>
                     {/foreach}
                     </tbody>
