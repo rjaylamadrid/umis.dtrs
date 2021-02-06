@@ -101,9 +101,23 @@
 										<td>-</td>
 										<td>-</td>
 									</tr>
-
-									
-									
+									{$temp=0}
+									{foreach from=$changes[$temp] item=change}
+										<tr align="center">	
+											<td><b>{$change.period|date_format:"F d, Y"}</b></td>
+											<td>{$change.particulars}</td>
+											<td></td>
+											<td>-</td>
+											<td></td>
+											<td>-</td>
+											<td></td>
+											<td>-</td>
+											<td></td>
+											<td>-</td>
+											<td>-</td>
+										</tr>
+										{$temp=$temp+1}
+									{/foreach}
 									<tr>
 										<td colspan="1" align="center"><b></b></td>
 										<td colspan="1" align="center"><b></b></td>
