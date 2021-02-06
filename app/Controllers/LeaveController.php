@@ -64,7 +64,8 @@ class LeaveController extends Controller {
                 // $monthtable = date_create($date_start)->format('m-Y');
                 // $attendance = DB::db("db_attendance")->fetch_all("SELECT * FROM `$monthtable` WHERE emp_id = ? AND date > ? ORDER BY date ASC", [$this->user['employee_id'], $this->leave_credits['date_credited']]);
                 $daterange = new DatePeriod($start_interval, $interval, $end_interval);
-                
+                $days_onleave[0][0] = '2000-01-01';
+                $days_present[0][0] = '2000-01-01';
                 foreach ($daterange as $dt) {
                     if ($dt->format('d') == 01) {
                         $monthtable[$temp] = $dt->format('m-Y');
@@ -73,6 +74,7 @@ class LeaveController extends Controller {
                             for ($i=0;$i<sizeof($attendance[$temp]);$i++) {
                                 if ($attendance[$temp][$i]['total_hours'] < 8) {
                                     $this->leave_changes[$temp][$i] = ["period" => $attendance[$temp][$i]['date'], "particulars" => "Undertime"];
+                                    $days_present[$temp][$i] = $attendance[$temp][$i]['date'];
                                 } else {
                                     $days_present[$temp][$i] = $attendance[$temp][$i]['date'];
                                 }
@@ -83,25 +85,26 @@ class LeaveController extends Controller {
                         if ($emp_leave[$temp]) {
                             for ($i=0;$i<sizeof($emp_leave[$temp]);$i++) {
                                 $this->leave_changes[$temp][$i] = ["period" => $emp_leave[$temp][$i]['lv_date_fr'], "particulars" => "On Leave"];
+                                $days_onleave[$temp][$i] = $emp_leave[$temp][$i]['lv_date_fr'];
                             }
                         }
                         $temp++;
                     }
                     if (in_array($dt->format('l'),$scheds)) { //and not in $emp_leave or calendar events and not in attendance
-                        if (!(in_array($dt->format('Y-m-d'), $days_present[$temp-1]))) {
+                        if ((!(in_array($dt->format('Y-m-d'), $days_present[$temp-1]))) && (!(in_array($dt->format('Y-m-d'), $days_onleave[$temp-1])))) {
                             $this->leave_changes[$temp-1][sizeof($this->leave_changes[$temp-1])] = ["period" => $dt->format('Y-m-d'), "particulars" => "Absent"];
-                        }
+                        } 
                     }
                     
-                    print_r("<pre>");
-                    print_r($dt->format('Y-m-d')); print_r($dt->format('l')); print_r("<br>");
-                    print_r("</pre>");
+                    // print_r("<pre>");
+                    // print_r($dt->format('Y-m-d')); print_r($dt->format('l')); print_r("<br>");
+                    // print_r("</pre>");
                 }
                 print_r("<pre>");
-                print_r($attendance);
-                print_r($days_present);
-                print_r($emp_leave);
-                print_r($scheds);
+                // print_r($attendance);
+                // print_r($days_present);
+                // print_r($emp_leave);
+                // print_r($scheds);
                 print_r($this->leave_changes);
                 print_r("</pre>");
 
