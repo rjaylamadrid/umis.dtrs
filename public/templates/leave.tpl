@@ -57,7 +57,9 @@
           </div>
         </div>
       </div>
-
+	  		{print_r("<pre>")}
+			{print_r($balance)}
+			{print_r("</pre>")}
 			<div class="row row-cards row-deck">
 				<div class="col-12">
 					<div class="card">
@@ -66,7 +68,7 @@
 								<thead class="thead-dark">
 									<tr>
 										<th style="text-align: left;" colspan="4"><b><u>NAME:</u> <br>{$user.last_name}, {$user.first_name} {$user.middle_name} </b></th>
-										<th style="text-align: left;" colspan="6"><b><u>OFFICE:</u> <br>{$office[0].department_desc} {$credits}</b></th>
+										<th style="text-align: left;" colspan="6"><b><u>OFFICE:</u> <br>{$office[0].department_desc}</b></th>
 										<th style="text-align: left;" colspan="2"><b><u>FIRST DAY OF SERVICE:</u> <br>{$office[0].date_start|date_format:"F d, Y"}</b></th>
 									</tr>
 									<tr  style="text-align: center;">
@@ -74,7 +76,7 @@
 										<td style=" width: 10%;" rowspan="2">PARTICULARS</td>
 										<td colspan="4">VACATION LEAVE</td>
 										<td colspan="4">SICK LEAVE</td>
-										<td style="word-wrap: break-word; width: 15%;" rowspan="2">DATE AND ACTION TAKEN FOR APPLICATION LEAVE</td>
+										<td style="word-wrap: break-word; width: 15%;" rowspan="2">DATE AND ACTION TAKEN ON APPLICATION FOR LEAVE</td>
 									</tr>
 									<tr align="center">
 										<td  style=" width: 5%;">Earned</td>
@@ -88,36 +90,37 @@
 									</tr>
 								</thead>
 								<tbody>
-									<tr align="center">	
-										<td><b>{$credits.date_credited|date_format:"F d, Y"}</b></td>
-										<td></td>
-										<td>{$credits.vacation}</td>
-										<td>-</td>
-										<td>{$credits.vacation}</td>
-										<td>-</td>
-										<td>{$credits.sick}</td>
-										<td>-</td>
-										<td>{$credits.sick}</td>
-										<td>-</td>
-										<td>-</td>
-									</tr>
-									{$temp=0}
-									{foreach from=$changes[$temp] item=change}
-										<tr align="center">	
-											<td><b>{$change.period|date_format:"F d, Y"}</b></td>
-											<td>{$change.particulars}</td>
-											<td></td>
-											<td>-</td>
-											<td></td>
-											<td>-</td>
-											<td></td>
-											<td>-</td>
-											<td></td>
-											<td>-</td>
-											<td>-</td>
-										</tr>
-										{$temp=$temp+1}
-									{/foreach}
+										{for $i=0 to sizeof($changes)-1}
+											<tr align="center">	
+											{* insert chevron drop down function call here *}
+												<td><b>{$balance[$i]['date']|date_format:"F d, Y"}</b></td>
+												<td>Leave Credits</td>
+												<td>{$balance[$i]['vacation']|round:2}</td>
+												<td>-</td>
+												<td>{$balance[$i]['vacation']|round:2}</td>
+												<td>-</td>
+												<td>{$balance[$i]['sick']|round:2}</td>
+												<td>-</td>
+												<td>{$balance[$i]['sick']|round:2}</td>
+												<td>-</td>
+												<td>-</td>
+											</tr>
+											{for $j=0 to sizeof($changes[$i])}
+												<tr align="center">
+													<td><b>{$changes[$i][$j].period|date_format:"F d, Y"}</b></td>
+													<td>{$changes[$i][$j].particulars}</td>
+													<td>{$changes[$i][$j].total_hours}</td>
+													<td>{$changes[$i][$j].awp}</td>
+													<td>{$changes[$i][$j].balance}</td>
+													<td>-</td>
+													<td></td>
+													<td>-</td>
+													<td></td>
+													<td>-</td>
+													<td>-</td>
+												</tr>
+											{/for}
+										{/for}
 									<tr>
 										<td colspan="1" align="center"><b></b></td>
 										<td colspan="1" align="center"><b></b></td>
@@ -155,9 +158,6 @@
 			</div>
 		</div>
 	</div>
-	{print_r("<pre>")}
-	{print_r($attendance)}
-	{print_r("</pre>")}
 <div class="flex-fill">
   <div class="my-3 my-md-5">
     <div class="container">
