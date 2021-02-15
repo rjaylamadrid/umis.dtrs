@@ -42,7 +42,11 @@ class EmployeeProfile {
     }
 
     public function family_background () {
-        $this->family_background = $this->get (["table" => "tbl_employee_family_background"]);
+        // $this->family_background = $this->get (["table" => "tbl_employee_family_background"]);
+        $this->family_background['children'] = DB::fetch_all("SELECT CONCAT(first_name,' ',middle_name,' ',last_name) as name, birthdate FROM tbl_employee_family_background WHERE employee_id = ? AND relationship = 0", $this->id);
+        $this->family_background['spouse'] = DB::fetch_row("SELECT * FROM tbl_employee_family_background WHERE employee_id = ? AND relationship = 1", $this->id);
+        $this->family_background['mother'] = DB::fetch_row("SELECT first_name, middle_name, last_name FROM tbl_employee_family_background WHERE employee_id = ? AND relationship = 2", $this->id);
+        $this->family_background['father'] = DB::fetch_row("SELECT first_name, middle_name, last_name, ext_name FROM tbl_employee_family_background WHERE employee_id = ? AND relationship = 3", $this->id);
     }
 
     public function education () {
@@ -50,7 +54,7 @@ class EmployeeProfile {
     }
 
     public function eligibility () {
-        $this->eligibility = $this->get (["table" => "tbl_employee_eligibility"]);
+        $this->eligibility = DB::fetch_all("SELECT * FROM tbl_employee_eligibility WHERE employee_id = ?", $this->id);
     }
 
     public function employment () {
@@ -84,7 +88,8 @@ class EmployeeProfile {
     }
 
     public function voluntary_work () {
-        $this->voluntary_work = $this->get (["table" => "tbl_employee_voluntary_work"]);
+        // $this->voluntary_work = $this->get (["table" => "tbl_employee_voluntary_work"]);
+        $this->voluntary_work = DB::fetch_all("SELECT * FROM tbl_employee_voluntary_work WHERE employee_id = ?", $this->id);
     }
 
     public function training_seminar () {
@@ -115,30 +120,13 @@ class EmployeeProfile {
     }
 
     public function service_record () {
-        // $record = DB::fetch_all ("SELECT a.no, a.date_start, a.date_end, a.is_active, a.position_id, b.position_desc, c.salary_grade, c.step_increment, c.date_implemented, d.campus_name, e.etype_desc, e.jo
-        // FROM tbl_employee_status a, tbl_position b, tbl_salary_grade c, tbl_campus d, tbl_employee_type e
-        // WHERE a.position_id = b.no AND b.salary_grade = c.salary_grade AND a.campus_id = d.id AND a.etype_id = e.etype_id AND a.employee_id = ?
-        // ORDER BY a.date_start ASC", $this->id);
-        // $ctr=0;
-        // foreach ($record as $value) {
-        //     if ($value['jo'] == '1') {
-        //         $temp = DB::fetch_row ("SELECT CONCAT(salary_type,';',salary)AS salary FROM tbl_cos_salary WHERE position_id = ?", $value['position_id']);
-        //         $record[$ctr]['step_increment'] = $temp['salary'];
-        //     }
-        //     else if ($value['jo'] == '0') {
-        //         $salary_steps = explode(",",$record[$ctr]['step_increment']);
-        //         if ($value['date_end'] == NULL) {
-        //             $record[$ctr]['step_increment'] = $salary_steps[Position::step($value['date_start'], date("Y-m-d")) - 1];
-        //             // $record[$ctr] += ['step' => Position::step($value['date_start'], date("Y-m-d"))];
-        //         }
-        //         else {
-        //             $record[$ctr]['step_increment'] = $salary_steps[Position::step($value['date_start'], $value['date_end']) - 1];
-        //             // $record[$ctr] += ['step' => Position::step($value['date_start'], date("Y-m-d"))];
-        //         }
-        //     }
-        //     $ctr++;
-        // }
-        // $this->service_record = $record;
+        $records = DB::fetch_all ("SELECT * FROM tbl_employee_service WHERE employee_id = ?", $this->id);
+        $i=0;
+        foreach ($records as $record) {
+            $this->service_record[$i] = $record;
+            $position = new Position($record['position'], $record['date_start'], $record['etype_id']);
+            // $this->service_record['position']
+        }
     }
     
     private function get ($args = []) {

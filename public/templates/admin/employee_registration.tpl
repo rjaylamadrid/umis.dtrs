@@ -150,7 +150,7 @@
                                             <select class="form-control" name="emp_status[etype_id]" required onchange="javascript:init_pos (this.value)">
                                                 <option selected disabled>Select</option>
                                                 {foreach from=$emp_type item=type}
-                                                <option value="{$type.etype_id}">{$type.etype_desc}</option>
+                                                <option value="{$type.id}">{$type.type_desc}</option>
                                                 {/foreach}
                                             </select>
                                         </div>

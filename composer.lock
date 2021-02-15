@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "868d534f3254ca8ab05d0850bf558788",
+    "content-hash": "ae31a42134b75a130aa03e0666bdc5ca",
     "packages": [
         {
             "name": "phroute/phroute",
@@ -49,6 +49,52 @@
                 "routing"
             ],
             "time": "2015-07-22T20:46:43+00:00"
+        },
+        {
+            "name": "propa/tcpdi",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kulbakin/tcpdi.git",
+                "reference": "059b202086258ae0326e2e05e4d1d3a892b75c72"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kulbakin/tcpdi/zipball/059b202086258ae0326e2e05e4d1d3a892b75c72",
+                "reference": "059b202086258ae0326e2e05e4d1d3a892b75c72",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0",
+                "tecnickcom/tcpdf": "^6.3"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "fpdf_tpl.php",
+                    "tcpdi.php",
+                    "tcpdi_parser.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Nicola Asuni",
+                    "email": "info@tecnick.com",
+                    "homepage": "http://nicolaasuni.tecnick.com"
+                }
+            ],
+            "description": "TCPDI is a PHP class for importing PDF to use with TCPDF",
+            "keywords": [
+                "TCPDF",
+                "pdf",
+                "tcpdi",
+                "tcpdi_parser"
+            ],
+            "time": "2020-03-31T12:47:48+00:00"
         },
         {
             "name": "smarty/smarty",
@@ -173,7 +219,9 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "propa/tcpdi": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

@@ -5,6 +5,7 @@ use Model\EmployeeStats;
 use Model\EmployeeProfile;
 use Controllers\EmployeesController;
 use Model\Schedule;
+use View\PDS;
 
 class Employees extends EmployeesController {
     private $stats;
@@ -57,11 +58,11 @@ class Employees extends EmployeesController {
         header ("location: /employees/update/$id/$tab");
     }
 
-    public function registration ($message = NULL) {
+    public function registration () {
         $this->position = new Position();
         $this->position->emp_types(); 
         $presets = Schedule::presets()->all ();
-        $this->view->display ('admin/employee_registration', ['emp_type' => $this->position->emp_types, 'schedules' => $presets , 'departments' => $this->departments(), 'designations' => $this->designations(), 'id' => $this->new_id ('1'), 'no' => $this->employee_no(), 'message' => $message]);
+        $this->view->display ('admin/employee_registration', ['emp_type' => $this->position->emp_types, 'schedules' => $presets , 'departments' => $this->departments(), 'designations' => $this->designations(), 'id' => $this->new_id ('1'), 'no' => $this->employee_no(), 'message' => $this->message]);
     }
 
     public function employment ($id, $tab = 'employment_info', $view = 'view', $message = NULL, $sched = NULL) {
@@ -83,7 +84,7 @@ class Employees extends EmployeesController {
         $this->view->display ('admin/employee_employment', ['positions' => $position->positions, 'emp_type' => $position->emp_types, 'employee' => $this->employee, 'tab' => $tab, 'view' => $view, 'presets' => $presets , 'departments' => $this->departments(), 'designations' => $this->designations(), 'message' => $message, 'sched' => $sched]);
     }
 
-    public function export () {
-        $this->view->display('profile/export');
+    public function export ($id) {
+        $pds = new PDS($id, '../public/assets/pdf/PDS.pdf');
     }
 }

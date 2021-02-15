@@ -11,6 +11,7 @@ class EmployeesController extends Controller {
     public $employees;
     public $profile;
     public $result;
+    public $message;
     
     public function bday_celebrant () {
         return DB::fetch_all ("SELECT first_name, last_name, DATE_FORMAT(birthdate, '%M %d') AS BDate, (YEAR(NOW()) - YEAR(birthdate)) AS Age, DAYNAME(DATE_FORMAT(birthdate, '$this->year-%m-%d')) AS Araw, employee_picture FROM tbl_employee a, tbl_employee_status b WHERE a.no = b.employee_id AND b.active_status = 1 AND b.campus_id = ? AND MONTH(a.birthdate) = ? AND DAY(birthdate) BETWEEN 1 AND 31 ORDER BY BDate", [$this->user['campus_id'], $this->year]);
@@ -66,22 +67,29 @@ class EmployeesController extends Controller {
     }
 
     protected function register () {
-        $id = DB::insert ("INSERT INTO tbl_employee SET ".DB::stmt_builder ($this->data['emp']), $this->data['emp']);
         $result = True;
-        if ($id) {
-            $this->data['emp_status']['campus_id'] = $this->user['campus_id'];
-            $this->data['emp_status']['employee_id'] = $id;
-            if (!(self::add_status ($this->data['emp_status']))) $result = False;
-            if (!(self::set_schedule ($this->data['sched_code'], $id, $this->data['emp_status']['date_start']))) $result = False;
+        $this->message = [];
+        if ($this->data['emp']) {
+            $id = DB::insert ("INSERT INTO tbl_employee SET ".DB::stmt_builder ($this->data['emp']), $this->data['emp']);
+            if ($id) {
+                $this->data['emp_status']['campus_id'] = $this->user['campus_id'];
+                $this->data['emp_status']['employee_id'] = $id;
+                if (!($this->add_status ($this->data['emp_status']))) $result = False;
+                if (!($this->set_schedule ($this->data['sched_code'], $id, $this->data['emp_status']['date_start']))) $result = False;
+                $this->add_user($id);
+            } else {
+                $result = false;
+            }
+            if ($result) {
+                $this->message = ['success' => 'success', 'message' => 'Employee registration has been successful!'];
+            } else { $this->message = ['success' => null, 'message' => 'Employee registration failed!']; }
         }
-        
-        if ($result) {
-            $message = ['success' => 'success', 'message' => 'Employee registration has been successful!'];
-            $this->registration($message);
-        } else {
-            $message = ['success' => 'failed', 'message' => 'Employee registration failed!'];
-            $this->registration($message);
-        }
+        $this->registration($message);
+    }
+
+    public function add_user ($id) {
+        $password = password_hash("12345467890", PASSWORD_DEFAULT);
+        DB::insert ("INSERT INTO tbl_user_employee SET employee_id = ?, employee_username = ?, employee_password = ?", [$id, $this->data['emp']['email_address'], $password]);
     }
 
     public static function add_profile($id,$employeeinfo,$tab,$admin_id) {
@@ -97,22 +105,9 @@ class EmployeesController extends Controller {
                     DB::insert ("INSERT INTO tbl_employee_update_delete SET ". DB::stmt_builder($inserted_vals),$inserted_vals);
                     return DB::update ("UPDATE $tab SET ".DB::stmt_builder($employeeinfo). " WHERE employee_id = $id",$other_row);
                 } else {
-                        // print_r("<pre>");
-                        // print_r($id);
-                        // print_r("<br />");
-                        // print_r($employeeinfo);
-                        // print_r("</pre>");
-                        $inserted_vals = array('updated_action'=>2,'updated_table'=>$tab,'updated_old_data'=>'','updated_new_data'=>$key."=".$value,'updated_employee_id'=>$id,'updated_admin_id'=>$admin_id,'updated_date'=>date("Y-m-d"));
-                        // print_r("<pre>");
-                        // print_r($inserted_vals);
-                        // print_r("</pre>");
-                        // array_push($employeeinfo,["employee_id" => $id]);
+                    $inserted_vals = array('updated_action'=>2,'updated_table'=>$tab,'updated_old_data'=>'','updated_new_data'=>$key."=".$value,'updated_employee_id'=>$id,'updated_admin_id'=>$admin_id,'updated_date'=>date("Y-m-d"));
                     DB::insert ("INSERT INTO tbl_employee_update_delete SET ". DB::stmt_builder($inserted_vals),$inserted_vals);
                     return DB::insert ("INSERT INTO $tab SET employee_id = ?, $key = ?",[$id,$employeeinfo["$key"]]);
-                    // $temp = DB::insert ("INSERT INTO $tab SET employee_id = ?, $key = ? WHERE employee_id = $id",[$id,$employeeinfo["$key"]]);
-                    // print_r("<pre>");
-                    // print_r($temp);
-                    // print_r("</pre>");
                 }
             }
         }
@@ -132,12 +127,6 @@ class EmployeesController extends Controller {
             $inserted_vals = array('updated_action'=>2,'updated_table'=>$tab,'updated_old_data'=>'','updated_new_data'=>$inserted_data,'updated_employee_id'=>$id,'updated_admin_id'=>$admin_id,'updated_date'=>date("Y-m-d"));
             DB::insert ("INSERT INTO tbl_employee_update_delete SET ". DB::stmt_builder($inserted_vals),$inserted_vals);
             return DB::insert("INSERT INTO $tab SET ".DB::stmt_builder ($employeeinfo), $employeeinfo);
-            // $temp = DB::insert("INSERT INTO $tab SET ".DB::stmt_builder ($employeeinfo), $employeeinfo);
-            // print_r("<pre>");
-            // print_r($temp);
-            // print_r($inserted_data);
-            
-            // print_r("</pre>");
         }
     }
 

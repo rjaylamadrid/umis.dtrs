@@ -16,11 +16,12 @@ class Position {
     public $salarygrade;
     public $type;
 
-    public function __construct($id = null, $date_start = null, $emp_type = null, $date = null) {
+    public function __construct($id = null, $date_start = null, $emp_type = null, $date = null, $sg_id = null) {
         $this->id = $id;
         $this->date = $date;
         $this->date_start = $date_start;
         $this->emp_type = $emp_type;
+        $this->sg_id = $sg_id;
         $this->step = 0;
         $this->position();
     }
@@ -54,7 +55,8 @@ class Position {
             $this->position = DB::fetch_row("SELECT * FROM tbl_position WHERE no = ? ORDER BY position_desc ASC", $this->id);
             if ($this->emp_type['isRegular'] == '1') { $this->step(); }
             $this->salary_grade();
-            $this->position['salary'] = $this->get_salary($this->position['salary_grade'], $this->id);
+            $this->sg_id = $this->sg_id ? $this->sg_id : $this->position['salary_grade'];
+            $this->position['salary'] = $this->get_salary($this->sg_id, $this->id);
             $this->position['type'] = $this->type;
             $this->position['emp_type'] = $this->emp_type['type_desc'];
         }

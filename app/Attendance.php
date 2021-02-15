@@ -71,9 +71,10 @@ class Attendance extends AttendanceController {
 
     protected function generate () {
         $employees = $this->data['emp_type'] ? Employee::type ($this->data['emp_type']) : Employee::getAll();
-        $emp_type = Position::emp_type();
+        $position = new Position;
+        $position->emp_types();
 
-        $this->view->display ('attendance', ["period" => $this->data, "emp_type" => $emp_type, "employees" => $employees, "posted" => $this->is_posted ($this->data), "month" => $this->data['month']]);
+        $this->view->display ('attendance', ["period" => $this->data, "emp_type" => $position->emp_types, "employees" => $employees, "posted" => $this->is_posted ($this->data), "month" => $this->data['month']]);
     }
 
     protected function get_attendance () {

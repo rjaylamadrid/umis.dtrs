@@ -5,7 +5,8 @@
     "require": {
         "smarty/smarty": "^3.1",
         "phroute/phroute": "^2.1",
-        "tecnickcom/tcpdf": "^6.3"
+        "tecnickcom/tcpdf": "^6.3",
+        "propa/tcpdi": "dev-master"
     },
     "autoload": {
         "psr-4": {
