@@ -40,17 +40,4 @@ class PDF {
         self::$pdf->SetPrintHeader($header);
         self::$pdf->SetPrintFooter($footer);
     }
-
-    public static function setText($x, $y, $h=0, $text) {
-        self::$pdf->setXY($x, $y);
-        $text = $text ? $text : 'N/A';
-        self::$pdf->Write($h, $text);
-    }
-
-    public function check($x, $y) {
-        self::$pdf->SetFont('zapfdingbats','', 7);
-        self::setText($x, $y, 0, '3');
-
-        self::$pdf->SetFont('helvetica','', 9);
-    }
 }

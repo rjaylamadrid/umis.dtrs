@@ -58,33 +58,13 @@ class EmployeeProfile {
     }
 
     public function employment () {
-        // $this->employment = $this->get (["col" => "*, 'Monthly' AS salary_type, (CASE when date_to IS NULL THEN NOW() ELSE date_to END) AS dateto", "table" => "tbl_employee_employment", "options" => " ORDER BY dateto DESC"]);
-        // $employment_record = DB::fetch_all ("SELECT a.*, b.*, c.*, d.*, e.* FROM tbl_employee_status a, tbl_position b, tbl_campus c, tbl_salary_grade d, tbl_employee_type e WHERE a.employee_id = ? AND b.no = a.position_id AND a.campus_id = c.id AND b.salary_grade = d.salary_grade AND b.etype_id = e.etype_id ORDER BY a.date_start DESC", $this->id);
-        // if ($employment_record) {
-        //     $temp = sizeof($this->employment);
-        //     foreach ($employment_record as $value) {
-        //         $date_end = $value['date_end'] == '' ? date('Y-m-d') : $value['date_end'];
-        //         $salary_amount = explode(",",$value['step_increment']);
-        //         $this->employment[$temp]['position'] = $value['position_desc'];
-        //         $this->employment[$temp]['date_from'] = $value['date_start'];
-        //         $this->employment[$temp]['date_to'] = $value['date_end'];
-        //         $this->employment[$temp]['company'] = "CBSUA - ".$value['campus_name'];
-        //         $this->employment[$temp]['govt_service'] = "1";
-        //         $this->employment[$temp]['appointment'] = $value['etype_desc'];
-        //         $this->employment[$temp]['salary_grade'] = $value['salary_grade'];
-        //         if ($value['jo'] == 1) {
-        //             $cos_salary = DB::fetch_row ("SELECT * FROM tbl_cos_salary WHERE position_id = ?", $value['position_id']);
-        //             $this->employment[$temp]['salary'] = $cos_salary['salary'];
-        //             $this->employment[$temp]['salary_type'] = $cos_salary['salary_type'];
-        //         } else {
-        //             $this->employment[$temp]['salary'] = $salary_amount[Position::step($value['date_start'],$date_end) - 1];
-        //             $this->employment[$temp]['salary_type'] = "Monthly";
-        //         }
-        //         $temp++;
-        //     }
-        // }
-        // $keys = array_column($this->employment, 'date_to');
-        // array_multisort($keys, SORT_ASC, $this->employment);
+        $this->employment = DB::fetch_all ("SELECT * FROM tbl_employee_employment WHERE employee_id = ?", $this->id);
+        $this->service_record();
+        foreach($this->service_record as $record) {
+            $govt = $record['type_id'] == '7' ? 0 : 1;
+            $this->employment[] = array('position' => $record['position_desc'], 'date_from' => $record['date_start'], 'date_to' => $record['date_end'], 'company' => 'Central Bicol State University of Agriculture', 'appointment' => $record['type_desc'], 'salary' => $record['salary'], 'salary_grade' => $record['salary_grade'], 'step' => $record['step'], 'govt_service' => $govt);
+        }
+        $this->service_record = [];
     }
 
     public function voluntary_work () {
@@ -120,13 +100,7 @@ class EmployeeProfile {
     }
 
     public function service_record () {
-        $records = DB::fetch_all ("SELECT * FROM tbl_employee_service WHERE employee_id = ?", $this->id);
-        $i=0;
-        foreach ($records as $record) {
-            $this->service_record[$i] = $record;
-            $position = new Position($record['position'], $record['date_start'], $record['etype_id']);
-            // $this->service_record['position']
-        }
+        $this->service_record = DB::fetch_all ("SELECT position_desc, date_start, date_end, type_id, type_desc, salary, step, a.salary_grade,campus_name FROM tbl_employee_service a, tbl_position b, tbl_employee_type c, tbl_campus d WHERE a.position_id = b.no AND a.etype_id = c.id AND a.campus_id = d.id AND employee_id = ? ORDER BY date_start DESC", $this->id);
     }
     
     private function get ($args = []) {

@@ -1,4 +1,3 @@
-{$service_records = $employee->service_record}
 {if $view !="update"}
     <div class="form-group" style="float: right;">
         <a href="{$server}/employees/employment-update/{$employee->id}/{$tab}" class="btn btn-secondary btn-sm ml-2"><i class="fe fe-edit-2"></i> Edit</a>
@@ -31,20 +30,20 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {foreach from=$service_records item=record}
+                        {foreach from=$employee->service_record item=record}
                             <tr>
                                 <td>
                                     <div>{$record.position_desc}</div>
-                                    <div class="small text-muted">Date: {$record.date_start} to {if $record.active_status == 0} {$record.date_end} {else} Present {/if}</div>
+                                    <div class="small text-muted">Date: {$record.date_start} to {if $record.date_end} {$record.date_end} {else} Present {/if}</div>
                                 </td>
                                 <td>
-                                    <div>{$record.etype_desc}</div>
+                                    <div>{$record.type_desc}</div>
                                 </td>
                                 <td>
-                                    <div>Php {if $record.jo == 0} {$record.step_increment|number_format:2:".":","} <div class="small text-muted">Salary Grade: {$record.salary_grade} - Step {$record.step} </div> {else} {$cos_pay = explode(";",$record.step_increment)} {$cos_pay[1]|lower} {$cos_pay[0]|lower} {/if}</div>
+                                    <div>Php {if $record.jo == 0} {$record.salary|number_format:2:".":","} <div class="small text-muted">Salary Grade: {$record.salary_grade} - Step {$record.step} </div> {else} {$cos_pay = explode(";",$record.step_increment)} {$cos_pay[1]|lower} {$cos_pay[0]|lower} {/if}</div>
                                 </td>
                                 <td>
-                                    <div>CBSUA - {$record.campus_name}</div>
+                                    <div>CBSUA - {$record.campus_name} Campus</div>
                                 </td>
                                 <td style="vertical-align: middle; text-align: center;">
                                 <a href="javascript:confirm_delete({$record.no},{$employee->id},'service_record')" class="btn btn-outline-danger btn-sm">

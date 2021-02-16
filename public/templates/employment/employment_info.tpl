@@ -17,14 +17,12 @@
     {/if}
     <div class="table-responsive">
         <table class="table card-table table-striped">
-            {* {foreach from = $employee->position item = position} *}
-                <tr class="row-header"><td colspan="2">Employment Information</td></tr>
-                <tr><td>Status</td><td>{$employee->position.emp_type}</td></tr>
-                <tr><td>Position</td><td><div>{$employee->position.position_desc}<div class="small text-muted">{$employee->info.date_start} {if $employee->info.date_end} to {$employee->info.date_end} {else} to Present {/if}</div></div></td></tr>
-                <tr><td>Salary</td><td><div>Php {$employee->position.salary}<div class="small text-muted">
-                {if $employee->position.salary_grade}Salary Grade {$employee->position.salary_grade} - Step {$employee->position.step}{/if}</div></div></td></tr>
-                <tr><td>Department</td><td><div>{$employee->employment_info.department}<div class="small text-muted">{$employee->employment_info.designation}</div></div></td></tr>
-            {* {/foreach} *}
+            <tr class="row-header"><td colspan="2">Employment Information</td></tr>
+            <tr><td>Status</td><td>{$employee->position.emp_type}</td></tr>
+            <tr><td>Position</td><td><div>{$employee->position.position_desc}<div class="small text-muted">{$employee->info.date_start} {if $employee->info.date_end} to {$employee->info.date_end} {else} to Present {/if}</div></div></td></tr>
+            <tr><td>Salary</td><td><div>Php {$employee->position.salary}<div class="small text-muted">
+            {if $employee->position.salary_grade}Salary Grade {$employee->position.salary_grade} - Step {$employee->position.step}{/if}</div></div></td></tr>
+            <tr><td>Department</td><td><div>{$employee->employment_info.department}<div class="small text-muted">{$employee->employment_info.designation}</div></div></td></tr>
         </table>
     </div>
     <div class="form-group" style="float: right;">

@@ -23,7 +23,7 @@
                 <tr>
                     <td>Salary</td>
                     <td>{$employment.salary|number_format:2}
-                        <div class="small text-muted">{$employment.salary_type}</div>
+                        <div class="small text-muted">Salary Grade: {$employment.salary_grade} | Step: {$employment.step}</div>
                     </td>
                 </tr>
                 <tr>

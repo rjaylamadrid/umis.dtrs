@@ -20,11 +20,24 @@ class PDS extends PDF{
         self::$pdf->Output(self::$employee->info['last_name'].'_pds.pdf', 'I');
     }
 
+    public function check($x, $y) {
+        self::$pdf->SetFont('zapfdingbats','', 7);
+        self::setText($x, $y, 0, '3');
+
+        self::$pdf->SetFont('helvetica','B', 7);
+    }
+
+    public static function setText($x, $y, $h=0, $text) {
+        self::$pdf->setXY($x, $y);
+        $text = $text ? $text : 'N/A';
+        self::$pdf->Write($h, $text);
+    }
+
     public function getPage($page) {
         self::$pdf->AddPage('P', array(216, 330));
         $template = self::$pdf->importPage($page);
         self::$pdf->useTemplate($template);
-        self::$pdf->SetFont('helvetica','', 9);
+        self::$pdf->SetFont('helvetica','B', 7);
 
         switch ($page){
             case '1':
@@ -151,9 +164,7 @@ class PDS extends PDF{
                 self::$pdf->Cell(24, 0, date_create($eligibility['eligibility_date_exam'])->format('m/d/Y'), 0, 0, 'C', 0, 1);
                 self::$pdf->Cell(60, 0, $eligibility['eligibility_place_exam'], 0, 0, 'C', 0, 1);
                 self::$pdf->Cell(18, 0, $eligibility['eligibility_license'], 0, 0, 'C', 0, 1);
-                self::$pdf->SetFont('helvetica','', 7);
                 self::$pdf->Cell(15, 5.7, date_create($eligibility['eligibility_validity'])->format('m/d/Y'),0, 0, 'C', 0, 1);
-                self::$pdf->SetFont('helvetica','', 9);
                 $y = $y+8.2;
             }
         }else{
@@ -168,8 +179,24 @@ class PDS extends PDF{
     }
 
     protected function work_experience() {
+        self::$employee->employment();
         $y = 109.8;
-        self::$pdf->setXY(6, $y);
+        if (self::$employee->employment) {
+            foreach (self::$employee->employment as $employment) {
+                $sg = $employment['salary_grade'] ? $employment['salary_grade']."-".$employment['step'] : 'N/A';
+                self::$pdf->setXY(6, $y);
+                self::$pdf->Cell(16, 0, date_create($employment['date_from'])->format('m/d/Y'), 0, 0, 'C', 0, 1);
+                self::$pdf->Cell(16.2, 0, date_create($employment['date_to'])->format('m/d/Y'), 0, 0, 'C', 0, 1);
+                self::$pdf->Cell(56, 0, $employment['position'], 0, 0, 'C', 0, 1);
+                self::$pdf->Cell(53.5, 0, $employment['company'], 0, 0, 'C', 0, 1);
+                self::$pdf->Cell(14, 0, $employment['salary'], 0, 0, 'C', 0, 1);
+                self::$pdf->Cell(16, 0, $sg, 0, 0, 'C', 0, 1);
+                self::$pdf->Cell(19, 0, $employment['appointment'], 0, 0, 'C', 0, 1);
+                self::$pdf->Cell(13.5, 0, $employment['govt_service'] == '1' ? 'Y' : 'N', 0, 0, 'C', 0, 1);
+                $y = $y + 7.2;
+            }
+        } else {
+            self::$pdf->setXY(6, $y);
             self::$pdf->Cell(16, 0, 'N/A', 0, 0, 'C', 0, 1);
             self::$pdf->Cell(16.2, 0, 'N/A', 0, 0, 'C', 0, 1);
             self::$pdf->Cell(56, 0, 'N/A', 0, 0, 'C', 0, 1);
@@ -178,6 +205,7 @@ class PDS extends PDF{
             self::$pdf->Cell(16, 0, 'N/A', 0, 0, 'C', 0, 1);
             self::$pdf->Cell(19, 0, 'N/A', 0, 0, 'C', 0, 1);
             self::$pdf->Cell(13.5, 0, 'N/A', 0, 0, 'C', 0, 1);
+        }
     }
 
     protected function voluntary_work() {
