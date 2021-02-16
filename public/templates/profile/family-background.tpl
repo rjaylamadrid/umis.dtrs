@@ -1,14 +1,7 @@
-{foreach from = $employee->family_background item = family_background}
-    {if $family_background.relationship == 1}
-        {$spouse = $family_background}
-    {elseif $family_background.relationship == 2}
-        {$mother = $family_background}
-    {elseif $family_background.relationship == 3}
-        {$father = $family_background}
-    {elseif $family_background.relationship == 0}
-        {$child = $family_background}
-    {/if}
-{/foreach}
+{$spouse = $employee->family_background['spouse']}
+{$mother = $employee->family_background['mother']}
+{$father = $employee->family_background['father']}
+{$children = $employee->family_background['children']}
 {if $view != "update"}
     <div class="form-group" style="float: right;">
         <a href="{$server}{if $user.is_admin}/employees/update/{$employee->id}/family-background{else}/update/family-background{/if}" class="btn btn-secondary btn-sm ml-2"><i class="fe fe-edit-2"></i> Edit</a>
@@ -33,8 +26,8 @@
                 <th>Name of Children</th>
                 <th>Date of Birth </th>
             </tr>
-            {foreach from = $employee->family_background item = child }
-                {if $child.relationship == 0}<tr><td>{$child.first_name} {$child.middle_name} {$child.last_name} {$child.ext_name}</td><td>{$child.birthdate|date_format: 'F d, Y'}</td></tr>{/if}
+            {foreach from=$children item=child }
+                <tr><td style="font-weight: 400;">{$child.name}</td><td>{$child.birthdate|date_format: 'F d, Y'}</td></tr>
             {/foreach}
         </table>
     </div>
@@ -168,8 +161,7 @@
 
                         <tbody>
                         {$count=4}
-                            {foreach from = $employee->family_background item = child }
-                                {if $child.relationship == 0}
+                            {foreach from = $children item = child }
                                 <tr id="row">
                                         <input type="hidden" name="employeeinfo[{$count}][relationship]" value="0">
                                         <input type="hidden" name="employeeinfo[{$count}][no]" value="{$child.no}">
@@ -181,7 +173,6 @@
                                         <td style="vertical-align: middle; text-align: center;"><a class="btn btn-outline-danger btn-sm" href="javascript:confirm_delete({$child.no},{$child.employee_id},'{$tab}')"><i class="fe fe-trash"></i></a></td>
                                 </tr>
                                 {$count = $count +1}
-                                {/if}
                             {/foreach}
                         </tbody>
                     </table>

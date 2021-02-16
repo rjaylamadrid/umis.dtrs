@@ -42,19 +42,18 @@ class EmployeeProfile {
     }
 
     public function family_background () {
-        // $this->family_background = $this->get (["table" => "tbl_employee_family_background"]);
-        $this->family_background['children'] = DB::fetch_all("SELECT CONCAT(first_name,' ',middle_name,' ',last_name) as name, birthdate FROM tbl_employee_family_background WHERE employee_id = ? AND relationship = 0", $this->id);
+        $this->family_background['children'] = DB::fetch_all("SELECT CONCAT(first_name,' ',middle_name,' ',last_name,' ',ext_name) as name, first_name, middle_name,last_name, ext_name, birthdate, no, employee_id FROM tbl_employee_family_background WHERE employee_id = ? AND relationship = 0", $this->id);
         $this->family_background['spouse'] = DB::fetch_row("SELECT * FROM tbl_employee_family_background WHERE employee_id = ? AND relationship = 1", $this->id);
-        $this->family_background['mother'] = DB::fetch_row("SELECT first_name, middle_name, last_name FROM tbl_employee_family_background WHERE employee_id = ? AND relationship = 2", $this->id);
-        $this->family_background['father'] = DB::fetch_row("SELECT first_name, middle_name, last_name, ext_name FROM tbl_employee_family_background WHERE employee_id = ? AND relationship = 3", $this->id);
+        $this->family_background['mother'] = DB::fetch_row("SELECT no, employee_id, first_name, middle_name, last_name FROM tbl_employee_family_background WHERE employee_id = ? AND relationship = 2", $this->id);
+        $this->family_background['father'] = DB::fetch_row("SELECT no, employee_id, first_name, middle_name, last_name, ext_name FROM tbl_employee_family_background WHERE employee_id = ? AND relationship = 3", $this->id);
     }
 
     public function education () {
-        $this->education = $this->get (["table" => "tbl_employee_education", "options" => " ORDER BY year_graduated DESC"]);
+        $this->education = $this->get (["type" => "all", "table" => "tbl_employee_education", "options" => " ORDER BY year_graduated DESC"]);
     }
 
     public function eligibility () {
-        $this->eligibility = DB::fetch_all("SELECT * FROM tbl_employee_eligibility WHERE employee_id = ?", $this->id);
+        $this->eligibility = $this->get (["type" => "all", "table" => "tbl_employee_eligibility", "options" => " ORDER BY eligibility_date_exam DESC"]);
     }
 
     public function employment () {
@@ -68,20 +67,19 @@ class EmployeeProfile {
     }
 
     public function voluntary_work () {
-        // $this->voluntary_work = $this->get (["table" => "tbl_employee_voluntary_work"]);
-        $this->voluntary_work = DB::fetch_all("SELECT * FROM tbl_employee_voluntary_work WHERE employee_id = ?", $this->id);
+        $this->voluntary_work = $this->get (["type" => "all", "table" => "tbl_employee_voluntary_work", "options" => " ORDER BY date_from DESC"]);
     }
-
+    
     public function training_seminar () {
-        $this->training_seminar = $this->get (["table" => "tbl_employee_training_seminar"]);
+        $this->training_seminar = $this->get (["table" => "tbl_employee_training_seminar", "options" => " ORDER BY training_from DESC"]);
     }
 
     public function references () {
-        $this->references = $this->get (["table" => "tbl_employee_references"]);
+        $this->references = $this->get (["type" => "all", "table" => "tbl_employee_references", "options" => ""]);
     }
 
     public function other_info () {
-        $this->other_info = $this->get (["table" => "tbl_employee_other_info"]);
+        $this->other_info = $this->get (["type" => "row", "table" => "tbl_employee_other_info", "options" => ""]);
     }
 
     public function employment_info () {
