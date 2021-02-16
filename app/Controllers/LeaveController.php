@@ -80,10 +80,12 @@ class LeaveController extends Controller {
                                         // $this->leaveBalanceChanges($attendance[$temp][$i]['total_hours'], $temp, 'undertime', $dt->format('Y-m-d'));
                                     } else if (($attendance[$temp][$i]['total_hours'] == 0) && ($attendance[$temp][$i]['is_absent'] == 1)) {
                                         $this->leave_changes[$temp][$i] = ["period" => $attendance[$temp][$i]['date'], "particulars" => "Absent", "total_hours" => $attendance[$temp][$i]['total_hours']];
-                                        $days_present[$temp][$i] = $attendance[$temp][$i]['date'];
+                                        // $days_present[$temp][$i] = $attendance[$temp][$i]['date'];
                                     } else {
-                                        $this->leave_changes[$temp][$i] = ["period" => $attendance[$temp][$i]['date'], "particulars" => "Present", "total_hours" => $attendance[$temp][$i]['total_hours']];
-                                        $days_present[$temp][$i] = $attendance[$temp][$i]['date'];
+                                        // if ($attendance[$temp][$i]['pm_in'] == "VL:VL") {
+                                            $this->leave_changes[$temp][$i] = ["period" => $attendance[$temp][$i]['date'], "particulars" => "Present", "total_hours" => $attendance[$temp][$i]['total_hours']];
+                                            $days_present[$temp][$i] = $attendance[$temp][$i]['date'];
+                                        // }
                                     }
                                 }
                             }
@@ -91,20 +93,39 @@ class LeaveController extends Controller {
 
                         $emp_leave[$temp] = DB::db("db_master")->fetch_all("SELECT * FROM tbl_emp_leave WHERE employee_id = ? AND lv_status = ? AND lv_date_fr BETWEEN ? AND ? ORDER BY lv_date_fr ASC", [$id, 2, $dt->format('Y-m-d'), $dt->format('Y-m-t')]);
                         if ($emp_leave[$temp]) { //ADD CONDITION IF LEAVE HAS MULTIPLE DAYS!
-                            for ($i=0;$i<sizeof($emp_leave[$temp]);$i++) {
-                                if ($emp_leave[$temp][$i]['lv_date_fr'] < date('Y-m-d')) {
+                            $k = sizeof($emp_leave[$temp]);
+                            for ($i=0; $i < sizeof($emp_leave[$temp]); $i++) {
+                                // if ($emp_leave[$temp][$i]['lv_date_fr'] < date('Y-m-d')) {
                                     if ($emp_leave[$temp][$i]['lv_no_days'] == 1) {
-                                        $this->leave_changes[$temp][$i] = ["period" => $emp_leave[$temp][$i]['lv_date_fr'], "particulars" => "On Leave", "total_days" => 1];
-                                        $days_onleave[$temp][$i] = $emp_leave[$temp][$i]['lv_date_fr'];
+                                        if ($k > sizeof($emp_leave[$temp])) {
+                                            $this->leave_changes[$temp][$k - sizeof($emp_leave[$temp])] = ["period" => $emp_leave[$temp][$i]['lv_date_fr'], "particulars" => "On Leave", "total_days" => 1];
+                                            $days_onleave[$temp][$k - sizeof($emp_leave[$temp])] = $emp_leave[$temp][$i]['lv_date_fr'];
+                                        } else {
+                                            $this->leave_changes[$temp][$i] = ["period" => $emp_leave[$temp][$i]['lv_date_fr'], "particulars" => "On Leave", "total_days" => 1];
+                                            $days_onleave[$temp][$i] = $emp_leave[$temp][$i]['lv_date_fr'];
+                                        }
+                                        $k++;
                                         // $this->leaveBalanceChanges(8, $temp, 'onleave', $dt->format('Y-m-d'));
                                     } else {
+                                        // $i += $emp_leave[$temp][$i]['lv_no_days'];
                                         for ($j=0;$j<$emp_leave[$temp][$i]['lv_no_days'];$j++) {
-                                            $this->leave_changes[$temp][$i+$j] = ["period" => date_create($emp_leave[$temp][$i]['lv_date_fr'])->modify("+$j day")->format('Y-m-d'), "particulars" => "On Leave", "total_days" => 1];
-                                            $days_onleave[$temp][$i+$j] = date_create($emp_leave[$temp][$i]['lv_date_fr'])->modify("+$j day")->format('Y-m-d');
+                                            if ($k > sizeof($emp_leave[$temp])) {
+                                                $this->leave_changes[$temp][$k - sizeof($emp_leave[$temp])] = ["period" => date_create($emp_leave[$temp][$i]['lv_date_fr'])->modify("+$j day")->format('Y-m-d'), "particulars" => "On Leave", "total_days" => 1];
+                                                $days_onleave[$temp][$k - sizeof($emp_leave[$temp])] = date_create($emp_leave[$temp][$i]['lv_date_fr'])->modify("+$j day")->format('Y-m-d');
+                                            } else {
+                                                $this->leave_changes[$temp][$i+$j] = ["period" => date_create($emp_leave[$temp][$i]['lv_date_fr'])->modify("+$j day")->format('Y-m-d'), "particulars" => "On Leave", "total_days" => 1];
+                                                $days_onleave[$temp][$i+$j] = date_create($emp_leave[$temp][$i]['lv_date_fr'])->modify("+$j day")->format('Y-m-d');
+                                            }
+                                            $k++;
+                                            // $i++;
                                         }
+                                        // $i += ($k - sizeof($emp_leave[$temp]) - 1);
+                                        // $k++;
+                                        // $i++;
                                     }
-                                }
+                                // }
                             }
+                            // $this->leave_changes[1][21] = ["period" => '2021-01-06', "particulars" => "on Leave", "total_days" => 1];
                         }
                         $temp++;
                     }
@@ -127,10 +148,7 @@ class LeaveController extends Controller {
                                         }
                                     }
                                 }
-                            } // else { Present
-                                // $this->leave_balance[$temp]['vacation'] += 0.0416666666666667;
-                                // $this->leave_balance[$temp]['sick'] += 0.0416666666666667;
-                            //}
+                            }
                         } else {
                             if (empty($days_onleave[$temp-1])) {
                                 if (is_array($this->leave_changes[$temp-1])) {
@@ -138,13 +156,6 @@ class LeaveController extends Controller {
                                 } else {
                                     $this->leave_changes[$temp-1][0] = ["period" => $dt->format('Y-m-d'), "particulars" => "Absent"];
                                 }
-                            }
-                        }
-                    } else {
-                        if (is_array($days_present[$temp-1])) { //Weekends or Off-duty
-                            if (!(in_array($dt->format('Y-m-d'), $days_present[$temp-1]))) {
-                                // $this->leave_balance[$temp]['vacation'] += 0.0416666666666667;
-                                // $this->leave_balance[$temp]['sick'] += 0.0416666666666667;
                             }
                         }
                     }
@@ -244,33 +255,5 @@ class LeaveController extends Controller {
                 $this->leave_balance[$i] = ["date" => date_create($this->leave_balance[$i-1]['date'])->modify('+1 month')->format('Y-m-d'), "vacation" => ($this->leave_balance[$i]['vacation'] + $this->leave_balance[$i-1]['vacation']), "sick" => ($this->leave_balance[$i]['sick'] + $this->leave_balance[$i-1]['sick'])];
             }
         }
-    }
-
-    protected function compute () { //from attendance controller to compute attendance
-        $attendance = [];
-        if ($this->attendance['attn']) {
-            for ($i=0; $i < sizeof($this->attendance['attn']); $i++) {
-                $this->attendance['attn'][$i]['auth'] = $this->authenticate($this->attendance['attn'][$i]);
-                $attendance['attn'][$this->attendance['attn'][$i]['date']] = $this->attendance['attn'][$i];
-                $attendance['total'] += $this->attendance[$i]['attn']['total_hours'];
-                $attendance['ut'] += ($this->attendance[$i]['attn']['late'] + $this->attendance[$i]['attn']['undertime']); 
-            }
-        }
-        $attendance['month'] = $this->attendance['month'];
-        $this->attendance = $attendance;
-        return $this->attendance;
-    }
-
-    protected function authenticate($attn){
-        if ($attn) {
-            $data = $attn['date'].$attn['emp_id'].$attn['am_in'].$attn['am_out'].$attn['pm_in'].$attn['pm_out'].$attn['ot_in'].$attn['ot_out'];
-            $data = md5(utf8_encode($data), TRUE);
-            if(base64_encode($data) == $attn['signature']){
-                $result = "true";
-            }else{
-                $result = "false";
-            }
-        }
-        return $result;
     }
 }
