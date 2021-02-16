@@ -53,8 +53,8 @@ class LeaveController extends Controller {
         if ($table1 == $table2) {
             $tables[] = ["table" => $table1, "begin" => $arr['from'], "end" => $arr['to']];
         } else {
-            $date_start = date_create($arr['from'])->format('Y-m-d');
-            $start_interval = new DateTime($date_start);
+            // $date_start = date_create($arr['from'])->format('Y-m-d');
+            $start_interval = new DateTime(date_create($arr['from'])->format('Y-m-d'));
             $interval = new DateInterval('P1D');
             $emp_schedule = DTR::get_sched($id);
             for ($i=0;$i<sizeof($emp_schedule);$i++) {
@@ -68,34 +68,45 @@ class LeaveController extends Controller {
                 $daterange = new DatePeriod($start_interval, $interval, $end_interval);
                 foreach ($daterange as $dt) {
                     if ($dt->format('d') == $start_interval->format('d')) {
-                        // $this->leave_balance[$temp]['date'] = $dt->format('Y-m-d');
                         $monthtable[$temp] = $dt->format('m-Y');
                         $attendance[$temp] = DB::db("db_attendance")->fetch_all("SELECT * FROM `$monthtable[$temp]` WHERE emp_id = ? AND date > ? ORDER BY date ASC", [$id, $this->leave_credits['date_credited']]);
+                        // LOOP ATTENDANCE AND STORE ABSENCES, UNDERTIME AND PRESENT DATES TO $this->leave_changes AND $days_present
                         if ($attendance[$temp]) {
                             for ($i=0;$i<sizeof($attendance[$temp]);$i++) {
-                                if ($attendance[$temp][$i]['date'] < date('Y-m-d')) {
-                                    if (($attendance[$temp][$i]['total_hours'] < 8) && ($attendance[$temp][$i]['total_hours'] > 0) && ($attendance[$temp][$i]['is_absent'] != 1)) {
-                                        $this->leave_changes[$temp][$i] = ["period" => $attendance[$temp][$i]['date'], "particulars" => "Undertime", "total_hours" => $attendance[$temp][$i]['total_hours']];
-                                        $days_present[$temp][$i] = $attendance[$temp][$i]['date'];
-                                        // $this->leaveBalanceChanges($attendance[$temp][$i]['total_hours'], $temp, 'undertime', $dt->format('Y-m-d'));
-                                    } else if (($attendance[$temp][$i]['total_hours'] == 0) && ($attendance[$temp][$i]['is_absent'] == 1)) {
-                                        $this->leave_changes[$temp][$i] = ["period" => $attendance[$temp][$i]['date'], "particulars" => "Absent", "total_hours" => $attendance[$temp][$i]['total_hours']];
-                                        // $days_present[$temp][$i] = $attendance[$temp][$i]['date'];
-                                    } else {
-                                        // if ($attendance[$temp][$i]['pm_in'] == "VL:VL") {
+                                if (empty($this->leave_changes[$temp][$i])) {
+                                    // if ($attendance[$temp][$i]['date'] < date('Y-m-d')) {
+                                        if (($attendance[$temp][$i]['total_hours'] < 8) && ($attendance[$temp][$i]['total_hours'] > 0) && ($attendance[$temp][$i]['is_absent'] != 1)) {
+                                            $this->leave_changes[$temp][$i] = ["period" => $attendance[$temp][$i]['date'], "particulars" => "Undertime", "total_hours" => $attendance[$temp][$i]['total_hours']];
+                                            $days_present[$temp][$i] = $attendance[$temp][$i]['date'];
+                                        } else if (($attendance[$temp][$i]['total_hours'] == 0) && ($attendance[$temp][$i]['is_absent'] == 1)) {
+                                            $this->leave_changes[$temp][$i] = ["period" => $attendance[$temp][$i]['date'], "particulars" => "Absent", "total_hours" => $attendance[$temp][$i]['total_hours']];
+                                        } else {
                                             $this->leave_changes[$temp][$i] = ["period" => $attendance[$temp][$i]['date'], "particulars" => "Present", "total_hours" => $attendance[$temp][$i]['total_hours']];
                                             $days_present[$temp][$i] = $attendance[$temp][$i]['date'];
-                                        // }
-                                    }
+                                        }
+                                    // }
+                                } else {
+                                    print_r("<pre>");
+                                    print_r($attendance[$temp]);
+                                    print_r("</pre>");
+                                    // $key = array_search($this->leave_changes[$temp][$i]['period'],$attendance[$temp]);
+                                    // print_r($key);
+                                    // $idx = 0;
+                                    // foreach ($this->leave_changes[$temp][$i] as $key => $lv_ch) {
+                                    //     $key == 'period' ? $result[] = key(array_splice($this->leave_changes[$temp][$i], $idx, 1)) : '';
+                                    //     $idx++;
+                                    // }
+                                    // print_r($result);
+                                    // unset($attendance[$temp][array_search($this->leave_changes[$temp][$i]['period'],$attendance[$temp])]);
                                 }
                             }
                         }
-
+                        // LOOP LEAVE APPROVED AND STORE DATES TO $this->leave_changes AND $days_onleave
                         $emp_leave[$temp] = DB::db("db_master")->fetch_all("SELECT * FROM tbl_emp_leave WHERE employee_id = ? AND lv_status = ? AND lv_date_fr BETWEEN ? AND ? ORDER BY lv_date_fr ASC", [$id, 2, $dt->format('Y-m-d'), $dt->format('Y-m-t')]);
-                        if ($emp_leave[$temp]) { //ADD CONDITION IF LEAVE HAS MULTIPLE DAYS!
+                        if ($emp_leave[$temp]) {
                             $k = sizeof($emp_leave[$temp]);
                             for ($i=0; $i < sizeof($emp_leave[$temp]); $i++) {
-                                // if ($emp_leave[$temp][$i]['lv_date_fr'] < date('Y-m-d')) {
+                                // if (empty($this->leave_changes[$temp][$i])) {
                                     if ($emp_leave[$temp][$i]['lv_no_days'] == 1) {
                                         if ($k > sizeof($emp_leave[$temp])) {
                                             $this->leave_changes[$temp][$k - sizeof($emp_leave[$temp])] = ["period" => $emp_leave[$temp][$i]['lv_date_fr'], "particulars" => "On Leave", "total_days" => 1];
@@ -105,27 +116,57 @@ class LeaveController extends Controller {
                                             $days_onleave[$temp][$i] = $emp_leave[$temp][$i]['lv_date_fr'];
                                         }
                                         $k++;
-                                        // $this->leaveBalanceChanges(8, $temp, 'onleave', $dt->format('Y-m-d'));
                                     } else {
-                                        // $i += $emp_leave[$temp][$i]['lv_no_days'];
-                                        for ($j=0;$j<$emp_leave[$temp][$i]['lv_no_days'];$j++) {
-                                            if ($k > sizeof($emp_leave[$temp])) {
-                                                $this->leave_changes[$temp][$k - sizeof($emp_leave[$temp])] = ["period" => date_create($emp_leave[$temp][$i]['lv_date_fr'])->modify("+$j day")->format('Y-m-d'), "particulars" => "On Leave", "total_days" => 1];
-                                                $days_onleave[$temp][$k - sizeof($emp_leave[$temp])] = date_create($emp_leave[$temp][$i]['lv_date_fr'])->modify("+$j day")->format('Y-m-d');
-                                            } else {
-                                                $this->leave_changes[$temp][$i+$j] = ["period" => date_create($emp_leave[$temp][$i]['lv_date_fr'])->modify("+$j day")->format('Y-m-d'), "particulars" => "On Leave", "total_days" => 1];
-                                                $days_onleave[$temp][$i+$j] = date_create($emp_leave[$temp][$i]['lv_date_fr'])->modify("+$j day")->format('Y-m-d');
+                                        if (date_create($emp_leave[$temp][$i]['lv_date_fr'])->format('m-Y') == date_create($emp_leave[$temp][$i]['lv_date_to'])->format('m-Y')) {
+                                            for ($j=0;$j<$emp_leave[$temp][$i]['lv_no_days'];$j++) {
+                                                if ($k > sizeof($emp_leave[$temp])) {
+                                                    $this->leave_changes[$temp][$k - sizeof($emp_leave[$temp])] = ["period" => date_create($emp_leave[$temp][$i]['lv_date_fr'])->modify("+$j day")->format('Y-m-d'), "particulars" => "On Leave", "total_days" => 1];
+                                                    $days_onleave[$temp][$k - sizeof($emp_leave[$temp])] = date_create($emp_leave[$temp][$i]['lv_date_fr'])->modify("+$j day")->format('Y-m-d');
+                                                } else {
+                                                    $this->leave_changes[$temp][$i+$j] = ["period" => date_create($emp_leave[$temp][$i]['lv_date_fr'])->modify("+$j day")->format('Y-m-d'), "particulars" => "On Leave", "total_days" => 1];
+                                                    $days_onleave[$temp][$i+$j] = date_create($emp_leave[$temp][$i]['lv_date_fr'])->modify("+$j day")->format('Y-m-d');
+                                                }
+                                                $k++;
                                             }
-                                            $k++;
-                                            // $i++;
+                                        } else {
+                                            $leave_start = new DateTime(date_create($emp_leave[$temp][$i]['lv_date_fr'])->format('Y-m-d'));
+                                            $day = new DateInterval('P1D');
+                                            $leave_end = new DateTime(date_create($emp_leave[$temp][$i]['lv_date_to'])->modify("+1 day")->format('Y-m-d'));
+                                            $leave_range = new DatePeriod($leave_start, $day, $leave_end);
+
+                                            $m = $temp;
+                                            $l = $k > sizeof($emp_leave[$temp]) ? $k - sizeof($emp_leave[$temp]) : $i;
+                                            // $month_diff = date_create($emp_leave[$temp][$i]['lv_date_fr'])->format('m')->diff(date_create($emp_leave[$temp][$i]['lv_date_to'])->format('m')) + (date_create($emp_leave[$temp][$i]['lv_date_fr'])->format('Y')->diff(date_create($emp_leave[$temp][$i]['lv_date_to'])->format('Y')*12));
+                                            foreach ($leave_range as $lv) {
+                                                
+                                                $m = $lv->format('d') == 01 ? $m+1 : $m;
+                                                $l = $lv->format('d') == 01 ? 0 : $l;
+                                                // print_r($l);print_r($m);
+                                                if (in_array($lv->format('l'),$this->schedule)) {
+                                                    // if ($lv->format('m-Y') == date_create($emp_leave[$temp][$i]['lv_date_fr'])->format('m-Y')) {
+                                                    $this->leave_changes[$m][$l] = ["period" => $lv->format('Y-m-d'), "particulars" => "On Leave", "total_days" => 1];
+                                                    $days_onleave[$m][$l] = $lv->format('Y-m-d');
+                                                    // } else {
+                                                        // $month_diff = 
+                                                    // }
+                                                    print_r("<pre>");
+                                                    print_r($m . $l);
+                                                    // print_r($days_onleave);
+                                                    print_r("</pre>");
+                                                    $l++;
+                                                }
+                                            }
+                                            // $month_diff = date_create($emp_leave[$temp][$i]['lv_date_fr'])->format('m')->diff(date_create($emp_leave[$temp][$i]['lv_date_to'])->format('m')) + (date_create($emp_leave[$temp][$i]['lv_date_fr'])->format('Y')->diff(date_create($emp_leave[$temp][$i]['lv_date_to'])->format('Y')*12));
+                                            // for ($l=0,$j=0; $l < $month_diff; $l++,$j++) {
+                                            //     while (date_create($emp_leave[$temp][$i]['lv_date_fr'])->modify("+$l month"))
+                                            //     for ($j=0; $j < $emp_leave[$temp][$i]['lv_no_days']; $j++) {
+                                                    
+                                            //     }
+                                            // }
                                         }
-                                        // $i += ($k - sizeof($emp_leave[$temp]) - 1);
-                                        // $k++;
-                                        // $i++;
                                     }
                                 // }
                             }
-                            // $this->leave_changes[1][21] = ["period" => '2021-01-06', "particulars" => "on Leave", "total_days" => 1];
                         }
                         $temp++;
                     }
@@ -142,7 +183,7 @@ class LeaveController extends Controller {
                                 } else {
                                     if (!(in_array($dt->format('Y-m-d'), $days_onleave[$temp-1]))) {
                                         if (is_array($this->leave_changes[$temp-1])) {
-                                            $this->leave_changes[$temp-1][sizeof($this->leave_changes[$temp-1])] = ["period" => $dt->format('Y-m-d'), "particulars" => "Absent"];
+                                            $this->leave_changes[$temp-1][sizeof($this->leave_changes[$temp-1])] = ["period" => $dt->format('Y-m-d'), "particulars" => "Absents"];
                                         } else {
                                             $this->leave_changes[$temp-1][0] = ["period" => $dt->format('Y-m-d'), "particulars" => "Absent"];
                                         }
