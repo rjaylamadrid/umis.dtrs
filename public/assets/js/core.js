@@ -54,7 +54,7 @@ function confirm_delete(no, id, tab, other_info_col='', other_info_data='', admi
     }
     else {
       f({action: 'delete_row', no:no, tab:tab}, "text", "/employees").then( function (data) {
-        location.href = "/employees/profile/" + id + "/" + tab;
+        location.href = "/employees/update/" + id + "/" + tab;
       });
     }
   }

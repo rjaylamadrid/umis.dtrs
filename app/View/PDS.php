@@ -33,6 +33,11 @@ class PDS extends PDF{
         self::$pdf->Write($h, $text);
     }
 
+    public static function multiLine($w, $h, $txt=null, $y='0', $border='0', $align='C', $x='0') {
+        $txt = $txt ? $txt : 'N/A';
+        self::$pdf->multiCell($w, $h, $txt, $border, $align, $x, $y,'','',true, 0, false, false, $h, 'M');
+    }
+
     public function getPage($page) {
         self::$pdf->AddPage('P', array(216, 330));
         $template = self::$pdf->importPage($page);
@@ -43,6 +48,7 @@ class PDS extends PDF{
             case '1':
                 self::personal_info();
                 self::family_background();
+                self::educational_background();
                 break;
             case '2':
                 self::eligibility();
@@ -51,6 +57,10 @@ class PDS extends PDF{
             case '3':
                 self::voluntary_work();
                 self::training_seminar();
+                self::other_info();
+                break;
+            case '4':
+                self::character_references();
                 break;
         }  
     }
@@ -61,13 +71,14 @@ class PDS extends PDF{
         self::setText(42, 46, 0, strtoupper(self::$employee->info['first_name']));
         self::setText(185, 46, 0, strtoupper(self::$employee->basic_info['ext_name']));
         self::setText(42, 52.2, 0, strtoupper(self::$employee->info['middle_name']));
-        self::setText(42, 61, 0, date_create(self::$employee->basic_info['birthdate'])->format('m/d/Y'));
+        self::setText(42, 61, 0, date('m/d/Y', self::$employee->basic_info['birthdate']));
         self::setText(42, 70, 0, self::$employee->basic_info['birthplace']);
 
         if (self::$employee->basic_info['gender'] == 'Male') self::check(43.8, 77.2);
         else self::check(72.9, 77.2);
 
         self::get_maritalStatus(self::$employee->basic_info['marital_status']);
+        self::get_citizenship();
 
         self::setText(42, 98, 0, self::$employee->basic_info['height']);
         self::setText(42, 105, 0, self::$employee->basic_info['weight']);
@@ -94,6 +105,22 @@ class PDS extends PDF{
         
         foreach ($m_status as $status) {
             if ($status['status'] == $stat) self::check($status['x'], $status['y']);
+        }
+    }
+
+    protected function get_citizenship() {
+        switch (self::$employee->basic_info['citizenship']) {
+            case 'Filipino':
+                self::check(139.6, 60.8);
+                break;
+            case 'Dual Citizenship - by birth':
+                self::check(163.6, 65.2);
+            case 'Dual Citizenship - by naturalization':
+                self::check(179.6, 65.3);
+            default:
+                self::check(158.5, 60.8);
+                self::setText(140, 77.2, 0, self::$employee->basic_info['dual_citizen']);
+                break;
         }
     }
 
@@ -125,7 +152,7 @@ class PDS extends PDF{
         self::$employee->family_background();
         self::setText(42, 166.7, 0, self::$employee->family_background['spouse']['last_name']);
         self::setText(42, 172.7, 0, self::$employee->family_background['spouse']['first_name']);
-        self::setText(98, 173.4, 0, self::$employee->family_background['spouse']['ext_name']);
+        self::setText(98, 173.6, 0, self::$employee->family_background['spouse']['ext_name']);
         self::setText(42, 178.7, 0, self::$employee->family_background['spouse']['middle_name']);
         self::setText(42, 185, 0, self::$employee->family_background['spouse']['occupation']);
         self::setText(42, 191, 0, self::$employee->family_background['spouse']['employer']);
@@ -153,94 +180,124 @@ class PDS extends PDF{
         self::setText(42, 245.9, 0, self::$employee->family_background['mother']['middle_name']);
     }
 
+    protected function educational_background() {
+        self::$employee->education();
+        $levels = array('Elementary','Secondary','Vocational','College','Graduate Studies');
+        $y = 269;
+        for($i=0; $i<sizeof($levels); $i++) {
+            $education = [];
+            foreach(self::$employee->education as $educ) {
+                if($educ['level'] == $levels[$i]) $education = $educ;
+            }
+            self::$pdf->setXY(41.5,$y);
+            self::multiLine(49.5, 8.1, $education['school_name'],0);
+            self::multiLine(45.1, 8.1, $education['school_degree'],0);
+            self::multiLine(12.5, 8.1, $education['period_from'],0);
+            self::multiLine(12.5, 8.1, $education['period_to'],0);
+            self::multiLine(19, 8.1, $education['highest_level'],0);
+            self::multiLine(14.2, 8.1, $education['year_graduated'],0);
+            self::multiLine(15.3, 8.1, $education['academic_honor'],1);
+            $y = $y+8.2;
+        }
+    }
+
     protected function eligibility() {
         self::$employee->eligibility();
-        $y = 24;
-        if(self::$employee->eligibility){
-            foreach (self::$employee->eligibility as $eligibility) {
-                self::$pdf->setXY(6, $y);
-                self::$pdf->Cell(62, 0, $eligibility['eligibility_name'], 0, 0, 'C', 0, 1);
-                self::$pdf->Cell(26, 0, $eligibility['eligibility_rating'], 0, 0, 'C', 0, 1);
-                self::$pdf->Cell(24, 0, date_create($eligibility['eligibility_date_exam'])->format('m/d/Y'), 0, 0, 'C', 0, 1);
-                self::$pdf->Cell(60, 0, $eligibility['eligibility_place_exam'], 0, 0, 'C', 0, 1);
-                self::$pdf->Cell(18, 0, $eligibility['eligibility_license'], 0, 0, 'C', 0, 1);
-                self::$pdf->Cell(15, 5.7, date_create($eligibility['eligibility_validity'])->format('m/d/Y'),0, 0, 'C', 0, 1);
-                $y = $y+8.2;
-            }
-        }else{
+        $y = 22;
+        if(!self::$employee->eligibility) self::$employee->eligibility[0] =[];
+        foreach (self::$employee->eligibility as $eligibility) {
             self::$pdf->setXY(6, $y);
-            self::$pdf->Cell(62, 0, 'N/A', 0, 0, 'C', 0, 1);
-            self::$pdf->Cell(26, 0, 'N/A', 0, 0, 'C', 0, 1);
-            self::$pdf->Cell(24, 0, 'N/A', 0, 0, 'C', 0, 1);
-            self::$pdf->Cell(60, 0, 'N/A', 0, 0, 'C', 0, 1);
-            self::$pdf->Cell(18, 0, 'N/A', 0, 0, 'C', 0, 1);
-            self::$pdf->Cell(15, 5.7, 'N/A',0, 0, 'C', 0, 1);
+            self::multiLine(62, 8.1, $eligibility['eligibility_name'], 0);
+            self::multiLine(26, 8.1, $eligibility['eligibility_rating'], 0);
+            self::multiLine(24, 8.1, $eligibility['eligibility_date_exam'] ? date('m/d/Y', $eligibility['eligibility_date_exam']) : '', 0);
+            self::multiLine(60, 8.1, $eligibility['eligibility_place_exam'], 0);
+            self::multiLine(18.3, 8.1, $eligibility['eligibility_license'], 0);
+            self::multiLine(14.5, 8.1, $eligibility['eligibility_validity'] && $eligibility['eligibility_validity'] != '0000-00-00' ? date('m/d/Y', $eligibility['eligibility_validity']) : '',1);
+            $y = $y+8.2;
         }
     }
 
     protected function work_experience() {
         self::$employee->employment();
-        $y = 109.8;
-        if (self::$employee->employment) {
-            foreach (self::$employee->employment as $employment) {
-                $sg = $employment['salary_grade'] ? $employment['salary_grade']."-".$employment['step'] : 'N/A';
-                self::$pdf->setXY(6, $y);
-                self::$pdf->Cell(16, 0, date_create($employment['date_from'])->format('m/d/Y'), 0, 0, 'C', 0, 1);
-                self::$pdf->Cell(16.2, 0, date_create($employment['date_to'])->format('m/d/Y'), 0, 0, 'C', 0, 1);
-                self::$pdf->Cell(56, 0, $employment['position'], 0, 0, 'C', 0, 1);
-                self::$pdf->Cell(53.5, 0, $employment['company'], 0, 0, 'C', 0, 1);
-                self::$pdf->Cell(14, 0, $employment['salary'], 0, 0, 'C', 0, 1);
-                self::$pdf->Cell(16, 0, $sg, 0, 0, 'C', 0, 1);
-                self::$pdf->Cell(19, 0, $employment['appointment'], 0, 0, 'C', 0, 1);
-                self::$pdf->Cell(13.5, 0, $employment['govt_service'] == '1' ? 'Y' : 'N', 0, 0, 'C', 0, 1);
-                $y = $y + 7.2;
-            }
-        } else {
+        $y = 108.3;
+        if (!self::$employee->employment) self::$employee->employment[0] = [];
+        foreach (self::$employee->employment as $employment) {
+            $sg = $employment['salary_grade'] ? $employment['salary_grade']."-".$employment['step'] : 'N/A';
+            $appointment =  $employment['govt_service'] && $employment['govt_service'] == '1' ? 'Y' : 'N';
             self::$pdf->setXY(6, $y);
-            self::$pdf->Cell(16, 0, 'N/A', 0, 0, 'C', 0, 1);
-            self::$pdf->Cell(16.2, 0, 'N/A', 0, 0, 'C', 0, 1);
-            self::$pdf->Cell(56, 0, 'N/A', 0, 0, 'C', 0, 1);
-            self::$pdf->Cell(53.5, 0, 'N/A', 0, 0, 'C', 0, 1);
-            self::$pdf->Cell(14, 0, 'N/A', 0, 0, 'C', 0, 1);
-            self::$pdf->Cell(16, 0, 'N/A', 0, 0, 'C', 0, 1);
-            self::$pdf->Cell(19, 0, 'N/A', 0, 0, 'C', 0, 1);
-            self::$pdf->Cell(13.5, 0, 'N/A', 0, 0, 'C', 0, 1);
+
+            self::multiLine(16.2, 7.1, $employment['date_from'] ? date('m/d/Y', $employment['date_from']) : '', 0);
+            self::multiLine(16.2, 7.1, $employment['date_from'] ? date('m/d/Y', $employment['date_to']) : '', 0);
+            self::multiLine(56, 7.1, $employment['position'], 0);
+            self::multiLine(53.2, 7.1, $employment['company'], 0);
+            self::multiLine(14, 7.1, $employment['salary'] ? number_format($employment['salary'],2,'.',',') : '', 0);
+            self::multiLine(16, 7.1, $sg, 0);
+            self::multiLine(19, 7.1, $employment['appointment'], 0);
+            self::multiLine(13.5, 7.1, $appointment, 1);
+            $y = $y + 7.1;
         }
     }
 
     protected function voluntary_work() {
         self::$employee->voluntary_work();
-        $y = 25;
-        if (self::$employee->voluntary_work) {
-            foreach (self::$employee->voluntary_work as $work) {
-                self::$pdf->setXY(6, $y);
-                self::$pdf->Cell(89, 0, $work['organization_name'],0, 0, 'C', 0, 1);
-                self::$pdf->SetFont('helvetica','', 7);
-                self::$pdf->Cell(16, 0, date_create($work['date_from'])->format('m/d/Y'), 0, 0, 'C', 0, 1);
-                self::$pdf->Cell(15, 0, date_create($work['date_to'])->format('m/d/Y'), 0, 0, 'C', 0, 1);
-                self::$pdf->SetFont('helvetica','', 9);
-                self::$pdf->Cell(15, 0, $work['total_hours'], 0, 0, 'C', 0, 1);
-                self::$pdf->Cell(69, 0, $work['organization_position'], 0, 0, 'C', 0, 1);
-                $y = $y + 8;
-            }
-        } else {
+        $y = 23.4;
+        if (!self::$employee->voluntary_work) self::$employee->voluntary_work[0] = [];
+        foreach (self::$employee->voluntary_work as $work) {
             self::$pdf->setXY(6, $y);
-            self::$pdf->Cell(89, 0, 'N/A', 0, 0, 'C', 0, 1);
-            self::$pdf->Cell(15.5, 0, 'N/A', 0, 0, 'C', 0, 1);
-            self::$pdf->Cell(15, 0, 'N/A', 0, 0, 'C', 0, 1);
-            self::$pdf->Cell(15.5, 0, 'N/A', 0, 0, 'C', 0, 1);
-            self::$pdf->Cell(69, 0, 'N/A', 0, 0, 'C', 0, 1);
+            self::multiLine(89, 7.3, $work['organization_name'],0);
+            self::multiLine(15.5, 7.3, $work['date_from'] ? date('m/d/Y', $work['date_from']) : '', 0);
+            self::multiLine(15.5, 7.3, $work['date_from'] ? date('m/d/Y', $work['date_to']) : '', 0);
+            self::multiLine(15, 7.3, $work['total_hours'], 0);
+            self::multiLine(69, 7.3, $work['organization_position'], 1);
+            $y = $y + 7.3;
         }
     }
 
     protected function training_seminar() {
-        $y = 105.3;
-        self::$pdf->setXY(6, $y);
-            self::$pdf->Cell(89, 0, 'N/A', 0, 0, 'C', 0, 1);
-            self::$pdf->Cell(15.5, 0, 'N/A', 0, 0, 'C', 0, 1);
-            self::$pdf->Cell(15, 0, 'N/A', 0, 0, 'C', 0, 1);
-            self::$pdf->Cell(15.5, 0, 'N/A', 0, 0, 'C', 0, 1);
-            self::$pdf->Cell(17, 0, 'N/A', 0, 0, 'C', 0, 1);
-            self::$pdf->Cell(52, 0, 'N/A', 0, 0, 'C', 0, 1);
+        self::$employee->training_seminar();
+        $y = 103.8;
+        if (!self::$employee->training_seminar) self::$employee->training_seminar[0] = [];
+        foreach(self::$employee->training_seminar as $training) {
+            self::$pdf->setXY(6, $y);
+            self::multiLine(89, 6.8, $training['training_title'], 0);
+            self::multiLine(15.5, 6.8, $training['training_from'] ? date('m/d/Y',$training['training_from']) : '', 0);
+            self::multiLine(15, 6.8, $training['training_to'] ? date('m/d/Y',$training['training_to']) : '', 0);
+            self::multiLine(15.5, 6.8, $training['training_hours'], 0);
+            self::multiLine(17, 6.8, $training['training_type'], 0);
+            self::multiLine(52, 6.8, $training['training_sponsor'],1);
+            $y = $y + 6.8;
+        }
+    }
+
+    protected function other_info() {
+        self::$employee->other_info();
+        $infos = array(
+            ['title' => 'skills', 'length' => '52.2', 'x' => '6'],
+            ['title' => 'recognizations', 'length' => '100', 'x' => '58.2'], 
+            ['title' => 'organizations', 'length' => '51.8', 'x' => '158.2']);
+        $infos[0]['data'] = self::$employee->other_info['other_skill'] ? explode(';', self::$employee->other_info['other_skill']) : array('0'=>'');
+        $infos[1]['data']  = self::$employee->other_info['other_recognition'] ? explode(';', self::$employee->other_info['other_recognition']) : array('0'=>'');
+        $infos[2]['data']  = self::$employee->other_info['other_recognition'] ? explode(';', self::$employee->other_info['other_organization']) : array('0'=>'');
+        
+        foreach($infos as $info) {
+            $y = 263;
+            for($i=0; $i<sizeof($info['data']); $i++) {
+                self::$pdf->setXY($info['x'], $y);
+                self::multiLine($info['length'], 6.8, $info['data'][$i], 1);
+                $y = $y + 6.8;
+            }
+        }
+    }
+
+    protected function character_references() {
+        self::$employee->references();
+        $y = 202.5;
+        foreach(self::$employee->references as $reference) {
+            self::$pdf->setXY(6, $y);
+            self::multiLine(78.2, 7.5, $reference['reference_name'], 0); 
+            self::multiLine(49.5, 7.5, $reference['reference_address'], 0); 
+            self::multiLine(24.5, 7.5, $reference['reference_contact'], 0); 
+            $y = $y+7.5;
+        }
     }
 }
