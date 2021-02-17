@@ -109,11 +109,11 @@
 												<tr align="center">
 													<td><b>{$changes[$i][$j].period|date_format:"F d, Y"}</b></td>
 													<td>{$changes[$i][$j].particulars}</td>
-													<td>{$changes[$i][$j].total_hours}</td>
-													<td>{$changes[$i][$j].awp}</td>
-													<td>{$changes[$i][$j].balance}</td>
-													<td>-</td>
-													<td></td>
+													<td>{if $changes[$i][$j].v_earned}{$changes[$i][$j].v_earned}{else}-{/if}</td>
+													<td>{if $changes[$i][$j].v_awp}{$changes[$i][$j].v_awp}{else}-{/if}</td>
+													<td>{$changes[$i][$j].v_bal}</td>
+													<td>{if $changes[$i][$j].v_awop}{$changes[$i][$j].v_awop}{else}-{/if}</td>
+													<td>{if $changes[$i][$j].s_earned}{$changes[$i][$j].s_earned}{else}-{/if}</td>
 													<td>-</td>
 													<td></td>
 													<td>-</td>
@@ -137,10 +137,10 @@
 										<td colspan="1" align="center"><b></b></td>
 										<td colspan="1" align="center"><b></b></td>
 										<td colspan="2" align="center"><b>OVERALL VL CREDITS<br></b></td>
-										<td colspan="1" align="center"><b></b></td>
+										<td colspan="1" align="center"><b>{$balance[$balance|@count - 1]['vacation']|round:2}</b></td>
 										<td colspan="1" align="center"><b></b></td>
 										<td colspan="2" align="center"><b>OVERALL SL CREDITS<br></b></td>
-										<td colspan="1" align="center"><b></b></td>
+										<td colspan="1" align="center"><b>{$balance[$balance|@count - 1]['sick']|round:2}</b></td>
 										<td colspan="1" align="center"><b></b></td>
 										<td colspan="1" align="center"><b></b></td>
 										
