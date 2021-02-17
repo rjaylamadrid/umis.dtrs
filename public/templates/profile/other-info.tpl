@@ -17,49 +17,29 @@
         {if $employee->other_info}
             <tr class="row-header">
                 <td>Skills and Hobbies</td>
-                {for $i=0 to $other_info.other_skill|@count-1}
-                <tr>
-                    <td style="font-weight:normal">
-                        {if $other_info.other_skill[0]}
-                            <p>{$other_info.other_skill[$i]}</p>
-                        {else}
-                            <p>No Record(s) Found</p>
-                        {/if}
-                    </td>
-                </tr>
-                {/for}
-            </tr>
-
-            <tr class="row-header">
                 <td>Recognition</td>
-                {for $i=0 to $other_info.other_recognition|@count-1}
-                <tr>
-                    <td style="font-weight:normal">
-                        {if $other_info.other_recognition[0]}
-                            <p>{$other_info.other_recognition[$i]}</p>
-                        {else}
-                            <p>No Record(s) Found</p>
-                        {/if}
-                    </td>
-                </tr>
-                {/for}
-            </tr>
-
-            <tr class="row-header">
                 <td>Association/Organization</td>
-                {for $i=0 to $other_info.other_organization|@count-1}
-                <tr>
-                    <td style="font-weight:normal">
-                        {if $other_info.other_organization[0]}
-                            <p>{$other_info.other_organization[$i]}</p>
-                        {else}
-                            <p>No Record(s) Found</p>
-                        {/if}
-                    </td>
-                </tr>
-                {/for}
             </tr>
-            
+            {if $other_info.other_skill|@count > $other_info.other_recognition|@count}
+                {if $other_info.other_skill|@count > $other_info.other_organization|@count} 
+                    {$len = $other_info.other_skill|@count}
+                {else}
+                    {$len = $other_info.other_organization|@count}
+                {/if}
+            {else}
+                {if $other_info.other_recognition|@count > $other_info.other_organization|@count} 
+                    {$len = $other_info.other_recognition|@count}
+                {else}
+                    {$len = $other_info.other_organization|@count}
+                {/if}
+            {/if}
+            {for $i=0 to $len-1}
+                <tr>
+                    <td style="font-weight:normal">{$other_info.other_skill[$i]}</td>
+                    <td style="font-weight:normal">{$other_info.other_recognition[$i]}</td>
+                    <td style="font-weight:normal">{$other_info.other_organization[$i]}</td>
+                </tr>
+            {/for}
         {else}
             <tr class="row-header">
                 <td colspan="2">No Record(s) Found</td>
@@ -67,6 +47,7 @@
         {/if}
         </table>
     </div>
+    {include file="profile/questions.tpl"}
 {else}
     <form method="POST" action="{$server}{if $user.is_admin}/employees/save/{$employee->id}/other-info{else}/save{/if}">
         <input type="hidden" name="admin_id" value="{$user.employee_id}">
@@ -81,7 +62,7 @@
                                 {if ($other_info.other_skill[$i] != '')}
                                     <tr id="skill">
                                         <td style="font-weight:normal"><input class="form-control" type="text" name="employeeinfo[skill][{$i}]" value="{$other_info.other_skill[$i]}"></td>
-                                        <td style="vertical-align: middle; text-align: center;"><a class="btn btn-outline-danger btn-sm" href="javascript:confirm_delete({$other_info.no},{$other_info.employee_id},'{$tab}', '{"other_skill"}', '{$other_info.other_skill[$i]}',{$user.employee_id})"><i class="fe fe-trash"></i></a></td>
+                                        <td style="vertical-align: middle; text-align: center;"><a class="btn btn-outline-danger btn-sm" href="javascript:confirm_delete({$employee->other_info.no},{$employee->other_info.employee_id},'{$tab}', '{"other_skill"}', '{$other_info.other_skill[$i]}',{$user.employee_id})"><i class="fe fe-trash"></i></a></td>
                                     </tr>
                                 {/if}
                             {/for}
@@ -97,7 +78,7 @@
                             {if ($other_info.other_recognition[$i] != '')}
                             <tr id="recog">
                                 <td style="font-weight:normal"><input class="form-control" type="text" name="employeeinfo[recog][{$i}]" value="{$other_info.other_recognition[$i]}"></td>
-                                <td style="vertical-align: middle; text-align: center;"><a class="btn btn-outline-danger btn-sm" href="javascript:confirm_delete({$other_info.no},{$other_info.employee_id},'{$tab}', '{"other_recognition"}', '{$other_info.other_recognition[$i]}',{$user.employee_id})"><i class="fe fe-trash"></i></a></td>
+                                <td style="vertical-align: middle; text-align: center;"><a class="btn btn-outline-danger btn-sm" href="javascript:confirm_delete({$employee->other_info.no},{$employee->other_info.employee_id},'{$tab}', '{"other_recognition"}', '{$other_info.other_recognition[$i]}',{$user.employee_id})"><i class="fe fe-trash"></i></a></td>
                             </tr>
                             {/if}
                         {/for}
@@ -113,7 +94,7 @@
                             {if ($other_info.other_organization[$i] != '')}
                                 <tr id="org">
                                     <td style="font-weight:normal"><input class="form-control" type="text" name="employeeinfo[org][{$i}]" value="{$other_info.other_organization[$i]}"></td>
-                                    <td style="vertical-align: middle; text-align: center;"><a class="btn btn-outline-danger btn-sm" href="javascript:confirm_delete({$other_info.no},{$other_info.employee_id},'{$tab}', '{"other_organization"}', '{$other_info.other_organization[$i]}',{$user.employee_id})"><i class="fe fe-trash"></i></a></td>
+                                    <td style="vertical-align: middle; text-align: center;"><a class="btn btn-outline-danger btn-sm" href="javascript:confirm_delete({$employee->other_info.no},{$employee->other_info.employee_id},'{$tab}', '{"other_organization"}', '{$other_info.other_organization[$i]}',{$user.employee_id})"><i class="fe fe-trash"></i></a></td>
                                 </tr>
                             {/if}
                         {/for}
@@ -127,10 +108,6 @@
                 <div class="col-md-4 table-responsive">
                     <table class="table table-bordered" id="skill">
                         <thead><tr><th colspan="2">Skills</th></tr></thead>
-                            {* <tr id="skill">
-                                <td style="font-weight:normal"><input class="form-control" type="text" name="employeeinfo[skill][0]"></td>
-                                <td style="vertical-align: middle; text-align: center;"><a class="btn btn-outline-danger btn-sm" href="javascript:confirm_delete({$other_info.no},{$other_info.employee_id},'{$tab}', '{"other_skill"}', '{$other_info.other_skill[$i]}',{$user.employee_id})"><i class="fe fe-trash"></i></a></td>
-                            </tr> *}
                             <tr>
                                 <td style="vertical-align: middle; text-align: center;"><a class="btn btn-outline-success btn-sm" href="#" data-toggle="modal" data-target="#other-skill">Add new skill<i class="fe fe-plus"></i></a></td>
                             </tr>
@@ -139,10 +116,6 @@
                 <div class="col-md-4 table-responsive">
                     <table class="table table-bordered" id="recog">
                         <thead><tr><th colspan="2">Recognition</th></tr></thead>
-                        {* <tr id="recog">
-                            <td style="font-weight:normal"><input class="form-control" type="text" name="employeeinfo[recog][0]" value="{$other_info.other_recognition[$i]}"></td>
-                            <td style="vertical-align: middle; text-align: center;"><a class="btn btn-outline-danger btn-sm" href="javascript:confirm_delete({$other_info.no},{$other_info.employee_id},'{$tab}', '{"other_recognition"}', '{$other_info.other_recognition[$i]}',{$user.employee_id})"><i class="fe fe-trash"></i></a></td>
-                        </tr>   *}
                         <tr>
                             <td style="vertical-align: middle; text-align: center;"><a class="btn btn-outline-success btn-sm" href="#" data-toggle="modal" data-target="#other-recog">Add new recognition<i class="fe fe-plus"></i></a></td>
                         </tr>
@@ -151,10 +124,6 @@
                 <div class="col-md-4 table-responsive">
                     <table class="table table-bordered" id="org">
                         <thead><tr><th colspan="2">Association/Organization</th></tr></thead>
-                        {* <tr id="org">
-                            <td style="font-weight:normal"><input class="form-control" type="text" name="employeeinfo[org][0]" value="{$other_info.other_organization[$i]}"></td>
-                            <td style="vertical-align: middle; text-align: center;"><a class="btn btn-outline-danger btn-sm" href="javascript:confirm_delete({$other_info.no},{$other_info.employee_id},'{$tab}', '{"other_organization"}', '{$other_info.other_organization[$i]}',{$user.employee_id})"><i class="fe fe-trash"></i></a></td>
-                        </tr> *}
                         <tr>
                             <td style="vertical-align: middle; text-align: center;"><a class="btn btn-outline-success btn-sm" href="#" data-toggle="modal" data-target="#other-org">Add new association/organization<i class="fe fe-plus"></i></a></td>
                         </tr>
@@ -162,6 +131,7 @@
                 </div>
             {/if}
         </div>
+        {include file="profile/questions.tpl"}
         <div class="row">
             <div class="col-md-12 mt-2" style="text-align: right;">
                 <button type="submit" class="btn btn-primary">Save changes</button>

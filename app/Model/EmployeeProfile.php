@@ -42,7 +42,7 @@ class EmployeeProfile {
     }
 
     public function family_background () {
-        $this->family_background['children'] = DB::fetch_all("SELECT CONCAT(first_name,' ',middle_name,' ',last_name,' ',ext_name) as name, first_name, middle_name,last_name, ext_name, birthdate, no, employee_id FROM tbl_employee_family_background WHERE employee_id = ? AND relationship = 0", $this->id);
+        $this->family_background['children'] = DB::fetch_all("SELECT CONCAT(first_name,' ',middle_name,' ',last_name,' ',ext_name) as name, first_name, middle_name,last_name, ext_name, birthdate, no, employee_id FROM tbl_employee_family_background WHERE employee_id = ? AND relationship = 0 ORDER BY birthdate ASC", $this->id);
         $this->family_background['spouse'] = DB::fetch_row("SELECT * FROM tbl_employee_family_background WHERE employee_id = ? AND relationship = 1", $this->id);
         $this->family_background['mother'] = DB::fetch_row("SELECT no, employee_id, first_name, middle_name, last_name FROM tbl_employee_family_background WHERE employee_id = ? AND relationship = 2", $this->id);
         $this->family_background['father'] = DB::fetch_row("SELECT no, employee_id, first_name, middle_name, last_name, ext_name FROM tbl_employee_family_background WHERE employee_id = ? AND relationship = 3", $this->id);

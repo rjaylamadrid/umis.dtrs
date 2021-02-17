@@ -38,8 +38,18 @@ class PDS extends PDF{
         self::$pdf->multiCell($w, $h, $txt, $border, $align, $x, $y,'','',true, 0, false, false, $h, 'M');
     }
 
+    public static function pdsDate($date, $format = 'm/d/Y') {
+        if ($date && $date != '0000-00-00') {
+            $date = date($format, strtotime($date));
+        } else {
+            $date = 'N/A';
+        }
+        return $date;
+    }
+
     public function getPage($page) {
         self::$pdf->AddPage('P', array(216, 330));
+        self::$pdf->SetAutoPageBreak(TRUE, 0);
         $template = self::$pdf->importPage($page);
         self::$pdf->useTemplate($template);
         self::$pdf->SetFont('helvetica','B', 7);
@@ -71,7 +81,7 @@ class PDS extends PDF{
         self::setText(42, 46, 0, strtoupper(self::$employee->info['first_name']));
         self::setText(185, 46, 0, strtoupper(self::$employee->basic_info['ext_name']));
         self::setText(42, 52.2, 0, strtoupper(self::$employee->info['middle_name']));
-        self::setText(42, 61, 0, date('m/d/Y', self::$employee->basic_info['birthdate']));
+        self::setText(42, 61, 0, self::pdsDate(self::$employee->basic_info['birthdate']));
         self::setText(42, 70, 0, self::$employee->basic_info['birthplace']);
 
         if (self::$employee->basic_info['gender'] == 'Male') self::check(43.8, 77.2);
@@ -115,11 +125,15 @@ class PDS extends PDF{
                 break;
             case 'Dual Citizenship - by birth':
                 self::check(163.6, 65.2);
-            case 'Dual Citizenship - by naturalization':
-                self::check(179.6, 65.3);
-            default:
                 self::check(158.5, 60.8);
                 self::setText(140, 77.2, 0, self::$employee->basic_info['dual_citizen']);
+                break;
+            case 'Dual Citizenship - by naturalization':
+                self::check(179.6, 65.3);
+                self::check(158.5, 60.8);
+                self::setText(140, 77.2, 0, self::$employee->basic_info['dual_citizen']);
+                break;
+            default:
                 break;
         }
     }
@@ -160,15 +174,11 @@ class PDS extends PDF{
         self::setText(42, 203.3, 0, self::$employee->family_background['spouse']['telephone_no']);
 
         $y = 172.7;
-        if (self::$employee->family_background['children'] ) {
-            foreach(self::$employee->family_background['children'] as $children) {
-                self::setText(122, $y, 0, $children['name']);
-                self::setText(181, $y, 0, date_create($children['birthdate'])->format('m/d/Y'));
-                $y = $y + 6.1;
-            }
-        } else {
-            self::setText(122, $y, 0, 'N/A');
-            self::setText(181, $y, 0, 'N/A');
+        $len = sizeof(self::$employee->family_background['children']) > 11 ? 11 : sizeof(self::$employee->family_background['children']);
+        for($i=0; $i<=$len; $i++) {
+            self::setText(122, $y, 0, self::$employee->family_background['children'][$i] ['name']);
+            self::setText(181, $y, 0, self::pdsDate(self::$employee->family_background['children'][$i] ['birthdate']));
+            $y = $y + 6.1;
         }
 
         self::setText(42, 209.2, 0, self::$employee->family_background['father']['last_name']);
@@ -204,15 +214,15 @@ class PDS extends PDF{
     protected function eligibility() {
         self::$employee->eligibility();
         $y = 22;
-        if(!self::$employee->eligibility) self::$employee->eligibility[0] =[];
-        foreach (self::$employee->eligibility as $eligibility) {
+        $len = sizeof(self::$employee->eligibility) > 7 ? 7 : sizeof(self::$employee->eligibility);
+        for ($i=0; $i<=$len; $i++) {
             self::$pdf->setXY(6, $y);
-            self::multiLine(62, 8.1, $eligibility['eligibility_name'], 0);
-            self::multiLine(26, 8.1, $eligibility['eligibility_rating'], 0);
-            self::multiLine(24, 8.1, $eligibility['eligibility_date_exam'] ? date('m/d/Y', $eligibility['eligibility_date_exam']) : '', 0);
-            self::multiLine(60, 8.1, $eligibility['eligibility_place_exam'], 0);
-            self::multiLine(18.3, 8.1, $eligibility['eligibility_license'], 0);
-            self::multiLine(14.5, 8.1, $eligibility['eligibility_validity'] && $eligibility['eligibility_validity'] != '0000-00-00' ? date('m/d/Y', $eligibility['eligibility_validity']) : '',1);
+            self::multiLine(62, 8.1, self::$employee->eligibility[$i]['eligibility_name'], 0);
+            self::multiLine(26, 8.1, self::$employee->eligibility[$i]['eligibility_rating'], 0);
+            self::multiLine(24, 8.1, self::pdsDate(self::$employee->eligibility[$i]['eligibility_date_exam']), 0);
+            self::multiLine(60, 8.1, self::$employee->eligibility[$i]['eligibility_place_exam'], 0);
+            self::multiLine(18.3, 8.1, self::$employee->eligibility[$i]['eligibility_license'], 0);
+            self::multiLine(14.5, 8.1, self::pdsDate(self::$employee->eligibility[$i]['eligibility_validity']),1);
             $y = $y+8.2;
         }
     }
@@ -220,52 +230,51 @@ class PDS extends PDF{
     protected function work_experience() {
         self::$employee->employment();
         $y = 108.3;
-        if (!self::$employee->employment) self::$employee->employment[0] = [];
-        foreach (self::$employee->employment as $employment) {
-            $sg = $employment['salary_grade'] ? $employment['salary_grade']."-".$employment['step'] : 'N/A';
-            $appointment =  $employment['govt_service'] && $employment['govt_service'] == '1' ? 'Y' : 'N';
+        $len = sizeof(self::$employee->employment) > 27 ? 27 : sizeof(self::$employee->employment);
+        for ($i=0; $i<=$len; $i++) {
+            $sg = self::$employee->employment[$i]['salary_grade'] ? self::$employee->employment[$i]['salary_grade']."-".self::$employee->employment[$i]['step'] : 'N/A';
+            $appointment =  self::$employee->employment[$i]['govt_service'] && self::$employee->employment[$i]['govt_service'] == '1' ? 'Y' : 'N';
             self::$pdf->setXY(6, $y);
-
-            self::multiLine(16.2, 7.1, $employment['date_from'] ? date('m/d/Y', $employment['date_from']) : '', 0);
-            self::multiLine(16.2, 7.1, $employment['date_from'] ? date('m/d/Y', $employment['date_to']) : '', 0);
-            self::multiLine(56, 7.1, $employment['position'], 0);
-            self::multiLine(53.2, 7.1, $employment['company'], 0);
-            self::multiLine(14, 7.1, $employment['salary'] ? number_format($employment['salary'],2,'.',',') : '', 0);
+            self::multiLine(16.2, 7.1, self::pdsDate(self::$employee->employment[$i]['date_from']), 0);
+            self::multiLine(16.2, 7.1, self::pdsDate(self::$employee->employment[$i]['date_to']), 0);
+            self::multiLine(56, 7.1, self::$employee->employment[$i]['position'], 0);
+            self::multiLine(53.2, 7.1, self::$employee->employment[$i]['company'], 0);
+            self::multiLine(14, 7.1, self::$employee->employment[$i]['salary'] ? number_format(self::$employee->employment[$i]['salary'],2,'.',',') : '', 0);
             self::multiLine(16, 7.1, $sg, 0);
-            self::multiLine(19, 7.1, $employment['appointment'], 0);
+            self::multiLine(19, 7.1, self::$employee->employment[$i]['appointment'], 0);
             self::multiLine(13.5, 7.1, $appointment, 1);
-            $y = $y + 7.1;
+            $y = $y + 7.25;
         }
     }
 
     protected function voluntary_work() {
         self::$employee->voluntary_work();
         $y = 23.4;
-        if (!self::$employee->voluntary_work) self::$employee->voluntary_work[0] = [];
-        foreach (self::$employee->voluntary_work as $work) {
+        $len = sizeof(self::$employee->voluntary_work) > 6 ? 6 : sizeof(self::$employee->voluntary_work);
+        for ($i=0; $i<=$len; $i++) {
             self::$pdf->setXY(6, $y);
-            self::multiLine(89, 7.3, $work['organization_name'],0);
-            self::multiLine(15.5, 7.3, $work['date_from'] ? date('m/d/Y', $work['date_from']) : '', 0);
-            self::multiLine(15.5, 7.3, $work['date_from'] ? date('m/d/Y', $work['date_to']) : '', 0);
-            self::multiLine(15, 7.3, $work['total_hours'], 0);
-            self::multiLine(69, 7.3, $work['organization_position'], 1);
-            $y = $y + 7.3;
+            self::multiLine(89, 7.3, self::$employee->voluntary_work[$i]['organization_name'],0);
+            self::multiLine(15.5, 7.3, self::pdsDate(self::$employee->voluntary_work[$i]['date_from']), 0);
+            self::multiLine(15.5, 7.3, self::pdsDate(self::$employee->voluntary_work[$i]['date_to']), 0);
+            self::multiLine(15, 7.3, self::$employee->voluntary_work[$i]['total_hours'], 0);
+            self::multiLine(69, 7.3, self::$employee->voluntary_work[$i]['organization_position'], 1);
+            $y = $y + 7.5;
         }
     }
 
     protected function training_seminar() {
         self::$employee->training_seminar();
         $y = 103.8;
-        if (!self::$employee->training_seminar) self::$employee->training_seminar[0] = [];
-        foreach(self::$employee->training_seminar as $training) {
+        $len = sizeof(self::$employee->training_seminar) > 21 ? 21 : sizeof(self::$employee->training_seminar);
+        for($i=0; $i<=$len; $i++) {
             self::$pdf->setXY(6, $y);
-            self::multiLine(89, 6.8, $training['training_title'], 0);
-            self::multiLine(15.5, 6.8, $training['training_from'] ? date('m/d/Y',$training['training_from']) : '', 0);
-            self::multiLine(15, 6.8, $training['training_to'] ? date('m/d/Y',$training['training_to']) : '', 0);
-            self::multiLine(15.5, 6.8, $training['training_hours'], 0);
-            self::multiLine(17, 6.8, $training['training_type'], 0);
-            self::multiLine(52, 6.8, $training['training_sponsor'],1);
-            $y = $y + 6.8;
+            self::multiLine(89, 6.8, self::$employee->training_seminar[$i]['training_title'], 0);
+            self::multiLine(15.5, 6.8, self::pdsDate(self::$employee->training_seminar[$i]['training_from']), 0);
+            self::multiLine(15, 6.8, self::pdsDate(self::$employee->training_seminar[$i]['training_to']), 0);
+            self::multiLine(15.5, 6.8, self::$employee->training_seminar[$i]['training_hours'], 0);
+            self::multiLine(17, 6.8, self::$employee->training_seminar[$i]['training_type'], 0);
+            self::multiLine(52, 6.8, self::$employee->training_seminar[$i]['training_sponsor'],1);
+            $y = $y + 6.7;
         }
     }
 
@@ -281,7 +290,8 @@ class PDS extends PDF{
         
         foreach($infos as $info) {
             $y = 263;
-            for($i=0; $i<sizeof($info['data']); $i++) {
+            $len = sizeof($info['data']) > 6 ? 6 : sizeof($info['data']);
+            for($i=0; $i<=$len; $i++) {
                 self::$pdf->setXY($info['x'], $y);
                 self::multiLine($info['length'], 6.8, $info['data'][$i], 1);
                 $y = $y + 6.8;
@@ -292,11 +302,11 @@ class PDS extends PDF{
     protected function character_references() {
         self::$employee->references();
         $y = 202.5;
-        foreach(self::$employee->references as $reference) {
+        for($i=0; $i<3; $i++) {
             self::$pdf->setXY(6, $y);
-            self::multiLine(78.2, 7.5, $reference['reference_name'], 0); 
-            self::multiLine(49.5, 7.5, $reference['reference_address'], 0); 
-            self::multiLine(24.5, 7.5, $reference['reference_contact'], 0); 
+            self::multiLine(78.2, 7.5, self::$employee->references[$i]['reference_name'], 0); 
+            self::multiLine(49.5, 7.5, self::$employee->references[$i]['reference_address'], 0); 
+            self::multiLine(24.5, 7.5, self::$employee->references[$i]['reference_contact'], 0); 
             $y = $y+7.5;
         }
     }

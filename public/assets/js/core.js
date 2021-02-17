@@ -44,7 +44,7 @@ function confirm_delete(no, id, tab, other_info_col='', other_info_data='', admi
   if(confirm("Are you sure you want to delete this record?")) {
     if(tab=='other-info') {
       f({action: 'delete_row', no:no, tab:tab, other_info_col:other_info_col, other_info_data:other_info_data, admin_id:admin_id}, "text", "/employees").then( function (data) {
-        location.href = "/employees/profile/" + id + "/" + tab;
+        location.href = "/employees/update/" + id + "/" + tab;
       });
     }
     else if(tab=='service_record') {
