@@ -104,6 +104,7 @@ class EmployeeProfile {
         ORDER BY a.date_start ASC", $this->id);
         $ctr=0;
         foreach ($record as $value) {
+            if ($value['jo'] == '1') {
                 $temp = DB::fetch_row ("SELECT CONCAT(salary_type,';',salary)AS salary FROM tbl_cos_salary WHERE position_id = ?", $value['position_id']);
                 $record[$ctr]['step_increment'] = $temp['salary'];
             }
