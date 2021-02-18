@@ -6,7 +6,8 @@
         "smarty/smarty": "^3.1",
         "phroute/phroute": "^2.1",
         "tecnickcom/tcpdf": "^6.3",
-        "propa/tcpdi": "dev-master"
+        "propa/tcpdi": "dev-master",
+        "cboden/ratchet": "^0.4.3"
     },
     "autoload": {
         "psr-4": {

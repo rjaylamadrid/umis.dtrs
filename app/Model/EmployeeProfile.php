@@ -98,7 +98,29 @@ class EmployeeProfile {
     }
 
     public function service_record () {
-        $this->service_record = DB::fetch_all ("SELECT position_desc, date_start, date_end, type_id, type_desc, salary, step, a.salary_grade,campus_name FROM tbl_employee_service a, tbl_position b, tbl_employee_type c, tbl_campus d WHERE a.position_id = b.no AND a.etype_id = c.id AND a.campus_id = d.id AND employee_id = ? ORDER BY date_start DESC", $this->id);
+        $record = DB::fetch_all ("SELECT a.no, a.date_start, a.date_end, a.is_active, a.position_id, b.position_desc, c.salary_grade, c.step_increment, c.date_implemented, d.campus_name, e.etype_desc, e.jo
+        FROM tbl_employee_status a, tbl_position b, tbl_salary_grade c, tbl_campus d, tbl_employee_type e
+        WHERE a.position_id = b.no AND b.salary_grade = c.salary_grade AND a.campus_id = d.id AND a.etype_id = e.etype_id AND a.employee_id = ?
+        ORDER BY a.date_start ASC", $this->id);
+        $ctr=0;
+        foreach ($record as $value) {
+                $temp = DB::fetch_row ("SELECT CONCAT(salary_type,';',salary)AS salary FROM tbl_cos_salary WHERE position_id = ?", $value['position_id']);
+                $record[$ctr]['step_increment'] = $temp['salary'];
+            }
+            else if ($value['jo'] == '0') {
+                $salary_steps = explode(",",$record[$ctr]['step_increment']);
+                if ($value['date_end'] == NULL) {
+                    $record[$ctr]['step_increment'] = $salary_steps[Position::step($value['date_start'], date("Y-m-d")) - 1];
+                    // $record[$ctr] += ['step' => Position::step($value['date_start'], date("Y-m-d"))];
+                }
+                else {
+                    $record[$ctr]['step_increment'] = $salary_steps[Position::step($value['date_start'], $value['date_end']) - 1];
+                    // $record[$ctr] += ['step' => Position::step($value['date_start'], date("Y-m-d"))];
+                }
+            }
+            $ctr++;
+        }
+        $this->service_record = $record;
     }
     
     private function get ($args = []) {

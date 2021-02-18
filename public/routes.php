@@ -78,11 +78,16 @@ $router->group(['before' => 'auth'], function ($router) {
             $router->get('/{tab}?', ["Settings", "tab"]);
         });
 
-        // Request
+        // Request 
         $router->group(["prefix" => "request"], function ($router) {
             $router->get("/", ["Request", "index"]);
             $router->any('/details/{id:i}', ["Request", "request_details"]);
             $router->get("/{status}", ["Request", "get_requests"]);
+        });
+        //Message
+        $router->group(["prefix" => "messages"], function ($router) {
+            $router->get("/", ["Messages", "index"]);
+            $router->post("/", ["Messages", "do_action"]);
         });
         // ADMIN END
     });

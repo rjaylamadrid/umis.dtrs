@@ -15,7 +15,11 @@
                         <span><img class="avatar" style="object-fit: cover;" src="{$server}/assets/employee_picture/{if $user.employee_picture}{$user.employee_picture}{else}0.jpeg{/if}"></span>
                         <span class="ml-2 d-none d-lg-block">
                             <span class="text-default">{$user.first_name|upper} {$user.last_name|upper}</span>
+                            <input id="user" type="hidden" value="{$user.employee_id}"/>
                             <small class="text-muted d-block mt-1">{$user.position}</small>
+                            <i class="fe fe-mail">
+                                <small id="notif" class="text-red">1</small>
+                            </i>
                         </span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
@@ -24,9 +28,9 @@
                             <i class="dropdown-icon fe fe-user"></i> Account
                         </a>
                         {/if}
-                        {* <a class="dropdown-item" href="#">
+                        <a class="dropdown-item" href="/messages">
                             <i class="dropdown-icon fe fe-send"></i> Messages
-                        </a> *}
+                        </a>
                         <a class="dropdown-item" href="/settings/security">
                             <i class="dropdown-icon fe fe-lock"></i> Change Password
                         </a>

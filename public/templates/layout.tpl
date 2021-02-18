@@ -18,7 +18,7 @@
         <title>{block name=title}CBSUA HRIS{/block}</title>
         <!-- Dashboard Core -->
         <script src="{$server}/assets/js/require.min.js"></script>
-        <script>
+        <script type="text/javascript">
             requirejs.config({
                 baseUrl: '/',
                 waitSeconds: 0
@@ -26,14 +26,17 @@
         </script>
         <link href="{$server}/assets/css/dashboard.css" rel="stylesheet" />
         <script src="{$server}/assets/js/dashboard.js"></script> 
+       
     </head>
 <body class="">
     <div class="page">
         <div class="flex-fill">
             {if $page != 'login' && $page != 'home'}{include file="header.tpl"}{/if}
             {block name=content}{/block}
+            {$server}
         </div>
     </div>
+    
 </body>
 {if $page != 'login'}{include file="footer.tpl"}{/if}
 </html>
