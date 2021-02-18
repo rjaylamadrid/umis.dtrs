@@ -24,7 +24,7 @@
                 <i class="fe fe-home"></i>
               </span>
               <div>
-                <h4 class="m-0"><a href=""></a></h4>
+                <h4 class="m-0"><a href="#">{$balance[$balance|@count - 1]['vacation']|round:2}</a></h4>
                 <small class="text-muted">Updated Vacation Leave Credits</small>
               </div>
             </div>
@@ -37,7 +37,7 @@
                 <i class="fe fe-heart"></i>
               </span>
               <div>
-                <h4 class="m-0"><a href=""></a></h4>
+                <h4 class="m-0"><a href="#">{$balance[$balance|@count - 1]['sick']|round:2}</a></h4>
                 <small class="text-muted">Updated Sick Leave Credits</small>
               </div>
             </div>
@@ -57,9 +57,9 @@
           </div>
         </div>
       </div>
-	  		{print_r("<pre>")}
+	  		{* {print_r("<pre>")}
 			{print_r($balance)}
-			{print_r("</pre>")}
+			{print_r("</pre>")} *}
 			<div class="row row-cards row-deck">
 				<div class="col-12">
 					<div class="card">
@@ -93,33 +93,37 @@
 										{for $i=0 to sizeof($changes)-1}
 											<tr align="center">	
 											{* insert chevron drop down function call here *}
-												<td><b>{$balance[$i]['date']|date_format:"F d, Y"}</b></td>
+												<td onclick="javascript:show_collapse({$i}, '.')">
+												<span class="head{$i} fe fe-chevron-down"></span>
+												<b>{$balance[$i]['date']|date_format:"F d, Y"}</b></td>
 												<td>Leave Credits</td>
-												<td>{$balance[$i]['vacation']|round:2}</td>
+												<td>{$balance[$i]['vacation']|round:3}</td>
 												<td>-</td>
-												<td>{$balance[$i]['vacation']|round:2}</td>
+												<td>{$balance[$i]['vacation']|round:3}</td>
 												<td>-</td>
-												<td>{$balance[$i]['sick']|round:2}</td>
+												<td>{$balance[$i]['sick']|round:3}</td>
 												<td>-</td>
-												<td>{$balance[$i]['sick']|round:2}</td>
+												<td>{$balance[$i]['sick']|round:3}</td>
 												<td>-</td>
 												<td>-</td>
 											</tr>
+											<div class="card-body collapse">
 											{for $j=0 to sizeof($changes[$i])}
-												<tr align="center">
+												<tr align="center" class="collapse {$i}">
 													<td><b>{$changes[$i][$j].period|date_format:"F d, Y"}</b></td>
 													<td>{$changes[$i][$j].particulars}</td>
-													<td>{if $changes[$i][$j].v_earned}{$changes[$i][$j].v_earned}{else}-{/if}</td>
-													<td>{if $changes[$i][$j].v_awp}{$changes[$i][$j].v_awp}{else}-{/if}</td>
-													<td>{$changes[$i][$j].v_bal}</td>
-													<td>{if $changes[$i][$j].v_awop}{$changes[$i][$j].v_awop}{else}-{/if}</td>
-													<td>{if $changes[$i][$j].s_earned}{$changes[$i][$j].s_earned}{else}-{/if}</td>
-													<td>-</td>
-													<td></td>
-													<td>-</td>
+													<td>{if $changes[$i][$j].v_earned}{$changes[$i][$j].v_earned|round:3}{else}-{/if}</td>
+													<td>{if $changes[$i][$j].v_awp}{$changes[$i][$j].v_awp|round:3}{else}-{/if}</td>
+													<td>{if $changes[$i][$j].v_bal}{$changes[$i][$j].v_bal|round:3}{else}-{/if}</td>
+													<td>{if $changes[$i][$j].v_awop}{$changes[$i][$j].v_awop|round:3}{else}-{/if}</td>
+													<td>{if $changes[$i][$j].s_earned}{$changes[$i][$j].s_earned|round:3}{else}-{/if}</td>
+													<td>{if $changes[$i][$j].s_awp}{$changes[$i][$j].s_awp|round:3}{else}-{/if}</td>
+													<td>{if $changes[$i][$j].s_bal}{$changes[$i][$j].s_bal|round:3}{else}-{/if}</td>
+													<td>{if $changes[$i][$j].s_awop}{$changes[$i][$j].s_awop|round:3}{else}-{/if}</td>
 													<td>-</td>
 												</tr>
 											{/for}
+											</div>
 										{/for}
 									<tr>
 										<td colspan="1" align="center"><b></b></td>

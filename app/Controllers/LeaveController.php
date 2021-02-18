@@ -12,6 +12,7 @@ class LeaveController extends Controller {
     public $leave_credits;
     public $leave_changes;
     public $leave_balance = ["0" => ["vacation" => 0, "sick" => 0]];
+    public $leave_types;
     private $period = [['01', '15'], ['16', '31'], ['01', '31']];
     private $attendance;
     private $schedule;
@@ -108,21 +109,23 @@ class LeaveController extends Controller {
             // print_r($days_present);
             // print_r("</pre>");
         }
-        $this->leaveBalanceChanges($id);
+        $this->leaveBalanceChanges($id,$start_interval,$end_interval);
         $this->attendance = $attendance;
         return $this;
     }
 
-    protected function leaveBalanceChanges ($id) {
+    protected function leaveBalanceChanges ($id,$start,$end) {
         // ADD CONDITION CHECKING IF THERE IS ENOUGH BALANCE
-        $leave_types = DB::fetch_all("SELECT * FROM tbl_leave_type");
+        // $this->leave_types = DB::db("db_master")->fetch_all("SELECT * FROM tbl_leave_type ORDER BY id ASC");
+        $emp_leave = DB::db("db_master")->fetch_all("SELECT a.*, b.leave_desc FROM tbl_emp_leave a, tbl_leave_type b WHERE a.employee_id = ? AND a.lv_status = ? AND a.lv_type = b.id AND a.lv_date_fr between ? AND ? ORDER BY a.lv_date_fr ASC", [$id, 2, $start->format('Y-m-d'), $end->format('Y-m-t')]);
+
         for ($i=1;$i<sizeof($this->leave_changes);$i++) {
             $v_bal = $this->leave_balance[$i-1]['vacation'];
             $s_bal = $this->leave_balance[$i-1]['sick'];
-            // $emp_leave[$i] = DB::db("db_master")->fetch_all("SELECT * FROM tbl_emp_leave WHERE employee_id = ? AND lv_status = ? AND lv_date_fr between ? AND ? ORDER BY lv_date_fr ASC", [$id, 2, date_create($this->leave_changes[$i][0]['period'])->format('Y-m-d'), date_create($this->leave_changes[$i][0]['period'])->format('Y-m-t')]);
+            
 
             // print_r("<pre>");
-            // print_r($emp_leave[$i]);
+            // print_r($emp_leave);
             // print_r("</pre>");
             
             for ($j=0;$j<sizeof($this->leave_changes[$i-1]);$j++) {
@@ -136,19 +139,43 @@ class LeaveController extends Controller {
                 } else if ($this->leave_changes[$i-1][$j]['particulars'] == 'Undertime') {
                     $actual_service = $this->leave_changes[$i-1][$j]['total_hours'] * .125;
                     if (($actual_service > .25) && ($actual_service < .75)) { $earned = .5; } else if ($actual_service >= .75) { $earned = 1; } else { $earned = 0; }
-                    $this->leave_balance[$i]['sick'] += $earned * $leave_deduction;
-                    $this->leave_balance[$i]['vacation'] += $earned * $leave_deduction;
                     $this->leave_changes[$i-1][$j]['v_earned'] = $earned * $leave_deduction;
                     $this->leave_changes[$i-1][$j]['s_earned'] = $earned * $leave_deduction;
-                    $v_bal >= $actual_service ? $this->leave_changes[$i-1][$j]['v_awp'] = $actual_service * $leave_deduction : $this->leave_changes[$i-1][$j]['v_awop'] = $actual_service * $leave_deduction;
-                    $this->leave_changes[$i-1][$j]['v_bal'] = $v_bal - ($actual_service * $leave_deduction);
-                    $v_bal -= $actual_service * $leave_deduction;
-                    $this->leave_balance[$i]['vacation'] -= $v_bal - ($actual_service * $leave_deduction);
+                    $v_bal >= 1-$actual_service ? $this->leave_changes[$i-1][$j]['v_awp'] = 1-$actual_service : $this->leave_changes[$i-1][$j]['v_awop'] = 1-$actual_service;
+                    $this->leave_changes[$i-1][$j]['v_bal'] = $v_bal + ($earned * $leave_deduction);
+                    $v_bal += ($earned * $leave_deduction);
+                    $s_bal += ($earned * $leave_deduction);
+                    $this->leave_balance[$i]['vacation'] += ($earned * $leave_deduction);
+                    $this->leave_balance[$i]['sick'] += ($earned * $leave_deduction);
                 } else if ($this->leave_changes[$i-1][$j]['particulars'] == 'On Leave') {
-                    $this->leave_balance[$i]['vacation'] -= $this->leave_changes[$i-1][$j]['total_days'];
+                    foreach ($emp_leave as $leave_info) {
+                        if ((date_create($leave_info['lv_date_fr'])->format('Y-m-d') <= date_create($this->leave_changes[$i-1][$j]['period'])->format('Y-m-d')) && (date_create($leave_info['lv_date_to'])->format('Y-m-d') >= date_create($this->leave_changes[$i-1][$j]['period'])->format('Y-m-d'))) {
+                            switch ($leave_info['leave_desc']) {
+                                case 'Vacation Leave':
+                                    $v_bal >= 1 ? $this->leave_changes[$i-1][$j]['v_awp'] = 1 : $this->leave_changes[$i-1][$j]['v_awop'] = 1; 
+                                    $this->leave_changes[$i-1][$j]['v_bal'] = $v_bal - 1;
+                                    $v_bal -= 1;
+                                    $this->leave_balance[$i]['vacation'] -= $this->leave_changes[$i-1][$j]['total_days'];
+                                    break;
+                                case 'Sick Leave':
+                                    $s_bal >= 1 ? $this->leave_changes[$i-1][$j]['v_awp'] = 1 : $this->leave_changes[$i-1][$j]['v_awop'] = 1; 
+                                    $this->leave_changes[$i-1][$j]['v_bal'] = $s_bal - 1;
+                                    $s_bal -= 1;
+                                    $this->leave_balance[$i]['sick'] -= $this->leave_changes[$i-1][$j]['total_days'];
+                                    break;
+                            }
+                        }
+                    }
                 } else if ($this->leave_changes[$i-1][$j]['particulars'] == 'Present') {
+                    $this->leave_changes[$i-1][$j]['v_earned'] = $leave_deduction;
+                    $this->leave_changes[$i-1][$j]['s_earned'] = $leave_deduction;
+                    $this->leave_changes[$i-1][$j]['v_bal'] = $v_bal + $leave_deduction;
+                    $this->leave_changes[$i-1][$j]['s_bal'] = $s_bal + $leave_deduction;
+
                     $this->leave_balance[$i]['vacation'] += $leave_deduction;
                     $this->leave_balance[$i]['sick'] += $leave_deduction;
+                    $v_bal += $leave_deduction;
+                    $s_bal += $leave_deduction;
                 }
             }
             if ($i < sizeof($this->leave_changes)) {
@@ -161,28 +188,58 @@ class LeaveController extends Controller {
                     $leave_deduction = in_array(date_create($this->leave_changes[$i][$j]['period'])->format('l'), $this->schedule) ? 0.0416666666666667 : 0.0625000000000001;
                     
                     if ($this->leave_changes[$i][$j]['particulars'] == 'Absent') {
-                        // $this->leave_changes[$i][$j]['v_awp'] = 1;
                         $this->leave_balance[$i]['vacation'] >= 1 ? $this->leave_changes[$i][$j]['v_awp'] = 1 : $this->leave_changes[$i][$j]['v_awop'] = 1;
                         $this->leave_changes[$i][$j]['v_bal'] = $v_bal - 1;
                         $v_bal -= 1;
                         $this->leave_balance[$i+1]['vacation'] -= 1;
-                    } else if ($this->leave_changes[$i-1][$j]['particulars'] == 'Undertime') {
-                        $this->leave_balance[$i+1]['sick'] += (($this->leave_changes[$i][$j]['total_hours'] * .125) * $leave_deduction);
-                        $this->leave_balance[$i+1]['vacation'] += (($this->leave_changes[$i][$j]['total_hours'] * .125) * $leave_deduction);
-                        $this->leave_balance[$i+1]['vacation'] -= (((8-$this->leave_changes[$i][$j]['total_hours']) * .125) * $leave_deduction);
+                    } else if ($this->leave_changes[$i][$j]['particulars'] == 'Undertime') {
+                        $actual_service = $this->leave_changes[$i][$j]['total_hours'] * .125;
+                        if (($actual_service > .25) && ($actual_service < .75)) { $earned = .5; } else if ($actual_service >= .75) { $earned = 1; } else { $earned = 0; }
+                        $this->leave_changes[$i][$j]['v_earned'] = $earned * $leave_deduction;
+                        $this->leave_changes[$i][$j]['s_earned'] = $earned * $leave_deduction;
+                        $v_bal >= 1-$actual_service ? $this->leave_changes[$i][$j]['v_awp'] = 1-$actual_service : $this->leave_changes[$i][$j]['v_awop'] = 1-$actual_service;
+                        $this->leave_changes[$i][$j]['v_bal'] = $v_bal + ($earned * $leave_deduction);
+                        $v_bal += ($earned * $leave_deduction);
+                        $s_bal += ($earned * $leave_deduction);
+                        $this->leave_balance[$i+1]['vacation'] += ($earned * $leave_deduction);
+                        $this->leave_balance[$i+1]['sick'] += ($earned * $leave_deduction);
                     } else if ($this->leave_changes[$i][$j]['particulars'] == 'On Leave') {
-                        $this->leave_balance[$i+1]['vacation'] -= $this->leave_changes[$i][$j]['total_days'];
+                        foreach ($emp_leave as $leave_info) {
+                            if ((date_create($leave_info['lv_date_fr'])->format('Y-m-d') <= date_create($this->leave_changes[$i][$j]['period'])->format('Y-m-d')) && (date_create($leave_info['lv_date_to'])->format('Y-m-d') >= date_create($this->leave_changes[$i][$j]['period'])->format('Y-m-d'))) {
+                                switch ($leave_info['leave_desc']) {
+                                    case 'Vacation Leave':
+                                        $v_bal >= 1 ? $this->leave_changes[$i][$j]['v_awp'] = 1 : $this->leave_changes[$i][$j]['v_awop'] = 1; 
+                                        $this->leave_changes[$i][$j]['v_bal'] = $v_bal - 1;
+                                        $v_bal -= 1;
+                                        $this->leave_balance[$i+1]['vacation'] -= $this->leave_changes[$i][$j]['total_days'];
+                                        break;
+                                    case 'Sick Leave':
+                                        $s_bal >= 1 ? $this->leave_changes[$i][$j]['v_awp'] = 1 : $this->leave_changes[$i][$j]['v_awop'] = 1; 
+                                        $this->leave_changes[$i][$j]['v_bal'] = $s_bal - 1;
+                                        $s_bal -= 1;
+                                        $this->leave_balance[$i+1]['sick'] -= $this->leave_changes[$i][$j]['total_days'];
+                                        break;
+                                }
+                            }
+                        }
                     } else if ($this->leave_changes[$i][$j]['particulars'] == 'Present') {
+                        $this->leave_changes[$i][$j]['v_earned'] = $leave_deduction;
+                        $this->leave_changes[$i][$j]['s_earned'] = $leave_deduction;
+                        $this->leave_changes[$i][$j]['v_bal'] = $v_bal + $leave_deduction;
+                        $this->leave_changes[$i][$j]['s_bal'] = $s_bal + $leave_deduction;
+
                         $this->leave_balance[$i+1]['vacation'] += $leave_deduction;
                         $this->leave_balance[$i+1]['sick'] += $leave_deduction;
+                        $v_bal += $leave_deduction;
+                        $s_bal += $leave_deduction;
                     }
                 }
 
                 $this->leave_balance[$i+1] = ["vacation" => ($this->leave_balance[$i]['vacation'] + $this->leave_balance[$i+1]['vacation']), "sick" => ($this->leave_balance[$i]['sick'] + $this->leave_balance[$i+1]['sick'])];
             }
         }
-        print_r("<pre>");
-        print_r($this->leave_changes);
-        print_r("</pre>");
+        // print_r("<pre>");
+        // print_r($this->leave_changes);
+        // print_r("</pre>");
     }
 }
