@@ -28,15 +28,27 @@ function init_dtr(id) {
 // ATTENDANCE::END
 
 // EMPLOYEE PROFILE :: START
-function show_collapse(id) {
-  if($('#'+id).hasClass('collapse')){
-    $('#'+id).removeClass('collapse');
-    $('.'+id).removeClass('fe-chevron-down');
-    $('.'+id).addClass('fe-chevron-up');
-  }else{
-    $('#'+id).addClass('collapse');
-    $('.'+id).addClass('fe-chevron-down');
-    $('.'+id).removeClass('fe-chevron-up');
+function show_collapse(id,id_='#') {
+  if (id_ == '.') {
+    if($(id_+id).hasClass('collapse')){
+      $(id_+id).removeClass('collapse');
+      $('.head'+id).removeClass('fe-chevron-down');
+      $('.head'+id).addClass('fe-chevron-up');
+    }else{
+      $(id_+id).addClass('collapse');
+      $('.head'+id).addClass('fe-chevron-down');
+      $('.head'+id).removeClass('fe-chevron-up');
+    }
+  } else {
+    if($(id_+id).hasClass('collapse')){
+      $(id_+id).removeClass('collapse');
+      $('.'+id).removeClass('fe-chevron-down');
+      $('.'+id).addClass('fe-chevron-up');
+    }else{
+      $(id_+id).addClass('collapse');
+      $('.'+id).addClass('fe-chevron-down');
+      $('.'+id).removeClass('fe-chevron-up');
+    }
   }
 }
 
@@ -107,6 +119,10 @@ function set_emp_inactive(id,status,name,pos) {
     }
   }
 // CALENDAR :: END
+
+// LEAVE :: START
+
+// LEAVE :: END
 
 // OTHER FUNCTIONS :: START
 function colours(size) {
