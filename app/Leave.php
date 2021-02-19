@@ -19,7 +19,7 @@ class Leave extends LeaveController{
         // $this->leaveBalanceChanges();
         // print_r($this->leave_balance);
         $attendance = $this->attendance($this->employee->id, ["from" => $this->leave_credits['date_credited'], "to" => date('Y-m-d')]);
-        $this->view->display ('leave', ["employee" => $this->employee, "office" => $this->office, "credits" => $this->leave_credits, "changes" => $this->leave_changes, "records" => $this->leave_record, "attendance" => $attendance, "balance" => $this->leave_balance]);
+        $this->view->display ('leave', ["employee" => $this->employee, "position" => $this->employee->position, "office" => $this->office, "credits" => $this->leave_credits, "changes" => $this->leave_changes, "records" => $this->leave_record, "attendance" => $attendance, "balance" => $this->leave_balance]);
     }
 
     public function do_action () {

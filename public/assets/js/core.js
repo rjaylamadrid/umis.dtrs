@@ -121,7 +121,111 @@ function set_emp_inactive(id,status,name,pos) {
 // CALENDAR :: END
 
 // LEAVE :: START
+function date_max()
+{
+ var maxDate = $('#date_to').val();
 
+ $('#date_from').attr('max', maxDate);
+
+ console.log(maxDate);
+}
+
+function date_min()
+{
+ var minDate = $('#date_from').val();
+
+ $('#date_to').attr('min', minDate);
+
+ console.log(minDate);
+}
+
+
+function dtmin(dtmin) {
+ var min = $('#date_from').val();
+ //document.getElementById("date_to").min = min;
+
+
+ var d2 = new Date($('#date_to').val());
+ var d1 = new Date($('#date_from').val());
+
+ var Millis1 = d1.getTime();
+ var Millis2 = d2.getTime();
+
+ var diff = Math.abs(d1-d2);
+ var Totaldays = Math.floor(diff/8.64e7);
+ var days = 0;
+ var weeks = Math.floor(days/7);
+ var weekend = 0;
+
+ var wd1 = d1.getDay();
+ var wd2 = d2.getDay();
+
+ for (var i = Millis1; i < Millis2; i+=8.64e7) 
+ {
+   var currentDate = new Date(i);
+
+   if(currentDate.getDay() == 5 || currentDate.getDay() == 6)
+   {
+     weekend ++;
+   }
+ }
+// days = (Totaldays + 1) - weekend;
+// console.log(days);
+dtmin.no_of_working_days.value = (Totaldays + 1) - weekend;
+}
+
+function toggle_other (option) {
+  if (option == 1) {
+    $("#vacation_text").prop("disabled", false);
+    $("#vacation_text").val("");
+  } else if (option == 2) {
+    $("#vacation_text").prop("disabled", true);
+    $("#vacation_text").val("");
+  } else if (option == 3) {
+
+
+   $("#where_specific").prop("disabled", true);
+   $("#where_specific").val("");
+
+ } else if (option == 4) {
+  // $("#vacation_text").prop("disabled", true);
+  // $("#vacation_text").val("");
+  $("#where_specific").prop("disabled", false);
+  $("#where_specific").val("");
+}
+}
+
+function toggle_options (option) {
+  var options = '';
+  $("#optionb").html("");
+  if (option == 1) {
+    $("#seek_employment").prop("disabled", false);
+    $("#vacation_other").prop("disabled", false);
+    $("#other_type_text").prop("disabled", true);
+    $("#other_type_text").val("0");
+    options = '<label class="form-label"> (In case of Vacation Leave)</label><label class="custom-control custom-radio"><input required type="radio" id="phonly" onchange="toggle_other(3)" class="custom-control-input radio_type" name="leave_info[lv_where]" value="Within the Philippines"><div class="custom-control-label">Within the Philippines</div></label><label class="custom-control custom-radio"><input required type="radio" id="abroad" onchange="toggle_other(4)" class="custom-control-input radio_type" name="leave_info[lv_where]" value="Abroad"><div class="custom-control-label">Abroad (Specify below)</div></label><input type="text" id="where_specific" disabled="true" class="form-control ml-1" name="leave_info[lv_where_specific]">';
+  } else if (option == 2) {
+    $("#seek_employment").prop("checked", false);
+    $("#vacation_other").prop("checked", false);
+    $("#seek_employment").prop("disabled", true);
+    $("#vacation_other").prop("disabled", true);
+    $("#vacation_text").prop("disabled", true);
+    $("#other_type_text").prop("disabled", true);
+    $("#other_type_text").val("0");
+    $("#vacation_text").val("");
+
+    options = '<label class="custom-control custom-radio"><input required type="radio" id="hospital" class="custom-control-input radio_type" name="leave_info[lv_where]" value="In Hospital"><div class="custom-control-label">in Hospital (Specify below)</div></label><label class="custom-control custom-radio"><input required type="radio" id="outpatient" class="custom-control-input radio_type" name="leave_info[lv_where]" value="Out Patient"><div class="custom-control-label">Out Patient (Specify below)</div></label><input type="text" id="where_specific" required class="form-control ml-1" name="leave_info[lv_where_specific]">';
+  } else {
+    $("#seek_employment").prop("disabled", true);
+    $("#vacation_other").prop("disabled", true);
+    $("#seek_employment").prop("checked", false);
+    $("#vacation_other").prop("checked", false);
+    $("#other_type_text").prop("disabled", false);
+    options += '<input type="text" id="where_specific" required class="form-control ml-1" name="leave_info[lv_where_specific]">';
+  }
+  
+  $("#optionb").html(options);
+}
 // LEAVE :: END
 
 // OTHER FUNCTIONS :: START

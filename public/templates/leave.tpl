@@ -1,5 +1,6 @@
 {extends file="layout.tpl"}
 {block name=content}
+{* LEAVE RECORD CARD *}
 	<div class="my-3 my-md-5">
 		<div class="container">
 
@@ -11,7 +12,7 @@
                 <i class="fe fe-file"></i>
               </span>
               <div>
-                <h4 class="m-0"><a href="?a=leave-request"></a></h4>
+                <h4 class="m-0"><a href="#">{$records|@count}</a></h4>
                 <small class="text-muted">Leave Application</small>
               </div>
             </div>
@@ -24,7 +25,7 @@
                 <i class="fe fe-home"></i>
               </span>
               <div>
-                <h4 class="m-0"><a href="#">{$balance[$balance|@count - 1]['vacation']|round:2}</a></h4>
+                <h4 class="m-0">{$balance[$balance|@count - 1]['vacation']|round:2}</h4>
                 <small class="text-muted">Updated Vacation Leave Credits</small>
               </div>
             </div>
@@ -37,7 +38,7 @@
                 <i class="fe fe-heart"></i>
               </span>
               <div>
-                <h4 class="m-0"><a href="#">{$balance[$balance|@count - 1]['sick']|round:2}</a></h4>
+                <h4 class="m-0">{$balance[$balance|@count - 1]['sick']|round:2}</h4>
                 <small class="text-muted">Updated Sick Leave Credits</small>
               </div>
             </div>
@@ -50,16 +51,13 @@
                 <i class="fe fe-star"></i>
               </span>
               <div>
-                <h4 class="m-0"><a href=""></a></h4>
+                <h4 class="m-0">{$balance[$balance|@count - 1]['vacation']|round:2 + $balance[$balance|@count - 1]['sick']|round:2}</h4>
                 <small class="text-muted">Total Leave Credits</small>
               </div>
             </div>
           </div>
         </div>
       </div>
-	  		{* {print_r("<pre>")}
-			{print_r($balance)}
-			{print_r("</pre>")} *}
 			<div class="row row-cards row-deck">
 				<div class="col-12">
 					<div class="card">
@@ -91,8 +89,7 @@
 								</thead>
 								<tbody>
 										{for $i=0 to sizeof($changes)-1}
-											<tr align="center">	
-											{* insert chevron drop down function call here *}
+											<tr align="center">
 												<td onclick="javascript:show_collapse({$i}, '.')">
 												<span class="head{$i} fe fe-chevron-down"></span>
 												<b>{$balance[$i]['date']|date_format:"F d, Y"}</b></td>
@@ -120,7 +117,7 @@
 													<td>{if $changes[$i][$j].s_awp}{$changes[$i][$j].s_awp|round:3}{else}-{/if}</td>
 													<td>{if $changes[$i][$j].s_bal}{$changes[$i][$j].s_bal|round:3}{else}-{/if}</td>
 													<td>{if $changes[$i][$j].s_awop}{$changes[$i][$j].s_awop|round:3}{else}-{/if}</td>
-													<td>-</td>
+													<td>{if $changes[$i][$j].action}{$changes[$i][$j].action}{else}-{/if}</td>
 												</tr>
 											{/for}
 											</div>
@@ -162,18 +159,18 @@
 			</div>
 		</div>
 	</div>
+{* LEAVE REQUESTS *}
 <div class="flex-fill">
   <div class="my-3 my-md-5">
     <div class="container">
-      
-
       <div class="row">
         <div class="col-md-12">
           <div class="card">
             <div class="card-header card-header-icon" data-background-color="green">
               <h4 class="card-title">Leave Request Record</h4>
               <div class="card-options">
-                <a href="" class="btn btn-primary" title="New Leave Request" rel="tooltip">Submit New</a>
+                <a href="" class="btn btn-primary" data-toggle="modal" data-target="#leave-request-form" title="New Leave Request" rel="tooltip">Submit New</a>
+				{* <a href="" class="btn btn-outline-success btn-sm" data-toggle="modal" data-target="#leave-form"><i class="fe fe-plus"></i>Add Work Experience</a> *}
               </div>
             </div>
             
@@ -190,6 +187,7 @@
 						</tr>
 					</thead>
 				<tbody>
+					{if $records}
 					{foreach $records as $record}
                 	<tr>
 						<td>{$record.leave_id}</td>
@@ -200,6 +198,16 @@
 						<td>{if $record.lv_status == '0'}<a href="" rel="tooltip" class="btn btn-outline-danger btn-sm" title="Delete Request"><i class="fe fe-trash"></i></a>{/if}</td>
                   	</tr>
 					{/foreach}
+					{else}
+					<tr>
+						<td>-</td>
+						<td>-</td>
+						<td>-</td>
+						<td>-</td>
+						<td>-</td>
+						<td>-</td>
+					</tr>
+					{/if}
               </tbody>
             </table>
           </div>
@@ -208,4 +216,6 @@
     </div>
   </div>
 </div>
+{* LEAVE REQUEST FORM *}
+{include file="custom/leave_request_form.tpl"}
 {/block}
