@@ -79,7 +79,7 @@ class Position {
     public function step() {
         $diff = date_diff(date_create(), date_create($this->date_start));
         $step = floor($diff->format('%y')/3) + 1;
-        $step = $step > 8 ? 8 : $step;
+        $step = $step > 7 ? 7 : $step;
         $this->position['step'] = $step;
         $this->step = $step;
     }

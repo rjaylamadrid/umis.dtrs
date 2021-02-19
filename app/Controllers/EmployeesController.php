@@ -226,25 +226,26 @@ class EmployeesController extends Controller {
         }
         // EDUCATION
         else if ($tab == 'tbl_employee_education') {
-            $levels = ['Elementary', 'Secondary', 'Vocational', 'College', 'Graduate Studies'];
-            foreach ($levels as $value) {
-                if ($employeeinfo[$value]['school_name']) {
-                    $row[$value] = DB::fetch_row ("SELECT * FROM $tab WHERE no = ?", $employeeinfo[$value]['no']);
-                    if ((sizeof(array_diff($row[$value],$employeeinfo[$value])) > 0) || (sizeof(array_diff($employeeinfo[$value],$row[$value])) > 0)) {
-                        $new_data = self::get_array_differences($row[$value],$employeeinfo[$value]);
-                        $updated_vals = array('updated_action'=>0,'updated_table'=>$tab,'updated_old_data'=>"no=".$row[$value]['no'].";".$new_data[0],'updated_new_data'=>"no=".$row[$value]['no'].";".$new_data[1],'updated_employee_id'=>$id,'updated_admin_id'=>$admin_id,'updated_date'=>date("Y-m-d"));
-                        $update_qry = DB::update ("UPDATE $tab SET " . DB::stmt_builder($employeeinfo[$value]) . " WHERE $id_col = $id AND level = '$value'",$employeeinfo[$value]);
+            for ($i=1; $i<=count($employeeinfo); $i++) {
+                if ($employeeinfo[$i]['school_name']) {
+                    $no = $employeeinfo[$i]['no'];
+                    $row[$i] = DB::fetch_row ("SELECT * FROM $tab WHERE no = ?", $employeeinfo[$i]['no']);
+                    if ((sizeof(array_diff($row[$i],$employeeinfo[$i])) > 0) || (sizeof(array_diff($employeeinfo[$i],$row[$i])) > 0)) {
+                        $new_data = self::get_array_differences($row[$i],$employeeinfo[$i]);
+                        $updated_vals = array('updated_action'=>0,'updated_table'=>$tab,'updated_old_data'=>"no=".$row[$i]['no'].";".$new_data[0],'updated_new_data'=>"no=".$row[$i]['no'].";".$new_data[1],'updated_employee_id'=>$id,'updated_admin_id'=>$admin_id,'updated_date'=>date("Y-m-d"));
+                        $update_qry = DB::update ("UPDATE $tab SET " . DB::stmt_builder($employeeinfo[$i]) . " WHERE $id_col = $id AND no = '$no'",$employeeinfo[$i]);
                         if ($update_qry != NULL) {
                             DB::insert ("INSERT INTO tbl_employee_update_delete SET ". DB::stmt_builder ($updated_vals),$updated_vals);
-                            return 'success';
                         }
                     }
                 }
             }
+            return 'success';
         }
         // OTHER_INFO
         else if ($tab == 'tbl_employee_other_info') {
             if (($employeeinfo['skill']) || ($employeeinfo['recog']) || ($employeeinfo['org'])) {
+                $ans = json_encode($employeeinfo['question']);
                 $row = DB::fetch_row("SELECT * FROM $tab WHERE $id_col = ?",$id);
                 $skill = $employeeinfo['skill'][0] != '' ? implode(";",$employeeinfo['skill']) : $employeeinfo['skill'][0];
                 $recog = $employeeinfo['recog'][0] != '' ? implode(";",$employeeinfo['recog']) : $employeeinfo['recog'][0];
@@ -257,7 +258,7 @@ class EmployeesController extends Controller {
                 $new_data[$key] = str_replace([";other_recognition",";other_organization"],["|other_recognition","|other_organization"],$value);
                 }
                 $updated_vals = array('updated_action'=>0,'updated_table'=>$tab,'updated_old_data'=>$new_data[0],'updated_new_data'=>$new_data[1],'updated_employee_id'=>$id,'updated_admin_id'=>$admin_id,'updated_date'=>date("Y-m-d"));
-                $update_qry = DB::update ("UPDATE $tab SET other_skill = '$skill', other_recognition = '$recog', other_organization = '$org' WHERE $id_col = $id");
+                $update_qry = DB::update ("UPDATE $tab SET other_skill = '$skill', other_recognition = '$recog', other_organization = '$org', answers = '$ans'  WHERE $id_col = $id");
                 if ($update_qry != NULL) {
                     DB::insert("INSERT INTO tbl_employee_update_delete SET ". DB::stmt_builder ($updated_vals),$updated_vals);
                     return 'success';

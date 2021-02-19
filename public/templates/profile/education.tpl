@@ -37,10 +37,10 @@
         <div class="card mb-1">
             <div class="card-content">
                 {foreach from = $employee->education item = education}
-                <input type="hidden" name="employeeinfo[{$education.level}][no]" value="{$education.no}">
-                <input type="hidden" name="employeeinfo[{$education.level}][employee_id]" value="{$employee->id}">
-                <input type="hidden" name="employeeinfo[{$education.level}][level]" value="{$education.level}">
-                <input type="hidden" name="employeeinfo[{$education.level}][school_address]" value="{$education.school_address}">
+                <input type="hidden" name="employeeinfo[{$education@iteration}][no]" value="{$education.no}">
+                <input type="hidden" name="employeeinfo[{$education@iteration}][employee_id]" value="{$employee->id}">
+                <input type="hidden" name="employeeinfo[{$education@iteration}][level]" value="{$education.level}">
+                <input type="hidden" name="employeeinfo[{$education@iteration}][school_address]" value="{$education.school_address}">
                     <div class="card-header pt-0 pb-0">
                         <h4 class="card-title">{$education.level}</h4>
                         <a href="#" onclick="javascript:show_collapse({$education@iteration})" class="ml-auto" style="text-decoration: none;"><span class="{$education@iteration} fe fe-chevron-down"></span></a>
@@ -50,13 +50,13 @@
                             <div class="col-sm-12 col-md-12">
                                 <div class="form-group mb-1">
                                     <label class="form-label mb-0">School Name</label>
-                                    <input type="text" class="form-control" name="employeeinfo[{$education.level}][school_name]" value="{$education.school_name}" required>
+                                    <input type="text" class="form-control" name="employeeinfo[{$education@iteration}][school_name]" value="{$education.school_name}" required>
                                 </div>
                             </div>
                             <div class="col-sm-12 col-md-4">
                                 <div class="form-group mb-1">
                                     <label class="form-label mb-0">School Degree</label>
-                                    <input type="text" class="form-control" name="employeeinfo[{$education.level}][school_degree]" value="{$education.school_degree}">
+                                    <input type="text" class="form-control" name="employeeinfo[{$education@iteration}][school_degree]" value="{$education.school_degree}">
                                 </div>
                             </div>
                             <div class="col-sm-12 col-md-8">
@@ -65,13 +65,13 @@
                                     <div class="col-sm-6 col-md-6">
                                         <div class="form-group mb-1">
                                             <label class="form-label mb-0">From</label>
-                                            <input type="text" class="form-control" name="employeeinfo[{$education.level}][period_from]" value="{$education.period_from}" required>
+                                            <input type="text" class="form-control" name="employeeinfo[{$education@iteration}][period_from]" value="{$education.period_from}" required>
                                         </div>
                                     </div>
                                     <div class="col-sm-6 col-md-6">
                                         <div class="form-group mb-1">
                                             <label class="form-label mb-0">To</label>
-                                            <input type="text" class="form-control" name="employeeinfo[{$education.level}][period_to]" value="{$education.period_to}" required>
+                                            <input type="text" class="form-control" name="employeeinfo[{$education@iteration}][period_to]" value="{$education.period_to}" required>
                                         </div>
                                     </div>
                                 </div>
@@ -80,7 +80,7 @@
                                 <div class="form-group mb-1">
                                     <div class="label-floating">
                                         <label class="form-label mb-0">Highest Level</label>
-                                        <input type="text" class="form-control" name="employeeinfo[{$education.level}][highest_level]" value="{$education.highest_level}">
+                                        <input type="text" class="form-control" name="employeeinfo[{$education@iteration}][highest_level]" value="{$education.highest_level}">
                                     </div>
                                 </div>
                             </div>
@@ -88,7 +88,7 @@
                                 <div class="form-group mb-1">
                                     <div class="label-floating">
                                         <label class="form-label mb-0">Year Graduated</label>
-                                        <input type="text" class="form-control" name="employeeinfo[{$education.level}][year_graduated]" value="{$education.year_graduated}">
+                                        <input type="text" class="form-control" name="employeeinfo[{$education@iteration}][year_graduated]" value="{$education.year_graduated}">
                                     </div>
                                 </div>
                             </div>
@@ -96,7 +96,7 @@
                                 <div class="form-group mb-1">
                                     <div class="label-floating">
                                         <label class="form-label mb-0">Scholarships/Academic Honors Received</label>
-                                        <input type="text" class="form-control" name="employeeinfo[{$education.level}][academic_honor]" value="{$education.academic_honor}">
+                                        <input type="text" class="form-control" name="employeeinfo[{$education@iteration}][academic_honor]" value="{$education.academic_honor}">
                                     </div>
                                 </div>
                             </div>

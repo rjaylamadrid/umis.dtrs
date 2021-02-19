@@ -163,14 +163,14 @@
                         {$count=4}
                             {foreach from = $children item = child }
                                 <tr id="row">
-                                        <input type="hidden" name="employeeinfo[{$count}][relationship]" value="0">
-                                        <input type="hidden" name="employeeinfo[{$count}][no]" value="{$child.no}">
-                                        <td><input type="text" class="form-control" name="employeeinfo[{$count}][first_name]" value="{$child.first_name}"></td>
-                                        <td><input type="text" class="form-control" name="employeeinfo[{$count}][middle_name]" value="{$child.middle_name}"></td>
-                                        <td><input type="text" class="form-control" name="employeeinfo[{$count}][last_name]" value="{$child.last_name}"></td>
-                                        <td><input type="text" class="form-control" name="employeeinfo[{$count}][ext_name]" value="{$child.ext_name}"></td>
-                                        <td><input type="text" class="form-control" name="employeeinfo[{$count}][birthdate]" value="{$child.birthdate}"></td>
-                                        <td style="vertical-align: middle; text-align: center;"><a class="btn btn-outline-danger btn-sm" href="javascript:confirm_delete({$child.no},{$child.employee_id},'{$tab}')"><i class="fe fe-trash"></i></a></td>
+                                    <input type="hidden" name="employeeinfo[{$count}][relationship]" value="0">
+                                    <input type="hidden" name="employeeinfo[{$count}][no]" value="{$child.no}">
+                                    <td><input type="text" class="form-control" name="employeeinfo[{$count}][first_name]" value="{$child.first_name}"></td>
+                                    <td><input type="text" class="form-control" name="employeeinfo[{$count}][middle_name]" value="{$child.middle_name}"></td>
+                                    <td><input type="text" class="form-control" name="employeeinfo[{$count}][last_name]" value="{$child.last_name}"></td>
+                                    <td><input type="text" class="form-control" name="employeeinfo[{$count}][ext_name]" value="{$child.ext_name}"></td>
+                                    <td><input type="text" class="form-control" name="employeeinfo[{$count}][birthdate]" value="{$child.birthdate}"></td>
+                                    <td style="vertical-align: middle; text-align: center;"><a class="btn btn-outline-danger btn-sm" href="javascript:confirm_delete({$child.no},{$child.employee_id},'{$tab}')"><i class="fe fe-trash"></i></a></td>
                                 </tr>
                                 {$count = $count +1}
                             {/foreach}

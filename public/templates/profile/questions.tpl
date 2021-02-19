@@ -1,3 +1,4 @@
+{$answer = json_decode($employee->other_info.answers)}
 <div class="table-responsive mt-2" style="overflow-x: unset">
     <table class="table table-sm card-table table-borderless">
         <tr>
@@ -12,14 +13,16 @@
                 {if $view == "update"}
                     <div class="custom-controls-stacked">
                         <label class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" class="custom-control-input" name="q34a" value="Yes" checked="">
+                        <input type="radio" class="custom-control-input" name="employeeinfo[question][q34a]" value="Yes" {if $answer->q34a == 'Yes'} Checked {/if}>
                         <span class="custom-control-label">Yes</span>
                         </label>
                         <label class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" class="custom-control-input" name="q34a" value="No">
+                        <input type="radio" class="custom-control-input" name="employeeinfo[question][q34a]" value="No" {if $answer->q34a == 'No'} Checked {/if}>
                         <span class="custom-control-label">No</span>
                         </label>
                     </div>
+                {else}
+                    <div>{$answer->q34a}</div>
                 {/if}
             </td>
         </tr>
@@ -30,15 +33,18 @@
                 {if $view == "update"}
                     <div class="custom-controls-stacked">
                         <label class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" class="custom-control-input" name="q34b" value="Yes" checked="">
+                        <input type="radio" class="custom-control-input" name="employeeinfo[question][q34b]" value="Yes" {if $answer->q34b == 'Yes'} Checked {/if}>
                         <span class="custom-control-label">Yes</span>
                         </label>
                         <label class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" class="custom-control-input" name="q34b" value="No">
+                        <input type="radio" class="custom-control-input" name="employeeinfo[question][q34b]" value="No" {if $answer->q34b == 'No'} Checked {/if}>
                         <span class="custom-control-label">No</span>
                         </label>
                     </div>
-                    <input type="text" class="form-control" placeholder="Username">
+                    <input type="text" class="form-control" name="employeeinfo[question][q34Det]" value="{$answer->q34Det}" placeholder="Details">
+                {else}
+                    <div>{$answer->q34b}</div>
+                    <div class="small text-muted">{$answer->q34Det}</div>
                 {/if}
             </td>
         </tr>
@@ -54,15 +60,18 @@
                 {if $view == "update"}
                     <div class="custom-controls-stacked">
                         <label class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" class="custom-control-input" name="q35a" value="Yes" checked="">
+                        <input type="radio" class="custom-control-input" name="employeeinfo[question][q35a]" value="Yes" {if $answer->q35a == 'Yes'} Checked {/if}>
                         <span class="custom-control-label">Yes</span>
                         </label>
                         <label class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" class="custom-control-input" name="q35a" value="No">
+                        <input type="radio" class="custom-control-input" name="employeeinfo[question][q35a]" value="No" {if $answer->q35a == 'No'} Checked {/if}>
                         <span class="custom-control-label">No</span>
                         </label>
                     </div>
-                    <input type="text" class="form-control" placeholder="Username">
+                    <input type="text" class="form-control" name="employeeinfo[question][q35aDet]" value="{$answer->q35aDet}" placeholder="Details">
+                {else}
+                    <div>{$answer->q35a}</div>
+                    <div class="small text-muted">{$answer->q35aDet}</div>
                 {/if}
             </td>
         </tr>
@@ -73,15 +82,20 @@
                 {if $view == "update"}
                     <div class="custom-controls-stacked">
                         <label class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" class="custom-control-input" name="q35b" value="Yes" checked="">
+                        <input type="radio" class="custom-control-input" name="employeeinfo[question][q35b]" value="Yes" {if $answer->q35b == 'Yes'} Checked {/if}>
                         <span class="custom-control-label">Yes</span>
                         </label>
                         <label class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" class="custom-control-input" name="q35b" value="No">
+                        <input type="radio" class="custom-control-input" name="employeeinfo[question][q35b]" value="No" {if $answer->q35b == 'No'} Checked {/if}>
                         <span class="custom-control-label">No</span>
                         </label>
                     </div>
-                    <input type="text" class="form-control" placeholder="Username">
+                    <input type="text" class="form-control mb-1" name="employeeinfo[question][q35bDate]" value="{$answer->q35bDate}" placeholder="Date Filed">
+                    <input type="text" class="form-control" name="employeeinfo[question][q35bStat]" value="{$answer->q35bStat}" placeholder="Status of Case/s">
+                {else}
+                    <div>{$answer->q35b}</div>
+                    <div class="small text-muted">Date: {$answer->q35bDate}</div>
+                    <div class="small text-muted">Status: {$answer->q35bStat}</div>
                 {/if}
             </td>
         </tr>
@@ -92,15 +106,18 @@
                 {if $view == "update"}
                     <div class="custom-controls-stacked">
                         <label class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" class="custom-control-input" name="q36" value="Yes" checked="">
+                        <input type="radio" class="custom-control-input" name="employeeinfo[question][q36]" value="Yes" {if $answer->q36 == 'Yes'} Checked {/if}>
                         <span class="custom-control-label">Yes</span>
                         </label>
                         <label class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" class="custom-control-input" name="q36" value="No">
+                        <input type="radio" class="custom-control-input" name="employeeinfo[question][q36]" value="No" {if $answer->q36 == 'No'} Checked {/if}>
                         <span class="custom-control-label">No</span>
                         </label>
                     </div>
-                    <input type="text" class="form-control" placeholder="Username">
+                    <input type="text" class="form-control" name="employeeinfo[question][q36Det]" value="{$answer->q36Det}" placeholder="Details">
+                {else}
+                    <div>{$answer->q36}</div>
+                    <div class="small text-muted">{$answer->q36Det}</div>
                 {/if}
             </td>
         </tr>
@@ -111,15 +128,18 @@
                 {if $view == "update"}
                     <div class="custom-controls-stacked">
                         <label class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" class="custom-control-input" name="q37" value="Yes" checked="">
+                        <input type="radio" class="custom-control-input" name="employeeinfo[question][q37]" value="Yes" {if $answer->q37 == 'Yes'} Checked {/if}>
                         <span class="custom-control-label">Yes</span>
                         </label>
                         <label class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" class="custom-control-input" name="q37" value="No">
+                        <input type="radio" class="custom-control-input" name="employeeinfo[question][q37]" value="No" {if $answer->q37 == 'No'} Checked {/if}>
                         <span class="custom-control-label">No</span>
                         </label>
                     </div>
-                    <input type="text" class="form-control" placeholder="Username">
+                    <input type="text" class="form-control" name="employeeinfo[question][q37Det]" value="{$answer->q37Det}" placeholder="Details">
+                {else}
+                    <div>{$answer->q37}</div>
+                    <div class="small text-muted">{$answer->q37Det}</div>
                 {/if}
             </td>
         </tr>
@@ -130,15 +150,18 @@
                 {if $view == "update"}
                     <div class="custom-controls-stacked">
                         <label class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" class="custom-control-input" name="q38a" value="Yes" checked="">
+                        <input type="radio" class="custom-control-input" name="employeeinfo[question][q38a]" value="Yes" {if $answer->q38a == 'Yes'} Checked {/if}>
                         <span class="custom-control-label">Yes</span>
                         </label>
                         <label class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" class="custom-control-input" name="q38a" value="No">
+                        <input type="radio" class="custom-control-input" name="employeeinfo[question][q38a]" value="No" {if $answer->q38a == 'No'} Checked {/if}>
                         <span class="custom-control-label">No</span>
                         </label>
                     </div>
-                    <input type="text" class="form-control" placeholder="Username">
+                    <input type="text" class="form-control" name="employeeinfo[question][q38aDet]" value="{$answer->q38aDet}" placeholder="Give the details">
+                {else}
+                    <div>{$answer->q38a}</div>
+                    <div class="small text-muted">{$answer->q38aDet}</div>
                 {/if}
             </td>
         </tr>
@@ -149,15 +172,18 @@
                 {if $view == "update"}
                     <div class="custom-controls-stacked">
                         <label class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" class="custom-control-input" name="q38b" value="Yes" checked="">
+                        <input type="radio" class="custom-control-input" name="employeeinfo[question][q38b]" value="Yes" {if $answer->q38b == 'Yes'} Checked {/if}>
                         <span class="custom-control-label">Yes</span>
                         </label>
                         <label class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" class="custom-control-input" name="q38b" value="No">
+                        <input type="radio" class="custom-control-input" name="employeeinfo[question][q38b]" value="No" {if $answer->q38b == 'No'} Checked {/if}>
                         <span class="custom-control-label">No</span>
                         </label>
                     </div>
-                    <input type="text" class="form-control" placeholder="Username">
+                    <input type="text" class="form-control" name="employeeinfo[question][q38bDet]" value="{$answer->q38bDet}" placeholder="Give the details">
+                {else}
+                    <div>{$answer->q38b}</div>
+                    <div class="small text-muted">{$answer->q38bDet}</div>
                 {/if}
             </td>
         </tr>
@@ -168,15 +194,18 @@
                 {if $view == "update"}
                     <div class="custom-controls-stacked">
                         <label class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" class="custom-control-input" name="q39" value="Yes" checked="">
+                        <input type="radio" class="custom-control-input" name="employeeinfo[question][q39]" value="Yes" {if $answer->q39 == 'Yes'} Checked {/if}>
                         <span class="custom-control-label">Yes</span>
                         </label>
                         <label class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" class="custom-control-input" name="q39" value="No">
+                        <input type="radio" class="custom-control-input" name="employeeinfo[question][q39]" value="No" {if $answer->q39 == 'No'} Checked {/if}>
                         <span class="custom-control-label">No</span>
                         </label>
                     </div>
-                    <input type="text" class="form-control" placeholder="Username">
+                    <input type="text" class="form-control" name="employeeinfo[question][q39Det]" value="{$answer->q39Det}" placeholder="Country">
+                {else}
+                    <div>{$answer->q39}</div>
+                    <div class="small text-muted">{$answer->q39Det}</div>
                 {/if}
             </td>
         </tr>
@@ -192,15 +221,18 @@
                 {if $view == "update"}
                     <div class="custom-controls-stacked">
                         <label class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" class="custom-control-input" name="q40a" value="Yes" checked="">
+                        <input type="radio" class="custom-control-input" name="employeeinfo[question][q40a]" value="Yes" {if $answer->q40a == 'Yes'} Checked {/if}>
                         <span class="custom-control-label">Yes</span>
                         </label>
                         <label class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" class="custom-control-input" name="q40a" value="No">
+                        <input type="radio" class="custom-control-input" name="employeeinfo[question][q40a]" value="No" {if $answer->q40a == 'No'} Checked {/if}>
                         <span class="custom-control-label">No</span>
                         </label>
                     </div>
-                    <input type="text" class="form-control" placeholder="Username">
+                    <input type="text" class="form-control" name="employeeinfo[question][q40aDet]" value="{$answer->q40aDet}" placeholder="Please Specify">
+                {else}
+                    <div>{$answer->q40a}</div>
+                    <div class="small text-muted">{$answer->q40aDet}</div>
                 {/if}
             </td>
         </tr>
@@ -211,15 +243,18 @@
                 {if $view == "update"}
                     <div class="custom-controls-stacked">
                         <label class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" class="custom-control-input" name="q40b" value="Yes" checked="">
+                            <input type="radio" class="custom-control-input" name="employeeinfo[question][q40b]" value="Yes" {if $answer->q40b == 'Yes'} Checked {/if}>
                             <span class="custom-control-label">Yes</span>
                         </label>
                         <label class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" class="custom-control-input" name="q40b" value="No">
+                            <input type="radio" class="custom-control-input" name="employeeinfo[question][q40b]" value="No" {if $answer->q40b == 'No'} Checked {/if}>
                             <span class="custom-control-label">No</span>
                         </label>
                     </div>
-                    <input type="text" class="form-control" placeholder="Username">
+                    <input type="text" class="form-control" name="employeeinfo[question][q40bDet]" value="{$answer->q40bDet}" placeholder="Please Specify ID No">
+                {else}
+                    <div>{$answer->q40b}</div>
+                    <div class="small text-muted">{$answer->q40bDet}</div>
                 {/if}
             </td>
         </tr>
@@ -230,15 +265,18 @@
                 {if $view == "update"}
                     <div class="custom-controls-stacked">
                         <label class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" class="custom-control-input" name="q40c" value="Yes" checked="">
+                        <input type="radio" class="custom-control-input" name="employeeinfo[question][q40c]" value="Yes" {if $answer->q40c == 'Yes'} Checked {/if}>
                         <span class="custom-control-label">Yes</span>
                         </label>
                         <label class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" class="custom-control-input" name="q40c" value="No">
+                        <input type="radio" class="custom-control-input" name="employeeinfo[question][q40c]" value="No" {if $answer->q40c == 'No'} Checked {/if}>
                         <span class="custom-control-label">No</span>
                         </label>
                     </div>
-                    <input type="text" class="form-control" placeholder="Username">
+                    <input type="text" class="form-control" name="employeeinfo[question][q40cDet]" value="{$answer->q40cDet}" placeholder="Please Specify ID No">
+                {else}
+                    <div>{$answer->q40c}</div>
+                    <div class="small text-muted">{$answer->q40cDet}</div>
                 {/if}
             </td>
         </tr>
