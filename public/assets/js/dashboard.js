@@ -4,6 +4,7 @@ require.config({
     core: ["bootstrap", "jquery"],
     datatables: ["jquery"],
     chartjs: ["chart"],
+    message: ["jquery"],
   },
   paths: {
     core: "assets/js/core",
@@ -12,6 +13,7 @@ require.config({
     datatables: "assets/js/vendors/datatables.min",
     chart: "assets/js/vendors/chart",
     chartjs: "assets/js/vendors/chartjs-plugin-datalabels.min",
+    message: "assets/js/vendors/message",
   },
 });
 window.tabler = {
@@ -116,4 +118,4 @@ window.tabler = {
     'gray-dark-lightest': '#ebebec'
     }
 };
-require (['core']);
+require (['core', 'message']);

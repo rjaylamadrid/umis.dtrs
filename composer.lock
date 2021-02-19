@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9351f3d2ca2911568ee8ce2007a480ed",
+    "content-hash": "420c156350f5c4d4579d997436353a20",
     "packages": [
         {
             "name": "cboden/ratchet",
-            "version": "v0.4.3",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ratchetphp/Ratchet.git",
-                "reference": "466a0ecc83209c75b76645eb823401b5c52e5f21"
+                "reference": "36983e12ffff4eaf042106b7341c7f99f7e3072a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ratchetphp/Ratchet/zipball/466a0ecc83209c75b76645eb823401b5c52e5f21",
-                "reference": "466a0ecc83209c75b76645eb823401b5c52e5f21",
+                "url": "https://api.github.com/repos/ratchetphp/Ratchet/zipball/36983e12ffff4eaf042106b7341c7f99f7e3072a",
+                "reference": "36983e12ffff4eaf042106b7341c7f99f7e3072a",
                 "shasum": ""
             },
             "require": {
@@ -61,12 +61,7 @@
                 "sockets",
                 "websocket"
             ],
-            "support": {
-                "chat": "https://gitter.im/reactphp/reactphp",
-                "issues": "https://github.com/ratchetphp/Ratchet/issues",
-                "source": "https://github.com/ratchetphp/Ratchet/tree/master"
-            },
-            "time": "2020-07-07T15:50:14+00:00"
+            "time": "2021-01-26T14:05:50+00:00"
         },
         {
             "name": "evenement/evenement",
@@ -109,10 +104,6 @@
                 "event-dispatcher",
                 "event-emitter"
             ],
-            "support": {
-                "issues": "https://github.com/igorw/evenement/issues",
-                "source": "https://github.com/igorw/evenement/tree/master"
-            },
             "time": "2017-07-23T21:35:13+00:00"
         },
         {
@@ -184,10 +175,6 @@
                 "uri",
                 "url"
             ],
-            "support": {
-                "issues": "https://github.com/guzzle/psr7/issues",
-                "source": "https://github.com/guzzle/psr7/tree/1.x"
-            },
             "time": "2020-12-08T11:45:39+00:00"
         },
         {
@@ -232,11 +219,53 @@
                 "router",
                 "routing"
             ],
-            "support": {
-                "issues": "https://github.com/mrjgreen/phroute/issues",
-                "source": "https://github.com/mrjgreen/phroute/tree/master"
-            },
             "time": "2015-07-22T20:46:43+00:00"
+        },
+        {
+            "name": "propa/tcpdi",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kulbakin/tcpdi.git",
+                "reference": "059b202086258ae0326e2e05e4d1d3a892b75c72"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kulbakin/tcpdi/zipball/059b202086258ae0326e2e05e4d1d3a892b75c72",
+                "reference": "059b202086258ae0326e2e05e4d1d3a892b75c72",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0",
+                "tecnickcom/tcpdf": "^6.3"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "fpdf_tpl.php",
+                    "tcpdi.php",
+                    "tcpdi_parser.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Nicola Asuni",
+                    "email": "info@tecnick.com",
+                    "homepage": "http://nicolaasuni.tecnick.com"
+                }
+            ],
+            "description": "TCPDI is a PHP class for importing PDF to use with TCPDF",
+            "keywords": [
+                "TCPDF",
+                "pdf",
+                "tcpdi",
+                "tcpdi_parser"
+            ],
+            "time": "2020-03-31T12:47:48+00:00"
         },
         {
             "name": "psr/http-message",
@@ -255,7 +284,6 @@
             "require": {
                 "php": ">=5.3.0"
             },
-            "default-branch": true,
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -287,9 +315,6 @@
                 "request",
                 "response"
             ],
-            "support": {
-                "source": "https://github.com/php-fig/http-message/tree/master"
-            },
             "time": "2019-08-29T13:16:46+00:00"
         },
         {
@@ -330,10 +355,6 @@
                 }
             ],
             "description": "A polyfill for getallheaders.",
-            "support": {
-                "issues": "https://github.com/ralouphie/getallheaders/issues",
-                "source": "https://github.com/ralouphie/getallheaders/tree/develop"
-            },
             "time": "2019-03-08T08:55:37+00:00"
         },
         {
@@ -386,11 +407,6 @@
                 "rfc6455",
                 "websocket"
             ],
-            "support": {
-                "chat": "https://gitter.im/reactphp/reactphp",
-                "issues": "https://github.com/ratchetphp/RFC6455/issues",
-                "source": "https://github.com/ratchetphp/RFC6455/tree/v0.3"
-            },
             "time": "2020-05-15T18:31:24+00:00"
         },
         {
@@ -453,10 +469,6 @@
                 "promise",
                 "reactphp"
             ],
-            "support": {
-                "issues": "https://github.com/reactphp/cache/issues",
-                "source": "https://github.com/reactphp/cache/tree/v1.1.1"
-            },
             "funding": [
                 {
                     "url": "https://github.com/WyriHaximus",
@@ -533,10 +545,6 @@
                 "dns-resolver",
                 "reactphp"
             ],
-            "support": {
-                "issues": "https://github.com/reactphp/dns/issues",
-                "source": "https://github.com/reactphp/dns/tree/v1.4.0"
-            },
             "funding": [
                 {
                     "url": "https://github.com/WyriHaximus",
@@ -589,10 +597,6 @@
                 "asynchronous",
                 "event-loop"
             ],
-            "support": {
-                "issues": "https://github.com/reactphp/event-loop/issues",
-                "source": "https://github.com/reactphp/event-loop/tree/v1.1.1"
-            },
             "time": "2020-01-01T18:39:52+00:00"
         },
         {
@@ -639,10 +643,6 @@
                 "promise",
                 "promises"
             ],
-            "support": {
-                "issues": "https://github.com/reactphp/promise/issues",
-                "source": "https://github.com/reactphp/promise/tree/2.x"
-            },
             "funding": [
                 {
                     "url": "https://github.com/WyriHaximus",
@@ -706,10 +706,6 @@
                 "timeout",
                 "timer"
             ],
-            "support": {
-                "issues": "https://github.com/reactphp/promise-timer/issues",
-                "source": "https://github.com/reactphp/promise-timer/tree/v1.6.0"
-            },
             "time": "2020-07-10T12:18:06+00:00"
         },
         {
@@ -780,10 +776,6 @@
                 "reactphp",
                 "stream"
             ],
-            "support": {
-                "issues": "https://github.com/reactphp/socket/issues",
-                "source": "https://github.com/reactphp/socket/tree/v1.6.0"
-            },
             "funding": [
                 {
                     "url": "https://github.com/WyriHaximus",
@@ -840,57 +832,7 @@
                 "stream",
                 "writable"
             ],
-            "support": {
-                "issues": "https://github.com/reactphp/stream/issues",
-                "source": "https://github.com/reactphp/stream/tree/v1.1.1"
-            },
             "time": "2020-05-04T10:17:57+00:00"
-        },
-        {
-            "name": "propa/tcpdi",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/kulbakin/tcpdi.git",
-                "reference": "059b202086258ae0326e2e05e4d1d3a892b75c72"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/kulbakin/tcpdi/zipball/059b202086258ae0326e2e05e4d1d3a892b75c72",
-                "reference": "059b202086258ae0326e2e05e4d1d3a892b75c72",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0",
-                "tecnickcom/tcpdf": "^6.3"
-            },
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    "fpdf_tpl.php",
-                    "tcpdi.php",
-                    "tcpdi_parser.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "Nicola Asuni",
-                    "email": "info@tecnick.com",
-                    "homepage": "http://nicolaasuni.tecnick.com"
-                }
-            ],
-            "description": "TCPDI is a PHP class for importing PDF to use with TCPDF",
-            "keywords": [
-                "TCPDF",
-                "pdf",
-                "tcpdi",
-                "tcpdi_parser"
-            ],
-            "time": "2020-03-31T12:47:48+00:00"
         },
         {
             "name": "smarty/smarty",
@@ -913,7 +855,6 @@
                 "phpunit/phpunit": "^7.5 || ^6.5 || ^5.7 || ^4.8",
                 "smarty/smarty-lexer": "^3.1"
             },
-            "default-branch": true,
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -973,7 +914,6 @@
             "require": {
                 "php": ">=7.1"
             },
-            "default-branch": true,
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -1005,9 +945,6 @@
             ],
             "description": "A generic function and convention to trigger deprecation notices",
             "homepage": "https://symfony.com",
-            "support": {
-                "source": "https://github.com/symfony/deprecation-contracts/tree/main"
-            },
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -1030,12 +967,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-foundation.git",
-                "reference": "f8474ef5c7a3fe2635fe38792aac7383ec8c3efc"
+                "reference": "933b4cba7ab9abdb2472c406c433f3f78e3f9bbd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/f8474ef5c7a3fe2635fe38792aac7383ec8c3efc",
-                "reference": "f8474ef5c7a3fe2635fe38792aac7383ec8c3efc",
+                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/933b4cba7ab9abdb2472c406c433f3f78e3f9bbd",
+                "reference": "933b4cba7ab9abdb2472c406c433f3f78e3f9bbd",
                 "shasum": ""
             },
             "require": {
@@ -1053,7 +990,6 @@
             "suggest": {
                 "symfony/mime": "To use the file extension guesser"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -1079,9 +1015,6 @@
             ],
             "description": "Defines an object-oriented layer for the HTTP specification",
             "homepage": "https://symfony.com",
-            "support": {
-                "source": "https://github.com/symfony/http-foundation/tree/5.x"
-            },
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -1096,7 +1029,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-02-06T10:28:18+00:00"
+            "time": "2021-02-15T18:57:44+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -1104,12 +1037,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
-                "reference": "f377a3dd1fde44d37b9831d68dc8dea3ffd28e13"
+                "reference": "5232de97ee3b75b0360528dae24e73db49566ab1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/f377a3dd1fde44d37b9831d68dc8dea3ffd28e13",
-                "reference": "f377a3dd1fde44d37b9831d68dc8dea3ffd28e13",
+                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/5232de97ee3b75b0360528dae24e73db49566ab1",
+                "reference": "5232de97ee3b75b0360528dae24e73db49566ab1",
                 "shasum": ""
             },
             "require": {
@@ -1118,7 +1051,6 @@
             "suggest": {
                 "ext-mbstring": "For best performance"
             },
-            "default-branch": true,
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -1160,9 +1092,6 @@
                 "portable",
                 "shim"
             ],
-            "support": {
-                "source": "https://github.com/symfony/polyfill-mbstring/tree/v1.22.0"
-            },
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -1177,7 +1106,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-01-07T16:49:33+00:00"
+            "time": "2021-01-22T09:19:47+00:00"
         },
         {
             "name": "symfony/polyfill-php80",
@@ -1196,7 +1125,6 @@
             "require": {
                 "php": ">=7.1"
             },
-            "default-branch": true,
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -1244,9 +1172,6 @@
                 "portable",
                 "shim"
             ],
-            "support": {
-                "source": "https://github.com/symfony/polyfill-php80/tree/v1.22.0"
-            },
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -1303,7 +1228,6 @@
                 "symfony/http-foundation": "For using a Symfony Request object",
                 "symfony/yaml": "For using the YAML loader"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -1335,9 +1259,6 @@
                 "uri",
                 "url"
             ],
-            "support": {
-                "source": "https://github.com/symfony/routing/tree/5.x"
-            },
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -1414,10 +1335,6 @@
                 "pdf417",
                 "qrcode"
             ],
-            "support": {
-                "issues": "https://github.com/tecnickcom/TCPDF/issues",
-                "source": "https://github.com/tecnickcom/TCPDF/tree/6.3.5"
-            },
             "time": "2020-02-14T14:20:12+00:00"
         }
     ],
@@ -1425,11 +1342,12 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "propa/tcpdi": 20
+        "propa/tcpdi": 20,
+        "cboden/ratchet": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.0.0"
+    "plugin-api-version": "1.1.0"
 }

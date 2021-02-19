@@ -176,7 +176,7 @@ class PDS extends PDF{
 
         $y = 172.7;
         $len = sizeof(self::$employee->family_background['children']) > 11 ? 11 : sizeof(self::$employee->family_background['children']);
-        for($i=0; $i<=$len; $i++) {
+        for($i=0; $i<$len; $i++) {
             self::setText(122, $y, 0, self::$employee->family_background['children'][$i] ['name']);
             self::setText(181, $y, 0, self::pdsDate(self::$employee->family_background['children'][$i] ['birthdate']));
             $y = $y + 6.1;
@@ -216,7 +216,7 @@ class PDS extends PDF{
         self::$employee->eligibility();
         $y = 22;
         $len = sizeof(self::$employee->eligibility) > 7 ? 7 : sizeof(self::$employee->eligibility);
-        for ($i=0; $i<=$len; $i++) {
+        for ($i=0; $i<$len; $i++) {
             self::$pdf->setXY(6, $y);
             self::multiLine(62, 8.1, self::$employee->eligibility[$i]['eligibility_name'], 0);
             self::multiLine(26, 8.1, self::$employee->eligibility[$i]['eligibility_rating'], 0);
@@ -232,7 +232,7 @@ class PDS extends PDF{
         self::$employee->employment();
         $y = 108.3;
         $len = sizeof(self::$employee->employment) > 27 ? 27 : sizeof(self::$employee->employment);
-        for ($i=0; $i<=$len; $i++) {
+        for ($i=0; $i<$len; $i++) {
             $sg = self::$employee->employment[$i]['salary_grade'] ? self::$employee->employment[$i]['salary_grade']."-".self::$employee->employment[$i]['step'] : 'N/A';
             $appointment =  self::$employee->employment[$i]['govt_service'] && self::$employee->employment[$i]['govt_service'] == '1' ? 'Y' : 'N';
             self::$pdf->setXY(6, $y);
@@ -252,7 +252,7 @@ class PDS extends PDF{
         self::$employee->voluntary_work();
         $y = 23.4;
         $len = sizeof(self::$employee->voluntary_work) > 6 ? 6 : sizeof(self::$employee->voluntary_work);
-        for ($i=0; $i<=$len; $i++) {
+        for ($i=0; $i<$len; $i++) {
             self::$pdf->setXY(6, $y);
             self::multiLine(89, 7.3, self::$employee->voluntary_work[$i]['organization_name'],0);
             self::multiLine(15.5, 7.3, self::pdsDate(self::$employee->voluntary_work[$i]['date_from']), 0);
@@ -267,7 +267,7 @@ class PDS extends PDF{
         self::$employee->training_seminar();
         $y = 103.8;
         $len = sizeof(self::$employee->training_seminar) > 21 ? 21 : sizeof(self::$employee->training_seminar);
-        for($i=0; $i<=$len; $i++) {
+        for($i=0; $i<$len; $i++) {
             self::$pdf->setXY(6, $y);
             self::multiLine(89, 6.8, self::$employee->training_seminar[$i]['training_title'], 0);
             self::multiLine(15.5, 6.8, self::pdsDate(self::$employee->training_seminar[$i]['training_from']), 0);
@@ -292,7 +292,7 @@ class PDS extends PDF{
         foreach($infos as $info) {
             $y = 263;
             $len = sizeof($info['data']) > 6 ? 6 : sizeof($info['data']);
-            for($i=0; $i<=$len; $i++) {
+            for($i=0; $i<$len; $i++) {
                 self::$pdf->setXY($info['x'], $y);
                 self::multiLine($info['length'], 6.8, $info['data'][$i], 1);
                 $y = $y + 6.8;
@@ -321,38 +321,52 @@ class PDS extends PDF{
         if ($answer->q35a == 'Yes') {
             self::check(137.2, 43);
             self::setText(139.5, 53, 0, $answer->q35aDet);
-        } else {
-            self::check(159.2, 43);
-        }
+        } else { self::check(159.2, 43); }
         
         if ($answer->q35b == 'Yes') {
             self::check(137.2, 60.5);
             self::setText(162.5, 70, 0, $answer->q35bDate);
             self::setText(162.5, 74.7, 0, $answer->q35bStat);
-        } else {
-            self::check(160.2, 60.5);
-        }
+        } else { self::check(160.2, 60.5); }
 
         if ($answer->q36 == 'Yes') {
             self::check(137, 82);
             self::setText(139.5, 92.3, 0, $answer->q36Det);
-        } else {
-            self::check(161.3, 82);
-        }
+        } else { self::check(161.3, 82); }
         
-        $answer->q37 == 'Yes' ? self::check(136.8, 99) : self::check(161.8, 99);
-        if ($answer->q35aDet)self::setText(139.5, 106.5, 0, $answer->q37Det);
-        $answer->q38a == 'Yes' ? self::check(137.2, 113.5) : self::check(163.3, 113.5);
-        if ($answer->q35aDet)self::setText(162.5, 118, 0, $answer->q38aDet);
-        $answer->q38b == 'Yes' ? self::check(137.5, 124) : self::check(163.6, 124.3);
-        if ($answer->q35aDet)self::setText(162.5, 129.3, 0, $answer->q38bDet);
-        $answer->q39 == 'Yes' ? self::check(137.2, 136.1) : self::check(163.4, 136.2);
-        if ($answer->q35aDet)self::setText(139.7, 145, 0, $answer->q39Det);
-        $answer->q40a == 'Yes' ? self::check(137.2, 161.5) : self::check(163.8, 161.5);
-        if ($answer->q35aDet)self::setText(175.5, 165.5, 0, $answer->q40aDet);
-        $answer->q40b == 'Yes' ? self::check(137.2, 170.3) : self::check(163.8, 170.3);
-        if ($answer->q35aDet)self::setText(175.5, 174.8, 0, $answer->q40bDet);
-        $answer->q40c == 'Yes' ? self::check(137.2, 179.4) : self::check(163.8, 179.4);
-        if ($answer->q35aDet)self::setText(175.5, 183.3, 0, $answer->q40cDet);
+        if ($answer->q37 == 'Yes') {
+            self::check(136.8, 99);
+            self::setText(139.5, 106.5, 0, $answer->q37Det);
+        } else { self::check(161.8, 99); }
+
+        if ($answer->q38a == 'Yes') {
+            self::check(137.2, 113.5);
+            self::setText(162.5, 118, 0, $answer->q38aDet);
+        } else { self::check(163.3, 113.5); }
+        
+        if ($answer->q38b == 'Yes') {
+            self::check(137.5, 124);
+            self::setText(162.5, 129.3, 0, $answer->q38bDet);
+        } else { self::check(163.6, 124.3); }
+
+        if ($answer->q39 == 'Yes') {
+            self::check(137.2, 136.1);
+            self::setText(139.7, 145, 0, $answer->q39Det);
+        } else { self::check(163.4, 136.2); }
+        
+        if ($answer->q40a == 'Yes') {
+            self::check(137.2, 161.5);
+            self::setText(175.5, 165.5, 0, $answer->q40aDet);
+        } else { self::check(163.8, 161.5); }
+
+        if ($answer->q40b == 'Yes') {
+            self::check(137.2, 170.3);
+            self::setText(175.5, 174.8, 0, $answer->q40bDet);
+        } else { self::check(163.8, 170.3); }
+
+        if ($answer->q40c == 'Yes') {
+            self::check(137.2, 179.4);
+            self::setText(175.5, 183.3, 0, $answer->q40cDet);
+        } else { self::check(163.8, 179.4); }
     }
 }

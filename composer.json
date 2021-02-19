@@ -7,7 +7,7 @@
         "phroute/phroute": "^2.1",
         "tecnickcom/tcpdf": "^6.3",
         "propa/tcpdi": "dev-master",
-        "cboden/ratchet": "^0.4.3"
+        "cboden/ratchet": "dev-master"
     },
     "autoload": {
         "psr-4": {

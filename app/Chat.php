@@ -11,6 +11,7 @@ class Chat implements MessageComponentInterface {
     private $msgFrom;
     private $users;
     private $onlineUsers;
+    private $user;
     
     public function __construct() {
         $this->clients = new \SplObjectStorage;
@@ -18,12 +19,20 @@ class Chat implements MessageComponentInterface {
         $this->msgFrom = [];
         $this->users = [];
         $this->onlineUsers = [];
+        $this->user = '';
     }
 
     public function onOpen(ConnectionInterface $conn) {
-        $this->clients->attach($conn);
-        $this->users[$conn->resourceId] = $conn;
-        echo "someone connected\n".$conn->resourceId;
+        // if (!$this->user) {
+            $this->clients->attach($conn);
+            $this->users[$conn->resourceId] = $conn;
+            $ids = [];
+            foreach($this->users as $user) {
+                $ids[] = $user->resourceId;
+            }
+            echo "someone connected\n".$conn->resourceId;
+            print_r($ids);
+        // }
     }
 
     public function onMessage(ConnectionInterface $conn, $msg) {
@@ -33,6 +42,7 @@ class Chat implements MessageComponentInterface {
 
             case "active":
                 $result["command"] = "active";
+                // $this->user = $data->user;
                 $this->onlineUsers[$conn->resourceId] = $data->user;
                 $employees = $messages_object->getAllEmployeeData();
                 $index = 0;
@@ -111,11 +121,13 @@ class Chat implements MessageComponentInterface {
     }
 
     public function onClose(ConnectionInterface $conn) {
-        $this->clients->detach($conn);
-        unset($this->users[$conn->resourceId]);
-        unset($this->msgTo[$conn->resourceId]);
-        unset($this->msgFrom[$conn->resourceId]);
-        echo "someone has disconnected";
+        // if (!in_array($this->user, $this->users)) {
+            $this->clients->detach($conn);
+            unset($this->users[$conn->resourceId]);
+            unset($this->msgTo[$conn->resourceId]);
+            unset($this->msgFrom[$conn->resourceId]);
+            echo "someone has disconnected";
+        // }
     }
 
     public function onError(ConnectionInterface $conn, \Exception $e) {

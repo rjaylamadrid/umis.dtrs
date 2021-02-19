@@ -39,4 +39,5 @@
     
 </body>
 {if $page != 'login'}{include file="footer.tpl"}{/if}
+
 </html>
