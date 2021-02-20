@@ -10,6 +10,7 @@ class Message {
 	private $text;
 	private $created_on;
 	private $user;
+	private $status;
 
 
 	public function setNo($no){$this->no = $no;}
@@ -27,13 +28,16 @@ class Message {
 	function setCreatedOn($created_on){$this->created_on = $created_on;}
 	function getCreatedOn(){return $this->created_on;}
 
+	function setStatus($status){$this->status = $status;}
+	function getStatus(){return $this->status;}
+
 	public function __construct () {
         
     }
 
 	function saveMessage()
 	{
-        DB::insert ("INSERT INTO tbl_messages VALUES(null,".$this->from.",".$this->to.",'".$this->text."','".$this->created_on."')");
+        DB::insert ("INSERT INTO tbl_messages VALUES(null,".$this->from.",".$this->to.",'".$this->text."','".$this->created_on."',".$this->status.")");
 	}
 
     function getAllMessagesData()
@@ -59,5 +63,10 @@ class Message {
 	function countUnseenMessageData()
 	{
 		return $unseen =  DB::fetch_all ("SELECT COUNT(`status`) AS cnt_unseen FROM tbl_messages WHERE `from` = ".$this->from."  AND `to` = ".$this->to." AND `status` = 1 ");
+	}
+
+	function updateMessageStatusData()
+	{
+		return $result = DB::update ("UPDATE tbl_messages SET `status` = ".$this->status." WHERE `from` = ".$this->from." AND `to` = ".$this->to);
 	}
 }

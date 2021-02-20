@@ -85,12 +85,16 @@ class Chat implements MessageComponentInterface {
                 $result["command"] = "subscribe";
                 $this->msgFrom[$conn->resourceId] = $data->from;
                 $this->msgTo[$conn->resourceId] = $data->to;
-
+                                                                                                                                                                                             
                 $messages_object->setFrom($data->from);
                 $messages_object->setTo($data->to);
                 $result['employee'] = $messages_object->getSelectEmployeeData();
                 $result['messages'] = $messages_object->getAllMessagesData();
                 $msg = json_encode($result);
+                $messages_object->setFrom($data->to);
+                $messages_object->setTo($data->from);
+                $messages_object->setStatus(0);
+                $messages_object->updateMessageStatusData();
                 $this->users[$conn->resourceId]->send($msg);
                 break;
 
@@ -102,18 +106,42 @@ class Chat implements MessageComponentInterface {
                     $messages_object->setText($data->text);
                     date_default_timezone_set('Asia/Manila');
                     $messages_object->setCreatedOn(date("Y-m-d h:i:s"));
-                    $messages_object->saveMessage();
-                    $result['message'] = $messages_object->getLastMessagesData();
-                    
-                    $msg = json_encode($result);
-                    foreach ($this->msgFrom as $id=>$from) {
-                        if ($this->msgTo[$conn->resourceId] == $from && $id != $conn->resourceId) {
-                            $this->users[$id]->send($msg);
+                    if(array_search($data->to, $this->onlineUsers) == null){
+                        $messages_object->setStatus(1);
+                    }else{
+                        foreach ($this->msgFrom as $id=>$from) {
+                            if ($data->to == $from) {
+                                if($this->msgTo[$id] == $data->from){
+                                    $messages_object->setStatus(0);
+                                    break;
+                                }else{
+                                    $messages_object->setStatus(1);
+                                }
+                            }else{
+                                $messages_object->setStatus(1);
+                            }
                         }
                     }
+                    $messages_object->saveMessage();
+                    if(array_search($data->to, $this->onlineUsers) <> null){
+                        $result['message'] = $messages_object->getLastMessagesData(); 
+                        $msg = json_encode($result);
+                        
+                        foreach ($this->onlineUsers as $id=>$ol) {
+                            if ($this->msgTo[$conn->resourceId] == $ol) {
+                                $this->users[$id]->send($msg);
+                            }
+                        }
+                    }
+
                 }
                 break;
             
+            case "unseenTo":
+    
+                $this->users[$conn->resourceId]->send($msg);
+        
+                break;
             default:
                 break;
 

@@ -26,30 +26,11 @@ class Messages extends MessagesController {
         } 
     }
 
-    public function getSelectedEmp() {
-        $msgTo = $this->data['msgTo'];
-        $result['employee'] = DB::fetch_all ("SELECT first_name, last_name, employee_picture, email_address FROM tbl_employee WHERE no = $msgTo");
-        echo json_encode($result);
-    }
-
-    public function getMessages() {
-        $msgTo = $this->data['msgTo'];
-        $msgFrom = $this->data['msgFrom'];
-        $result['messages'] = DB::fetch_all ("SELECT * FROM tbl_messages WHERE `from` = $msgFrom AND `to` = $msgTo OR `from` = $msgTo AND `to` = $msgFrom");
-        echo json_encode($result);
-    }
-
-    public function uMessages() {
-        $msgTo = $this->data['msgTo'];
-        $msgFrom = $this->data['msgFrom'];
-        $result['messages'] = DB::fetch_all ("SELECT * FROM tbl_messages WHERE `from` = $msgFrom AND `to` = $msgTo OR `from` = $msgTo AND `to` = $msgFrom");
-        echo json_encode($result);
-    }
-
-    public function addNewMessage() {
-        unset($this->data['action']);
-        $id = DB::insert ("INSERT INTO tbl_messages VALUES(null,".$this->data['from'].",".$this->data['to'].",'".$this->data['text']."','".$this->data['date']."','".$this->data['time']."')");
-        echo json_encode($this->data['date_time']);
-        
+    public function updateStatus(){
+        $message_object = new Message();
+        $messages_object->setStatus($this->data['status']);
+        $messages_object->setFrom($this->data['from']);
+        $messages_object->updateMessageStatusData();
+        echo json_encode($data);
     }
 } 

@@ -2,17 +2,14 @@
 var msgTo, msgFrom;
 var msgData = [];
 var msgNotif = 0;
-var conn = new WebSocket('ws://192.168.1.11:8080');
 
-
-// var conn = new WebSocket('ws://192.168.1.11:8080');
-
-if(typeof $("#user").val() !== "undefined"){
-  conn.onopen = function(e) {
-    conn.send(JSON.stringify({command: "active", user: $("#user").val()}));
-    conn.send(JSON.stringify({command: "unseen", user: $("#user").val()}));
+  var conn = new WebSocket('ws://' + window.location.origin.substr(7) + ':8080');
+  if(typeof $("#user").val() !== "undefined"){
+    conn.onopen = function(e) {
+      conn.send(JSON.stringify({command: "active", user: $("#user").val()}));
+      conn.send(JSON.stringify({command: "unseen", user: $("#user").val()}));
+    }
   }
-}
 
 conn.onmessage = function(e) {
   var msg = JSON.parse(e.data);
@@ -21,6 +18,12 @@ conn.onmessage = function(e) {
     $("#feed").animate({ scrollTop: $('#feed')[0].scrollHeight}, 1000);
   }else if(msg.command == "message"){
     newMessage(msg.message[0]);
+    console.log(msg.message[0].status);
+    if(msg.message[0].status){
+      var unseen = parseInt(msg.message[0].status) + parseInt(msgNotif)
+      getUnseen({no: msg.message[0].from, unseen: unseen});
+      msgNotif = parseInt(msg.message[0].status) + parseInt(msgNotif);
+    }
     $("#feed").animate({ scrollTop: $('#feed')[0].scrollHeight}, 1000);
   }else if(msg.command == "active"){
     for(let employee of msg.online_users){ 
@@ -35,6 +38,8 @@ conn.onmessage = function(e) {
       }
     }
     $("#notif").text(msgNotif);
+  }else if(msg.command == "unseenTo"){
+     console.log(msg);
   }
 };
 
@@ -57,11 +62,8 @@ function getSelectedEmployee(id) {
   msgTo = id;
   msgFrom = $("#user").val();
   conn.send(JSON.stringify({command: "subscribe", from: msgFrom, to: msgTo}));
-  f (form, "text", "/attendance").then( function(html){
-    $('#update-log-modal').modal('hide');
-    init_dtr($('#id').val());
-  });
   $("#feed").html("<ul></ul>");
+  conn.send(JSON.stringify({command: "unseen", user: $("#user").val()}));
 }
 
 $("#message").keypress(function (event){
@@ -86,17 +88,20 @@ $("#message").keypress(function (event){
 $("#msgSearch").keypress(function (event){
   var keycode = (event.keycode ? event.keycode : event.which)
   console.log("test");
+  
 });
 
 function newMessage(msg) {
+  if((msg.to == msgTo && msg.from == msgFrom) || (msg.to == msgFrom && msg.from == msgTo)){
   var HTMLList;
   var msgStatus = msgFrom == msg.from ? 'received' : 'sent';
- 
+  
   HTMLList =  "<li class='message " + msgStatus + "'>" +
                 "<small class='dateTime'>" + fmtDateTime(new Date(msg.created_on.toString().substr(0, 10) + ", " + msg.created_on.toString().substr(11))) + "</small>" +
                 "<div class='text'>" + msg.text + "</div>" +
               "</li>";
-$("#feed").append("<ul>" + HTMLList + "</ul>"); 
+$("#feed").append("<ul>" + HTMLList + "</ul>");
+  }
 }
 
 function fmtDateTime(dt) {
@@ -122,4 +127,3 @@ function fmtDateTime(dt) {
   }
   return dateTime;
 }
-//MESSAGES :: END
