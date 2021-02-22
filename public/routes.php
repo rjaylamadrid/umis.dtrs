@@ -98,6 +98,7 @@ $router->group(['before' => 'auth'], function ($router) {
     $router->get('/dtr', ['DTR', 'index']);
     $router->post('/dtr', ['DTR', 'do_action']);
     $router->get('/leave', ['Leave', 'index']);
+    $router->post('/leave', ['Leave', 'do_action']);
     // EMPLOYEE END
 });
 

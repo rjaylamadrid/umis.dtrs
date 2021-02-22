@@ -1,5 +1,70 @@
 {extends file="layout.tpl"}
 {block name=content}
+{if $user.is_admin}
+<div class="content">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="card">
+					<div class="card-header card-header-icon" data-background-color="rose">
+						<i class="material-icons">inbox</i>
+					</div>
+					<div class="card-content">
+						<div class="row">
+						<div class="col-sm-6">
+						<h4 class="card-title">Leave Requests</h4>
+					</div>  
+					<div class="col-sm-6">
+						<select name="req_filter" required class="form-control" >
+							<option value="0">Pending</option>
+							<option value="1">For Recommendation</option>
+							<option value="2">Approved</option>
+							<option value="3">Disapproved</option>
+						</select>
+					</div>
+				</div>
+			</div>
+
+			<form class="user" method="POST" action="">
+				<input type="hidden" name="a" value="hr_view_leave_request">
+				<div class="card-content material-datatables">
+					<table class="table table-striped table-no-bordered table-hover" id="employees">
+						<thead>
+							<tr>   
+								<th hidden>ID</th>
+								<th>Name</th>
+								<th>Office/Agency</th>
+								<th>Position</th>
+								<th>Type of Leave/Reason</th>
+								<th>Inclusive Dates</th>
+								<th>Days</th>
+								<th style="text-align: center;">Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>  
+								<td>-</td>
+								<td>-</td>
+								<td>-</td>
+								<td>-</td>
+								<td>-</td>
+								<td>-</td>
+								<td style="text-align: center;">-</td>
+								<td class="td-center" width="14%">
+
+								<a href="#" data-toggle="modal" data-target="#leaveRequestResponse_modal<?php echo $row1['emp_id']; ?>" class="btn btn-primary btn-sm"><i class="material-icons">reply</i></a>
+
+								<a href="#" data-toggle="modal" data-target="#leaveDelete_modal<?php echo $row1['emp_id']; ?>" class="btn btn-warning btn-sm"><i class="material-icons">delete</i></a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+{else}
 {* LEAVE RECORD CARD *}
 	<div class="my-3 my-md-5">
 		<div class="container">
@@ -192,10 +257,10 @@
                 	<tr>
 						<td>{$record.leave_id}</td>
 						<td>{$record.lv_dateof_filing|date_format:"F d, Y"}</td>
-						<td>{if $record.lv_status == '0'} Pending {else if $record.lv_status == '1'} For Approval {else if $record.lv_status == '2'} Approved {else} Disapproved {/if}</td>
-						<td>{$record.lv_type}<div class="small text-muted">{$record.lv_type_others}</div></td>
-						<td>{$record.lv_date_fr|date_format:"M. d, Y"} {if $record.lv_no_days > 1} - {$record.lv_date_to|date_format:"M. d, Y"} {/if}<div class="small text-muted">{$record.lv_no_days} {if $record.lv_no_days > 1}days{else}day{/if}</div></td>
-						<td>{if $record.lv_status == '0'}<a href="" rel="tooltip" class="btn btn-outline-danger btn-sm" title="Delete Request"><i class="fe fe-trash"></i></a>{/if}</td>
+						<td>{if $record.lv_status == '0'} Pending {else if $record.lv_status == '1'} For Approval {else if $record.lv_status == '2'} Approved {else} Disapproved {/if}<div class="small text-muted">Commutation: {$record.lv_commutation}</div></td>
+						<td>{foreach $leave_types as $types} {if $types.id == $record.lv_type} {$types.leave_desc} <div class="small text-muted"> {$record.lv_type_others} </div> {/if} {/foreach} </td>
+						<td>{if $record.lv_date_fr|date_format:"M" == "May"} {$record.lv_date_fr|date_format:"M d, Y"} {else} {$record.lv_date_fr|date_format:"M. d, Y"} {/if} {if $record.lv_no_days > 1} - {if $record.lv_date_to|date_format:"M" == "May"} {$record.lv_date_to|date_format:"M d, Y"} {else} {$record.lv_date_to|date_format:"M. d, Y"} {/if} {/if}<div class="small text-muted">{$record.lv_no_days} {if $record.lv_no_days > 1}days{else}day{/if}</div></td>
+						<td>{if $record.lv_status == '0'}<a href onclick="javascript:return delete_leave({$record.leave_id})" rel="tooltip" class="btn btn-outline-danger btn-sm" title="Delete Leave"><i class="fe fe-trash"></i></a>{/if}</td>
                   	</tr>
 					{/foreach}
 					{else}
@@ -216,6 +281,8 @@
     </div>
   </div>
 </div>
+{/if}
 {* LEAVE REQUEST FORM *}
 {include file="custom/leave_request_form.tpl"}
+
 {/block}

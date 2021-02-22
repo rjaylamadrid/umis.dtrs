@@ -68,10 +68,9 @@
                         <li class="nav-item">
                             <a href="/calendar" class="nav-link {if $page == 'calendar'}active{/if}"><i class="fe fe-calendar"></i> Calendar</a>
                         </li>
-                        {* <li class="nav-item">
-                            <a href="/request" class="nav-link {if $page == 'request'}active{/if}"><i class="fe fe-mail"></i> Leave Requests</a>
-                            <span><div class="notif"></div></span>
-                        </li> *}
+                        <li class="nav-item">
+                            <a href="/leave" class="nav-link {if $page == 'leave'}active{/if}"><i class="fe fe-mail"></i> Leave Requests</a>
+                        </li>
                         <li class="nav-item">
                             <a href="/settings" class="nav-link {if $page == 'settings'}active{/if}"><i class="fe fe-settings"></i> Settings</a>
                         </li>

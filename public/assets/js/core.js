@@ -163,7 +163,6 @@ function dtmin(dtmin) {
  for (var i = Millis1; i < Millis2; i+=8.64e7) 
  {
    var currentDate = new Date(i);
-
    if(currentDate.getDay() == 5 || currentDate.getDay() == 6)
    {
      weekend ++;
@@ -187,12 +186,12 @@ function toggle_other (option) {
    $("#where_specific").prop("disabled", true);
    $("#where_specific").val("");
 
- } else if (option == 4) {
+  } else if (option == 4) {
   // $("#vacation_text").prop("disabled", true);
   // $("#vacation_text").val("");
   $("#where_specific").prop("disabled", false);
   $("#where_specific").val("");
-}
+  }
 }
 
 function toggle_options (option) {
@@ -225,6 +224,19 @@ function toggle_options (option) {
   }
   
   $("#optionb").html(options);
+}
+
+function delete_leave(id) {
+  if(confirm("Are you sure you want to delete this leave request?")) {
+    // $('#cover-spin').show(0);
+    f({action: 'delete_leave', id:id}, "text", "/leave").then( function (data) {
+      location.href = "/leave";
+      // $('#cover-spin').hide(0);
+      // console.log(data);
+    });
+  } else {
+    return false;
+  }
 }
 // LEAVE :: END
 

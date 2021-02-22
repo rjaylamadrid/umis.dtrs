@@ -18,7 +18,7 @@ class LeaveController extends Controller {
     private $schedule;
 
     protected function getLeaveRecord() {
-        $this->leave_record = DB::fetch_all("SELECT * FROM tbl_emp_leave WHERE employee_id = ? ORDER BY lv_date_fr DESC", $this->user['employee_id']);
+        $this->leave_record = DB::fetch_all("SELECT * FROM tbl_emp_leave WHERE employee_id = ? ORDER BY leave_id DESC", $this->user['employee_id']);
     }
 
     protected function getLeaveCredits () {
@@ -42,6 +42,7 @@ class LeaveController extends Controller {
     }
 
     protected function attendance ($id, $arr, $period = 2) {
+        $this->leave_types = DB::db("db_master")->fetch_all("SELECT * FROM tbl_leave_type");
         $table1 = date_create($arr['from'])->format('m-Y');
         $table2 = date_create($arr['to'])->format('m-Y');
         if ($table1 == $table2) {
@@ -222,5 +223,34 @@ class LeaveController extends Controller {
                 $this->leave_balance[$i+1] = ["vacation" => ($this->leave_balance[$i]['vacation'] + $this->leave_balance[$i+1]['vacation']), "sick" => ($this->leave_balance[$i]['sick'] + $this->leave_balance[$i+1]['sick'])];
             }
         }
+    }
+    
+    protected function submitLeave() {
+        if ($this->data['leave_info']['lv_no_days'] > 1) {
+            $start = new DateTime(date_create($this->data['leave_info']['lv_date_fr'])->format('Y-m-d'));
+            $end = new DateTime(date_create($this->data['leave_info']['lv_date_to'])->modify('+1 day')->format('Y-m-d'));
+            $interval = new DateInterval('P1D');
+            $leave_range = new DatePeriod($start, $interval, $end);
+            $emp_schedule = DTR::get_sched($this->data['leave_info']['employee_id']);
+            for ($i=0;$i<sizeof($emp_schedule);$i++) {
+                $this->schedule[$i] = $emp_schedule[$i]['weekday'];
+            }
+            $this->data['leave_info']['lv_no_days'] = 0;
+            foreach ($leave_range as $dates) {
+                in_array($dates->format('l'),$this->schedule) ? $this->data['leave_info']['lv_no_days']++ : '';
+            }
+        }
+        $result = DB::db('db_master')->insert("INSERT INTO tbl_emp_leave SET ". DB::stmt_builder($this->data['leave_info']),$this->data['leave_info']);
+        header ("location: /leave");
+    }
+
+    protected function delete_leave() {
+        $leave_row = DB::db('db_master')->fetch_all("SELECT * FROM tbl_emp_leave WHERE leave_id = ?",$this->data['id'])[0];
+        $data = $leave_row['leave_id'].";".$leave_row['employee_id'].";".$leave_row['lv_dateof_filing'].";".$leave_row['lv_office'].";".$leave_row['lv_type'].";".$leave_row['lv_type_others'].";".$leave_row['lv_where'].";".$leave_row['lv_where_specific'].";".$leave_row['lv_commutation'].";".$leave_row['lv_date_fr'].";".$leave_row['lv_date_to'].";".$leave_row['lv_no_days'].";".$leave_row['emp_salary'].";".$leave_row['lv_recommendation'].";".$leave_row['lv_status'].";".$leave_row['lv_days_with_pay'].";".$leave_row['lv_days_others'].";".$leave_row['lv_approved_others'].";".$leave_row['lv_disapproved_reason'].";".$leave_row['lv_date_requested'];
+        $data_array = ["updated_action" => 1, "updated_table" => 'tbl_emp_leave', "updated_old_data" => $data, "updated_new_data" => '', "updated_employee_id" => $leave_row['employee_id'], "updated_admin_id" => 0,"updated_date"=>date("Y-m-d")];
+
+        $archive = DB::db('db_master')->insert ("INSERT INTO tbl_employee_update_delete SET ". DB::stmt_builder ($data_array),$data_array);
+        $delete = DB::db('db_master')->delete("DELETE FROM tbl_emp_leave WHERE leave_id = ?", $this->data['id']);
+        $this->index();
     }
 }

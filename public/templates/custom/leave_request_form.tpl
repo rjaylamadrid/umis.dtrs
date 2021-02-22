@@ -9,9 +9,9 @@
                         </div>
 
                         <div class="modal-body">
-                            <form class="user" method="POST" action="">
-                            <input type="hidden" name="action" value="">
-                            <input type="hidden" name="emp_id" value="">
+                            <form class="user" method="POST" action="/leave">
+                            <input type="hidden" name="action" value="submitLeave">
+                            <input type="hidden" name="leave_info[employee_id]" value="{$user.employee_id}">
 
                             <div class="row">
                                 <div class="col-lg-6 col-md-6 col-sm-12">
@@ -60,7 +60,7 @@
                                         <label class="form-label">6. A) Type of Leave</label>
                                         <div class="custom-controls-stacked">
                                             <label class="custom-control custom-radio">
-                                                <input required type="radio" id="vacation" class="custom-control-input radio_type" name="leave_info[lv_type]" value="Vacation" onchange="javascript:toggle_options(1)">
+                                                <input required type="radio" id="vacation" class="custom-control-input radio_type" name="leave_info[lv_type]" value="1" onchange="javascript:toggle_options(1)">
                                                 <div class="custom-control-label">Vacation Leave</div>
                                             </label>
 
@@ -77,20 +77,24 @@
                                             </div>
 
                                             <label class="custom-control custom-radio">
-                                                <input required type="radio" id="sick" class="custom-control-input radio_type" name="leave_info[lv_type]" value="Sick Leave" onchange="javascript:toggle_options(2)"><div class="custom-control-label">Sick Leave</div>
+                                                <input required type="radio" id="sick" class="custom-control-input radio_type" name="leave_info[lv_type]" value="2" onchange="javascript:toggle_options(2)"><div class="custom-control-label">Sick Leave</div>
                                             </label>
                                             <label class="custom-control custom-radio">
-                                                <input required type="radio" id="leave_type" onchange="javascript:toggle_options(2)" class="custom-control-input radio_type" name="leave_info[lv_type]" value="Maternity"><div class="custom-control-label">Maternity</div>
+                                                <input required type="radio" id="leave_type" onchange="javascript:toggle_options(3)" class="custom-control-input radio_type" name="leave_info[lv_type]" value="3"><div class="custom-control-label">Maternity</div>
                                             </label>
                                             <label class="custom-control custom-radio">
-                                                <input required type="radio" id="leave_type" onchange="javascript:toggle_options(2)" class="custom-control-input radio_type" name="leave_info[lv_type]" value="Paternity"><div class="custom-control-label">Paternity</div>
+                                                <input required type="radio" id="leave_type" onchange="javascript:toggle_options(3)" class="custom-control-input radio_type" name="leave_info[lv_type]" value="4"><div class="custom-control-label">Paternity</div>
                                             </label>
                                             <label class="custom-control custom-radio">
                                                 <input required type="radio" id="sick_others" onchange="javascript:toggle_options(4)" class="custom-control-input radio_type" name="leave_info[lv_type]" value="Other"><div class="custom-control-label">Other (Specify below)</div>
                                             </label>
                                             <select  id="other_type_text" required class="form-control" disabled="true" name="leave_info[lv_type_others]">
                                                 <option selected value="" disabled>Select Type</option>
-                                                    <option value=""></option>
+                                                    {foreach $leave_types as $types}
+                                                        {if $types.id > 4}
+                                                        <option value="{$types.id}">{$types.leave_desc}</option>
+                                                        {/if}
+                                                    {/foreach}
                                                 </option>
                                             </select>
                                         </div>
@@ -147,7 +151,7 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary">Submit Request</button>
+                                <input type="submit" class="btn btn-primary" value="Submit Request">
                                 <button class="btn btn-secondary" data-dismiss="modal">Close</button>
                             </div>
                         </form>
