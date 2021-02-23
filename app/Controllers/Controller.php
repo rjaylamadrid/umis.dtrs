@@ -15,6 +15,7 @@ class Controller {
         $this->view = new SmartyView ();
         $this->data = $_POST;
         $this->access(); 
+        // print_r($this->user);
         $this->view->assign (["user" => $this->user, "page" => $this->request_page ()]);
     }
 
@@ -34,11 +35,11 @@ class Controller {
         $u_headers = [];
 
         if (!$this->user['is_admin']) {
-            $access = $this->user['isJO'] ? '789' : '789';
+            $access = $this->user['isJO'] ? '()*' : '()*+';
         }
 
         for($i=0; $i<strlen($access); $i++) {
-            $u_headers[] = $headers[substr($access, $i, 1)];
+            $u_headers[] = $headers[ord(substr($access, $i, 1))-33];
         }
 
         $this->view->assign(["headers" => $u_headers]);
