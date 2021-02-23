@@ -5,7 +5,7 @@ class Payroll extends PayrollController {
     private $tab = "page";
 
     public function index () {
-        $this->view->display ('admin/payroll/page', ["tab" => $this->tab, "days" => $this->days]);
+        $this->view->display ('admin/payroll', ["tab" => $this->tab, "days" => $this->days]);
     }
 
     public function do_action () {
@@ -19,5 +19,9 @@ class Payroll extends PayrollController {
     public function tab ($tab = "page") {
         $this->tab = $tab;
         $this->index();
+    }
+
+    public function pay_slip() {
+        
     }
 }

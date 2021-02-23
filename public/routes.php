@@ -95,6 +95,7 @@ $router->group(['before' => 'auth'], function ($router) {
     // EMPLOYEE START
     $router->get('/profile/{view}?', ['Profile', 'index']);
     $router->get('/update/{view}?', ['Profile', 'update']);
+    $router->get('/payslip', ['Payroll', 'payslip']);
     $router->get('/dtr', ['DTR', 'index']);
     $router->post('/dtr', ['DTR', 'do_action']);
     $router->get('/leave', ['Leave', 'index']);

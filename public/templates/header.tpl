@@ -24,9 +24,9 @@
                     </a>
                     <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
                         {if $user.type == "admin"}
-                        <a class="dropdown-item" href="#loginOtherAccountModal" data-toggle="modal">
-                            <i class="dropdown-icon fe fe-user"></i> Account
-                        </a>
+                            <a class="dropdown-item" href="#loginOtherAccountModal" data-toggle="modal">
+                                <i class="dropdown-icon fe fe-user"></i> Account
+                            </a>
                         {/if}
                         <a class="dropdown-item" href="/messages">
                             <i class="dropdown-icon fe fe-send"></i> Messages
@@ -52,42 +52,11 @@
         <div class="row align-items-center">
             <div class="col-lg order-lg-first">
                 <ul class="nav nav-tabs border-0 flex-column flex-lg-row">
-                    {if $user.is_admin}
+                    {foreach from = $headers item = 'header'}
                         <li class="nav-item">
-                            <a href="/dashboard" class="nav-link {if $page == 'dashboard'}active{/if}"><i class="fe fe-home"></i> Dashboard</a>
+                            <a href="/{$header.url}" class="nav-link {if $page == $header.url}active{/if}"><i class="fe fe-{$header.icon}"></i> {$header.title}</a>
                         </li>
-                        <li class="nav-item">
-                            <a href="/employees" class="nav-link {if $page == 'employees'}active{/if}"><i class="fe fe-users"></i> Employees</a>
-                        </li>
-                        {* <li class="nav-item">
-                            <a href="/payroll" class="nav-link {if $page == 'payroll'}active{/if}"><i class="fe fe-credit-card"></i> Payroll</a>
-                        </li> *}
-                        <li class="nav-item">
-                            <a href="/attendance" class="nav-link {if $page == 'attendance'}active{/if}"><i class="fe fe-clock"></i> Daily Time Records</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="/calendar" class="nav-link {if $page == 'calendar'}active{/if}"><i class="fe fe-calendar"></i> Calendar</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="/leave" class="nav-link {if $page == 'leave'}active{/if}"><i class="fe fe-mail"></i> Leave Requests</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="/settings" class="nav-link {if $page == 'settings'}active{/if}"><i class="fe fe-settings"></i> Settings</a>
-                        </li>
-                    {else}
-                        <li class="nav-item">
-                            <a href="/profile" class="nav-link {if $page == 'profile'}active{/if}"><i class="fe fe-user"></i> Profile</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="/payroll" class="nav-link {if $page == 'payroll'}active{/if}"><i class="fe fe-credit-card"></i> Payroll</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{$server}/dtr" class="nav-link {if $page == 'dtr'}active{/if}"><i class="fe fe-clock"></i> Daily Time Records</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{$server}/leave" class="nav-link {if $page == 'leave'}active{/if}"><i class="fe fe-clock"></i> Leave Management</a>
-                        </li>
-                    {/if}
+                    {/foreach}
                 </ul>
             </div>
         </div>

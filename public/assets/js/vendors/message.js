@@ -4,6 +4,7 @@ var msgData = [];
 var msgNotif = 0;
 
   var conn = new WebSocket('ws://' + window.location.origin.substr(7) + ':8080');
+  
   if(typeof $("#user").val() !== "undefined"){
     conn.onopen = function(e) {
       conn.send(JSON.stringify({command: "active", user: $("#user").val()}));

@@ -29,10 +29,16 @@ class LoginController extends Controller {
             $_SESSION['user']['is_admin'] = '1';
             $_SESSION['user']['type'] = 'admin';
         }
+        $this->get_user_access();
         $this->user = $_SESSION['user'];
     }
 
     private function user_data () {
         return DB::fetch_row ("SELECT first_name, middle_name, last_name, employee_picture FROM tbl_employee a, tbl_employee_status b WHERE a.no = b.employee_id AND a.no = ? AND b.campus_id = ? ORDER BY b.date_added DESC LIMIT 0, 1", [$this->tmp_user['employee_id'], $this->tmp_user['campus_id']]);
+    }
+
+    private function get_user_access() {
+        $_SESSION['user']['access'] = DB::fetch_row ("SELECT access FROM tbl_privilege WHERE priv_level = ?", $this->tmp_user['privilege'])['access'];
+        $_SESSION['user']['isJO'] = DB::fetch_row ("SELECT isJobOrder FROM tbl_employee_type WHERE id = ?", $this->tmp_user['etype_id'])['isJobOrder'];
     }
 }
