@@ -7,6 +7,7 @@
                 <div class="card">
                     <div class="card-body">
                         <form action="" method="POST">
+                            <input type="hidden" name="action" value="init_payroll">                        
                             <div class="form-group">
                                 <label class="form-label">Payroll Type:</label>
                                 <select name="payroll[type]" class="form-control custom-select">
@@ -35,11 +36,11 @@
                             <div class="form-group">
                                 <label class="form-label">Employee Type:</label>
                                 <select name="payroll[emp_type]" class="form-control custom-select">
-                                    <option value="1">Regular Employees</option>
-                                    <option value="2">Casual Employees</option>
-                                    <option value="3">Job-Order Employees</option>
-                                    <option value="4">COS Instructor Employees</option>
-                                    <option value="5">Project-Based Employees</option>
+                                    <option value="1" {if $init == '1'}selected{/if}>Regular Employees</option>
+                                    <option value="3" {if $init == '3'}selected{/if}>Casual Employees</option>
+                                    <option value="5" {if $init == '5'}selected{/if}>COS Instructor Employees</option>
+                                    <option value="6" {if $init == '6'}selected{/if}>Job-Order Employees</option>
+                                    <option value="7" {if $init == '7'}selected{/if}>Project-Based Employees</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -53,28 +54,7 @@
                 </div>
             </div>
             <div class="col-md-5 col-lg-9">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="text-right">
-                            <a class="btn btn-primary" href="inc/<?php echo 'trial_excel2.php?cam_id='.$user['CampusID'].'&month='.$payroll['month'].'&year='.$payroll['year'].'&emp_type='.$payroll['emp_type'].'&payroll='.$payroll['range'];?>">Download Payroll</a>
-                        </div>
-                        <div class="table-responsive">
-                            <table id="employees" class="table table-hover card-table table-vcenter text-nowrap datatable dataTable no-footer">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Employee Name</th>
-                                        <th>Position</th>
-                                        <th>Designation</th>
-                                        <th>Salary</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+                {include file = "admin/payroll/init_payroll.tpl"}
             </div>
         </div>
     </div>

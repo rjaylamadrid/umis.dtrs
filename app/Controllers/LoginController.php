@@ -38,7 +38,11 @@ class LoginController extends Controller {
     }
 
     private function get_user_access() {
+        $isJO = null;
+
         $_SESSION['user']['access'] = DB::fetch_row ("SELECT access FROM tbl_privilege WHERE priv_level = ?", $this->tmp_user['privilege'])['access'];
-        $_SESSION['user']['isJO'] = DB::fetch_row ("SELECT isJobOrder FROM tbl_employee_type WHERE id = ?", $this->tmp_user['etype_id'])['isJobOrder'];
+        $isJO = DB::fetch_row ("SELECT isJobOrder FROM tbl_employee_type WHERE id = ?", $this->tmp_user['etype_id'])['isJobOrder'];
+        
+        $_SESSION['user']['user_access'] = $isJO ? '8bC' : '8bC*';
     }
 }
