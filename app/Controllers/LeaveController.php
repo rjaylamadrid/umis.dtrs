@@ -13,12 +13,16 @@ class LeaveController extends Controller {
     public $leave_changes;
     public $leave_balance = ["0" => ["vacation" => 0, "sick" => 0]];
     public $leave_types;
+    public $all_leave_requests;
     private $period = [['01', '15'], ['16', '31'], ['01', '31']];
     private $attendance;
     private $schedule;
 
     protected function getLeaveRecord() {
-        $this->leave_record = DB::fetch_all("SELECT * FROM tbl_emp_leave WHERE employee_id = ? ORDER BY leave_id DESC", $this->user['employee_id']);
+        $this->leave_record = DB::db('db_master')->fetch_all("SELECT * FROM tbl_emp_leave WHERE employee_id = ? ORDER BY leave_id DESC", $this->user['employee_id']);
+        if ($this->user['is_admin']) {
+            $this->all_leave_requests = DB::db('db_master')->fetch_all("SELECT a.*, CONCAT('b.last_name, ','b.first_name ','b.middle_name')AS name, d.position_desc FROM tbl_emp_leave a, tbl_employee b, tbl_employee_status c, tbl_position d WHERE a.employee_id = b.no AND a.employee_id = c.employee_id AND c.position_id = d.no AND c.is_active = 1 ORDER BY a.leave_id ASC");
+        }
     }
 
     protected function getLeaveCredits () {

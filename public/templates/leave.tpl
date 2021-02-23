@@ -1,69 +1,86 @@
 {extends file="layout.tpl"}
 {block name=content}
 {if $user.is_admin}
-<div class="content">
-	<div class="container-fluid">
-		<div class="row">
-			<div class="col-md-12">
-				<div class="card">
-					<div class="card-header card-header-icon" data-background-color="rose">
-						<i class="material-icons">inbox</i>
-					</div>
-					<div class="card-content">
-						<div class="row">
-						<div class="col-sm-6">
-						<h4 class="card-title">Leave Requests</h4>
-					</div>  
-					<div class="col-sm-6">
-						<select name="req_filter" required class="form-control" >
-							<option value="0">Pending</option>
-							<option value="1">For Recommendation</option>
-							<option value="2">Approved</option>
-							<option value="3">Disapproved</option>
-						</select>
+
+{print_r($requests)}
+<div class="flex-fill">
+	{* <div class="container"> *}
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="my-3 my-md-5">
+						<div class="card">
+							<div class="card-body">
+								<div class="form-group form-inline" style="vertical-align: middle;">
+									<label style="display: inline-block;">Request Status Filter </label>
+									<select name="request_stat_filter" class="form-control custom-select" onchange="location.href=this.value" >
+										<option value="0">Pending</option>
+										<option value="1">For Recommendation</option>
+										<option value="2">Approved</option>
+										<option value="3">Disapproved</option>
+									</select>
+								</div>
+							</div>
+
+							<hr style="margin: 0px 0px;">
+
+							<div class="table-responsive">
+								<table class="table table-hover table-outline " style="width: 100%;" id="requests" class=" content: '\e90c';">
+									<thead>
+										<tr>
+											<th class="text-center w-1 no-sort"><i class="icon-people"></i></th>
+											<th class="no-sort" >Employee</th>
+											<th class="no-sort">Leave Type</th>
+											<th class="no-sort">Inclusive Dates</th>
+											<th class="text-center no-sort">Date of Filing</th>
+											<th class="text-center no-sort">Action</th>
+											<th></th>
+										</tr>
+									</thead>
+									<tbody>
+									{foreach $requests as $request}
+										<tr>
+											<td class="text-center">
+												<div class="avatar d-block" style="background-image: url('../assets/images/employees/avatar/<?=$requests[$i]['EmpPicture']; ?>')">
+												<span class="avatar-status bg-green"></span>
+												</div>
+											</td>
+											<td>
+												<input type="hidden" name="emp_id" value="">
+												<div>Wilson D. Cezar</div>
+												<div class="small text-muted">
+												Programmer
+												</div>
+											</td>
+											<td>
+												<div>Vacation Leave</div>
+												<div class="small text-muted">
+												Within the Philippines
+												</div>
+											</td>
+											<td>
+												<div>February 14, 2021</div>
+												<div class="small text-muted">1 day - Commutation not requested</div>
+											</td>
+											<td class="text-center pt-4">
+												<div>February 9, 2021</div>
+											</td>
+											<td class="text-center">
+												<button data-toggle="modal" data-target="#display_leave_details" class="btn btn-secondary btn-pill "> <i class="fe fe-info"></i> View Details</button>
+											</td>
+										</tr>
+									{/foreach}
+									</tbody>
+								</table>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
-
-			<form class="user" method="POST" action="">
-				<input type="hidden" name="a" value="hr_view_leave_request">
-				<div class="card-content material-datatables">
-					<table class="table table-striped table-no-bordered table-hover" id="employees">
-						<thead>
-							<tr>   
-								<th hidden>ID</th>
-								<th>Name</th>
-								<th>Office/Agency</th>
-								<th>Position</th>
-								<th>Type of Leave/Reason</th>
-								<th>Inclusive Dates</th>
-								<th>Days</th>
-								<th style="text-align: center;">Action</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>  
-								<td>-</td>
-								<td>-</td>
-								<td>-</td>
-								<td>-</td>
-								<td>-</td>
-								<td>-</td>
-								<td style="text-align: center;">-</td>
-								<td class="td-center" width="14%">
-
-								<a href="#" data-toggle="modal" data-target="#leaveRequestResponse_modal<?php echo $row1['emp_id']; ?>" class="btn btn-primary btn-sm"><i class="material-icons">reply</i></a>
-
-								<a href="#" data-toggle="modal" data-target="#leaveDelete_modal<?php echo $row1['emp_id']; ?>" class="btn btn-warning btn-sm"><i class="material-icons">delete</i></a>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</form>
 		</div>
-	</div>
+	{* </div> *}
 </div>
+{include file="custom/display_leave_details.tpl"}
 {else}
 {* LEAVE RECORD CARD *}
 	<div class="my-3 my-md-5">
@@ -281,8 +298,9 @@
     </div>
   </div>
 </div>
+{include file="custom/leave_request_form.tpl"}
 {/if}
 {* LEAVE REQUEST FORM *}
-{include file="custom/leave_request_form.tpl"}
+
 
 {/block}

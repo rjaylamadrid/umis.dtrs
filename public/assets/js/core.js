@@ -181,11 +181,8 @@ function toggle_other (option) {
     $("#vacation_text").prop("disabled", true);
     $("#vacation_text").val("");
   } else if (option == 3) {
-
-
    $("#where_specific").prop("disabled", true);
    $("#where_specific").val("");
-
   } else if (option == 4) {
   // $("#vacation_text").prop("disabled", true);
   // $("#vacation_text").val("");
@@ -237,6 +234,10 @@ function delete_leave(id) {
   } else {
     return false;
   }
+}
+
+function disapp(disapp) {
+  disapp.remarks.disabled = disapp.disapproved.checked == true ? false : true; 
 }
 // LEAVE :: END
 
