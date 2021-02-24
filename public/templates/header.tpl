@@ -18,7 +18,7 @@
                             <input id="user" type="hidden" value="{$user.employee_id}"/>
                             <small class="text-muted d-block mt-1">{$user.position}</small>
                             <i class="fe fe-mail">
-                                <small id="notif" class="text-red">1</small>
+                                <small id="notif" class="text-red"></small>
                             </i>
                         </span>
                     </a>

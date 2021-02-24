@@ -1,56 +1,133 @@
 //MESSAGES :: START
+if(typeof $("#user").val() !== "undefined"){
 var msgTo, msgFrom;
 var msgData = [];
 var msgNotif = 0;
-
-  var conn = new WebSocket('ws://' + window.location.origin.substr(7) + ':8080');
-  
-  if(typeof $("#user").val() !== "undefined"){
+var user_id = $("#user").val();
+var session_id = document.cookie.match(/PHPSESSID=[^;]+/);
+  var conn = new WebSocket('ws://' + window.location.origin.substr(7) + ':8080?'+ session_id + '&user_id='+ user_id);
+  console.log(conn);
     conn.onopen = function(e) {
-      conn.send(JSON.stringify({command: "active", user: $("#user").val()}));
-      conn.send(JSON.stringify({command: "unseen", user: $("#user").val()}));
+      //conn.send(JSON.stringify({command: "active", user: $("#user").val()}));
+      //conn.send(JSON.stringify({command: "msg_unseen", user: $("#user").val()}));
     }
-  }
 
 conn.onmessage = function(e) {
   var msg = JSON.parse(e.data);
-  if(msg.command == "subscribe"){
+  if(msg.command == "contacts_recents"){
+    console.log("hey");
+    $("#recents").html("<ul class='list-unstyled'></ul>");
+    for(let recent of msg.recents){recents(recent);}
+    $("#contacts").html("<ul class='list-unstyled'></ul>");
+    for(let contact of msg.contacts){contacts(contact);}
+  }else if(msg.command == "active_users"){
+    for(let user of msg.users){activeUser(user);}
+  }else if(msg.command == "msg_unseen"){
+    console.log(msg);
+    for(let us of msg.unseen){
+      unSeenMsg(us[0]);
+    }
+  }else if(msg.command == "subscribe"){
     getMessages(msg.employee, msg.messages);
     $("#feed").animate({ scrollTop: $('#feed')[0].scrollHeight}, 1000);
+    conn.send(JSON.stringify({command: "msg_unseen", user_id: user_id}));
   }else if(msg.command == "message"){
     newMessage(msg.message[0]);
-    console.log(msg.message[0].status);
-    if(msg.message[0].status){
-      var unseen = parseInt(msg.message[0].status) + parseInt(msgNotif)
-      getUnseen({no: msg.message[0].from, unseen: unseen});
-      msgNotif = parseInt(msg.message[0].status) + parseInt(msgNotif);
+    if($('#feed').is(":visible")){
+      $("#feed").animate({ scrollTop: $('#feed')[0].scrollHeight}, 1000);
     }
-    $("#feed").animate({ scrollTop: $('#feed')[0].scrollHeight}, 1000);
-  }else if(msg.command == "active"){
-    for(let employee of msg.online_users){ 
-      getContacts(employee);
-    }
-  }else if(msg.command == "unseen"){
-    msgNotif = 0;
-    for (let index = 0; index < msg.index; index++) {
-      if(typeof msg.unseen_msg[index] !== "undefined"){
-        msgNotif = parseInt(msg.unseen_msg[index].unseen) + parseInt(msgNotif);
-        getUnseen(msg.unseen_msg[index]);
-      }
-    }
-    $("#notif").text(msgNotif);
-  }else if(msg.command == "unseenTo"){
-     console.log(msg);
+    conn.send(JSON.stringify({command:"msg_unseen", user_id: msg.message[0].to}));
   }
+  // if(msg.command == "subscribe"){
+  //   getMessages(msg.employee, msg.messages);
+  //   $("#feed").animate({ scrollTop: $('#feed')[0].scrollHeight}, 1000);
+  // }else if(msg.command == "message"){
+  //   newMessage(msg.message[0]);
+  //   console.log(msg.message[0].status);
+  //   if(msg.message[0].status){
+  //     var unseen = parseInt(msg.message[0].status) + parseInt(msgNotif)
+  //     getUnseen({no: msg.message[0].from, unseen: unseen});
+  //     msgNotif = parseInt(msg.message[0].status) + parseInt(msgNotif);
+  //   }
+  //   $("#feed").animate({ scrollTop: $('#feed')[0].scrollHeight}, 1000);
+  // }else if(msg.command == "initialize"){
+
+  //   $("#recents").html("<ul class='list-unstyled'></ul>");
+  //   for(let recent of msg.recents){recents(recent);}
+
+  //   $("#contacts").html("<ul class='list-unstyled'></ul>");
+  //   for(let contact of msg.contacts){contacts(contact);}
+
+  //   for(let user of msg.users){activeUser(user);}
+    
+  //   //for(let us of msg.unseen){unSeenMsg(us[0]);}
+    
+  // }else if(msg.command == "unseen"){
+  //   msgNotif = 0;
+  //   for (let index = 0; index < msg.index; index++) {
+  //     if(typeof msg.unseen_msg[index] !== "undefined"){
+  //       msgNotif = parseInt(msg.unseen_msg[index].unseen) + parseInt(msgNotif);
+  //       unSeenMsg(msg.unseen_msg[index]); 
+  //     }
+  //   }
+  //   $("#notif").text(msgNotif);
+  // }else if(msg.command == "unseenTo"){
+  //    console.log(msg);
+  // }
 };
 
-function getUnseen (item){
-  $("#isSeen" + item.no).text(item.unseen == 0 ? '' : item.unseen);
+function recents (item) {
+  var HTMLList =  "<li class='list-separated-item' onclick='javascript:getSelectedEmployee(" + item.no + ")'>" +
+                    "<div class='row align-items-center'>" +
+                      "<div class='col-md-2'>" +
+                        "<div id='isActive" + item.no + "' class='avatar d-block' style='background-image: url(/assets/employee_picture/" + item.employee_picture + ")'>" +
+                        "</div>" +
+                      "</div>" +
+
+                      "<div class='col-md-10'>" +
+                        "<span id='isSeen" + item.no + "' class='mt-2 float-right badge badge-danger'></span>" +
+                        "<div>"+ item.first_name + ' ' + item.last_name +"</div>" +
+                        "<div class='small text-muted'>" + item.text + "</div>" +
+                      "</div>" +
+                    "</div>" +
+                  "</li>" 
+
+  $("#recents").append("<ul class='list-unstyled'>" + HTMLList + "</ul>");
 }
 
-function getContacts (item) {
-  var status = item.status == 'active' ? 'bg-green' : 'bg-red';
-  $("#isActive" + item.no).addClass('avatar-status ' + status);
+function contacts (item) {
+  if(item.no != user_id) {
+  var HTMLList =  "<li class='list-separated-item' onclick='javascript:getSelectedEmployee(" + item.no + ")'>" +
+                    "<div class='row align-items-center'>" +
+                      "<div class='col-md-2'>" +
+                        "<div id='isActive" + item.no + "' class='avatar d-block' style='background-image: url(/assets/employee_picture/" + item.employee_picture + ")'>" +
+                        "</div>" +
+                      "</div>" +
+
+                      "<div class='col-md-10'>" +
+                        "<span id='isSeen" + item.no + "' class='mt-2 float-right badge badge-danger'></span>" +
+                        "<div>"+ item.first_name + ' ' + item.last_name +"</div>" +
+                        "<div class='small text-muted'>" + item.email_address + "</div>" +
+                      "</div>" +
+                    "</div>" +
+                  "</li>" 
+
+  $("#contacts").append("<ul class='list-unstyled'>" + HTMLList + "</ul>");
+  }
+}
+
+function unSeenMsg (item){
+  if(item.cnt_unseen >= 0){
+    $("#isSeen" + item.from).text(item.cnt_unseen == 0 ? '' : item.cnt_unseen);
+  }else{
+    $("#notif").text(item.tlt_unseen);
+  }
+  
+}
+
+function activeUser (item) {
+  var status = item.active == 1 ? 'bg-green' : 'bg-red';
+  $( "#isActive" + item.no ).html("<span class='avatar-status " + status + "'></span>");
 }
 function getMessages(employee, messages) {
   $("#chatName").text(employee[0].first_name + ' ' + employee[0].last_name);
@@ -63,7 +140,7 @@ function getSelectedEmployee(id) {
   msgTo = id;
   msgFrom = $("#user").val();
   conn.send(JSON.stringify({command: "subscribe", from: msgFrom, to: msgTo}));
-  $("#feed").html("<ul></ul>");
+  $("#feed").html("<ul></ul>"); 
   conn.send(JSON.stringify({command: "unseen", user: $("#user").val()}));
 }
 
@@ -83,6 +160,7 @@ $("#message").keypress(function (event){
     $("#message").val("");
     newMessage(msg);
     $("#feed").animate({ scrollTop: $('#feed')[0].scrollHeight}, 1000);
+    conn.send(JSON.stringify({command:"recents", user_id: user_id}));
   }
 });
 
@@ -127,4 +205,5 @@ function fmtDateTime(dt) {
     dateTime = month + '/' + day +'/' + year + ' AT ' + hours + ':' + minutes + ' ' + ampm;
   }
   return dateTime;
+}
 }

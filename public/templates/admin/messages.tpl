@@ -6,9 +6,9 @@
 
         <div class="row">
             <div class="col-md-4">
-                <div class="card">
+                <div class="card mb-0">
                     <div class="card-header">
-                        
+                        <h3 class="card-title mr-2">Recent()</h3>
                         <form class="input-icon my-3 my-lg-0">
                             <input type="msgSearch" class="form-control header-search" placeholder="Search Employees&hellip;" tabindex="1">
                             <div class="input-icon-addon">
@@ -16,9 +16,46 @@
                             </div>
                           </form>
                     </div>
-                    <div class="card-body o-auto" style="height: 40rem">
+                    <div class="card-body o-auto" style="height: 15rem">
+                        <div id="recents">
+                        <!-- <ul class="list-unstyled" id="employees">
+                            {foreach from = $recents item = r_employee}
+                                {if $r_employee.no != $emp_user}
+                            <li class="list-separated-item" onclick="javascript:getSelectedEmployee('{$r_employee.no}')">
+                                <div class="row align-items-center">
+                                    <div class="col-md-2">
+                                        <div class="avatar d-block" style="background-image: url({$server}/assets/employee_picture/{if $user.employee_picture}{$user.employee_picture}{else}0.jpeg{/if})">
+                                            <span id="isActive{$r_employee.no}"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-10">
+                                        <span id="isSeen{$r_employee.no}" class='mt-2 float-right badge badge-danger'></span>
+                                        <div>{$r_employee.first_name} {$r_employee.last_name}</div>
+                                        <div class='small text-muted'>{$r_employee.email_address}</div>
+                                    </div>
+                                </div>
+                            </li>
+                                {/if}
+                            {/foreach}
+                        </ul> -->
+                    </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title mr-2">Contacts()</h3>
+                        <form class="input-icon my-3 my-lg-0">
+                            <input type="msgSearch" class="form-control header-search" placeholder="Search Employees&hellip;" tabindex="1">
+                            <div class="input-icon-addon">
+                              <i class="fe fe-search"></i>
+                            </div>
+                          </form>
+                    </div>
+                    <div class="card-body o-auto" style="height: 20rem">
                         <div id="contacts">
-                        <ul class="list-unstyled" id="employees">
+                        <!-- <ul class="list-unstyled" id="employees">
                             {foreach from = $employees item = employee}
                                 {if $employee.no != $emp_user}
                             <li class="list-separated-item" onclick="javascript:getSelectedEmployee('{$employee.no}')">
@@ -38,7 +75,7 @@
                             </li>
                                 {/if}
                             {/foreach}
-                        </ul>
+                        </ul> -->
                     </div>
                     </div>
                 </div>

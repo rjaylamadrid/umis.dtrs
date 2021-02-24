@@ -15,7 +15,7 @@ class Messages extends MessagesController {
     
     public function index() {
         $message_object = new Message();
-        $this->view->display ('admin/messages',['employees' => $message_object->getAllEmployeeData(), 'emp_user' => $this->user['employee_id']]);
+        $this->view->display ('admin/messages',['employees' => $message_object->getAllEmployeeData(), 'recents' => $message_object->getRecentConvoData(), 'emp_user' => $this->user['employee_id']]);
     }
 
     public function do_action (){
