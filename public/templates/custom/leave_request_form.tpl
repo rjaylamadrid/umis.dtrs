@@ -11,6 +11,8 @@
                         <div class="modal-body">
                             <form class="user" method="POST" action="/leave">
                             <input type="hidden" name="action" value="submitLeave">
+                            <input type="hidden" name="vl_credits" value="{$balance[$balance|@count - 1].vacation}">
+                            <input type="hidden" name="sl_credits" value="{$balance[$balance|@count - 1].sick}">
                             <input type="hidden" name="leave_info[employee_id]" value="{$user.employee_id}">
 
                             <div class="row">

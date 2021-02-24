@@ -2,7 +2,9 @@
 {block name=content}
 {if $user.is_admin}
 
+{* {print_r("<pre>")}
 {print_r($requests)}
+{print_r("</pre>")} *}
 <div class="flex-fill">
 	{* <div class="container"> *}
 		<div class="container">
@@ -41,32 +43,30 @@
 									{foreach $requests as $request}
 										<tr>
 											<td class="text-center">
-												<div class="avatar d-block" style="background-image: url('../assets/images/employees/avatar/<?=$requests[$i]['EmpPicture']; ?>')">
+												<div class="avatar d-block" style="background-image: url('../assets/images/employees/avatar/{$request.employee_picture}')">
 												<span class="avatar-status bg-green"></span>
 												</div>
 											</td>
 											<td>
 												<input type="hidden" name="emp_id" value="">
-												<div>Wilson D. Cezar</div>
+												<div>{$request.name}</div>
+												<div class="small text-muted">{$request.position_desc}</div>
+											</td>
+											<td>
+												<div>{$request.leave_desc}</div>
 												<div class="small text-muted">
-												Programmer
+												{$request.lv_where}
 												</div>
 											</td>
 											<td>
-												<div>Vacation Leave</div>
-												<div class="small text-muted">
-												Within the Philippines
-												</div>
-											</td>
-											<td>
-												<div>February 14, 2021</div>
-												<div class="small text-muted">1 day - Commutation not requested</div>
+												<div>{if $request.lv_date_fr|date_format:"M" == "May"} {$request.lv_date_fr|date_format:"M d, Y"} {else} {$request.lv_date_fr|date_format:"M. d, Y"} {/if} {if $request.lv_no_days > 1} - {if $request.lv_date_to|date_format:"M" == "May"} {$request.lv_date_to|date_format:"M d, Y"} {else} {$request.lv_date_to|date_format:"M. d, Y"} {/if} {/if}</div>
+												<div class="small text-muted">{$request.lv_no_days} day{if $request.lv_no_days > 1}s{/if} - Commutation {$request.commutation|lower}</div>
 											</td>
 											<td class="text-center pt-4">
-												<div>February 9, 2021</div>
+												<div>{$request.lv_dateof_filing|date_format:"F d, Y"}</div>
 											</td>
 											<td class="text-center">
-												<button data-toggle="modal" data-target="#display_leave_details" class="btn btn-secondary btn-pill "> <i class="fe fe-info"></i> View Details</button>
+												<button data-toggle="modal" data-target="#display_leave_details{$request.leave_id}" class="btn btn-secondary btn-pill "> <i class="fe fe-info"></i> View Details</button>
 											</td>
 										</tr>
 									{/foreach}
@@ -147,9 +147,9 @@
 							<table style="font-size: 13px;" class="table table-bordered table-hover card-table table-vcenter text-wrap datatable dataTable no-footer ">
 								<thead class="thead-dark">
 									<tr>
-										<th style="text-align: left;" colspan="4"><b><u>NAME:</u> <br>{$user.last_name}, {$user.first_name} {$user.middle_name} </b></th>
-										<th style="text-align: left;" colspan="6"><b><u>OFFICE:</u> <br>{$office[0].department_desc}</b></th>
-										<th style="text-align: left;" colspan="2"><b><u>FIRST DAY OF SERVICE:</u> <br>{$office[0].date_start|date_format:"F d, Y"}</b></th>
+										<th style="text-align: left;" colspan="4"><b>NAME: <br><u>{$user.last_name}, {$user.first_name} {$user.middle_name} </u></b></th>
+										<th style="text-align: left;" colspan="6"><b>OFFICE: <br><u>{$office[0].department_desc}</u></b></th>
+										<th style="text-align: left;" colspan="2"><b>FIRST DAY OF SERVICE: <br><u>{$office[0].date_start|date_format:"F d, Y"}</u></b></th>
 									</tr>
 									<tr  style="text-align: center;">
 										<td style=" width: 12%;" rowspan="2">PERIOD</td>
@@ -247,12 +247,12 @@
     <div class="container">
       <div class="row">
         <div class="col-md-12">
+
           <div class="card">
             <div class="card-header card-header-icon" data-background-color="green">
               <h4 class="card-title">Leave Request Record</h4>
               <div class="card-options">
                 <a href="" class="btn btn-primary" data-toggle="modal" data-target="#leave-request-form" title="New Leave Request" rel="tooltip">Submit New</a>
-				{* <a href="" class="btn btn-outline-success btn-sm" data-toggle="modal" data-target="#leave-form"><i class="fe fe-plus"></i>Add Work Experience</a> *}
               </div>
             </div>
             

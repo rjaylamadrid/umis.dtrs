@@ -237,7 +237,7 @@ function delete_leave(id) {
 }
 
 function disapp(disapp) {
-  disapp.remarks.disabled = disapp.disapproved.checked == true ? false : true; 
+  disapp.remarks.disabled = disapp.approved.checked == false ? false : true;
 }
 // LEAVE :: END
 
