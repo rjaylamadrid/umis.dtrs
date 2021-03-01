@@ -16,13 +16,13 @@ class Position {
     public $salarygrade;
     public $type;
 
-    public function __construct($id = null, $date_start = null, $emp_type = null, $date = null, $sg_id = null) {
+    public function __construct($id = null, $date_start = null, $emp_type = null, $date = null, $sg_id = null, $step = 0) {
         $this->id = $id;
         $this->date = $date;
         $this->date_start = $date_start;
         $this->emp_type = $emp_type;
         $this->sg_id = $sg_id;
-        $this->step = 0;
+        $this->step = $step;
         $this->position();
     }
 

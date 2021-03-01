@@ -23,7 +23,7 @@
                                         <option value="" selected="" disabled="">Month</option>
                                         {include file="custom/select_month.tpl"}
                                     </select>
-                                    <input name="payroll[year]" type="number" class="col-md-4 ml-4 form-control" placeholder="Year" value="<?php echo date('Y'); ?>">
+                                    <input name="payroll[year]" type="number" class="col-md-4 ml-4 form-control" placeholder="Year" value="{date('Y')}">
                                 </div>
                             </div>
                             <div class="form-group">

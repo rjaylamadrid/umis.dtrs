@@ -10,4 +10,8 @@ class PayrollController extends Controller {
         $this->view->assign(['employees' => $employees, 'init' => $this->data['payroll']['emp_type']]);
         $this->index();
     }
+
+    public function download_payroll() {
+        Payroll::download();
+    }
 }
