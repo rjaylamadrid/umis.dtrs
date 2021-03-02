@@ -1,12 +1,7 @@
 {extends file="layout.tpl"}
 {block name=content}
 {if $user.is_admin}
-
-{* {print_r("<pre>")}
-{print_r($requests)}
-{print_r("</pre>")} *}
 <div class="flex-fill">
-	{* <div class="container"> *}
 		<div class="container">
 			<div class="row">
 				<div class="col-md-12">
@@ -14,12 +9,12 @@
 						<div class="card">
 							<div class="card-body">
 								<div class="form-group form-inline" style="vertical-align: middle;">
-									<label style="display: inline-block;">Request Status Filter </label>
+									<label style="display: inline-block;">Request Status Filter</label>
 									<select name="request_stat_filter" class="form-control custom-select" onchange="location.href=this.value" >
-										<option value="0">Pending</option>
-										<option value="1">For Recommendation</option>
-										<option value="2">Approved</option>
-										<option value="3">Disapproved</option>
+										<option value="{$server}/leave/0" {if $tab == '0'}selected{/if}>Pending</option>
+										<option value="{$server}/leave/1" {if $tab == '1'}selected{/if}>For Recommendation</option>
+										<option value="{$server}/leave/2" {if $tab == '2'}selected{/if}>Approved</option>
+										<option value="{$server}/leave/3" {if $tab == '3'}selected{/if}>Disapproved</option>
 									</select>
 								</div>
 							</div>
@@ -43,7 +38,7 @@
 									{foreach $requests as $request}
 										<tr>
 											<td class="text-center">
-												<div class="avatar d-block" style="background-image: url('../assets/images/employees/avatar/{$request.employee_picture}')">
+												<div class="avatar d-block" style="background-image: url('/assets/employee_picture/{$request.employee_picture}')">
 												<span class="avatar-status bg-green"></span>
 												</div>
 											</td>

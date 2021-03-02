@@ -90,6 +90,12 @@ $router->group(['before' => 'auth'], function ($router) {
             $router->get("/", ["Messages", "index"]);
             $router->post("/", ["Messages", "do_action"]);
         });
+        //Leave
+        // $router->group(["prefix" => "leave"], function ($router) {
+        //     $router->get("/", ["Leave", "index"]);
+        //     $router->post("/", ["Leave", "do_action"]);
+        //     $router->get("/{tab}?", ["Leave", "tab"]);
+        // });
         // ADMIN END
     });
     
@@ -100,6 +106,7 @@ $router->group(['before' => 'auth'], function ($router) {
     $router->get('/dtr', ['DTR', 'index']);
     $router->post('/dtr', ['DTR', 'do_action']);
     $router->get('/leave', ['Leave', 'index']);
+    $router->get('/leave/{tab}?', ['Leave', 'tab']);
     $router->post('/leave', ['Leave', 'do_action']);
     // EMPLOYEE END
 });

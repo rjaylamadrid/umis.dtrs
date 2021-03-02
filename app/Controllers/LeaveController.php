@@ -18,32 +18,48 @@ class LeaveController extends Controller {
     private $attendance;
     private $schedule;
 
-    protected function getLeaveRecord() {
-        $this->leave_record = DB::db('db_master')->fetch_all("SELECT * FROM tbl_emp_leave WHERE employee_id = ? ORDER BY leave_id DESC", $this->user['employee_id']);
+    protected function getLeaveRecord($status) {
+        
         if ($this->user['is_admin']) {
-            $this->all_leave_requests = DB::db('db_master')->fetch_all("SELECT a.*, b.employee_picture, CONCAT(b.last_name,', ',b.first_name,' ',b.middle_name)AS name, d.position_desc, e.leave_desc FROM tbl_emp_leave a, tbl_employee b, tbl_employee_status c, tbl_position d, tbl_leave_type e WHERE a.employee_id = b.no AND a.employee_id = c.employee_id AND c.position_id = d.no AND c.is_active = 1 AND a.lv_type = e.id ORDER BY a.leave_id ASC");
+            $this->all_leave_requests = DB::db('db_master')->fetch_all("SELECT a.*, b.employee_picture, CONCAT(b.last_name,', ',b.first_name,' ',b.middle_name)AS name, d.position_desc, e.leave_desc FROM tbl_emp_leave a, tbl_employee b, tbl_employee_status c, tbl_position d, tbl_leave_type e WHERE a.employee_id = b.no AND a.employee_id = c.employee_id AND c.position_id = d.no AND c.is_active = 1 AND a.lv_status=$status AND a.lv_type = e.id ORDER BY a.leave_id ASC");
+        } else {
+            $this->leave_record = DB::db('db_master')->fetch_all("SELECT * FROM tbl_emp_leave WHERE employee_id = ? ORDER BY leave_id DESC", $this->user['employee_id']);
         }
     }
 
     protected function getLeaveCredits () {
         $this->leave_credits = DB::fetch_row("SELECT * FROM tbl_emp_leave_credits WHERE employee_id = ? AND is_active = ?", [$this->user['employee_id'], 1]);
-        $this->leave_balance[0] = ["date" => $this->leave_credits['date_credited'], "vacation" => $this->leave_credits['vacation'], "sick" => $this->leave_credits['sick']];
-    }
 
-    protected function getLeaveChanges () {
-        $interval = new DateInterval('P1D');
-        $daterange = new DatePeriod(date_create($this->leave_credits['date_credited']), $interval, date_create('2021-01-29'));
-        $sched = DTR::get_sched($this->user['employee_id']);
-        foreach ($daterange as $date) {
-            $monthtable = date_create($this->leave_credits['date_credited'])->format('m-Y');
-            $attendance = DB::db("db_attendance")->fetch_all("SELECT * FROM $monthtable WHERE emp_id = ? AND date > ?", [$this->user['employee_id'], $this->leave_credits['date_credited']]);
+        if (!$this->leave_credits) {
+            if (!$this->user['is_admin']) {
+                $this->view->display ('error_page',["code" => "400", "message" => "Your leave credits are not yet available.", "submessage" => "Sorry, we are still processing your leave information."]);
+            } else {
+                $this->leave_credits = ["date_credited" => date('Y-m-d'), "vacation" => 0, "sick" => 0];
+            }
+        } else {
+            if (!$this->user['is_admin']) {
+                $this->leave_balance[0] = ["date" => $this->leave_credits['date_credited'], "vacation" => $this->leave_credits['vacation'], "sick" => $this->leave_credits['sick']];
+            } else {
+                $this->leave_credits = ["date_credited" => date('Y-m-d'), "vacation" => 0, "sick" => 0];
+            }
+            // $this->getLeaveChanges();
         }
     }
 
-    protected function computeLeaveCredits($id, $date_start) {
-        $interval = new DateInterval('P1D');
-        $daterange = new DatePeriod($date_start, $interval ,$date_start->modify('+30 day'));
-    }
+    // protected function getLeaveChanges () {
+    //     $interval = new DateInterval('P1D');
+    //     $daterange = new DatePeriod(date_create($this->leave_credits['date_credited']), $interval, date_create('2021-01-29'));
+    //     $sched = DTR::get_sched($this->user['employee_id']);
+    //     foreach ($daterange as $date) {
+    //         $monthtable = date_create($this->leave_credits['date_credited'])->format('m-Y');
+    //         $attendance = DB::db("db_attendance")->fetch_all("SELECT * FROM $monthtable WHERE emp_id = ? AND date > ?", [$this->user['employee_id'], $this->leave_credits['date_credited']]);
+    //     }
+    // }
+
+    // protected function computeLeaveCredits($id, $date_start) {
+    //     $interval = new DateInterval('P1D');
+    //     $daterange = new DatePeriod($date_start, $interval ,$date_start->modify('+30 day'));
+    // }
 
     protected function attendance ($id, $arr, $period = 2) {
         $this->leave_types = DB::db("db_master")->fetch_all("SELECT * FROM tbl_leave_type");
@@ -100,8 +116,9 @@ class LeaveController extends Controller {
             for ($i=0;$i<sizeof($this->leave_changes);$i++) {
                 array_multisort(array_map('strtotime', array_column($this->leave_changes[$i], 'period')), SORT_ASC, $this->leave_changes[$i]);
             }
+            $this->leaveBalanceChanges($id,$start_interval,$end_interval);
         }
-        $this->leaveBalanceChanges($id,$start_interval,$end_interval);
+        
         $this->attendance = $attendance;
         return $this;
     }
@@ -248,8 +265,8 @@ class LeaveController extends Controller {
             $result = DB::db('db_master')->insert("INSERT INTO tbl_emp_leave SET ". DB::stmt_builder($this->data['leave_info']),$this->data['leave_info']);
             header ("location: /leave");
         } else {
-            // ADD ERROR NOT ENOUGH BALANCE
-            header ("location: /leave");
+            $this->view->display ('error_page',["code" => "401", "message" => "You have insufficient leave credits.", "submessage" => "Sorry, we cannot process your request because you don't have enough leave credits."]);
+            return false;
         }
     }
 
@@ -257,7 +274,12 @@ class LeaveController extends Controller {
         $remarks = $this->data['remarks'] ? $this->data['remarks'] : '';
         DB::db('db_master')->update("UPDATE tbl_emp_leave SET lv_status = ?, lv_disapproved_reason = ?, lv_hr_id = ? WHERE leave_id = ?",[$this->data['recommendation'], $remarks, $this->data['hr_id'], $this->data['leave_id']]);
         $this->index();
-        // DB::db('db_master')->update("",[])
+    }
+
+    protected function adminRecommendation() {
+        $remarks = $this->data['remarks'] ? $this->data['remarks'] : '';
+        DB::db('db_master')->update("UPDATE tbl_emp_leave SET lv_status = ?, lv_disapproved_reason = ?, lv_hr_id = ? WHERE leave_id = ?",[$this->data['recommendation'], $remarks, $this->data['hr_id'], $this->data['leave_id']]);
+        $this->index();
     }
 
     protected function delete_leave() {
