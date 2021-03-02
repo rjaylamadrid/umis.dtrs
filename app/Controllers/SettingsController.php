@@ -3,7 +3,6 @@ namespace Controllers;
 
 use Database\DB;
 use Model\Position;
-use Model\SalaryGrade;
 
 class SettingsController extends Controller {
     public $positions;
@@ -15,18 +14,6 @@ class SettingsController extends Controller {
             $connection[$value['keyword']] = $value['value'];
         }
         return $connection;
-    }
-
-    protected function salary_grade ($sg_id = NULL) {
-        $this->salary_grade = new SalaryGrade($sg_id);
-        $this->salary_grade->salary_tranches();
-        $data['sg'] = $this->salary_grade;
-        return $data;
-    } 
-
-    protected function show_salary () {
-        $data = $this->salary_grade($this->data['tranche']);
-        $this->view->display('admin/settings/salary-grade', $data);
     }
 
     protected function security () {
@@ -44,10 +31,6 @@ class SettingsController extends Controller {
         $type = $this->data['emp_type'];
         $data = $this->position($type);
         $this->view->display ("admin/settings/position", $data);
-    }
-
-    protected function w_tax () {
-
     }
 
     public function change_password($id,$cur_pass,$new_pass,$confirm_pass) {

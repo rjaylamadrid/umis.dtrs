@@ -2,29 +2,42 @@
 namespace View;
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-// use Xlsx;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
 
 class Excel {
     static $spreadsheet;
-    static $excel;
-    static $writer;
+    static $sheet;
 
     public static function __callStatic($name, $arguments) {
         echo "__callStatic";
         return call_user_func($name, $args);
     }
 
-    protected static function set() {
+    public static function set($orientation = 'LANDSCAPE', $size = "LEGAL") {
         self::$spreadsheet = new Spreadsheet();
-        self::$excel = self::$spreadsheet->getActiveSheet();
+        self::$sheet = self::$spreadsheet->getActiveSheet();
+
+        self::$sheet->getPageSetup()
+            ->setOrientation(PageSetup::ORIENTATION_LANDSCAPE)
+            ->setPaperSize(PageSetup::PAPERSIZE_LEGAL)
+            ->setFitToPage(false)->setScale(110);
+
+        self::$sheet->getPageMargins()
+            ->setLeft(0.25)
+            ->setRight(1)
+            ->setTop(0.5)
+            ->setBottom(0.5);
     }
 
-    public static function generate($title) {
-        self::set();
-        self::$excel->setCellValue('A1', 'Hello World !');
+    public static function download($title) {
+        $writer = IOFactory::createWriter(self::$spreadsheet, 'Xlsx');
+        $writer->save('reports/'.$title);
 
-        // $objWriter = IOFactory::createWriter(self::$spreadsheet, 'Xlsx');
-        $objWriter = new Xlsx(self::$spreadsheet);
-        $objWriter->save($title);
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreedsheetml.sheet');
+        header('Content-Disposition: attachment; filename= "'.$title.'"');
+        header('Cache-Control: max-age=0');
+
+        $writer->save('php://output');
     }
 }

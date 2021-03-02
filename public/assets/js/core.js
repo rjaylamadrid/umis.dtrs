@@ -389,7 +389,7 @@ function modify_log () {
 
 function show_list () {
   var form = $('#frmData').serialize();
-  f (form, "text", "/settings").then( function(html){
+  f (form, "text", "/payroll").then( function(html){
     $('#settings_tab').html(html);
   });
 }

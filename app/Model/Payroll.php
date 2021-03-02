@@ -8,6 +8,7 @@ use View\Excel;
 class Payroll{
     static $employees;
     static $payroll;
+    static $excel;
 
     public static function initialize($type) {
         self::$employees = [];
@@ -34,6 +35,9 @@ class Payroll{
     }
 
     public static function download() {
-        Excel::generate('payroll.xlxs');
+        Excel::set();
+        self::$excel = Excel::$sheet;
+    
+        Excel::download("payroll.xlsx");
     }
 }

@@ -62,6 +62,7 @@ $router->group(['before' => 'auth'], function ($router) {
         $router->group(["prefix" => "payroll"], function ($router) {
             $router->get('/', ['Payroll', 'index']);
             $router->post('/', ['Payroll', 'do_action']);
+            $router->get('/{tab}?', ['Payroll', 'tab']);
         });
 
         //Calendar

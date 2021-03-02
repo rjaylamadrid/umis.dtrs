@@ -2,7 +2,7 @@
 use Controllers\PayrollController;
 
 class Payroll extends PayrollController {
-    private $tab = "page";
+    private $tab = "salary-grade";
 
     public function index () {
         $this->view->display ('admin/payroll', ["tab" => $this->tab, "days" => $this->days]);
@@ -16,12 +16,11 @@ class Payroll extends PayrollController {
         } 
     }
 
-    public function tab ($tab = "page") {
+    public function tab ($tab = "salary-grade") {
         $this->tab = $tab;
-        $this->index();
-    }
+        $vars = call_user_func_array ([$this, str_replace ("-", "_", $tab)], []);
 
-    public function pay_slip() {
-        
+        $this->view->assign($vars);
+        $this->index();
     }
 }
