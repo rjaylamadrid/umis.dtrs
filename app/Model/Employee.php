@@ -37,7 +37,7 @@ class Employee {
     }
 
     public static function employees () {
-        self::$employees = DB::fetch_all ("SELECT a.no as employee_no, first_name, last_name, gender, birthdate, is_active, b.*, a.employee_id as employee_id FROM tbl_employee a, tbl_employee_status b WHERE a.no = b.employee_id AND b.no = (SELECT no FROM tbl_employee_status WHERE employee_id = a.no ORDER BY date_start DESC LIMIT 0,1) ORDER BY last_name ASC");
+        self::$employees = DB::fetch_all ("SELECT a.no as employee_no, first_name, middle_name, last_name, gender, birthdate, is_active, b.*, a.employee_id as employee_id FROM tbl_employee a, tbl_employee_status b WHERE a.no = b.employee_id AND b.no = (SELECT no FROM tbl_employee_status WHERE employee_id = a.no ORDER BY date_start DESC LIMIT 0,1) ORDER BY last_name ASC");
         return new self();
     }
 

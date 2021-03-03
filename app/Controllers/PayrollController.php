@@ -18,10 +18,6 @@ class PayrollController extends Controller {
         $data['sg'] = $this->salary_grade;
         return $data;
     } 
-    
-    protected function reports () {
-
-    }
 
     protected function show_salary () {
         $data = $this->salary_grade($this->data['tranche']);
@@ -29,6 +25,11 @@ class PayrollController extends Controller {
     }
 
     public function download_payroll() {
-        Payroll::download();
+        Payroll::generate($this->data['payroll']);
+    }
+    
+    protected function formula () {
+        $data[] = "hello world";
+        return $data;
     }
 }

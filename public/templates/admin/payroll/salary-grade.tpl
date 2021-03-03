@@ -37,7 +37,6 @@
                             <th>Step 4</th>
                             <th>Step 5</th>
                             <th>Step 6</th>
-                            <th></th>
                         </tr>
                     </thead>
                     <tbody>

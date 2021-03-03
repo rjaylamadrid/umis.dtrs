@@ -2,10 +2,12 @@
 use Controllers\PayrollController;
 
 class Payroll extends PayrollController {
-    private $tab = "salary-grade";
+    private $settings = ["formula", "content", "signatories"];
+    private $tab = "payroll";
 
     public function index () {
-        $this->view->display ('admin/payroll', ["tab" => $this->tab, "days" => $this->days]);
+        $setting  = in_array($this->tab, $this->settings) ? true : false;
+        $this->view->display ('admin/payroll', ["tab" => $this->tab, "days" => $this->days, "setting" => $setting]);
     }
 
     public function do_action () {

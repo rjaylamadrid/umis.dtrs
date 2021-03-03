@@ -51,14 +51,16 @@ class Position {
 
     public function position() {
         if($this->id) {
-            $this->emp_type();
             $this->position = DB::fetch_row("SELECT * FROM tbl_position WHERE no = ? ORDER BY position_desc ASC", $this->id);
-            if ($this->emp_type['isRegular'] == '1') { $this->step(); }
-            $this->salary_grade();
-            $this->sg_id = $this->sg_id ? $this->sg_id : $this->position['salary_grade'];
-            $this->position['salary'] = $this->get_salary($this->sg_id, $this->id);
-            $this->position['type'] = $this->type;
-            $this->position['emp_type'] = $this->emp_type['type_desc'];
+            if ($this->emp_type) {
+                $this->emp_type();
+                if ($this->emp_type['isRegular'] == '1') { $this->step(); }
+                $this->salary_grade();
+                $this->sg_id = $this->sg_id ? $this->sg_id : $this->position['salary_grade'];
+                $this->position['salary'] = $this->get_salary($this->sg_id, $this->id);
+                $this->position['type'] = $this->type;
+                $this->position['emp_type'] = $this->emp_type['type_desc'];
+            }
         }
     }
 

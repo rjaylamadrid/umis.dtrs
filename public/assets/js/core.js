@@ -409,4 +409,13 @@ function set_presets (type, emp_id = "") {
     }
   });
 }
+
+function show_settings() {
+  if($('#settings-menu').hasClass("collapse")) {
+    $('#settings-menu').removeClass("collapse");
+  } else {
+    $('#settings-menu').addClass("collapse");
+  }
+}
+
 // OTHER FUNCTIONS :: END
