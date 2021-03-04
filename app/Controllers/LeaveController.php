@@ -14,6 +14,8 @@ class LeaveController extends Controller {
     public $leave_balance = ["0" => ["vacation" => 0, "sick" => 0]];
     public $leave_types;
     public $all_leave_requests;
+    public $stats;
+    public $emp_list;
     private $period = [['01', '15'], ['16', '31'], ['01', '31']];
     private $attendance;
     private $schedule;
@@ -22,6 +24,11 @@ class LeaveController extends Controller {
         
         if ($this->user['is_admin']) {
             $this->all_leave_requests = DB::db('db_master')->fetch_all("SELECT a.*, b.employee_picture, CONCAT(b.last_name,', ',b.first_name,' ',b.middle_name)AS name, d.position_desc, e.leave_desc FROM tbl_emp_leave a, tbl_employee b, tbl_employee_status c, tbl_position d, tbl_leave_type e WHERE a.employee_id = b.no AND a.employee_id = c.employee_id AND c.position_id = d.no AND c.is_active = 1 AND a.lv_status=$status AND a.lv_type = e.id ORDER BY a.leave_id ASC");
+            $this->emp_list = DB::db('db_master')->fetch_all("SELECT a.no, a.employee_picture, CONCAT(a.last_name,', ',a.first_name,' ',a.middle_name)AS name, c.position_desc, d.department_desc FROM tbl_employee a, tbl_employee_status b, tbl_position c, tbl_department d WHERE a.no = b.employee_id AND b.position_id = c.no AND b.department_id = d.no ORDER BY a.last_name ASC");
+            for ($i=0,$j=2,$k=1; $i<2; $i++,$j++,$k++) {
+                $this->stats[$i] = DB::db('db_master')->fetch_all("SELECT COUNT(*)as ctr FROM tbl_emp_leave WHERE lv_status = ?", [$i])[0];
+                $this->stats[$j] = DB::db('db_master')->fetch_all("SELECT COUNT(*)as ctr FROM tbl_emp_leave WHERE lv_status < ? AND lv_type = ?",[2, $k])[0];
+            }
         } else {
             $this->leave_record = DB::db('db_master')->fetch_all("SELECT * FROM tbl_emp_leave WHERE employee_id = ? ORDER BY leave_id DESC", $this->user['employee_id']);
         }

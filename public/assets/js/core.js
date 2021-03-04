@@ -239,6 +239,11 @@ function delete_leave(id) {
 function disapp(disapp) {
   disapp.remarks.disabled = disapp.approved.checked == false ? false : true;
 }
+
+function change_emp(emp_arr) {
+  var obj = json_encode(emp_arr);
+  console.log(obj);
+}
 // LEAVE :: END
 
 // OTHER FUNCTIONS :: START

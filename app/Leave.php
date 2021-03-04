@@ -17,7 +17,7 @@ class Leave extends LeaveController{
         $this->getLeaveRecord($this->status);
         // $this->getLeaveChanges();
         $attendance = $this->attendance($this->employee->id, ["from" => $this->leave_credits['date_credited'], "to" => date('Y-m-d')]);
-        $this->view->display ('leave', ["employee" => $this->employee, "position" => $this->employee->position, "office" => $this->office, "credits" => $this->leave_credits, "changes" => $this->leave_changes, "records" => $this->leave_record, "attendance" => $attendance, "balance" => $this->leave_balance, "leave_types" => $this->leave_types, "requests" => $this->all_leave_requests, "tab" => $this->status]);
+        $this->view->display ('leave', ["employee" => $this->employee, "position" => $this->employee->position, "office" => $this->office, "credits" => $this->leave_credits, "changes" => $this->leave_changes, "records" => $this->leave_record, "attendance" => $attendance, "balance" => $this->leave_balance, "leave_types" => $this->leave_types, "requests" => $this->all_leave_requests, "tab" => $this->status, "stats" => $this->stats, "emp_list" => $this->emp_list]);
     }
 
     public function do_action () {

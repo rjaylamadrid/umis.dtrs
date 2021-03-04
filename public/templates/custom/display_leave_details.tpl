@@ -12,7 +12,7 @@
           <div class="row">
             <div class="col-3">
               <p class="text-center">
-                <img class="avatar avatar-xxl" src="../<?php echo substr($requests[$i]['EmpPicture'], 14); ?>"></img>
+                <img class="avatar avatar-xxl" src="/assets/employee_picture/{$request.employee_picture}"></img>
               </p>
             </div>
 

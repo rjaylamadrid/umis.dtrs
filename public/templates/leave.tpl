@@ -2,79 +2,142 @@
 {block name=content}
 {if $user.is_admin}
 <div class="flex-fill">
-		<div class="container">
-			<div class="row">
-				<div class="col-md-12">
-					<div class="my-3 my-md-5">
-						<div class="card">
-							<div class="card-body">
-								<div class="form-group form-inline" style="vertical-align: middle;">
-									<label style="display: inline-block;">Request Status Filter</label>
-									<select name="request_stat_filter" class="form-control custom-select" onchange="location.href=this.value" >
-										<option value="{$server}/leave/0" {if $tab == '0'}selected{/if}>Pending</option>
-										<option value="{$server}/leave/1" {if $tab == '1'}selected{/if}>For Recommendation</option>
-										<option value="{$server}/leave/2" {if $tab == '2'}selected{/if}>Approved</option>
-										<option value="{$server}/leave/3" {if $tab == '3'}selected{/if}>Disapproved</option>
-									</select>
-								</div>
+	<div class="container">
+		<div class="my-3 my-md-5">
+			<div class="row credit-stats">
+				<div class="col-sm-6 col-lg-3">
+					<div class="card p-3">
+						<div class="d-flex align-items-center">
+							<span class="stamp stamp-md bg-yellow mr-3">
+								<i class="fe fe-clipboard"></i>
+							</span>
+							<div>
+								<h4 class="m-0">{$stats[0].ctr}</h4>
+								<small class="text-muted">Pending Requests</small>
 							</div>
-
-							<hr style="margin: 0px 0px;">
-
-							<div class="table-responsive">
-								<table class="table table-hover table-outline " style="width: 100%;" id="requests" class=" content: '\e90c';">
-									<thead>
-										<tr>
-											<th class="text-center w-1 no-sort"><i class="icon-people"></i></th>
-											<th class="no-sort" >Employee</th>
-											<th class="no-sort">Leave Type</th>
-											<th class="no-sort">Inclusive Dates</th>
-											<th class="text-center no-sort">Date of Filing</th>
-											<th class="text-center no-sort">Action</th>
-											<th></th>
-										</tr>
-									</thead>
-									<tbody>
-									{foreach $requests as $request}
-										<tr>
-											<td class="text-center">
-												<div class="avatar d-block" style="background-image: url('/assets/employee_picture/{$request.employee_picture}')">
-												<span class="avatar-status bg-green"></span>
-												</div>
-											</td>
-											<td>
-												<input type="hidden" name="emp_id" value="">
-												<div>{$request.name}</div>
-												<div class="small text-muted">{$request.position_desc}</div>
-											</td>
-											<td>
-												<div>{$request.leave_desc}</div>
-												<div class="small text-muted">
-												{$request.lv_where}
-												</div>
-											</td>
-											<td>
-												<div>{if $request.lv_date_fr|date_format:"M" == "May"} {$request.lv_date_fr|date_format:"M d, Y"} {else} {$request.lv_date_fr|date_format:"M. d, Y"} {/if} {if $request.lv_no_days > 1} - {if $request.lv_date_to|date_format:"M" == "May"} {$request.lv_date_to|date_format:"M d, Y"} {else} {$request.lv_date_to|date_format:"M. d, Y"} {/if} {/if}</div>
-												<div class="small text-muted">{$request.lv_no_days} day{if $request.lv_no_days > 1}s{/if} - Commutation {$request.commutation|lower}</div>
-											</td>
-											<td class="text-center pt-4">
-												<div>{$request.lv_dateof_filing|date_format:"F d, Y"}</div>
-											</td>
-											<td class="text-center">
-												<button data-toggle="modal" data-target="#display_leave_details{$request.leave_id}" class="btn btn-secondary btn-pill "> <i class="fe fe-info"></i> View Details</button>
-											</td>
-										</tr>
-									{/foreach}
-									</tbody>
-								</table>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-6 col-lg-3">
+					<div class="card p-3">
+						<div class="d-flex align-items-center">
+							<span class="stamp stamp-md bg-green mr-3">
+								<i class="fe fe-check"></i>
+							</span>
+							<div>
+								<h4 class="m-0">{$stats[1].ctr}</h4>
+								<small class="text-muted">For Administrator's Approval</small>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-6 col-lg-3">
+					<div class="card p-3">
+						<div class="d-flex align-items-center">
+							<span class="stamp stamp-md bg-blue mr-3">
+								<i class="fe fe-home"></i>
+							</span>
+							<div>
+								<h4 class="m-0">{$stats[2].ctr}</h4>
+								<small class="text-muted">Vacation Leave Requests</small>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-6 col-lg-3">
+					<div class="card p-3">
+						<div class="d-flex align-items-center">
+							<span class="stamp stamp-md bg-red mr-3">
+								<i class="fe fe-heart"></i>
+							</span>
+							<div>
+								<h4 class="m-0">{$stats[3].ctr}</h4>
+								<small class="text-muted">Sick Leave Requests</small>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
+
+			<div class="row">
+				<div class="col-md-12">
+					<div class="card">
+						<div class="card-body">
+							<div class="form-group form-inline" style="vertical-align: middle;">
+								<label style="display: inline-block;">Request Status Filter</label>
+								<select name="request_stat_filter" class="form-control custom-select" onchange="location.href=this.value" >
+									<option value="{$server}/leave/0" {if $tab == '0'}selected{/if}>Pending</option>
+									<option value="{$server}/leave/1" {if $tab == '1'}selected{/if}>For Recommendation</option>
+									<option value="{$server}/leave/2" {if $tab == '2'}selected{/if}>Approved</option>
+									<option value="{$server}/leave/3" {if $tab == '3'}selected{/if}>Disapproved</option>
+								</select>
+								<div style="float: right;">
+									<button data-toggle="modal" data-target="#set_leave_credits" class="btn btn-primary"> <i class="fe fe-layers"></i> Set Leave Credits</button>
+									<button data-toggle="modal" data-target="#display_leave_details" class="btn btn-primary"> <i class="fe fe-home"></i> Forced Leave</button>
+								</div>
+							</div>
+						</div>
+
+						<hr style="margin: 0px 0px;">
+
+						<div class="table-responsive">
+							<table class="table table-hover table-outline " style="width: 100%;" id="requests" class=" content: '\e90c';">
+								<thead>
+									<tr>
+										<th class="text-center w-1 no-sort"></th>
+										<th class="no-sort" >Employee</th>
+										<th class="no-sort">Leave Type</th>
+										<th class="no-sort">Inclusive Dates</th>
+										<th class="text-center no-sort">Date of Filing</th>
+										<th class="text-center no-sort">Action</th>
+									</tr>
+								</thead>
+								<tbody>
+								{foreach $requests as $request}
+									<tr>
+										<td class="text-center">
+											<div class="avatar d-block" style="background-image: url('/assets/employee_picture/{$request.employee_picture}')">
+											<span class="avatar-status bg-green"></span>
+											</div>
+										</td>
+										<td>
+											<input type="hidden" name="emp_id" value="">
+											<div>{$request.name}</div>
+											<div class="small text-muted">{$request.position_desc}</div>
+										</td>
+										<td>
+											<div>{$request.leave_desc}</div>
+											<div class="small text-muted">
+											{$request.lv_where}
+											</div>
+										</td>
+										<td>
+											<div>{if $request.lv_date_fr|date_format:"M" == "May"} {$request.lv_date_fr|date_format:"M d, Y"} {else} {$request.lv_date_fr|date_format:"M. d, Y"} {/if} {if $request.lv_no_days > 1} - {if $request.lv_date_to|date_format:"M" == "May"} {$request.lv_date_to|date_format:"M d, Y"} {else} {$request.lv_date_to|date_format:"M. d, Y"} {/if} {/if}</div>
+											<div class="small text-muted">{$request.lv_no_days} day{if $request.lv_no_days > 1}s{/if} - Commutation {$request.commutation|lower}</div>
+										</td>
+										<td class="text-center pt-4">
+											<div>{$request.lv_dateof_filing|date_format:"F d, Y"}</div>
+										</td>
+										<td class="text-center">
+											<button data-toggle="modal" data-target="#display_leave_details{$request.leave_id}" class="btn btn-secondary btn-pill "> <i class="fe fe-info"></i> View Details</button>
+										</td>
+									</tr>
+								{/foreach}
+								</tbody>
+							</table>
+						</div>
+						<script>
+							require (['datatables'], function () {
+								$("#requests").DataTable();
+							})
+						</script>
+					</div>
+				</div>
+			</div>
 		</div>
-	{* </div> *}
+	</div>
 </div>
+{include file="custom/set_leave_credits.tpl"}
 {include file="custom/display_leave_details.tpl"}
 {else}
 {* LEAVE RECORD CARD *}
