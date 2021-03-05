@@ -81,7 +81,7 @@
 								</select>
 								<div style="float: right;">
 									<button data-toggle="modal" data-target="#set_leave_credits" class="btn btn-primary"> <i class="fe fe-layers"></i> Set Leave Credits</button>
-									<button data-toggle="modal" data-target="#display_leave_details" class="btn btn-primary"> <i class="fe fe-home"></i> Forced Leave</button>
+									<button data-toggle="modal" data-target="#set_forced_leave" class="btn btn-primary"> <i class="fe fe-home"></i> Forced Leave</button>
 								</div>
 							</div>
 						</div>
@@ -146,6 +146,7 @@
 	</div>
 </div>
 {include file="custom/set_leave_credits.tpl"}
+{include file="custom/set_forced_leave.tpl"}
 {include file="custom/display_leave_details.tpl"}
 {else}
 {* LEAVE RECORD CARD *}

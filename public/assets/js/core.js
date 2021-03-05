@@ -242,16 +242,21 @@ function disapp(disapp) {
 
 function change_emp(emp_info) {
   var emp_array = emp_info.split(";");
-  document.getElementById("slc_pic").src = "/assets/employee_picture/"+emp_array[1];
-  $("#slc_emp_id").val(emp_array[0]);
-  $("#slc_position").val(emp_array[3]);
-  $("#slc_department").val(emp_array[4]);
+  document.getElementById(emp_array[5]+"pic").src = "/assets/employee_picture/"+emp_array[1];
+  $("#"+emp_array[5]+"emp_id").val(emp_array[0]);
+  $("#"+emp_array[5]+"position").val(emp_array[3]);
+  $("#"+emp_array[5]+"department").val(emp_array[4]);
   // console.log(emp_array);
 }
 
-// function save_leave_credits() {
-//   alert($('#slc_pic').val());
-// }
+function forced_leave_change(emp_info) {
+  var emp_array = emp_info.split(";");
+  document.getElementById(emp_array[5]+"pic").src = "/assets/employee_picture/"+emp_array[1];
+  $("#"+emp_array[5]+"emp_id").val(emp_array[0]);
+  $("#"+emp_array[5]+"position").val(emp_array[3]);
+  $("#"+emp_array[5]+"department").val(emp_array[4]);
+}
+
 // LEAVE :: END
 
 // OTHER FUNCTIONS :: START

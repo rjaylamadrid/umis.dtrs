@@ -21,7 +21,7 @@
                 <select name="emp_id" id="emp_info" class="form-control custom-select" onchange="javascript:change_emp(this.value)">
                     <option selected disabled>Select employee</option>
                     {foreach $emp_list as $emp}
-                    <option value="{$emp.no};{$emp.employee_picture};{$emp.name};{$emp.position_desc};{$emp.department_desc}">{$emp.name}</option>
+                    <option value="{$emp.no};{$emp.employee_picture};{$emp.name};{$emp.position_desc};{$emp.department_desc};slc_">{$emp.name}</option>
                     {/foreach}
                 </select>
                 <label class="form-label">Position</label><input type="text" id="slc_position" class="form-control" value="" readonly>
@@ -36,7 +36,7 @@
             <div class="form-group">
               <div class="row">
                 <div class="col-md-6">
-                  <label class="form-label">Vacation Leave Credits</label>{literal}<input class="form-control" name="slc[vacation]" value="" pattern="^\d*(\.\d{0,9})?$" required>{/literal}
+                  <label class="form-label">Vacation Leave Credits</label>{literal}<input class="form-control" name="slc[vacation]" value="" pattern="^-?\d*(\.\d{0,9})?$" required>{/literal}
                 </div>
                 <div class="col-md-6">
                   <label class="form-label">Sick Leave Credits</label>{literal}<input class="form-control" name="slc[sick]" value="" pattern="^\d*(\.\d{0,9})?$" required>{/literal}

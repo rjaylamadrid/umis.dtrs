@@ -285,6 +285,10 @@ class LeaveController extends Controller {
         $this->index();
     }
 
+    protected function set_forced_leave() {
+        
+    }
+
     protected function leaveRecommendation() {
         $remarks = $this->data['remarks'] ? $this->data['remarks'] : '';
         $qry_result = DB::db('db_master')->update("UPDATE tbl_emp_leave SET lv_status = ?, lv_disapproved_reason = ?, lv_hr_id = ? WHERE leave_id = ?",[$this->data['recommendation'], $remarks, $this->data['hr_id'], $this->data['leave_id']]);
