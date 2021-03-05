@@ -40,9 +40,13 @@ class Message {
         DB::insert ("INSERT INTO tbl_messages VALUES(null,".$this->from.",".$this->to.",'".$this->text."','".$this->created_on."',".$this->status.")");
 	}
 
-    function getAllMessagesData()
+	function getConversation($sender_id, $receiver_id)
 	{
-		return $messages =  DB::fetch_all ("SELECT * FROM tbl_messages WHERE `from` = ".$this->from." AND `to` = ".$this->to."  OR `from` = ".$this->to."  AND `to` = ".$this->from);
+		return $messages =  DB::fetch_all ("SELECT * FROM tbl_messages WHERE `from` = ".$sender_id." AND `to` = ".$receiver_id."  OR `from` = ".$receiver_id."  AND `to` = ".$sender_id);
+	}
+
+	function getReceiverInfo($receiver_id){
+		return $employee = DB::fetch_all ("SELECT no, first_name, last_name, employee_picture, email_address FROM tbl_employee WHERE no = ".$receiver_id);
 	}
 
 	function getLastMessagesData()
@@ -50,46 +54,31 @@ class Message {
 		return $messages =  DB::fetch_all ("SELECT * FROM tbl_messages WHERE `from` = ".$this->from." AND `to` = ".$this->to."  OR `from` = ".$this->to."  AND `to` = ".$this->from." ORDER BY no DESC LIMIT 1");
 	}
 
-    function getAllEmployeeData()
-	{
-		return $employees = DB::fetch_all ("SELECT a.no, first_name, last_name, employee_picture, email_address, campus_name FROM tbl_employee a, tbl_employee_status b, tbl_campus c WHERE a.no = b.employee_id AND b.campus_id = c.id AND b.is_active = 1 ORDER BY c.id ASC");
+	function getContacts($id){
+		return $employees = DB::fetch_all ("SELECT a.no, first_name, last_name, employee_picture, email_address, campus_name FROM tbl_employee a, tbl_employee_status b, tbl_campus c WHERE a.no = b.employee_id AND b.campus_id = c.id AND b.is_active = 1 AND a.no <> ".$id." ORDER BY c.id ASC");
 	}
 
-    function getSelectEmployeeData()
+	function cntUnseenMessage($id)
 	{
-		return $employee = DB::fetch_all ("SELECT no, first_name, last_name, employee_picture, email_address FROM tbl_employee WHERE no = ".$this->to);
+		return $unseen =  DB::fetch_all ("SELECT `from`, SUM(`status`) AS `status` FROM tbl_messages WHERE `to` = ". $id ." GROUP BY `from`");
 	}
 
-	function countUnseenMessageData()
-	{
-		return $unseen =  DB::fetch_all ("SELECT COUNT(`status`) AS cnt_unseen FROM tbl_messages WHERE `from` = ".$this->from."  AND `to` = ".$this->to." AND `status` = 1 ");
-	}
 
-	function cntUnseenMsg()
+	function updateMessageStatus($sender_id, $receiver_id)
 	{
-		//$employees = DB::fetch_all ("SELECT a.no FROM tbl_employee a, tbl_employee_status b, tbl_campus c WHERE a.no = b.employee_id AND b.campus_id = c.id AND b.is_active = 1 ORDER BY c.id ASC");
-		$employees = $this->getAllEmployeeData();
-		$index = 0;
-		foreach($employees as $employee ){
-			$result[$index] = DB::fetch_all ("SELECT `from`, SUM(`status`) AS cnt_unseen FROM tbl_messages WHERE `from` = ". $employee['no'] . " AND `to` = ". $this->from . " GROUP BY `from`");
-			if($result[$index] == []){
-				$result[$index][0] = ['from' => $employee['no'], 'cnt_unseen' => 0];
-			}else{
-
-			}
-			$index++;
+		$status = DB::update ("UPDATE tbl_messages SET `status` = 0 WHERE `from` = ".$sender_id." AND `to` = ".$receiver_id);
+		if($status){
+			return $result = DB::fetch_all ("SELECT SUM(`status`) AS tlt_unseen FROM tbl_messages WHERE `to` = ". $receiver_id);
+		}else{
+			return $result = DB::fetch_all ("SELECT SUM(`status`) AS tlt_unseen FROM tbl_messages WHERE `to` = ". $receiver_id);
 		}
-		$result[$index] = DB::fetch_all ("SELECT SUM(`status`) AS tlt_unseen FROM tbl_messages WHERE `to` = ". $this->from);
-		return $result;
-		//return $unseen =  DB::fetch_all ("SELECT COUNT(`status`) AS cnt_unseen FROM tbl_messages WHERE `from` = ".$this->from. " AND `status` = 1 ");
 	}
 
-	function updateMessageStatusData()
-	{
-		return $result = DB::update ("UPDATE tbl_messages SET `status` = ".$this->status." WHERE `from` = ".$this->from." AND `to` = ".$this->to);
+	function getMessageNotification($user_id){
+		return $result = DB::fetch_all ("SELECT SUM(`status`) AS tlt_unseen FROM tbl_messages WHERE `to` = ". $user_id);
 	}
 
-	function getRecentConvoData() {
-		return $result = DB::fetch_all("SELECT * FROM tbl_messages a, tbl_employee b, (SELECT `to`, MAX(`created_on`) `created_on` FROM tbl_messages WHERE `from` = ".$this->from." GROUP BY `to`) c WHERE a.to = c.to AND a.created_on = c.created_on AND a.to = b.no AND a.from = ".$this->from." GROUP BY a.to ORDER BY a.created_on DESC");
+	function getRecentConversation($user_id) {
+		return $result = DB::fetch_all("SELECT  b.no, a.from, a.to, employee_picture, first_name, last_name, text FROM tbl_messages a, tbl_employee b, (SELECT `to`, MAX(`created_on`) `created_on` FROM tbl_messages WHERE `from` = ". $user_id ." GROUP BY `to`) c WHERE a.to = c.to AND a.created_on = c.created_on AND a.to = b.no AND a.from = ". $user_id ." GROUP BY a.to ORDER BY a.created_on DESC");
 	}
 }

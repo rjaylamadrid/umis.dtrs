@@ -15,7 +15,7 @@ class Messages extends MessagesController {
     
     public function index() {
         $message_object = new Message();
-        $this->view->display ('admin/messages',['employees' => $message_object->getAllEmployeeData(), 'recents' => $message_object->getRecentConvoData(), 'emp_user' => $this->user['employee_id']]);
+        $this->view->display ('admin/messages');
     }
 
     public function do_action (){
@@ -26,11 +26,50 @@ class Messages extends MessagesController {
         } 
     }
 
-    public function updateStatus(){
+    public function get_contacts(){
+
         $message_object = new Message();
-        $messages_object->setStatus($this->data['status']);
-        $messages_object->setFrom($this->data['from']);
-        $messages_object->updateMessageStatusData();
-        echo json_encode($data);
+        echo json_encode(['contacts' => $message_object->getContacts($this->data['user_id'])]);
+    }
+
+    public function get_recents(){
+        $message_object = new Message();
+        echo json_encode(['recents' => $message_object->getRecentConversation($this->data['user_id'])]);
+    }
+
+    public function get_unseen_msg(){
+        $message_object = new Message();
+        echo json_encode(['unseen' => $message_object->cntUnseenMessage($this->data['user_id'])]);
+    }
+
+    public function get_message_notif(){
+        $message_object = new Message();
+        echo json_encode(['message_notif' => $message_object->getMessageNotification($this->data['user_id'])]);
+    }
+
+    public function get_receiver_info(){
+        $message_object = new Message();
+        echo json_encode(['receiver_info' => $message_object->getReceiverInfo($this->data['receiver_id'])]);
+    }
+
+    public function get_conversation(){
+        $message_object = new Message();
+        echo json_encode(['conversation' => $message_object->getConversation($this->data['sender_id'], $this->data['receiver_id'])]);
+    }
+
+    public function update_msg_status(){
+        $message_object = new Message();
+        echo json_encode(['message_notif' => $message_object->updateMessageStatus($this->data['sender_id'], $this->data['receiver_id'])]);
+    }
+
+    public function add_new_message(){
+        $message_object = new Message();
+        $message_object->setFrom($this->data['from']);
+        $message_object->setTo($this->data['to']);
+        $message_object->setText($this->data['text']);
+        $message_object->setCreatedOn(date("Y-m-d h:i:s"));
+        $message_object->setStatus(1);
+        $message_object->saveMessage();
+        echo json_encode(['new_message' => $message_object->getLastMessagesData()]);
     }
 } 

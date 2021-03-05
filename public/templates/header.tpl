@@ -17,9 +17,6 @@
                             <span class="text-default">{$user.first_name|upper} {$user.last_name|upper}</span>
                             <input id="user" type="hidden" value="{$user.employee_id}"/>
                             <small class="text-muted d-block mt-1">{$user.position}</small>
-                            <i class="fe fe-mail">
-                                <small id="notif" class="text-red"></small>
-                            </i>
                         </span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
@@ -29,6 +26,9 @@
                             </a>
                         {/if}
                         <a class="dropdown-item" href="/messages">
+                            <span class="float-right">
+                                <span id="notif" class="badge badge-primary"></span>
+                            </span>
                             <i class="dropdown-icon fe fe-send"></i> Messages
                         </a>
                         <a class="dropdown-item" href="/settings/security">

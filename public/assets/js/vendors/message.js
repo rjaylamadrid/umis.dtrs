@@ -1,209 +1,266 @@
 //MESSAGES :: START
 if(typeof $("#user").val() !== "undefined"){
-var msgTo, msgFrom;
-var msgData = [];
-var msgNotif = 0;
-var user_id = $("#user").val();
-var session_id = document.cookie.match(/PHPSESSID=[^;]+/);
-  var conn = new WebSocket('ws://' + window.location.origin.substr(7) + ':8080?'+ session_id + '&user_id='+ user_id);
-  console.log(conn);
-    conn.onopen = function(e) {
-      //conn.send(JSON.stringify({command: "active", user: $("#user").val()}));
-      //conn.send(JSON.stringify({command: "msg_unseen", user: $("#user").val()}));
-    }
-
-conn.onmessage = function(e) {
-  var msg = JSON.parse(e.data);
-  if(msg.command == "contacts_recents"){
-    console.log("hey");
-    $("#recents").html("<ul class='list-unstyled'></ul>");
-    for(let recent of msg.recents){recents(recent);}
-    $("#contacts").html("<ul class='list-unstyled'></ul>");
-    for(let contact of msg.contacts){contacts(contact);}
-  }else if(msg.command == "active_users"){
-    for(let user of msg.users){activeUser(user);}
-  }else if(msg.command == "msg_unseen"){
-    console.log(msg);
-    for(let us of msg.unseen){
-      unSeenMsg(us[0]);
-    }
-  }else if(msg.command == "subscribe"){
-    getMessages(msg.employee, msg.messages);
-    $("#feed").animate({ scrollTop: $('#feed')[0].scrollHeight}, 1000);
-    conn.send(JSON.stringify({command: "msg_unseen", user_id: user_id}));
-  }else if(msg.command == "message"){
-    newMessage(msg.message[0]);
-    if($('#feed').is(":visible")){
-      $("#feed").animate({ scrollTop: $('#feed')[0].scrollHeight}, 1000);
-    }
-    conn.send(JSON.stringify({command:"msg_unseen", user_id: msg.message[0].to}));
+  var sender, receiver, receiver_picture;
+  var msgNotif = 0;
+  var user_id = $("#user").val();
+  var session_id = document.cookie.match(/PHPSESSID=[^;]+/);
+  var onlineUsers = [];
+  async function f_msg (data = {}, type = 'json', url = path) {
+    const response = await fetch(url, {
+      method: 'POST',
+      body: new URLSearchParams(data),
+      headers: new Headers({ 'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8' }),
+    });
+    return type == 'json' ? response.json() : response.text();
   }
-  // if(msg.command == "subscribe"){
-  //   getMessages(msg.employee, msg.messages);
-  //   $("#feed").animate({ scrollTop: $('#feed')[0].scrollHeight}, 1000);
-  // }else if(msg.command == "message"){
-  //   newMessage(msg.message[0]);
-  //   console.log(msg.message[0].status);
-  //   if(msg.message[0].status){
-  //     var unseen = parseInt(msg.message[0].status) + parseInt(msgNotif)
-  //     getUnseen({no: msg.message[0].from, unseen: unseen});
-  //     msgNotif = parseInt(msg.message[0].status) + parseInt(msgNotif);
+
+  f_msg({action: 'get_contacts', user_id: user_id }, "json", "/messages").then( function (data) {
+    $("#contacts").html("<ul class='list-unstyled list-separated'></ul>");
+    for(let contact of data.contacts){
+      showContacts(contact);
+    } 
+  });
+
+  f_msg({action: 'get_recents', user_id: user_id }, "json", "/messages").then( function (data) {
+    $("#recents").html("<ul class='list-unstyled list-separated'></ul>");
+    for(let recent of data.recents){
+      showRecents(recent);
+    }
+  });
+
+  // f_msg({action: 'get_online_users', user_id: user_id}, "json", "/messages").then( function (data) {
+  //   for(let user of data.users){
+  //     go_online(user);
   //   }
-  //   $("#feed").animate({ scrollTop: $('#feed')[0].scrollHeight}, 1000);
-  // }else if(msg.command == "initialize"){
+  // });
 
-  //   $("#recents").html("<ul class='list-unstyled'></ul>");
-  //   for(let recent of msg.recents){recents(recent);}
+  f_msg({action: 'get_unseen_msg', user_id: user_id}, "json", "/messages").then( function (data) {
+    for(let us of data.unseen){
+      unSeenMsg(us);
+    }
+  });
 
-  //   $("#contacts").html("<ul class='list-unstyled'></ul>");
-  //   for(let contact of msg.contacts){contacts(contact);}
+  f_msg({action: 'get_message_notif', user_id: user_id}, "json", "/messages").then( function (data) {
+    $("#notif").text(data.message_notif[0]['tlt_unseen'] == 0 ? '' : data.message_notif[0]['tlt_unseen']);
+    msgNotif = data.message_notif[0]['tlt_unseen'];
+  });
 
-  //   for(let user of msg.users){activeUser(user);}
-    
-  //   //for(let us of msg.unseen){unSeenMsg(us[0]);}
-    
-  // }else if(msg.command == "unseen"){
-  //   msgNotif = 0;
-  //   for (let index = 0; index < msg.index; index++) {
-  //     if(typeof msg.unseen_msg[index] !== "undefined"){
-  //       msgNotif = parseInt(msg.unseen_msg[index].unseen) + parseInt(msgNotif);
-  //       unSeenMsg(msg.unseen_msg[index]); 
-  //     }
-  //   }
-  //   $("#notif").text(msgNotif);
-  // }else if(msg.command == "unseenTo"){
-  //    console.log(msg);
-  // }
-};
+    var conn = new WebSocket('ws://' + window.location.origin.substr(7) + ':9001?'+ session_id + '&user_id='+ user_id);
+      conn.onopen = function(e) {
+        console.log("connection establish");
+      }
 
-function recents (item) {
-  var HTMLList =  "<li class='list-separated-item' onclick='javascript:getSelectedEmployee(" + item.no + ")'>" +
-                    "<div class='row align-items-center'>" +
-                      "<div class='col-md-2'>" +
-                        "<div id='isActive" + item.no + "' class='avatar d-block' style='background-image: url(/assets/employee_picture/" + item.employee_picture + ")'>" +
+  conn.onmessage = function(e) {
+    var msg = JSON.parse(e.data);
+    if(msg.command == "login_user"){
+      go_online(msg.users);
+      onlineUsers.unshift(msg.users);
+    }else if(msg.command == "logout_user"){
+      go_offline(msg);
+    }else if(msg.command == "msg_unseen"){
+      for(let us of msg.unseen){unSeenMsg(us[0]);}
+    }else if(msg.command == "message"){
+      if(msg.status){
+        f_msg({action: 'get_unseen_msg', user_id: user_id}, "json", "/messages").then( function (data) {
+          for(let us of data.unseen){
+            unSeenMsg(us);
+          }
+        });
+        console.log(msgNotif);
+        msgNotif = parseInt(msgNotif) + 1;
+        $("#notif").text(msgNotif == 0 ? '' : msgNotif);
+      }else{
+        newMessage(msg);
+        $("#chat-message-list").animate({ scrollTop: $('#chat-message-list')[0].scrollHeight}, 1000);
+        f_msg({action: 'get_recents', user_id: user_id }, "json", "/messages").then( function (data) {
+          $("#recents").html("<ul class='list-unstyled list-separated'></ul>");
+          for(let recent of data.recents){
+            showRecents(recent);
+          }
+        });
+        go_online(onlineUsers[0]);
+      }
+    }
+  };
+
+  function showRecents (item) {
+    var HTMLList =  "<li class='list-separated-item' onclick='javascript:selectMsgReceiver(" + item.no + ")' style='cursor: pointer;'>" +
+                      "<div class='row align-items-center'>" +
+                        "<div class='col-auto'>" +
+                          "<div id='r_isActive" + item.no + "' class='avatar d-block' style='background-image: url(/assets/employee_picture/" + item.employee_picture + ")'>" +
+                            "<span class='avatar-status bg-red'></span>" +
+                          "</div>" +
+                        "</div>" +
+                        "<div class='col'>" +
+                          "<span id='isSeen" + item.no + "' class='mt-2 float-right badge badge-danger'></span>" +
+                          "<div><small class='d-block item-except text-sm h-1x'>"+ item.first_name + ' ' + item.last_name +"</small></div>" +
+                          "<small class='d-block item-except text-sm text-muted h-1x'>" + item.text + "</small>" +
                         "</div>" +
                       "</div>" +
+                    "</li>";
+                    
+    $("#recents").append("<ul class='list-unstyled list-separated'>" + HTMLList + "</ul>");
+  }
 
-                      "<div class='col-md-10'>" +
+  function showContacts (item) {
+    var HTMLList =  "<li class='list-separated-item' onclick='javascript:selectMsgReceiver(" + item.no + ")' style='cursor: pointer;'>" +
+                      "<div class='row align-items-center'>" +
+                        "<div class='col-auto'>" +
+                          "<div id='c_isActive" + item.no + "' class='avatar d-block' style='background-image: url(/assets/employee_picture/" + item.employee_picture + ")'>" +
+                            "<span class='avatar-status bg-red'></span>" +
+                          "</div>" +
+                        "</div>" +
+                        "<div class='col'>" +
                         "<span id='isSeen" + item.no + "' class='mt-2 float-right badge badge-danger'></span>" +
-                        "<div>"+ item.first_name + ' ' + item.last_name +"</div>" +
-                        "<div class='small text-muted'>" + item.text + "</div>" +
-                      "</div>" +
-                    "</div>" +
-                  "</li>" 
-
-  $("#recents").append("<ul class='list-unstyled'>" + HTMLList + "</ul>");
-}
-
-function contacts (item) {
-  if(item.no != user_id) {
-  var HTMLList =  "<li class='list-separated-item' onclick='javascript:getSelectedEmployee(" + item.no + ")'>" +
-                    "<div class='row align-items-center'>" +
-                      "<div class='col-md-2'>" +
-                        "<div id='isActive" + item.no + "' class='avatar d-block' style='background-image: url(/assets/employee_picture/" + item.employee_picture + ")'>" +
+                          "<div><small class='d-block item-except text-sm h-1x'>"+ item.first_name + ' ' + item.last_name +"</small></div>" +
                         "</div>" +
                       "</div>" +
+                    "</li>";
+                    
+    $("#contacts").append("<ul class='list-unstyled list-separated'>" + HTMLList + "</ul>");
+  }
 
-                      "<div class='col-md-10'>" +
-                        "<span id='isSeen" + item.no + "' class='mt-2 float-right badge badge-danger'></span>" +
-                        "<div>"+ item.first_name + ' ' + item.last_name +"</div>" +
-                        "<div class='small text-muted'>" + item.email_address + "</div>" +
+  function unSeenMsg (item){
+    $("#isSeen" + item.from).text(item.status == 0 ? '' : item.status);
+  }
+
+  function go_online (items) {
+    
+    setTimeout(function () {
+      for(let item of items){
+        $( "#r_isActive" + item).html("<span class='avatar-status bg-green'></span>");
+        $( "#c_isActive" + item).html("<span class='avatar-status bg-green'></span>");
+      }
+    }, 1000);
+
+  }
+
+  function go_offline (item) {
+    $( "#r_isActive" + item.user_id ).html("<span class='avatar-status bg-red'></span>");
+    $( "#c_isActive" + item.user_id ).html("<span class='avatar-status bg-red'></span>");
+  }
+
+  function getMessages(employee, messages) {
+    $("#chatName").text(employee[0].first_name + ' ' + employee[0].last_name);
+    $("#chatEmail").text(employee[0].email_address);
+    for(let msg of messages){
+      newMessage(msg);
+    }
+  }
+  function selectMsgReceiver(receiver_id) {
+    receiver = receiver_id;
+    conn.send(JSON.stringify({command: "subscribe", sender_id: user_id, receiver_id: receiver_id}));
+    $("#chat-message-list").html(""); 
+    f_msg({action: 'get_receiver_info', receiver_id: receiver_id}, "json", "/messages").then( function (data) {
+      $("#chatName").text(data.receiver_info[0].first_name + ' ' + data.receiver_info[0].last_name);
+      $("#chatEmail").text(data.receiver_info[0].email_address);
+      var HTMLList =  "<div class='col-auto'>" +
+                        "<div id='c_isActive" + data.receiver_info[0].no + "' class='avatar d-block' style='background-image: url(/assets/employee_picture/" + data.receiver_info[0].employee_picture + ")'>" +
+                          "<span class='avatar-status bg-red'></span>" +
+                        "</div>" +
                       "</div>" +
-                    "</div>" +
-                  "</li>" 
+                      "<div class='col'>" +
+                        "<span id='isSeen" + data.receiver_info[0].no + "' class='mt-2 float-right badge badge-danger'></span>" +
+                        "<div><small class='d-block item-except text-sm h-1x'>"+ data.receiver_info[0].first_name + ' ' + data.receiver_info[0].last_name +"</small></div>" +
+                      "</div>";
+      $("#selectedUser").html("<div class='row align-items-center'>" + HTMLList + "</div>");
+      receiver_picture = data.receiver_info[0].employee_picture;
+    });
 
-  $("#contacts").append("<ul class='list-unstyled'>" + HTMLList + "</ul>");
+    f_msg({action: 'get_conversation', sender_id: user_id, receiver_id: receiver_id}, "json", "/messages").then( function (data) {
+      for(let convo of data.conversation){
+        newMessage(convo);
+      }
+      $("#chat-message-list").animate({ scrollTop: $('#chat-message-list')[0].scrollHeight}, 1000);
+    });
+
+    f_msg({action: 'update_msg_status', sender_id: receiver_id, receiver_id: user_id}, "json", "/messages").then( function (data) {
+      console.log(data.message_notif[0]['tlt_unseen']);
+      $("#isSeen" + receiver_id).text('');
+      if(data.message_notif[0]['tlt_unseen']){
+        $("#notif").text(data.message_notif[0]['tlt_unseen'] == 0 ? '' : data.message_notif[0]['tlt_unseen']);
+        msgNotif = data.message_notif[0]['tlt_unseen'];
+      }
+    });
   }
-}
 
-function unSeenMsg (item){
-  if(item.cnt_unseen >= 0){
-    $("#isSeen" + item.from).text(item.cnt_unseen == 0 ? '' : item.cnt_unseen);
-  }else{
-    $("#notif").text(item.tlt_unseen);
+  $("#message").keypress(function (event){
+    var keycode = (event.keycode ? event.keycode : event.which)
+    
+    if(keycode == '13') {
+      event.preventDefault();
+      var msg = {
+        action: "add_new_message",
+        command: "message",
+        from: user_id,
+        to: receiver,
+        text: $("#message").val(),
+      };
+      f_msg(msg, "json", "/messages").then( function (data) {
+        newMessage(data.new_message[0]);
+        data.new_message[0]['command'] = "message";
+        conn.send(JSON.stringify(data.new_message[0]));
+      });
+      $("#message").val("");
+      $("#chat-message-list").animate({ scrollTop: $('#chat-message-list')[0].scrollHeight}, 1000);
+      f_msg({action: 'get_recents', user_id: user_id }, "json", "/messages").then( function (data) {
+        $("#recents").html("<ul class='list-unstyled'></ul>");
+        for(let recent of data.recents){
+          showRecents(recent);
+        }
+      });
+      go_online(onlineUsers[0]);
+    }
+  });
+
+  $("#msgSearch").keypress(function (event){
+    var keycode = (event.keycode ? event.keycode : event.which)
+    console.log("test");
+  });
+
+  function newMessage(msg) {
+    if((msg.to == receiver && msg.from == user_id) || (msg.to == user_id && msg.from == receiver)){
+    var HTMLList;
+    var msgStatus = user_id == msg.from ? 'you' : 'other';
+    var checkUrl = isURL(msg.text) ? "<a class='message-text' target='_blank' href='" + msg.text + "'>" + msg.text + "</a>" : "<div class='message-text'>" + msg.text + "</div>";
+    var avatar = user_id == msg.to ? "<div id='r_isActive309' class='avatar d-block' style='background-image: url(/assets/employee_picture/309.jpg)'></div>" : '';
+    HTMLList =  "<div class='message-row " + msgStatus + "-message'>" +
+                  "<div class='message-content'>" +
+                    avatar +
+                    checkUrl +
+                  "</div>" +
+                  "<div class='message-time'>" + fmtDateTime(new Date(msg.created_on.toString().substr(0, 10) + ", " + msg.created_on.toString().substr(11))) + "</div>" +
+                "</div>";
+      $("#chat-message-list").append(HTMLList);
+    }
   }
-  
-}
 
-function activeUser (item) {
-  var status = item.active == 1 ? 'bg-green' : 'bg-red';
-  $( "#isActive" + item.no ).html("<span class='avatar-status " + status + "'></span>");
-}
-function getMessages(employee, messages) {
-  $("#chatName").text(employee[0].first_name + ' ' + employee[0].last_name);
-  $("#chatEmail").text(employee[0].email_address);
-  for(let msg of messages){
-    newMessage(msg);
+  function fmtDateTime(dt) {
+    var day, month, year, hours, minutes, dateTime, ampm, dtNow, fmtDate;
+    var mS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+    dtNow = date_create(new Date().getFullYear(), new Date().getMonth() + 1, new Date().getDate())
+    day = dt.getDate();
+    month = dt.getMonth() + 1;
+    m_index = dt.getMonth();
+    year = dt.getFullYear();
+    day = day < 10 ? '0' + day : day;
+    month = month < 10 ? '0' + month : month;
+
+    hours = dt.getHours();
+    minutes = dt.getMinutes();
+    ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+    if(year + '-' + month + '-' + day == dtNow){
+      dateTime = hours + ':' + minutes + ' ' + ampm;
+    }else{
+      dateTime = mS[m_index] + ' ' + year + ' AT ' + hours + ':' + minutes + ' ' + ampm;
+    }
+    return dateTime;
   }
-}
-function getSelectedEmployee(id) {
-  msgTo = id;
-  msgFrom = $("#user").val();
-  conn.send(JSON.stringify({command: "subscribe", from: msgFrom, to: msgTo}));
-  $("#feed").html("<ul></ul>"); 
-  conn.send(JSON.stringify({command: "unseen", user: $("#user").val()}));
-}
-
-$("#message").keypress(function (event){
-  var keycode = (event.keycode ? event.keycode : event.which)
-  
-  if(keycode == '13') {
-    event.preventDefault();
-    var msg = {
-      command: "message",
-      from: msgFrom,
-      to: msgTo,
-      created_on: new Date(),
-      text: $("#message").val(),
-    };
-    conn.send(JSON.stringify(msg));
-    $("#message").val("");
-    newMessage(msg);
-    $("#feed").animate({ scrollTop: $('#feed')[0].scrollHeight}, 1000);
-    conn.send(JSON.stringify({command:"recents", user_id: user_id}));
+  function isURL(str) {
+    var regexp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
+    return regexp.test(str);
   }
-});
-
-$("#msgSearch").keypress(function (event){
-  var keycode = (event.keycode ? event.keycode : event.which)
-  console.log("test");
-  
-});
-
-function newMessage(msg) {
-  if((msg.to == msgTo && msg.from == msgFrom) || (msg.to == msgFrom && msg.from == msgTo)){
-  var HTMLList;
-  var msgStatus = msgFrom == msg.from ? 'received' : 'sent';
-  
-  HTMLList =  "<li class='message " + msgStatus + "'>" +
-                "<small class='dateTime'>" + fmtDateTime(new Date(msg.created_on.toString().substr(0, 10) + ", " + msg.created_on.toString().substr(11))) + "</small>" +
-                "<div class='text'>" + msg.text + "</div>" +
-              "</li>";
-$("#feed").append("<ul>" + HTMLList + "</ul>");
-  }
-}
-
-function fmtDateTime(dt) {
-  var day, month, year, hours, minutes, dateTime, ampm, dtNow, fmtDate;
-  dtNow = date_create(new Date().getFullYear(), new Date().getMonth() + 1, new Date().getDate())
-  day = dt.getDate();
-  month = dt.getMonth() + 1;
-  year = dt.getFullYear();
-  day = day < 10 ? '0' + day : day;
-  month = month < 10 ? '0' + month : month;
-
-  hours = dt.getHours();
-  minutes = dt.getMinutes();
-  ampm = hours >= 12 ? 'PM' : 'AM';
-  hours = hours % 12;
-  hours = hours ? hours : 12;
-  minutes = minutes < 10 ? '0' + minutes : minutes;
-
-  if(year + '-' + month + '-' + day == dtNow){
-    dateTime = hours + ':' + minutes + ' ' + ampm;
-  }else{
-    dateTime = month + '/' + day +'/' + year + ' AT ' + hours + ':' + minutes + ' ' + ampm;
-  }
-  return dateTime;
-}
 }

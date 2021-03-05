@@ -8,61 +8,39 @@ use Model\MessageConnection;
 
 class Chat implements MessageComponentInterface {
     protected $clients;
-    private $msgTo;
-    private $msgFrom;
+    private $receiver;
+    private $usersConnected;
     private $users;
-    private $onlineUsers;
     
     public function __construct() {
         $this->clients = new \SplObjectStorage;
-        $this->msgTo = [];
-        $this->msgFrom = [];
         $this->users = [];
-        $this->onlineUsers = [];
+        $this->receiver = [];
+        $this->usersConnected = [];
     }
 
     public function onOpen(ConnectionInterface $conn) {
-
         $this->clients->attach($conn);
-        $this->users[$conn->resourceId] = $conn;
         
         $uriQuery = $conn->httpRequest->getUri()->getQuery();
         $uriQueryArr = explode('&',$uriQuery);
-
-        $sesionId = explode('=',$uriQueryArr[0]);
         $userId = explode('=',$uriQueryArr[1]);
-        $this->onlineUsers[$conn->resourceId] = $userId[1];
 
-        $msgConnObject = new MessageConnection();
-        $msgObject = new Message();
+        $this->users[$conn->resourceId] = $conn;
+        $this->usersConnected[$conn->resourceId] = $userId[1];
+        $this->receiver[$conn->resourceId] = null;
 
-        $msgConnObject->setResourceId($conn->resourceId);
-        $msgConnObject->setUserId($userId[1]);
-        $msgConnObject->setSesionId($sesionId[1]);
-        $msgConnObject->deleteMessageConnection();
-        $msgConnObject->saveMessageConnection();
-
-        echo "someone connected\n".$conn->resourceId;
-        $result["command"] = "contacts_recents";
-
-        $msgObject->setFrom($userId[1]);
-
-        $result["contacts"] = $msgObject->getAllEmployeeData();
-        $result["recents"] = $msgObject->getRecentConvoData();
-        $msg = json_encode($result);
-        $this->users[$conn->resourceId]->send($msg);
+        echo "someone connected [user_id = ". $this->usersConnected[$conn->resourceId]." | resourceID = ". $conn->resourceId ."]\n";
+        foreach ($this->usersConnected as $user){
+            $OL_users[] =  $user;
+        }
         $result = [];
-        $result["command"] = "active_users";
-        $result["users"] = $msgConnObject->getAllUserIdData();
+        $result["command"] = "login_user";
+        $result["users"] = $OL_users; 
         $msg = json_encode($result);
         foreach ($this->clients as $client) {
             $client->send($msg);
         }
-        $result = [];
-        $result["command"] = "msg_unseen";
-        $result["unseen"] = $msgObject->cntUnseenMsg();
-        $msg = json_encode($result);
-        $this->users[$conn->resourceId]->send($msg);
     }
 
     public function onMessage(ConnectionInterface $conn, $msg) {
@@ -70,141 +48,71 @@ class Chat implements MessageComponentInterface {
         $messages_object = new Message();
         switch ($data->command) {
 
-            // case "active":
-            //     $result["command"] = "active";
-            //     $this->onlineUsers[$conn->resourceId] = $data->user;
-            //     $employees = $messages_object->getAllEmployeeData();
-            //     $index = 0;
-            //     foreach($employees as $employee){
-            //         if(array_search($employee["no"],$this->onlineUsers) == null){
-            //             $employee['status'] = "inactive";
-            //             $result["online_users"][$index] = ["status" => "inactive", 'no' => $employee["no"]];
-            //         }else{
-            //             $employee['status'] = "active";
-            //             $result["online_users"][$index] = ["status" => "active", 'no' => $employee["no"]];
-            //         }
-            //         $index++;
-            //     }
-            //     $msg = json_encode($result);
-            //     foreach ($this->clients as $client) {
-            //         $client->send($msg);
-            //     }
-            //     break;
-            case "recents":
-                $result["command"] = "contacts_recents";
-                $msgConnObject = new MessageConnection();
-                $msgObject = new Message();
-
-                $msgObject->setFrom($data->user_id);
-
-                $result["contacts"] = $msgObject->getAllEmployeeData();
-                $result["recents"] = $msgObject->getRecentConvoData();
-                $msg = json_encode($result);
-                $this->users[$conn->resourceId]->send($msg);
-                $result = [];
-                $result["command"] = "active_users";
-                $result["users"] = $msgConnObject->getAllUserIdData();
-                $msg = json_encode($result);
-                foreach ($this->clients as $client) {
-                    $client->send($msg);
-                }
-                break;
-
-            case "msg_unseen":
-                $result["command"] = "msg_unseen";
-                $msgObject = new Message();
-                $msgObject->setFrom($data->user_id);
-                $result["unseen"] = $msgObject->cntUnseenMsg();
-                $msg = json_encode($result);
-                $this->users[$conn->resourceId]->send($msg);
-                break;
-
             case "subscribe":
-                $result["command"] = "subscribe";
-                $this->msgFrom[$conn->resourceId] = $data->from;
-                $this->msgTo[$conn->resourceId] = $data->to;
-                                                                                                                                                                                             
-                $messages_object->setFrom($data->from);
-                $messages_object->setTo($data->to);
-                $result['employee'] = $messages_object->getSelectEmployeeData();
-                $result['messages'] = $messages_object->getAllMessagesData();
-                $msg = json_encode($result);
-                $messages_object->setFrom($data->to);
-                $messages_object->setTo($data->from);
-                $messages_object->setStatus(0);
-                $messages_object->updateMessageStatusData();
-                $this->users[$conn->resourceId]->send($msg);
+                $this->sender[$conn->resourceId] = $data->sender_id;
+                $this->receiver[$conn->resourceId] = $data->receiver_id;
                 break;
 
             case "message":
                 $result["command"] = "message";
-                if (isset($this->msgFrom[$conn->resourceId]) && isset($this->msgTo[$conn->resourceId])) {
-                    $messages_object->setFrom($data->from);
-                    $messages_object->setTo($data->to);
-                    $messages_object->setText($data->text);
-                    date_default_timezone_set('Asia/Manila');
-                    $messages_object->setCreatedOn(date("Y-m-d h:i:s"));
-                    if(array_search($data->to, $this->onlineUsers) == null){
-                        $messages_object->setStatus(1);
+                $isOnline = false;
+                $isFocus = false;
+                if (isset($this->sender[$conn->resourceId]) && isset($this->receiver[$conn->resourceId])) {
+                    if(array_search($this->receiver[$conn->resourceId], $this->usersConnected) == null){
+                        $isOnline = false;
                     }else{
-                        foreach ($this->msgFrom as $id=>$from) {
-                            if ($data->to == $from) {
-                                if($this->msgTo[$id] == $data->from){
-                                    $messages_object->setStatus(0);
+                        $isOnline = true;
+                        foreach($this->usersConnected as $id=>$from){
+                        echo "resourceId[". $id. "] receiver[" . $from . "]\n";
+                            if($from == $data->to){
+                                if($this->receiver[$id] == $data->from){
+                                    $isFocus = true;
                                     break;
                                 }else{
-                                    $messages_object->setStatus(1);
+                                    $isFocus = false;
                                 }
                             }else{
-                                $messages_object->setStatus(1);
+                                $isFocus = false;
+                            }
+                        } 
+                    }
+                    if($isOnline){
+                        if($isFocus){
+                            $data->status = 0;
+                        }else{
+                            $data->status = 1;
+                        }
+                    }else{
+                        $data->status = 1;
+                    }
+                    $msg = json_encode($data);
+                    if($isOnline){
+                        foreach ($this->usersConnected as $id=>$receiver) {
+                            if($data->to == $receiver){
+                                echo "send to: ". $id ." \n";
+                                $this->users[$id]->send($msg);
                             }
                         }
                     }
-                    $messages_object->saveMessage();
-                    $result['message'] = $messages_object->getLastMessagesData(); 
-                    $msg = json_encode($result);
-                    
-                    foreach ($this->onlineUsers as $id=>$ol) {
-                        if ($this->msgTo[$conn->resourceId] == $ol) {
-                            $this->users[$id]->send($msg);
-                        }
-                    }
-
                 }
-                break;
-            
-            case "unseenTo":
-    
-                $this->users[$conn->resourceId]->send($msg);
-        
-                break;
-            default:
                 break;
 
         }
     }
 
     public function onClose(ConnectionInterface $conn) {
-        
+        echo "someone has disconnected [user_id = ". $this->usersConnected[$conn->resourceId]." | resourceID = ". $conn->resourceId ."]\n";
         $this->clients->detach($conn);
+        $user_id = $this->usersConnected[$conn->resourceId];
         unset($this->users[$conn->resourceId]);
-        unset($this->msgTo[$conn->resourceId]);
-        unset($this->msgFrom[$conn->resourceId]);
-        unset($this->onlineUsers[$conn->resourceId]);
-        $uriQuery = $conn->httpRequest->getUri()->getQuery();
-        $uriQueryArr = explode('&',$uriQuery);
-        $userId = explode('=',$uriQueryArr[1]);
-        $msgConnObject = new MessageConnection();
-        $msgConnObject->setUserId($userId[1]);
-        $msgConnObject->deleteMessageConnection();
-        echo "someone has disconnected";
+        unset($this->usersConnected[$conn->resourceId]);
+        unset($this->receiver[$conn->resourceId]);
         $result = [];
-        $result["command"] = "active_users";
-        $result["users"] = $msgConnObject->getAllUserIdData();
+        $result["command"] = "logout_user";
+        $result["user_id"] = $user_id;
         $msg = json_encode($result);
         foreach ($this->clients as $client) {
             $client->send($msg);
-            print_r("ok");
         }
     }
 

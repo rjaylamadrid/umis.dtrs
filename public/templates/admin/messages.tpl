@@ -1,172 +1,132 @@
 {extends file="layout.tpl"}
 {block name=content}
 <div class="my-3 my-md-5">
-    <div class="container">
-        <h3 class="page-title mb-5">Messages</h3>
+  <div class="container">
+    <div class="card">
 
-        <div class="row">
-            <div class="col-md-4">
-                <div class="card mb-0">
-                    <div class="card-header">
-                        <h3 class="card-title mr-2">Recent()</h3>
-                        <form class="input-icon my-3 my-lg-0">
-                            <input type="msgSearch" class="form-control header-search" placeholder="Search Employees&hellip;" tabindex="1">
-                            <div class="input-icon-addon">
-                              <i class="fe fe-search"></i>
-                            </div>
-                          </form>
-                    </div>
-                    <div class="card-body o-auto" style="height: 15rem">
-                        <div id="recents">
-                        <!-- <ul class="list-unstyled" id="employees">
-                            {foreach from = $recents item = r_employee}
-                                {if $r_employee.no != $emp_user}
-                            <li class="list-separated-item" onclick="javascript:getSelectedEmployee('{$r_employee.no}')">
-                                <div class="row align-items-center">
-                                    <div class="col-md-2">
-                                        <div class="avatar d-block" style="background-image: url({$server}/assets/employee_picture/{if $user.employee_picture}{$user.employee_picture}{else}0.jpeg{/if})">
-                                            <span id="isActive{$r_employee.no}"></span>
-                                        </div>
-                                    </div>
+      <div class="card-header">
+        <h3 class="card-title">Message</h3>
+      </div>
+                
+        <div class="card-body py-0">
+          <div class="row mx-n5">
+            <div class="col-md-3">
 
-                                    <div class="col-md-10">
-                                        <span id="isSeen{$r_employee.no}" class='mt-2 float-right badge badge-danger'></span>
-                                        <div>{$r_employee.first_name} {$r_employee.last_name}</div>
-                                        <div class='small text-muted'>{$r_employee.email_address}</div>
-                                    </div>
-                                </div>
-                            </li>
-                                {/if}
-                            {/foreach}
-                        </ul> -->
-                    </div>
-                    </div>
+              <div class="row border border-top-0">
+                <div class="input-icon mb-0" style="width: 100%;">
+                  <input type="text" class="form-control border-0" placeholder="Search for...">
+                    <span class="input-icon-addon">
+                      <i class="fe fe-search"></i>
+                    </span>
                 </div>
+              </div>
 
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title mr-2">Contacts()</h3>
-                        <form class="input-icon my-3 my-lg-0">
-                            <input type="msgSearch" class="form-control header-search" placeholder="Search Employees&hellip;" tabindex="1">
-                            <div class="input-icon-addon">
-                              <i class="fe fe-search"></i>
-                            </div>
-                          </form>
-                    </div>
-                    <div class="card-body o-auto" style="height: 20rem">
-                        <div id="contacts">
-                        <!-- <ul class="list-unstyled" id="employees">
-                            {foreach from = $employees item = employee}
-                                {if $employee.no != $emp_user}
-                            <li class="list-separated-item" onclick="javascript:getSelectedEmployee('{$employee.no}')">
-                                <div class="row align-items-center">
-                                    <div class="col-md-2">
-                                        <div class="avatar d-block" style="background-image: url({$server}/assets/employee_picture/{if $user.employee_picture}{$user.employee_picture}{else}0.jpeg{/if})">
-                                            <span id="isActive{$employee.no}"></span>
-                                        </div>
-                                    </div>
+              <div class="row border border-top-0">
+                <h5 class="my-2 mx-2">RECENTS</h5>
+              </div>
 
-                                    <div class="col-md-10">
-                                        <span id="isSeen{$employee.no}" class='mt-2 float-right badge badge-danger'></span>
-                                        <div>{$employee.first_name} {$employee.last_name}</div>
-                                        <div class='small text-muted'>{$employee.email_address}</div>
-                                    </div>
-                                </div>
-                            </li>
-                                {/if}
-                            {/foreach}
-                        </ul> -->
-                    </div>
-                    </div>
+              <div class="row border border-top-0">
+                <div id="recents" class="card-body o-auto py-0" style="height: 35rem">
+                  
                 </div>
+              </div>
             </div>
-            <div class="col-md-8" id="settings_tab">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="col-auto">
-                            <span class="avatar avatar-md d-block" style="background-image: url({$server}/assets/employee_picture/{if $user.employee_picture}{$user.employee_picture}{else}0.jpeg{/if})"></span>
-                        </div>
-
-                        <div class="col">
-                            <div>
-                                <a class="text-inherit" id="chatName"></a>
-                            </div>
-                            <small class="d-block item-except text-sm text-muted h-1x" id="chatEmail"></small>
-                        </div>
-                    </div>
-                    <div class="card-body" style="height: 40rem">
-
-                        <div id="feed" class="feed" ref="feed">
-                           
-                        </div>
-
-                        <div class="composer">
-                            <textarea id="message" placeholder="Message..."></textarea>
-                        </div>
-                    </div>
+            <div class="col-md-6 py-0 px-0 border border-top-0 border-bottom-0">
+              <div class="card mb-0">
+                <div class="card-header">
+                  <div id="selectedUser"></div>
                 </div>
+                <div class="card-body py-0 px-0" style="height: 32rem">
+                  <div id="chat-message-list" class="chat-message-list" ref="chat-message-list"></div>
+                </div>
+                <div class="card-footer py-0 px-0">
+                  <div class="input-group composer">
+                    <textarea id="message" class="form-control border" rows="2" placeholder="Type a message..."></textarea>  
+                    <span class="input-group-append">
+                      <button class="btn bg-dark text-white" type="button">Send</button>
+                    </span>
+                  </div>
+                </div>
+              </div> 
             </div>
+            <div class="col-md-3">
+              <div class="row border border-top-0">
+                <div class="input-icon mb-0" style="width: 100%;">
+                  <input type="text" class="form-control border-0 input-focus" placeholder="Search for...">
+                  <span class="input-icon-addon">
+                    <i class="fe fe-search"></i>
+                  </span>
+                </div>
+              </div>
+              <div class="row border border-top-0">
+                <h5 class="my-2 mx-2">CONTACTS</h5>
+              </div>
+              <div class="row border border-top-0">
+                <div id="contacts" class="card-body o-auto py-0" style="height: 35rem">
+                  
+                </div>
+              </div>
+            </div>
+          </div>    
         </div>
+      </div>
     </div>
-</div>
+  </div>
 </div>
 <style scoped>
-    input.form-control.header-search {
-        width: 325;
-    }
-    .dateTime {
-        text-align: center;
-        display: block;
-    }
-
-    .composer textarea {
-        width:97%;
-        margin: 10px;
-        resize: none;
-        border-radius: 3px;
-        border: 1px solid lightgray;
-        padding: 6px;
-    }
-
-    .feed {
-        background: #f0f0f0;
-        height: 100%;
-        max-height: 470px;
-        overflow: scroll;
-    }
-
-    .feed ul{
-        list-style-type: none;
-        padding: 5px;
-    }
-
-    .feed ul li.message{
-        margin: 10px 0;
-        width: 100%;
-    }
-
-    .text{
-        max-width: 300px;
-        border-radius: 20px;
-        padding: 12px;
-        display: inline-block; 
-        margin-bottom: 5;
-    }
-
-    li.message.received{
-        text-align: right;
-    }
-    li.message.received .text{
-        background: #b2b2b2;
-    }
-
-    li.message.sent{
-        text-align: left;
-    }
-    
-    li.message.sent .text{
-        background: #81c4f9;
-    } 
+  .composer textarea {
+    resize: none;
+  }
+  #chat-message-list {
+    grid-area: chat-message-list;
+    display: flex;
+    flex-direction: column;
+    padding: 0 20px;
+    background: #f0f0f0;
+    height: 100%;
+    max-height: 522px;
+    overflow: scroll;
+  }
+  .message-content {
+    display: grid;
+  }
+  .message-row{
+    display: grid;
+    grid-template-columns: 70%;
+    margin-bottom: 20px;
+  }
+  .message-text {
+    padding: 9px 14px;
+    font-size: 1rem;
+    margin-bottom: 5px;
+  }
+  .message-time {
+    font-size: 0.6rem;
+    color: #777;
+  }
+  .you-message .message-text {
+    background: #fff;
+    color:#111;
+    border: 1px solid  #ddd;
+    border-radius: 14px 14px 0 14px;
+  }
+  .you-message {
+    justify-content: end;
+    justify-items: end;
+  }
+  .other-message .message-text {
+    background: #343a40;
+    color:#eee;
+    border: 1px solid  #343a40;
+    border-radius: 14px 14px 14px 0px;
+  }
+  .other-message {
+    justify-items: start;
+  }
+  .other-message .message-content {
+    grid-template-columns: 48px 1fr;
+    grid-column: 10px;
+  }
 </style>
 {/block}
 
