@@ -16,6 +16,7 @@ class LeaveController extends Controller {
     public $all_leave_requests;
     public $stats;
     public $emp_list;
+    public $message;
     private $period = [['01', '15'], ['16', '31'], ['01', '31']];
     private $attendance;
     private $schedule;
@@ -23,8 +24,9 @@ class LeaveController extends Controller {
     protected function getLeaveRecord($status) {
         
         if ($this->user['is_admin']) {
-            $this->all_leave_requests = DB::db('db_master')->fetch_all("SELECT a.*, b.employee_picture, CONCAT(b.last_name,', ',b.first_name,' ',b.middle_name)AS name, d.position_desc, e.leave_desc FROM tbl_emp_leave a, tbl_employee b, tbl_employee_status c, tbl_position d, tbl_leave_type e WHERE a.employee_id = b.no AND a.employee_id = c.employee_id AND c.position_id = d.no AND c.is_active = 1 AND a.lv_status=$status AND a.lv_type = e.id ORDER BY a.leave_id ASC");
-            $this->emp_list = DB::db('db_master')->fetch_all("SELECT a.no, a.employee_picture, CONCAT(a.last_name,', ',a.first_name,' ',a.middle_name)AS name, c.position_desc, d.department_desc FROM tbl_employee a, tbl_employee_status b, tbl_position c, tbl_department d WHERE a.no = b.employee_id AND b.position_id = c.no AND b.department_id = d.no ORDER BY a.last_name ASC");
+            $this->all_leave_requests = DB::db('db_master')->fetch_all("SELECT a.*, b.employee_picture, CONCAT(b.last_name,', ',b.first_name,' ',b.middle_name)AS name, d.position_desc, e.leave_desc FROM tbl_emp_leave a, tbl_employee b, tbl_employee_status c, tbl_position d, tbl_leave_type e WHERE a.employee_id = b.no AND c.campus_id = ? AND a.employee_id = c.employee_id AND c.position_id = d.no AND c.is_active = ? AND a.lv_status = ? AND a.lv_type = e.id ORDER BY a.leave_id ASC",[$this->user['campus_id'],1,$status]);
+
+            $this->emp_list = DB::db('db_master')->fetch_all("SELECT a.no, a.employee_picture, CONCAT(a.last_name,', ',a.first_name,' ',a.middle_name)AS name, c.position_desc, d.department_desc FROM tbl_employee a, tbl_employee_status b, tbl_position c, tbl_department d WHERE a.no = b.employee_id AND b.campus_id = ? AND b.position_id = c.no AND c.etype_id < ? AND b.department_id = d.no AND a.no NOT IN (SELECT employee_id FROM tbl_emp_leave_credits) ORDER BY a.last_name ASC",[$this->user['campus_id'],5]);
             for ($i=0,$j=2,$k=1; $i<2; $i++,$j++,$k++) {
                 $this->stats[$i] = DB::db('db_master')->fetch_all("SELECT COUNT(*)as ctr FROM tbl_emp_leave WHERE lv_status = ?", [$i])[0];
                 $this->stats[$j] = DB::db('db_master')->fetch_all("SELECT COUNT(*)as ctr FROM tbl_emp_leave WHERE lv_status < ? AND lv_type = ?",[2, $k])[0];
@@ -277,9 +279,17 @@ class LeaveController extends Controller {
         }
     }
 
+    protected function set_leave_credits() {
+        $qry_result = DB::db('db_master')->insert("INSERT INTO tbl_emp_leave_credits SET ". DB::stmt_builder($this->data['slc']),$this->data['slc']);
+        $this->message = $qry_result != 0 ? ["result" => "success", "message" => "Leave credits has been successfully saved."] : ["result" => "failed", "message" => "Leave credits was not saved. Please check inputted data and try again."];
+        $this->index();
+    }
+
     protected function leaveRecommendation() {
         $remarks = $this->data['remarks'] ? $this->data['remarks'] : '';
-        DB::db('db_master')->update("UPDATE tbl_emp_leave SET lv_status = ?, lv_disapproved_reason = ?, lv_hr_id = ? WHERE leave_id = ?",[$this->data['recommendation'], $remarks, $this->data['hr_id'], $this->data['leave_id']]);
+        $qry_result = DB::db('db_master')->update("UPDATE tbl_emp_leave SET lv_status = ?, lv_disapproved_reason = ?, lv_hr_id = ? WHERE leave_id = ?",[$this->data['recommendation'], $remarks, $this->data['hr_id'], $this->data['leave_id']]);
+        $recommendation = $this->data['recommendation'] == 1 ? 'approved' : 'disapproved';
+        $this->message = $qry_result != '' ? ["result" => "success", "message" => "Leave request has been successfully $recommendation."] : ["result" => "failed", "message" => "Leave recommendation was not saved. Please try again."];
         $this->index();
     }
 

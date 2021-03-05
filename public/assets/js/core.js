@@ -240,10 +240,18 @@ function disapp(disapp) {
   disapp.remarks.disabled = disapp.approved.checked == false ? false : true;
 }
 
-function change_emp(emp_arr) {
-  var obj = json_encode(emp_arr);
-  console.log(obj);
+function change_emp(emp_info) {
+  var emp_array = emp_info.split(";");
+  document.getElementById("slc_pic").src = "/assets/employee_picture/"+emp_array[1];
+  $("#slc_emp_id").val(emp_array[0]);
+  $("#slc_position").val(emp_array[3]);
+  $("#slc_department").val(emp_array[4]);
+  // console.log(emp_array);
 }
+
+// function save_leave_credits() {
+//   alert($('#slc_pic').val());
+// }
 // LEAVE :: END
 
 // OTHER FUNCTIONS :: START

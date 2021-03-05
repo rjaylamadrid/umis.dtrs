@@ -58,6 +58,14 @@
 					</div>
 				</div>
 			</div>
+			
+			{if $message}
+				<div class="alert card-alert {if $message.result == 'success'}alert-success{else}alert-danger{/if} alert-dismissible">
+					<button type="button" class="close" data-dismiss="alert"></button>
+					<i class="fe {if $message.result == 'success'}fe-check{else}fe-alert-triangle{/if} mr-2" aria-hidden="true"></i>{$message.message}
+				</div>
+				<br />
+			{/if}
 
 			<div class="row">
 				<div class="col-md-12">
@@ -67,7 +75,7 @@
 								<label style="display: inline-block;">Request Status Filter</label>
 								<select name="request_stat_filter" class="form-control custom-select" onchange="location.href=this.value" >
 									<option value="{$server}/leave/0" {if $tab == '0'}selected{/if}>Pending</option>
-									<option value="{$server}/leave/1" {if $tab == '1'}selected{/if}>For Recommendation</option>
+									<option value="{$server}/leave/1" {if $tab == '1'}selected{/if}>For Approval</option>
 									<option value="{$server}/leave/2" {if $tab == '2'}selected{/if}>Approved</option>
 									<option value="{$server}/leave/3" {if $tab == '3'}selected{/if}>Disapproved</option>
 								</select>
