@@ -9,6 +9,7 @@ class Payroll{
     static $employees;
     static $payroll;
     static $excel;
+    static $headers;
 
     public static function initialize($type) {
         self::$employees = [];
@@ -50,6 +51,7 @@ class Payroll{
     protected static function set_page($no, $sheets) {
         $row = ($no - 1) * 37;
         $irow = 0;
+        self::$headers = ["No.", "Name", "Employee ID", "Position"];
         self::set_header($no, $sheets, $row);
 
         Excel::set_style(['font' => ['size' => 10,'bold' => false,'name'=>'Arial']]);
@@ -78,7 +80,8 @@ class Payroll{
         self::set_footer($irow);
     }
 
-    protected static function set_header($no, $sheets, $row) {
+    protected static function set_header($no, $sheets, $row) { 
+        
         Excel::set_style(['font' => ['size' => 11,'bold' => false,'name'=>'Times']]);
         self::$excel->getDefaultColumnDimension()->setWidth(12);
         self::$excel->getDefaultRowDimension()->setRowHeight(12);
@@ -94,6 +97,10 @@ class Payroll{
         Excel::set_value('Q'.($row+4), 'Payroll No. : _______________________', ['font' => ['bold' => true]], 'Q'.($row+4).':S'.($row+4));
         Excel::set_value('Q'.($row+5), 'Sheet '.$no.' of  '.$sheets.' Sheets', ['font' => ['bold' => true]], 'Q'.($row+5).':S'.($row+5));
         Excel::set_value('B'.($row+6), 'We acknowledge receipt of cash shown opposite our name as full compensation for services rendered for the period covered.', null, 'B'.($row+6).':N'.($row+6));
+    
+        foreach (self::$headers as $header) {
+            
+        }
     }
 
     protected static function set_footer($row) {
@@ -107,8 +114,11 @@ class Payroll{
         Excel::set_value('Q'.($row+1), 'CERTIFIED : Each employee whose name appears above have been paid the amount opposite their name.', null, 'Q'.($row+1).':U'.($row+2), 'left', 'center', true);
         Excel::set_value('V'.($row+1), 'E', ['font' => ['size' => 12,'bold' => true]], null, 'center');
         Excel::set_value('V'.($row+2), 'ORS/BURS No:', null, 'V'.($row+2).':W'.($row+2), 'right');
+        Excel::set_border('Z'.($row+2).':Y'.($row+2), 'bottom', 'thin');
         Excel::set_value('V'.($row+3), 'Date:', null, 'V'.($row+3).':W'.($row+3), 'right');
+        Excel::set_border('Z'.($row+3).':Y'.($row+3), 'bottom', 'thin');
         Excel::set_value('V'.($row+4), 'JEV No:', null, 'V'.($row+4).':W'.($row+4), 'right');
+        Excel::set_border('Z'.($row+4).':Y'.($row+4), 'bottom', 'thin');
         Excel::set_value('V'.($row+5), 'Date:', null, 'V'.($row+5).':W'.($row+5), 'right');
 
         Excel::set_border('A'.($row+1).':D'.($row+5), 'outline', 'medium');
