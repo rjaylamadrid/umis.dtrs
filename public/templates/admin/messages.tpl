@@ -14,7 +14,7 @@
 
               <div class="row border border-top-0">
                 <div class="input-icon mb-0" style="width: 100%;">
-                  <input type="text" class="form-control border-0" placeholder="Search for...">
+                  <input id="searchForRecents" type="text" class="form-control border-0" placeholder="Search for...">
                     <span class="input-icon-addon">
                       <i class="fe fe-search"></i>
                     </span>
@@ -43,7 +43,7 @@
                   <div class="input-group composer">
                     <textarea id="message" class="form-control border" rows="2" placeholder="Type a message..."></textarea>  
                     <span class="input-group-append">
-                      <button class="btn bg-dark text-white" type="button">Send</button>
+                      <button class="btn text-white" type="button">Send</button>
                     </span>
                   </div>
                 </div>
@@ -52,7 +52,7 @@
             <div class="col-md-3">
               <div class="row border border-top-0">
                 <div class="input-icon mb-0" style="width: 100%;">
-                  <input type="text" class="form-control border-0 input-focus" placeholder="Search for...">
+                  <input id="searchForContacts" type="text" class="form-control border-0 input-focus" placeholder="Search for...">
                   <span class="input-icon-addon">
                     <i class="fe fe-search"></i>
                   </span>
@@ -76,6 +76,9 @@
 <style scoped>
   .composer textarea {
     resize: none;
+  }
+  .btn {
+    background: #499d7b;
   }
   #chat-message-list {
     grid-area: chat-message-list;
@@ -115,9 +118,9 @@
     justify-items: end;
   }
   .other-message .message-text {
-    background: #343a40;
+    background: #499d7b;
     color:#eee;
-    border: 1px solid  #343a40;
+    border: 1px solid  #499d7b;
     border-radius: 14px 14px 14px 0px;
   }
   .other-message {

@@ -81,4 +81,12 @@ class Message {
 	function getRecentConversation($user_id) {
 		return $result = DB::fetch_all("SELECT  b.no, a.from, a.to, employee_picture, first_name, last_name, text FROM tbl_messages a, tbl_employee b, (SELECT `to`, MAX(`created_on`) `created_on` FROM tbl_messages WHERE `from` = ". $user_id ." GROUP BY `to`) c WHERE a.to = c.to AND a.created_on = c.created_on AND a.to = b.no AND a.from = ". $user_id ." GROUP BY a.to ORDER BY a.created_on DESC");
 	}
+
+	function searchForRecents($user_id, $search_data) {
+		return $result = DB::fetch_all("SELECT  b.no, a.from, a.to, employee_picture, first_name, last_name, text FROM tbl_messages a, tbl_employee b, (SELECT `to`, MAX(`created_on`) `created_on` FROM tbl_messages WHERE `from` = ". $user_id ." GROUP BY `to`) c WHERE a.to = c.to AND a.created_on = c.created_on AND a.to = b.no AND a.from = ". $user_id ." AND CONCAT(first_name, ' ', last_name) LIKE '". $search_data ."%' GROUP BY a.to ORDER BY a.created_on DESC");
+	}
+	
+	function searchForContacts($user_id, $search_data){
+		return $result = DB::fetch_all ("SELECT a.no, first_name, last_name, employee_picture, email_address, campus_name FROM tbl_employee a, tbl_employee_status b, tbl_campus c WHERE a.no = b.employee_id AND b.campus_id = c.id AND b.is_active = 1 AND a.no <> ".$user_id." AND CONCAT(first_name, ' ', last_name) LIKE '". $search_data ."%' ORDER BY c.id ASC");
+	}
 }
