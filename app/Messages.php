@@ -67,9 +67,19 @@ class Messages extends MessagesController {
         $message_object->setFrom($this->data['from']);
         $message_object->setTo($this->data['to']);
         $message_object->setText($this->data['text']);
-        $message_object->setCreatedOn(date("Y-m-d h:i:s"));
+        $message_object->setCreatedOn(date("Y-m-d G:i:s"));
         $message_object->setStatus(1);
         $message_object->saveMessage();
         echo json_encode(['new_message' => $message_object->getLastMessagesData()]);
+    }
+
+    public function search_recents(){
+        $message_object = new Message();
+        echo json_encode(['recents' => $message_object->searchForRecents($this->data['user_id'], $this->data['search_data'])]);
+    }
+
+    public function search_contacts(){
+        $message_object = new Message();
+        echo json_encode(['contacts' => $message_object->searchForContacts($this->data['user_id'], $this->data['search_data'])]);
     }
 } 

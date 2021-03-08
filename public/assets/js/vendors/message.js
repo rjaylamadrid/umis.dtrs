@@ -4,7 +4,9 @@ if(typeof $("#user").val() !== "undefined"){
   var msgNotif = 0;
   var user_id = $("#user").val();
   var session_id = document.cookie.match(/PHPSESSID=[^;]+/);
-  var onlineUsers = [];
+  var onlineUsers = [], contactsData = new Array();
+  var msg_id = 0;
+  var appendOnceTyping = true;
   async function f_msg (data = {}, type = 'json', url = path) {
     const response = await fetch(url, {
       method: 'POST',
@@ -16,11 +18,14 @@ if(typeof $("#user").val() !== "undefined"){
 
   f_msg({action: 'get_contacts', user_id: user_id }, "json", "/messages").then( function (data) {
     $("#contacts").html("<ul class='list-unstyled list-separated'></ul>");
+    index = 0;
     for(let contact of data.contacts){
       showContacts(contact);
+      index++;
     } 
+    contactsData.unshift(data.contacts);
   });
-
+  console.log(contactsData);
   f_msg({action: 'get_recents', user_id: user_id }, "json", "/messages").then( function (data) {
     $("#recents").html("<ul class='list-unstyled list-separated'></ul>");
     for(let recent of data.recents){
@@ -70,7 +75,26 @@ if(typeof $("#user").val() !== "undefined"){
         msgNotif = parseInt(msgNotif) + 1;
         $("#notif").text(msgNotif == 0 ? '' : msgNotif);
       }else{
-        newMessage(msg);
+        $(".typing").remove();
+        if(msg.typing){
+          var msgStatus = user_id == msg.from ? 'you' : 'other';
+          var avatar = user_id == msg.to ? "<div id='r_isActive309' class='avatar d-block' style='background-image: url(/assets/employee_picture/309.jpg)'></div>" : '';
+          var HTMLList =  "<div class='message-row " + msgStatus + "-message typing'>" +
+                      "<div class='message-content'>" +
+                        avatar +
+                        "<div class='message-text text-muted'>" + msg.text + "</div>" +
+                      "</div>" +
+                    "</div>";
+        $("#chat-message-list").append(HTMLList);
+        }else{
+          if(msg.text == ''){
+            $(".typing").remove();
+          }else{
+            $(".typing").remove();
+            newMessage(msg);
+          }
+        }
+        console.log(msg);
         $("#chat-message-list").animate({ scrollTop: $('#chat-message-list')[0].scrollHeight}, 1000);
         f_msg({action: 'get_recents', user_id: user_id }, "json", "/messages").then( function (data) {
           $("#recents").html("<ul class='list-unstyled list-separated'></ul>");
@@ -170,6 +194,7 @@ if(typeof $("#user").val() !== "undefined"){
     f_msg({action: 'get_conversation', sender_id: user_id, receiver_id: receiver_id}, "json", "/messages").then( function (data) {
       for(let convo of data.conversation){
         newMessage(convo);
+        appendOnceTyping = true
       }
       $("#chat-message-list").animate({ scrollTop: $('#chat-message-list')[0].scrollHeight}, 1000);
     });
@@ -183,10 +208,29 @@ if(typeof $("#user").val() !== "undefined"){
       }
     });
   }
+  $("#searchForRecents").keyup(function () {
+    f_msg({action: 'search_recents', user_id: user_id, search_data: $("#searchForRecents").val() }, "json", "/messages").then( function (data) {
+      $("#recents").html("<ul class='list-unstyled list-separated'></ul>");
+      for(let recent of data.recents){
+        showRecents(recent);
+      }
+    });
+    go_online(onlineUsers[0]);
+  });
 
-  $("#message").keypress(function (event){
+  $("#searchForContacts").keyup(function () {
+    f_msg({action: 'search_contacts', user_id: user_id, search_data: $("#searchForContacts").val()}, "json", "/messages").then( function (data) {
+      $("#contacts").html("<ul class='list-unstyled list-separated'></ul>");
+      console.log(data);
+      for(let contact of data.contacts){
+        showContacts(contact);
+      }
+      go_online(onlineUsers[0]);
+    });
+  });
+
+  $("#message").keyup(function (event){
     var keycode = (event.keycode ? event.keycode : event.which)
-    
     if(keycode == '13') {
       event.preventDefault();
       var msg = {
@@ -195,12 +239,15 @@ if(typeof $("#user").val() !== "undefined"){
         from: user_id,
         to: receiver,
         text: $("#message").val(),
+        status:false,
       };
       f_msg(msg, "json", "/messages").then( function (data) {
         newMessage(data.new_message[0]);
         data.new_message[0]['command'] = "message";
+        data.new_message[0]['msg_id'] = msg_id;
         conn.send(JSON.stringify(data.new_message[0]));
       });
+      msg_id++;
       $("#message").val("");
       $("#chat-message-list").animate({ scrollTop: $('#chat-message-list')[0].scrollHeight}, 1000);
       f_msg({action: 'get_recents', user_id: user_id }, "json", "/messages").then( function (data) {
@@ -210,28 +257,57 @@ if(typeof $("#user").val() !== "undefined"){
         }
       });
       go_online(onlineUsers[0]);
+    }else if($("#message").val() == ""){
+      var msg = {
+        command: "message",
+        from: user_id,
+        to: receiver,
+        text: "",
+        typing:false,
+        msg_id: msg_id
+      };
+      conn.send(JSON.stringify(msg));
+    }else{
+      var msg = {
+        command: "message",
+        from: user_id,
+        to: receiver,
+        text: "Typing...",
+        typing:true,
+        msg_id: msg_id
+      };
+      conn.send(JSON.stringify(msg));
     }
   });
 
-  $("#msgSearch").keypress(function (event){
-    var keycode = (event.keycode ? event.keycode : event.which)
-    console.log("test");
-  });
-
   function newMessage(msg) {
-    if((msg.to == receiver && msg.from == user_id) || (msg.to == user_id && msg.from == receiver)){
     var HTMLList;
-    var msgStatus = user_id == msg.from ? 'you' : 'other';
-    var checkUrl = isURL(msg.text) ? "<a class='message-text' target='_blank' href='" + msg.text + "'>" + msg.text + "</a>" : "<div class='message-text'>" + msg.text + "</div>";
-    var avatar = user_id == msg.to ? "<div id='r_isActive309' class='avatar d-block' style='background-image: url(/assets/employee_picture/309.jpg)'></div>" : '';
-    HTMLList =  "<div class='message-row " + msgStatus + "-message'>" +
-                  "<div class='message-content'>" +
-                    avatar +
-                    checkUrl +
-                  "</div>" +
-                  "<div class='message-time'>" + fmtDateTime(new Date(msg.created_on.toString().substr(0, 10) + ", " + msg.created_on.toString().substr(11))) + "</div>" +
-                "</div>";
-      $("#chat-message-list").append(HTMLList);
+    if((msg.to == receiver && msg.from == user_id) || (msg.to == user_id && msg.from == receiver)){
+
+      // if(msg.text == "Typing..."){
+      //   var msgStatus = user_id == msg.from ? 'you' : 'other';
+      //   var checkUrl = isURL(msg.text) ? "<a class='message-text' target='_blank' href='" + msg.text + "'>" + msg.text + "</a>" : "<div class='message-text'>" + msg.text + "</div>";
+      //   var avatar = user_id == msg.to ? "<div id='r_isActive309' class='avatar d-block' style='background-image: url(/assets/employee_picture/309.jpg)'></div>" : '';
+      //   HTMLList =  "<div class='message-row " + msgStatus + "-message'>" +
+      //                 "<div class='message-content'>" +
+      //                   avatar +
+      //                   "<div class='message-text text-muted'>" + msg.text + "</div>" +
+      //                 "</div>" +
+      //               "</div>";
+      // }else{
+      //   appendOnceTyping = true;
+        var msgStatus = user_id == msg.from ? 'you' : 'other';
+        var checkUrl = isURL(msg.text) ? "<a class='message-text' target='_blank' href='" + msg.text + "'>" + msg.text + "</a>" : "<div class='message-text'>" + msg.text + "</div>";
+        var avatar = user_id == msg.to ? "<div id='r_isActive309' class='avatar d-block' style='background-image: url(/assets/employee_picture/309.jpg)'></div>" : '';
+        HTMLList =  "<div class='message-row " + msgStatus + "-message'>" +
+                      "<div class='message-content'>" +
+                        avatar +
+                        checkUrl +
+                      "</div>" +
+                      "<div class='message-time'>" + fmtDateTime(new Date(msg.created_on.toString().substr(0, 10) + ", " + msg.created_on.toString().substr(11))) + "</div>" +
+                    "</div>";
+     $("#chat-message-list").append(HTMLList);
+      
     }
   }
 
