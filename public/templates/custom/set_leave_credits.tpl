@@ -7,6 +7,10 @@
         <div class="card-header">
           <h3 class="card-title">Set Employee's Leave Credits</h3>
         </div>
+        {* <form action="/leave" method="POST">
+          <input type="hidden" name="action" value="set_leave_credits">
+          <input type="hidden" name="slc[employee_id]" id="slc_emp_id" value="">
+          <div class="form-group"> *}
         <div class="card-body">
           <div class="row">
             <div class="col-3">
@@ -14,13 +18,12 @@
                 <img class="avatar avatar-xxl" id="slc_pic" src="/assets/employee_picture/0.jpeg"></img>
               </p>
             </div>
-
             <div class="col-9">
               <div class="fetch-data">
                 <label class="form-label">Name</label>
-                <select name="emp_id" id="emp_info" class="form-control custom-select" onchange="javascript:change_emp(this.value)">
+                <select name="emp_id" id="emp_info" class="form-control custom-select" onchange="javascript:change_emp(this.value)" required>
                     <option selected disabled>Select employee</option>
-                    {foreach $emp_list as $emp}
+                    {foreach $emp_list[0] as $emp}
                     <option value="{$emp.no};{$emp.employee_picture};{$emp.name};{$emp.position_desc};{$emp.department_desc};slc_">{$emp.name}</option>
                     {/foreach}
                 </select>

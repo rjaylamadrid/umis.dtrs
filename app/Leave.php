@@ -28,8 +28,17 @@ class Leave extends LeaveController{
         } 
     }
 
-    public function tab($tab) {
+    public function tab ($tab) {
         $this->status = $tab;
         $this->index();
+    }
+
+    public function show_leave_credits () {
+        // $this->getLeaveCredits();
+        $this->getLeaveCredits('forced_leave', $this->data['emp_id']);
+        $this->getLeaveRecord('', 'forced_leave', $this->data['emp_id']);
+        $attendance = $this->attendance($this->data['emp_id'], ["from" => $this->leave_credits['date_credited'], "to" => date('Y-m-d')]);
+        
+        $this->view->display ('custom/show_leave_credits', ["vl" => $this->leave_balance[sizeof($this->leave_balance)-1]['vacation'], "sl" => $this->leave_balance[sizeof($this->leave_balance)-1]['sick'], "changes" => $this->leave_changes]);
     }
 }

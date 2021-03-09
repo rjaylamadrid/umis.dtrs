@@ -21,37 +21,47 @@ class LeaveController extends Controller {
     private $attendance;
     private $schedule;
 
-    protected function getLeaveRecord($status) {
-        
-        if ($this->user['is_admin']) {
-            $this->all_leave_requests = DB::db('db_master')->fetch_all("SELECT a.*, b.employee_picture, CONCAT(b.last_name,', ',b.first_name,' ',b.middle_name)AS name, d.position_desc, e.leave_desc FROM tbl_emp_leave a, tbl_employee b, tbl_employee_status c, tbl_position d, tbl_leave_type e WHERE a.employee_id = b.no AND c.campus_id = ? AND a.employee_id = c.employee_id AND c.position_id = d.no AND c.is_active = ? AND a.lv_status = ? AND a.lv_type = e.id ORDER BY a.leave_id ASC",[$this->user['campus_id'],1,$status]);
+    protected function getLeaveRecord($status='', $operation='', $emp_id='') {
+        if (($operation == '') && ($emp_id == '')) {
+            if ($this->user['is_admin']) {
+                $this->all_leave_requests = DB::db('db_master')->fetch_all("SELECT a.*, b.employee_picture, CONCAT(b.last_name,', ',b.first_name,' ',b.middle_name)AS name, d.position_desc, e.leave_desc FROM tbl_emp_leave a, tbl_employee b, tbl_employee_status c, tbl_position d, tbl_leave_type e WHERE a.employee_id = b.no AND c.campus_id = ? AND a.employee_id = c.employee_id AND c.position_id = d.no AND c.is_active = ? AND a.lv_status = ? AND a.lv_type = e.id ORDER BY a.leave_id ASC",[$this->user['campus_id'],1,$status]);
 
-            $this->emp_list = DB::db('db_master')->fetch_all("SELECT a.no, a.employee_picture, CONCAT(a.last_name,', ',a.first_name,' ',a.middle_name)AS name, c.position_desc, d.department_desc FROM tbl_employee a, tbl_employee_status b, tbl_position c, tbl_department d WHERE a.no = b.employee_id AND b.campus_id = ? AND b.position_id = c.no AND c.etype_id < ? AND b.department_id = d.no AND a.no NOT IN (SELECT employee_id FROM tbl_emp_leave_credits) ORDER BY a.last_name ASC",[$this->user['campus_id'],5]);
-            for ($i=0,$j=2,$k=1; $i<2; $i++,$j++,$k++) {
-                $this->stats[$i] = DB::db('db_master')->fetch_all("SELECT COUNT(*)as ctr FROM tbl_emp_leave WHERE lv_status = ?", [$i])[0];
-                $this->stats[$j] = DB::db('db_master')->fetch_all("SELECT COUNT(*)as ctr FROM tbl_emp_leave WHERE lv_status < ? AND lv_type = ?",[2, $k])[0];
+                $this->emp_list[0] = DB::db('db_master')->fetch_all("SELECT a.no, a.employee_picture, CONCAT(a.last_name,', ',a.first_name,' ',a.middle_name)AS name, c.position_desc, d.department_desc FROM tbl_employee a, tbl_employee_status b, tbl_position c, tbl_department d WHERE a.no = b.employee_id AND b.campus_id = ? AND b.position_id = c.no AND c.etype_id < ? AND b.department_id = d.no AND a.no NOT IN (SELECT employee_id FROM tbl_emp_leave_credits) ORDER BY a.last_name ASC",[$this->user['campus_id'],5]);
+
+                $this->emp_list[1] = DB::db('db_master')->fetch_all("SELECT a.no, a.employee_picture, CONCAT(a.last_name,', ',a.first_name,' ',a.middle_name)AS name, b.salary, c.position_desc, d.department_desc, e.vacation, e.sick, e.date_credited FROM tbl_employee a, tbl_employee_status b, tbl_position c, tbl_department d, tbl_emp_leave_credits e WHERE a.no = b.employee_id AND b.campus_id = ? AND b.is_active = ? AND b.position_id = c.no AND c.etype_id < ? AND b.department_id = d.no AND a.no = e.employee_id AND e.is_active = ? ORDER BY a.last_name ASC",[$this->user['campus_id'],1,5,1]);
+
+                for ($i=0,$j=2,$k=1; $i<2; $i++,$j++,$k++) {
+                    $this->stats[$i] = DB::db('db_master')->fetch_all("SELECT COUNT(*)as ctr FROM tbl_emp_leave a, tbl_employee_status b WHERE a.lv_status = ? AND a.employee_id = b.employee_id AND b.campus_id = ? AND b.is_active = ?", [$i, $this->user['campus_id'],1])[0];
+                    $this->stats[$j] = DB::db('db_master')->fetch_all("SELECT COUNT(*)as ctr FROM tbl_emp_leave a, tbl_employee_status b WHERE a.lv_status < ? AND a.lv_type = ? AND a.employee_id = b.employee_id AND b.campus_id = ? AND b.is_active = ?",[2, $k, $this->user['campus_id'],1])[0];
+                }
+            } else {
+                $this->leave_record = DB::db('db_master')->fetch_all("SELECT * FROM tbl_emp_leave WHERE employee_id = ? ORDER BY leave_id DESC", $this->user['employee_id']);
             }
         } else {
-            $this->leave_record = DB::db('db_master')->fetch_all("SELECT * FROM tbl_emp_leave WHERE employee_id = ? ORDER BY leave_id DESC", $this->user['employee_id']);
+            $this->leave_record = DB::db('db_master')->fetch_all("SELECT * FROM tbl_emp_leave WHERE employee_id = ? ORDER BY leave_id DESC", $emp_id);
         }
     }
 
-    protected function getLeaveCredits () {
-        $this->leave_credits = DB::fetch_row("SELECT * FROM tbl_emp_leave_credits WHERE employee_id = ? AND is_active = ?", [$this->user['employee_id'], 1]);
+    protected function getLeaveCredits ($operation='', $emp_id='') {
+        if (($operation == '') && ($emp_id == '')) {
+            $this->leave_credits = DB::fetch_row("SELECT * FROM tbl_emp_leave_credits WHERE employee_id = ? AND is_active = ?", [$this->user['employee_id'], 1]);
 
-        if (!$this->leave_credits) {
-            if (!$this->user['is_admin']) {
-                $this->view->display ('error_page',["code" => "400", "message" => "Your leave credits are not yet available.", "submessage" => "Sorry, we are still processing your leave information."]);
+            if (!$this->leave_credits) {
+                if (!$this->user['is_admin']) {
+                    $this->view->display ('error_page',["code" => "400", "message" => "Your leave credits are not yet available.", "submessage" => "Sorry, we are still processing your leave information."]);
+                } else {
+                    $this->leave_credits = ["date_credited" => date('Y-m-d'), "vacation" => 0, "sick" => 0];
+                }
             } else {
-                $this->leave_credits = ["date_credited" => date('Y-m-d'), "vacation" => 0, "sick" => 0];
+                if (!$this->user['is_admin']) {
+                    $this->leave_balance[0] = ["date" => $this->leave_credits['date_credited'], "vacation" => $this->leave_credits['vacation'], "sick" => $this->leave_credits['sick']];
+                } else {
+                    $this->leave_credits = ["date_credited" => date('Y-m-d'), "vacation" => 0, "sick" => 0];
+                }
             }
         } else {
-            if (!$this->user['is_admin']) {
-                $this->leave_balance[0] = ["date" => $this->leave_credits['date_credited'], "vacation" => $this->leave_credits['vacation'], "sick" => $this->leave_credits['sick']];
-            } else {
-                $this->leave_credits = ["date_credited" => date('Y-m-d'), "vacation" => 0, "sick" => 0];
-            }
-            // $this->getLeaveChanges();
+            $this->leave_credits = DB::fetch_row("SELECT * FROM tbl_emp_leave_credits WHERE employee_id = ? AND is_active = ?", [$emp_id, 1]);
+            $this->leave_balance[0] = ["date" => $this->leave_credits['date_credited'], "vacation" => $this->leave_credits['vacation'], "sick" => $this->leave_credits['sick']];
         }
     }
 
@@ -285,10 +295,6 @@ class LeaveController extends Controller {
         $this->index();
     }
 
-    protected function set_forced_leave() {
-        
-    }
-
     protected function leaveRecommendation() {
         $remarks = $this->data['remarks'] ? $this->data['remarks'] : '';
         $qry_result = DB::db('db_master')->update("UPDATE tbl_emp_leave SET lv_status = ?, lv_disapproved_reason = ?, lv_hr_id = ? WHERE leave_id = ?",[$this->data['recommendation'], $remarks, $this->data['hr_id'], $this->data['leave_id']]);
@@ -311,5 +317,103 @@ class LeaveController extends Controller {
         $archive = DB::db('db_master')->insert ("INSERT INTO tbl_employee_update_delete SET ". DB::stmt_builder ($data_array),$data_array);
         $delete = DB::db('db_master')->delete("DELETE FROM tbl_emp_leave WHERE leave_id = ?", $this->data['id']);
         $this->index();
+    }
+
+    // public function show_leave_credits($asdasd) {
+    //     // $this->view->display ('/custom/show_leave_credits');
+    //     echo "asdasd";
+    // }
+
+    protected function set_forced_leave() {
+        $this->data['fl']['lv_dateof_filing'] = date('Y-m-d');
+        $this->data['fl']['lv_type'] = 13;
+        $this->data['fl']['lv_status'] = 2;
+        if ($this->data['fl']['lv_date_fr'] != $this->data['fl']['lv_date_to']) {
+            $start = new DateTime(date_create($this->data['fl']['lv_date_fr'])->format('Y-m-d'));
+            $end = new DateTime(date_create($this->data['fl']['lv_date_to'])->modify('+1 day')->format('Y-m-d'));
+            $interval = new DateInterval('P1D');
+            $leave_range = new DatePeriod($start, $interval, $end);
+            $emp_schedule = DTR::get_sched($this->data['fl']['employee_id']);
+            for ($i=0;$i<sizeof($emp_schedule);$i++) {
+                $this->schedule[$i] = $emp_schedule[$i]['weekday'];
+            }
+            $this->data['fl']['lv_no_days'] = 0;
+            foreach ($leave_range as $dates) {
+                // in_array($dates->format('l'),$this->schedule) ? $this->data['fl']['lv_no_days']++ : '';
+                if (in_array($dates->format('l'),$this->schedule)) {
+                    $this->data['fl']['lv_no_days']++;
+                    self::atendance_event($this->data['fl']['employee_id'], $dates->format('Y-m-d'), 6, '00:00', '23:59');
+                }
+            }
+        } else {$this->data['fl']['lv_no_days'] = 0;}
+        $qry_emp_lv = DB::db('db_master')->insert("INSERT INTO tbl_emp_leavez SET ". DB::stmt_builder($this->data['fl']),$this->data['fl']);
+        // 0 if error, id if query executed;
+
+
+        print_r("<pre>");
+        print_r($this->data);
+        print_r($qry_emp_lv);
+        print_r("</pre>");
+    }
+    
+    public function attendance_event($id, $date, $dtr_code_id, $start, $end) {
+        $monthtable = date_create($date)->format('m-Y');
+        $date = date_create($date)->format('Y-m-d');
+        // $employee_scheds = DB::db('db_master')->fetch_all ("SELECT a.* FROM tbl_employee_sched a WHERE a.no = (SELECT MAX(b.no) FROM tbl_employee_sched b WHERE b.employee_id = a.employee_id)");
+        $employee_scheds = DB::db('db_master')->fetch_all ("SELECT * FROM tbl_employee_sched WHERE employee_id = ? ORDER BY no DESC",[$id])[0];
+        $date_logs = DB::db('db_attendance')->fetch_all("SELECT * FROM `$monthtable` WHERE date = '$date'");
+        if (!$date_logs) {
+            $create = DTR::create_table($monthtable);
+            $date_logs = DB::db('db_attendance')->fetch_all("SELECT * FROM `$monthtable` WHERE date = '$date'");
+        }
+
+        foreach ($employee_scheds as $value) {
+            $attnd_logs = self::check_logs ($value['employee_id'], $monthtable, $date, 'LV:LV', $value['sched_code'], $start, $end);
+            if (array_search($value['employee_id'], array_column($date_logs,'emp_id')) !== false) {
+                foreach ($date_logs as $logs) {
+                    if($value['employee_id'] == $logs['emp_id']) {
+                        DTR::change_log($value['employee_id'], $attnd_logs, $monthtable, $date, $logs['id']);
+                    }
+                }
+            }
+            else {
+                DTR::change_log($value['employee_id'], $attnd_logs, $monthtable, $date);
+            }
+        }
+    }
+
+    public function check_logs($id, $monthtable, $date, $dtr_code, $sched_code, $start, $end) {
+        $in_out = ['am_in', 'am_out', 'pm_in', 'pm_out'];
+        $date_logs = DB::db('db_attendance')->fetch_row("SELECT * FROM `$monthtable` WHERE date = '$date' AND emp_id = ?", $id);
+        $emp_sched = DB::db('db_master')->fetch_row("SELECT * FROM tbl_schedule WHERE sched_code = ? AND weekday = ?", [$sched_code, date_create($date)->format('l')]);
+
+        for ($i=0; $i<4; $i++) {
+            if($date_logs) {
+                if(($date_logs[$in_out[$i]] == NULL) || ($date_logs[$in_out[$i]] == ':') || ($date_logs[$in_out[$i]] == '')) {
+                    if ((($i == 1) && ($value[0] == ':')) || (($i == 3) && ($value[2] == ':'))) {
+                        $value[$i] = ':';
+                    } else {
+                        if((strtotime($emp_sched[$in_out[$i]]) >= strtotime($start)) && (strtotime($emp_sched[$in_out[$i]]) <= strtotime($end))) {
+                            $value[$i] = $dtr_code;
+                        } else {
+                            $value[$i] = $date_logs[$in_out[$i]];
+                        }
+                    }
+                } else {
+                    $value[$i] = $date_logs[$in_out[$i]];
+                }
+            } else {
+                if ((($i == 1) && ($value[0] == ':')) || (($i == 3) && ($value[2] == ':'))) {
+                    $value[$i] = ':';
+                } else {
+                    if((strtotime($emp_sched[$in_out[$i]]) >= strtotime($start)) && (strtotime($emp_sched[$in_out[$i]]) <= strtotime($end))) {
+                        $value[$i] = $dtr_code;
+                    } else {
+                        $value[$i] = ':';
+                    }
+                }
+            }
+        }
+        return $value;
     }
 }
