@@ -11,8 +11,9 @@ class Payroll{
     static $excel;
     static $headers;
 
-    public static function initialize($type) {
+    public static function initialize() {
         self::$employees = [];
+        $type = self::$payroll['emp_type'];
         $types = $type == '1' ? '124' : $type;
 
         for ($i=0; $i<strlen($types); $i++) {
@@ -38,7 +39,8 @@ class Payroll{
     public static function generate($payroll) {
         Excel::set();
         self::$excel = Excel::$sheet;
-        self::initialize($payroll['emp_type']);
+        self::$payroll = $payroll;
+        self::initialize();
         $sheets = intval(sizeof(self::$employees)/20);
         $sheets += sizeof(self::$employees)%20 > 0 ? 1 : 0;
         
@@ -51,7 +53,7 @@ class Payroll{
     protected static function set_page($no, $sheets) {
         $row = ($no - 1) * 37;
         $irow = 0;
-        self::$headers = ["No.", "Name", "Employee ID", "Position"];
+        self::$headers = ["No.", "Name", "Employee ID", "Position", "Compensation" => ["Monthly Salary", "PERA"]];
         self::set_header($no, $sheets, $row);
 
         Excel::set_style(['font' => ['size' => 10,'bold' => false,'name'=>'Arial']]);
@@ -97,10 +99,20 @@ class Payroll{
         Excel::set_value('Q'.($row+4), 'Payroll No. : _______________________', ['font' => ['bold' => true]], 'Q'.($row+4).':S'.($row+4));
         Excel::set_value('Q'.($row+5), 'Sheet '.$no.' of  '.$sheets.' Sheets', ['font' => ['bold' => true]], 'Q'.($row+5).':S'.($row+5));
         Excel::set_value('B'.($row+6), 'We acknowledge receipt of cash shown opposite our name as full compensation for services rendered for the period covered.', null, 'B'.($row+6).':N'.($row+6));
-    
-        foreach (self::$headers as $header) {
-            
+        Excel::set_style(['font' => ['size' => 10,'bold' => false,'name'=>'Arial']]);
+
+        for ($i=0; $i < sizeof(self::$headers); $i++) {
+            if (is_array(self::$headers[$i])) {
+               
+                    Excel::set_value(self::getColumn($i).'8', key_arrays(self::$headers[$i])[0]);
+            }
+            Excel::set_value(self::getColumn($i).'8', self::$headers[$i]);
         }
+    }
+
+    protected static function getColumn($index) {
+        $columns = range("A", "Z");
+        return $columns[$index];
     }
 
     protected static function set_footer($row) {

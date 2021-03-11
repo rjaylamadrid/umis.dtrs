@@ -446,4 +446,18 @@ function show_settings() {
   }
 }
 
+function payroll(action) {
+  var payroll = [payroll_type = $('#payroll_type').val(),
+  employee_type = $('#emp_type').val(),
+  date_from = $('#date_from').val(),
+  date_to = $('#date_to').val()];
+
+  if (action == 'download_payroll') {
+    $.post('/payroll',  {action:action, payroll:payroll}, function(){});
+  }
+  // f({action:action,payroll:payroll}, "text", "/payroll").then( function(html) {
+  //   console.log(html);
+  // })
+}
+
 // OTHER FUNCTIONS :: END

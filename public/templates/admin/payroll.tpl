@@ -73,7 +73,7 @@
                 <div>
                     <div class="form-group mb-1">
                         <label class="form-label">Payroll Type</label>
-                        <select name="payroll[type]" class="form-control custom-select">
+                        <select name="payroll[type]" class="form-control custom-select" id="payroll_type">
                             <option value="1" selected="">Regular Payroll</option>
                             <option value="2">Differential</option>
                             <option value="3">Special Payroll</option> 
@@ -81,7 +81,7 @@
                     </div>
                     <div class="form-group mb-2">
                         <label class="form-label">Employee Type</label>
-                        <select name="payroll[emp_type]" class="form-control custom-select">
+                        <select name="payroll[emp_type]" class="form-control custom-select" id="emp_type">
                             <option value="1">Regular Employees</option>
                             <option value="2">Casual Employees</option>
                             <option value="3">Job-Order Employees</option>
