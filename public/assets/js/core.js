@@ -256,7 +256,6 @@ function forced_leave_change(emp_info) {
   f({action: 'show_leave_credits', emp_id:emp_id}, "text", "/leave").then( function (data) {
     $('.spinner1').hide(0);
     $('#leave-credits').html(data);
-    // console.log(data);
   });
 
   document.getElementById(emp_array[5]+"pic").src = "/assets/employee_picture/"+emp_array[1];

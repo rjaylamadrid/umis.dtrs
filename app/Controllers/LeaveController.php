@@ -65,21 +65,6 @@ class LeaveController extends Controller {
         }
     }
 
-    // protected function getLeaveChanges () {
-    //     $interval = new DateInterval('P1D');
-    //     $daterange = new DatePeriod(date_create($this->leave_credits['date_credited']), $interval, date_create('2021-01-29'));
-    //     $sched = DTR::get_sched($this->user['employee_id']);
-    //     foreach ($daterange as $date) {
-    //         $monthtable = date_create($this->leave_credits['date_credited'])->format('m-Y');
-    //         $attendance = DB::db("db_attendance")->fetch_all("SELECT * FROM $monthtable WHERE emp_id = ? AND date > ?", [$this->user['employee_id'], $this->leave_credits['date_credited']]);
-    //     }
-    // }
-
-    // protected function computeLeaveCredits($id, $date_start) {
-    //     $interval = new DateInterval('P1D');
-    //     $daterange = new DatePeriod($date_start, $interval ,$date_start->modify('+30 day'));
-    // }
-
     protected function attendance ($id, $arr, $period = 2) {
         $this->leave_types = DB::db("db_master")->fetch_all("SELECT * FROM tbl_leave_type");
         $table1 = date_create($arr['from'])->format('m-Y');
@@ -104,13 +89,16 @@ class LeaveController extends Controller {
                         for ($i=0;$i<sizeof($attendance[$temp]);$i++) {
                             if (($attendance[$temp][$i]['total_hours'] < 8) && ($attendance[$temp][$i]['total_hours'] > 0) && ($attendance[$temp][$i]['is_absent'] != 1)) {
                                 $this->leave_changes[$temp][$i] = ["period" => $attendance[$temp][$i]['date'], "particulars" => "Undertime", "total_hours" => $attendance[$temp][$i]['total_hours']];
-                                $days_present[$temp][$i] = $attendance[$temp][$i]['date'];
-                            } else if (($attendance[$temp][$i]['total_hours'] == 8) && (($attendance[$temp][$i]['am_in'] == "VL:VL") && ($attendance[$temp][$i]['am_out'] == "VL:VL") && ($attendance[$temp][$i]['pm_in'] == "VL:VL") && ($attendance[$temp][$i]['pm_out'] == "VL:VL"))) {
+                                $days_counted[$temp][$i] = $attendance[$temp][$i]['date'];
+                            } else if (($attendance[$temp][$i]['total_hours'] == 8) && (($attendance[$temp][$i]['am_in'] == "LV:LV") && ($attendance[$temp][$i]['am_out'] == "LV:LV") && ($attendance[$temp][$i]['pm_in'] == "LV:LV") && ($attendance[$temp][$i]['pm_out'] == "LV:LV"))) {
                                 $this->leave_changes[$temp][$i] = ["period" => $attendance[$temp][$i]['date'], "particulars" => "On Leave", "total_days" => 1];
-                                $days_present[$temp][$i] = $attendance[$temp][$i]['date'];
+                                $days_counted[$temp][$i] = $attendance[$temp][$i]['date'];
                             } else if ($attendance[$temp][$i]['total_hours'] == 8) {
                                 $this->leave_changes[$temp][$i] = ["period" => $attendance[$temp][$i]['date'], "particulars" => "Present", "total_hours" => $attendance[$temp][$i]['total_hours']];
-                                $days_present[$temp][$i] = $attendance[$temp][$i]['date'];
+                                $days_counted[$temp][$i] = $attendance[$temp][$i]['date'];
+                            } else if ($attendance[$temp][$i]['is_absent'] == 1) {
+                                $this->leave_changes[$temp][$i] = ["period" => $attendance[$temp][$i]['date'], "particulars" => "Absent"];
+                                $days_counted[$temp][$i] = $attendance[$temp][$i]['date'];
                             }
                         }
                     }
@@ -118,17 +106,18 @@ class LeaveController extends Controller {
                 }
                 
                 if (in_array($dt->format('l'),$this->schedule)) {
-                    if (!empty($days_present[$temp-1])) {
-                        if (!(in_array($dt->format('Y-m-d'), $days_present[$temp-1]))) {
-                            if (is_array($this->leave_changes[$temp-1])) {
+                    if (!empty($days_counted[$temp-1])) {
+                        if (!(in_array($dt->format('Y-m-d'), $days_counted[$temp-1]))) {
+                            if (!empty($this->leave_changes[$temp-1])) {
+                                // POPULATES ONLY INDEX 1
                                 $this->leave_changes[$temp-1][sizeof($this->leave_changes[$temp-1])] = ["period" => $dt->format('Y-m-d'), "particulars" => "Absent"];
                             } else {
                                 $this->leave_changes[$temp-1][0] = ["period" => $dt->format('Y-m-d'), "particulars" => "Absent"];
                             }
                         }
                     } else {
-                        $this->leave_changes[$temp-1][0] = ["period" => $dt->format('Y-m-d'), "particulars" => "Absent"];
-                        $days_present[$temp-1][0] = $dt->format('Y-m-d');
+                            $this->leave_changes[$temp-1][0] = ["period" => $dt->format('Y-m-d'), "particulars" => "Absent"];
+                            $days_counted[$temp-1][0] = $dt->format('Y-m-d');
                     }
                 }
             }
@@ -137,7 +126,6 @@ class LeaveController extends Controller {
             }
             $this->leaveBalanceChanges($id,$start_interval,$end_interval);
         }
-        
         $this->attendance = $attendance;
         return $this;
     }
@@ -172,7 +160,7 @@ class LeaveController extends Controller {
                     foreach ($emp_leave as $leave_info) {
                         if ((date_create($leave_info['lv_date_fr'])->format('Y-m-d') <= date_create($this->leave_changes[$i-1][$j]['period'])->format('Y-m-d')) && (date_create($leave_info['lv_date_to'])->format('Y-m-d') >= date_create($this->leave_changes[$i-1][$j]['period'])->format('Y-m-d'))) {
                             switch ($leave_info['leave_desc']) {
-                                case 'Vacation Leave':
+                                case 'Vacation Leave' || 'Mandatory Leave':
                                     $v_bal >= 1 ? $this->leave_changes[$i-1][$j]['v_awp'] = 1 : $this->leave_changes[$i-1][$j]['v_awop'] = 1; 
                                     $this->leave_changes[$i-1][$j]['v_bal'] = $v_bal - 1;
                                     $v_bal -= 1;
@@ -230,7 +218,7 @@ class LeaveController extends Controller {
                         foreach ($emp_leave as $leave_info) {
                             if ((date_create($leave_info['lv_date_fr'])->format('Y-m-d') <= date_create($this->leave_changes[$i][$j]['period'])->format('Y-m-d')) && (date_create($leave_info['lv_date_to'])->format('Y-m-d') >= date_create($this->leave_changes[$i][$j]['period'])->format('Y-m-d'))) {
                                 switch ($leave_info['leave_desc']) {
-                                    case 'Vacation Leave':
+                                    case 'Vacation Leave' || 'Mandatory Leave':
                                         $v_bal >= 1 ? $this->leave_changes[$i][$j]['v_awp'] = 1 : $this->leave_changes[$i][$j]['v_awop'] = 1; 
                                         $this->leave_changes[$i][$j]['v_bal'] = $v_bal - 1;
                                         $v_bal -= 1;
@@ -263,6 +251,20 @@ class LeaveController extends Controller {
                 $this->leave_balance[$i+1] = ["vacation" => ($this->leave_balance[$i]['vacation'] + $this->leave_balance[$i+1]['vacation']), "sick" => ($this->leave_balance[$i]['sick'] + $this->leave_balance[$i+1]['sick'])];
             }
         }
+        // print_r("<pre>");
+        // print_r($this->leave_changes);
+        // print_r("</pre>");
+        // $future_emp_leave = DB::db('db_master')->fetch_all("SELECT a.*, b.leave_desc FROM tbl_emp_leave a, tbl_leave_type b WHERE a.lv_type = b.id AND a.lv_status = ? AND a.employee_id = ? AND a.lv_date_fr > ?", [2,$id,$end->format('Y-m-t')]);
+        // print_r($future_emp_leave);
+        // for ($i=0; $i < sizeof($future_emp_leave); $i++) {
+        //     $j=sizeof($this->leave_changes);
+        //     if ($i == 0) {
+        //         for ($k=0; $k < $future_emp_leave[$i][])
+        //         $this->leave_changes[$j][0] = []
+        //     } else {
+
+        //     }
+        // }
     }
     
     protected function submitLeave() {
@@ -319,101 +321,64 @@ class LeaveController extends Controller {
         $this->index();
     }
 
-    // public function show_leave_credits($asdasd) {
-    //     // $this->view->display ('/custom/show_leave_credits');
-    //     echo "asdasd";
-    // }
-
     protected function set_forced_leave() {
-        $this->data['fl']['lv_dateof_filing'] = date('Y-m-d');
-        $this->data['fl']['lv_type'] = 13;
-        $this->data['fl']['lv_status'] = 2;
-        if ($this->data['fl']['lv_date_fr'] != $this->data['fl']['lv_date_to']) {
-            $start = new DateTime(date_create($this->data['fl']['lv_date_fr'])->format('Y-m-d'));
-            $end = new DateTime(date_create($this->data['fl']['lv_date_to'])->modify('+1 day')->format('Y-m-d'));
-            $interval = new DateInterval('P1D');
-            $leave_range = new DatePeriod($start, $interval, $end);
-            $emp_schedule = DTR::get_sched($this->data['fl']['employee_id']);
-            for ($i=0;$i<sizeof($emp_schedule);$i++) {
-                $this->schedule[$i] = $emp_schedule[$i]['weekday'];
+        $from = new DateTime (date_create($this->data['fl']['lv_date_fr'])->format('Y-m-d'));
+        $to = new DateTime (date_create($this->data['fl']['lv_date_to'])->modify('+1 day')->format('Y-m-d'));
+        $diff = date_diff($from,$to)->format("%d");
+        if ($diff > $this->data['vl_credits']) {
+            $this->message = ["result" => "failed", "message" => "Insufficient vacation leave credit."];
+            $this->index ();
+        } else {
+            $this->data['fl']['lv_dateof_filing'] = date('Y-m-d');
+            $this->data['fl']['lv_type'] = 13;
+            $this->data['fl']['lv_status'] = 2;
+            if ($this->data['fl']['lv_date_fr'] != $this->data['fl']['lv_date_to']) {
+                $start = new DateTime(date_create($this->data['fl']['lv_date_fr'])->format('Y-m-d'));
+                $end = new DateTime(date_create($this->data['fl']['lv_date_to'])->modify('+1 day')->format('Y-m-d'));
+                $interval = new DateInterval('P1D');
+                $leave_range = new DatePeriod($start, $interval, $end);
+                $emp_schedule = DTR::get_sched($this->data['fl']['employee_id']);
+                for ($i=0;$i<sizeof($emp_schedule);$i++) {
+                    $this->schedule[$i] = $emp_schedule[$i]['weekday'];
+                }
+                $this->data['fl']['lv_no_days'] = 0;
+                foreach ($leave_range as $dates) {
+                    if (in_array($dates->format('l'),$this->schedule)) {
+                        $result[$this->data['fl']['lv_no_days']] = self::attendance_event($this->data['fl']['employee_id'], $dates->format('Y-m-d'), '00:00', '23:59');
+                        $this->data['fl']['lv_no_days']++;
+                    }
+                }
+            } else { 
+                $result[$this->data['fl']['lv_no_days']] = self::attendance_event($this->data['fl']['employee_id'], $dates->format('Y-m-d'), '00:00', '23:59');
+                $this->data['fl']['lv_no_days'] = 1;
             }
-            $this->data['fl']['lv_no_days'] = 0;
-            foreach ($leave_range as $dates) {
-                // in_array($dates->format('l'),$this->schedule) ? $this->data['fl']['lv_no_days']++ : '';
-                if (in_array($dates->format('l'),$this->schedule)) {
-                    $this->data['fl']['lv_no_days']++;
-                    self::atendance_event($this->data['fl']['employee_id'], $dates->format('Y-m-d'), 6, '00:00', '23:59');
+            foreach ($result as $value) {
+                if ($value != '') {
+                    $this->message = ["result" => "failed", "message" => "Forced leave cannot be processed. Please check your data and try again later."];
+                    $this->index ();
                 }
             }
-        } else {$this->data['fl']['lv_no_days'] = 0;}
-        $qry_emp_lv = DB::db('db_master')->insert("INSERT INTO tbl_emp_leavez SET ". DB::stmt_builder($this->data['fl']),$this->data['fl']);
-        // 0 if error, id if query executed;
-
-
-        print_r("<pre>");
-        print_r($this->data);
-        print_r($qry_emp_lv);
-        print_r("</pre>");
+            $qry_emp_lv = DB::db('db_master')->insert("INSERT INTO tbl_emp_leave SET ". DB::stmt_builder($this->data['fl']),$this->data['fl']);
+            if ($qry_emp_lv == 0) {
+                $this->message = ["result" => "failed", "message" => "Forced leave cannot be processed. Please check your data and try again."];
+                $this->index ();
+            }
+        }
+        $this->message = ["result" => "success", "message" => "Forced leave has been processed successfully."];
+        $this->index ();
     }
     
-    public function attendance_event($id, $date, $dtr_code_id, $start, $end) {
+    public function attendance_event($id, $date, $start, $end) {
         $monthtable = date_create($date)->format('m-Y');
         $date = date_create($date)->format('Y-m-d');
-        // $employee_scheds = DB::db('db_master')->fetch_all ("SELECT a.* FROM tbl_employee_sched a WHERE a.no = (SELECT MAX(b.no) FROM tbl_employee_sched b WHERE b.employee_id = a.employee_id)");
-        $employee_scheds = DB::db('db_master')->fetch_all ("SELECT * FROM tbl_employee_sched WHERE employee_id = ? ORDER BY no DESC",[$id])[0];
-        $date_logs = DB::db('db_attendance')->fetch_all("SELECT * FROM `$monthtable` WHERE date = '$date'");
+        
+        $date_logs = DB::db('db_attendance')->fetch_all("SELECT * FROM `$monthtable` WHERE emp_id = ? AND date = ?",[$id,$date])[0];
         if (!$date_logs) {
             $create = DTR::create_table($monthtable);
-            $date_logs = DB::db('db_attendance')->fetch_all("SELECT * FROM `$monthtable` WHERE date = '$date'");
         }
 
-        foreach ($employee_scheds as $value) {
-            $attnd_logs = self::check_logs ($value['employee_id'], $monthtable, $date, 'LV:LV', $value['sched_code'], $start, $end);
-            if (array_search($value['employee_id'], array_column($date_logs,'emp_id')) !== false) {
-                foreach ($date_logs as $logs) {
-                    if($value['employee_id'] == $logs['emp_id']) {
-                        DTR::change_log($value['employee_id'], $attnd_logs, $monthtable, $date, $logs['id']);
-                    }
-                }
-            }
-            else {
-                DTR::change_log($value['employee_id'], $attnd_logs, $monthtable, $date);
-            }
-        }
-    }
-
-    public function check_logs($id, $monthtable, $date, $dtr_code, $sched_code, $start, $end) {
-        $in_out = ['am_in', 'am_out', 'pm_in', 'pm_out'];
-        $date_logs = DB::db('db_attendance')->fetch_row("SELECT * FROM `$monthtable` WHERE date = '$date' AND emp_id = ?", $id);
-        $emp_sched = DB::db('db_master')->fetch_row("SELECT * FROM tbl_schedule WHERE sched_code = ? AND weekday = ?", [$sched_code, date_create($date)->format('l')]);
-
-        for ($i=0; $i<4; $i++) {
-            if($date_logs) {
-                if(($date_logs[$in_out[$i]] == NULL) || ($date_logs[$in_out[$i]] == ':') || ($date_logs[$in_out[$i]] == '')) {
-                    if ((($i == 1) && ($value[0] == ':')) || (($i == 3) && ($value[2] == ':'))) {
-                        $value[$i] = ':';
-                    } else {
-                        if((strtotime($emp_sched[$in_out[$i]]) >= strtotime($start)) && (strtotime($emp_sched[$in_out[$i]]) <= strtotime($end))) {
-                            $value[$i] = $dtr_code;
-                        } else {
-                            $value[$i] = $date_logs[$in_out[$i]];
-                        }
-                    }
-                } else {
-                    $value[$i] = $date_logs[$in_out[$i]];
-                }
-            } else {
-                if ((($i == 1) && ($value[0] == ':')) || (($i == 3) && ($value[2] == ':'))) {
-                    $value[$i] = ':';
-                } else {
-                    if((strtotime($emp_sched[$in_out[$i]]) >= strtotime($start)) && (strtotime($emp_sched[$in_out[$i]]) <= strtotime($end))) {
-                        $value[$i] = $dtr_code;
-                    } else {
-                        $value[$i] = ':';
-                    }
-                }
-            }
-        }
-        return $value;
+        $log_id = $date_logs ? $date_logs['id'] : '';
+        $change_logs = DTR::change_log($id, ['LV:LV','LV:LV','LV:LV','LV:LV'], $monthtable, $date, $log_id);
+        return $change_logs;
     }
 }
