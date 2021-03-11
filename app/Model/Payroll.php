@@ -6,10 +6,12 @@ use Model\Position;
 use View\Excel;
 
 class Payroll{
+    static $merge = ['E' => 'F', 'K' => 'L', 'P' => 'O', 'V' => 'W'];
     static $employees;
     static $payroll;
     static $excel;
-    static $headers;
+    static $columns;
+    static $lastColumn;
 
     public static function initialize() {
         self::$employees = [];
@@ -50,10 +52,11 @@ class Payroll{
         Excel::download("payroll.xlsx");
     }
 
+    
+
     protected static function set_page($no, $sheets) {
         $row = ($no - 1) * 37;
         $irow = 0;
-        self::$headers = ["No.", "Name", "Employee ID", "Position", "Compensation" => ["Monthly Salary", "PERA"]];
         self::set_header($no, $sheets, $row);
 
         Excel::set_style(['font' => ['size' => 10,'bold' => false,'name'=>'Arial']]);
@@ -72,18 +75,34 @@ class Payroll{
                 Excel::set_value('E'.$irow, $position->position['salary'], null, 'E'.$irow.':F'.$irow, 'right');
             }
         }
-        $irow += 1;
-        Excel::set_value('A'.$irow,'        Total Page '.$no, ['font' => ['bold' => true]], 'A'.$irow.':D'.$irow);
-
-        if($no == $sheets) {
-            $irow += 1;
-            Excel::set_value('A'.$irow,'', null, 'A'.$irow.':D'.$irow);
-        }
+        Excel::set_border('A'.($row+12).':'.self::$lastColumn.$irow, 'inside', 'thin');
+        Excel::set_border('A'.($row+12).':'.self::$lastColumn.$irow, 'outline', 'medium');
+        $irow = self::get_total($row+12, $irow, $no==$sheets, $no);
         self::set_footer($irow);
     }
 
+    protected static function get_total($start, $row, $last = false, $no) {
+        Excel::set_value('A'.$row,'        Total Page '.$no, ['font' => ['bold' => true]], 'A'.$row.':D'.$row);
+        $irow = $last ? $row+1 : $row;
+        if ($last) {
+            Excel::set_value('A'.$irow,'', null, 'A'.$irow.':D'.$irow);
+        }
+        foreach(self::$columns as $column) {
+            $exempt = range('A', 'D');
+            if (!in_array($column, $exempt)) {
+                $key2 = array_key_exists($column, self::$merge) ? self::$merge[$column] : $column;
+                Excel::set_value($column.$row, "=SUM(".$column.$start.":".$column.($row-1).")",['font' => ['bold' => true]], $column.$row.":".$key2.$row, 'right');
+            }
+        }
+        Excel::set_border('A'.$row.':'.self::$lastColumn.$irow, 'inside', 'thin');
+        Excel::set_border('A'.$row.':'.self::$lastColumn.$irow, 'outline', 'medium');
+        return $irow;
+    }
+
     protected static function set_header($no, $sheets, $row) { 
-        
+        $jsonHeaders = '{"A":"No.", "B":"Name", "C":"Employee ID", "D":"Position","COMPENSATION": {"E":"Monthly Salary", "Additional":{"G":"PERA", "Bonus" : {"H":"PBB", "I":"CNA"}}, "J":"Total"}, "DEDUCTION":{"Pag-ibig":{"K":"Modified Pag-ibig","M":"Contribution"}, "N":"Philhealth"}}';
+        $headers = json_decode($jsonHeaders, true);
+
         Excel::set_style(['font' => ['size' => 11,'bold' => false,'name'=>'Times']]);
         self::$excel->getDefaultColumnDimension()->setWidth(12);
         self::$excel->getDefaultRowDimension()->setRowHeight(12);
@@ -101,18 +120,35 @@ class Payroll{
         Excel::set_value('B'.($row+6), 'We acknowledge receipt of cash shown opposite our name as full compensation for services rendered for the period covered.', null, 'B'.($row+6).':N'.($row+6));
         Excel::set_style(['font' => ['size' => 10,'bold' => false,'name'=>'Arial']]);
 
-        for ($i=0; $i < sizeof(self::$headers); $i++) {
-            if (is_array(self::$headers[$i])) {
-               
-                    Excel::set_value(self::getColumn($i).'8', key_arrays(self::$headers[$i])[0]);
+        self::get_header($headers, $row+8, $row+11);
+        Excel::set_border('A'.($row+8).':'.self::$lastColumn.($row+11), 'inside', 'thin');
+        Excel::set_border('A'.($row+8).':'.self::$lastColumn.($row+11), 'outline', 'medium');
+    }
+    
+    protected static function get_header($headers, $row, $endrow) {
+        foreach($headers as $key => $value) {
+            if (is_array($value)) {
+                self::get_header($value, $row+1, $endrow);
+                $start= self::get_key($value);
+                $end = self::get_key($value, 'end');
+                Excel::set_value($start.$row, $key, null, $start.$row.":".$end.$row, 'center');
+            } else {
+                self::$columns[] = $key;
+                self::$lastColumn = array_key_exists($key, self::$merge) ? self::$merge[$key] : $key;
+                Excel::set_value($key.$row, $value, null, $key.$row.":".self::$lastColumn.$endrow, 'center', 'center', true);
             }
-            Excel::set_value(self::getColumn($i).'8', self::$headers[$i]);
         }
     }
 
-    protected static function getColumn($index) {
-        $columns = range("A", "Z");
-        return $columns[$index];
+    protected static function get_key($arr, $position = "start") {
+        while (is_array($arr)) {
+            if($position != "start") {
+                end($arr);
+            }
+            $key = key($arr);
+            $arr = $arr[$key];
+        }
+        return $key;
     }
 
     protected static function set_footer($row) {
