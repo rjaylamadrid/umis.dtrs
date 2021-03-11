@@ -26,8 +26,8 @@ class DTR {
         if (($pay['payable'] == "1") && ($pay['affected'] == "1")) {
             $result = True;
         } elseif ($pay) {
-            $type = DB::db('db_master')->fetch_row ("SELECT a.jo FROM tbl_employee_type a, tbl_employee_status b WHERE employee_id = ? AND a.etype_id = b.etype_id ORDER BY date_start DESC LIMIT 0,1", $id);
-            if ($type['jo'] == "0") {
+            $type = DB::db('db_master')->fetch_row ("SELECT a.isJobOrder FROM tbl_employee_type a, tbl_employee_status b WHERE employee_id = ? AND a.id = b.etype_id ORDER BY date_start DESC LIMIT 0,1", $id);
+            if ($type['isJobOrder'] == "0") {
                 $result = True;
             }
         }

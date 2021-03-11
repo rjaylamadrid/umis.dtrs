@@ -5,6 +5,3 @@
     <label class="form-label">Sick Leave Credits</label><input type="text" class="form-control" name="sl_credits" value="{$sl|round:2}" readonly>
 </div>
 <br />
-{print_r("<pre>")}
-{print_r($changes)}
-{print_r("</pre>")}
