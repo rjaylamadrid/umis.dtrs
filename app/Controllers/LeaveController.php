@@ -67,11 +67,11 @@ class LeaveController extends Controller {
 
     protected function attendance ($id, $arr, $period = 2) {
         $this->leave_types = DB::db("db_master")->fetch_all("SELECT * FROM tbl_leave_type");
-        $table1 = date_create($arr['from'])->format('m-Y');
-        $table2 = date_create($arr['to'])->format('m-Y');
-        if ($table1 == $table2) {
-            $tables[] = ["table" => $table1, "begin" => $arr['from'], "end" => $arr['to']];
-        } else {
+        // $table1 = date_create($arr['from'])->format('m-Y');
+        // $table2 = date_create($arr['to'])->format('m-Y');
+        // if ($table1 == $table2) {
+        //     $tables[] = ["table" => $table1, "begin" => $arr['from'], "end" => $arr['to']];
+        // } else {
             $start_interval = new DateTime(date_create($arr['from'])->format('Y-m-d'));
             $interval = new DateInterval('P1D');
             $emp_schedule = DTR::get_sched($id);
@@ -125,7 +125,8 @@ class LeaveController extends Controller {
                 array_multisort(array_map('strtotime', array_column($this->leave_changes[$i], 'period')), SORT_ASC, $this->leave_changes[$i]);
             }
             $this->leaveBalanceChanges($id,$start_interval,$end_interval);
-        }
+            // print_r("<pre>");print_r($this->leave_changes);print_r("</pre>");
+        // }
         $this->attendance = $attendance;
         return $this;
     }
@@ -133,13 +134,16 @@ class LeaveController extends Controller {
     protected function leaveBalanceChanges ($id,$start,$end) {
         $emp_leave = DB::db("db_master")->fetch_all("SELECT a.*, b.leave_desc FROM tbl_emp_leave a, tbl_leave_type b WHERE a.employee_id = ? AND a.lv_status = ? AND a.lv_type = b.id AND a.lv_date_fr between ? AND ? ORDER BY a.lv_date_fr ASC", [$id, 2, $start->format('Y-m-d'), $end->format('Y-m-t')]);
 
-        for ($i=1;$i<sizeof($this->leave_changes);$i++) {
+        // $size = is_array($this->leave_changes) ? sizeof($this->leave_changes) : 2;
+        $size = sizeof($this->leave_changes) == 1 ? 2 : sizeof($this->leave_changes);
+        for ($i=1;$i<$size;$i++) {
             $v_bal = $this->leave_balance[$i-1]['vacation'];
             $s_bal = $this->leave_balance[$i-1]['sick'];
             
+        echo "JANMICO";
             for ($j=0;$j<sizeof($this->leave_changes[$i-1]);$j++) {
                 $leave_deduction = in_array(date_create($this->leave_changes[$i-1][$j]['period'])->format('l'), $this->schedule) ? 0.0416666666666667 : 0.0625000000000001;
-                
+
                 if ($this->leave_changes[$i-1][$j]['particulars'] == 'Absent') {
                     $this->leave_balance[$i-1]['vacation'] >= 1 ? $this->leave_changes[$i-1][$j]['v_awp'] = 1 : $this->leave_changes[$i-1][$j]['v_awop'] = 1;
                     $this->leave_changes[$i-1][$j]['v_bal'] = $v_bal - 1;
@@ -251,18 +255,26 @@ class LeaveController extends Controller {
                 $this->leave_balance[$i+1] = ["vacation" => ($this->leave_balance[$i]['vacation'] + $this->leave_balance[$i+1]['vacation']), "sick" => ($this->leave_balance[$i]['sick'] + $this->leave_balance[$i+1]['sick'])];
             }
         }
-        // print_r("<pre>");
-        // print_r($this->leave_changes);
-        // print_r("</pre>");
-        // $future_emp_leave = DB::db('db_master')->fetch_all("SELECT a.*, b.leave_desc FROM tbl_emp_leave a, tbl_leave_type b WHERE a.lv_type = b.id AND a.lv_status = ? AND a.employee_id = ? AND a.lv_date_fr > ?", [2,$id,$end->format('Y-m-t')]);
-        // print_r($future_emp_leave);
-        // for ($i=0; $i < sizeof($future_emp_leave); $i++) {
-        //     $j=sizeof($this->leave_changes);
-        //     if ($i == 0) {
-        //         for ($k=0; $k < $future_emp_leave[$i][])
-        //         $this->leave_changes[$j][0] = []
-        //     } else {
+        // $future_emp_leave = DB::db('db_master')->fetch_all("SELECT a.*, b.leave_desc FROM tbl_emp_leave a, tbl_leave_type b WHERE a.lv_type = b.id AND a.lv_status = ? AND a.employee_id = ? AND a.lv_date_fr > ? ORDER BY lv_date_fr ASC", [2,$id,$end->format('Y-m-t')]);
+        // print_r("<pre>");print_r($future_emp_leave);print_r("</pre>");
 
+        // if ($future_emp_leave) {
+        //     for ($i=0; $i < sizeof($future_emp_leave); $i++) {
+        //         $j = sizeof($this->leave_changes);
+        //         $k = is_array($this->leave_changes[$j]) ? sizeof($this->leave_changes[sizeof($this->leave_changes[$j])]) : 0;
+        //         $days = $future_emp_leave[$i]['lv_no_days'];
+
+        //         if ($days > 1) {
+        //             if (date_create($future_emp_leave[$i]['lv_date_fr'])->format('m-Y') != date_create($future_emp_leave[$i]['lv_date_to'])->format('m-Y')) {
+        //                 for ($l = 0; $l < $days; $l++) {
+        //                     // deduct $this->leave_balance and/or save leave details
+        //                 }
+        //             } else {
+        //                 // deduct $this->leave_balance and/or save leave details
+        //             }
+        //         } else {
+        //             // deduct $this->leave_balance and/or save leave details
+        //         }
         //     }
         // }
     }

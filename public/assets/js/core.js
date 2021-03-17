@@ -266,6 +266,24 @@ function forced_leave_change(emp_info) {
   $("#"+emp_array[5]+"dept").val(emp_array[4]);
 }
 
+function view_leave_record(emp_info) {
+  $('#cover-spin').show(0);
+  var emp_array = emp_info.split(";");
+  var emp_id = emp_array[0];
+
+  f({action: 'emp_leave_record', emp_id:emp_id}, "text", "/leave").then( function (data) {
+    $('.spinner1').hide(0);
+    $('#leave-record-card').html(data);
+  });
+
+  document.getElementById(emp_array[5]+"pic").src = "/assets/employee_picture/"+emp_array[1];
+  $("#"+emp_array[5]+"emp_id").val(emp_array[0]);
+  $("#"+emp_array[5]+"position").val(emp_array[3]);
+  $("#"+emp_array[5]+"department").val(emp_array[4]);
+  $("#"+emp_array[5]+"emp_salary").val(emp_array[6]);
+  $("#"+emp_array[5]+"dept").val(emp_array[4]);
+}
+
 // LEAVE :: END
 
 // OTHER FUNCTIONS :: START

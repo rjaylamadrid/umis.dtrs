@@ -13,6 +13,7 @@ class Leave extends LeaveController{
         $this->employee = new EmployeeProfile ($this->user['employee_id']);
         $this->office = DB::fetch_all ("SELECT a.department_desc, b.date_start FROM tbl_department a, tbl_employee_status b WHERE a.no = b.department_id AND b.employee_id = ? AND b.is_active = ?", [$this->user['employee_id'],1]);
         // $this->user['is_admin'] ? '' : $this->getLeaveCredits();
+        
         $this->getLeaveCredits();
         $this->getLeaveRecord($this->status);
         // $this->getLeaveChanges();
@@ -34,11 +35,18 @@ class Leave extends LeaveController{
     }
 
     public function show_leave_credits () {
-        // $this->getLeaveCredits();
         $this->getLeaveCredits('forced_leave', $this->data['emp_id']);
         $this->getLeaveRecord('', 'forced_leave', $this->data['emp_id']);
         $attendance = $this->attendance($this->data['emp_id'], ["from" => $this->leave_credits['date_credited'], "to" => date('Y-m-d')]);
         
         $this->view->display ('custom/show_leave_credits', ["vl" => $this->leave_balance[sizeof($this->leave_balance)-1]['vacation'], "sl" => $this->leave_balance[sizeof($this->leave_balance)-1]['sick'], "changes" => $this->leave_changes]);
+    }
+
+    public function emp_leave_record () {
+        $this->getLeaveCredits('forced_leave', $this->data['emp_id']);
+        $this->getLeaveRecord('', 'forced_leave', $this->data['emp_id']);
+        $attendance = $this->attendance($this->data['emp_id'], ["from" => $this->leave_credits['date_credited'], "to" => date('Y-m-d')]);
+        
+        $this->view->display ('custom/leave_record_card', ["balance" => $this->leave_balance, "changes" => $this->leave_changes]);
     }
 }
