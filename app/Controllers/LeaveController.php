@@ -26,9 +26,11 @@ class LeaveController extends Controller {
             if ($this->user['is_admin']) {
                 $this->all_leave_requests = DB::db('db_master')->fetch_all("SELECT a.*, b.employee_picture, CONCAT(b.last_name,', ',b.first_name,' ',b.middle_name)AS name, d.position_desc, e.leave_desc FROM tbl_emp_leave a, tbl_employee b, tbl_employee_status c, tbl_position d, tbl_leave_type e WHERE a.employee_id = b.no AND c.campus_id = ? AND a.employee_id = c.employee_id AND c.position_id = d.no AND c.is_active = ? AND a.lv_status = ? AND a.lv_type = e.id ORDER BY a.leave_id ASC",[$this->user['campus_id'],1,$status]);
 
-                $this->emp_list[0] = DB::db('db_master')->fetch_all("SELECT a.no, a.employee_picture, CONCAT(a.last_name,', ',a.first_name,' ',a.middle_name)AS name, c.position_desc, d.department_desc FROM tbl_employee a, tbl_employee_status b, tbl_position c, tbl_department d WHERE a.no = b.employee_id AND b.campus_id = ? AND b.position_id = c.no AND c.etype_id < ? AND b.department_id = d.no AND a.no NOT IN (SELECT employee_id FROM tbl_emp_leave_credits) ORDER BY a.last_name ASC",[$this->user['campus_id'],5]);
+                $this->emp_list[0] = DB::db('db_master')->fetch_all("SELECT a.no, a.employee_picture, CONCAT(a.last_name,', ',a.first_name,' ',a.middle_name)AS name, c.position_desc, d.department_desc FROM tbl_employee a, tbl_employee_status b, tbl_position c, tbl_department d WHERE a.no = b.employee_id AND b.campus_id = ? AND b.position_id = c.no AND c.etype_id = ? AND b.department_id = d.no AND a.no NOT IN (SELECT employee_id FROM tbl_emp_leave_credits) ORDER BY a.last_name ASC",[$this->user['campus_id'],2]);
 
                 $this->emp_list[1] = DB::db('db_master')->fetch_all("SELECT a.no, a.employee_picture, CONCAT(a.last_name,', ',a.first_name,' ',a.middle_name)AS name, b.salary, c.position_desc, d.department_desc, e.vacation, e.sick, e.date_credited FROM tbl_employee a, tbl_employee_status b, tbl_position c, tbl_department d, tbl_emp_leave_credits e WHERE a.no = b.employee_id AND b.campus_id = ? AND b.is_active = ? AND b.position_id = c.no AND c.etype_id < ? AND b.department_id = d.no AND a.no = e.employee_id AND e.is_active = ? ORDER BY a.last_name ASC",[$this->user['campus_id'],1,5,1]);
+
+                $this->emp_list[2] = DB::db('db_master')->fetch_all("SELECT a.no, a.employee_picture, CONCAT(a.last_name,', ',a.first_name,' ',a.middle_name)AS name, b.salary, c.position_desc, d.department_desc, e.vacation, e.sick, e.date_credited FROM tbl_employee a, tbl_employee_status b, tbl_position c, tbl_department d, tbl_emp_leave_credits e WHERE a.no = b.employee_id AND b.campus_id = ? AND b.is_active = ? AND b.position_id = c.no AND c.etype_id = ? AND b.department_id = d.no AND a.no = e.employee_id AND e.is_active = ? ORDER BY a.last_name ASC",[$this->user['campus_id'],1,1,1]);
 
                 for ($i=0,$j=2,$k=1; $i<2; $i++,$j++,$k++) {
                     $this->stats[$i] = DB::db('db_master')->fetch_all("SELECT COUNT(*)as ctr FROM tbl_emp_leave a, tbl_employee_status b WHERE a.lv_status = ? AND a.employee_id = b.employee_id AND b.campus_id = ? AND b.is_active = ?", [$i, $this->user['campus_id'],1])[0];
@@ -55,9 +57,10 @@ class LeaveController extends Controller {
             } else {
                 if (!$this->user['is_admin']) {
                     $this->leave_balance[0] = ["date" => $this->leave_credits['date_credited'], "vacation" => $this->leave_credits['vacation'], "sick" => $this->leave_credits['sick']];
-                } else {
-                    $this->leave_credits = ["date_credited" => date('Y-m-d'), "vacation" => 0, "sick" => 0];
                 }
+                //  else {
+                //     $this->leave_credits = ["date_credited" => date('Y-m-d'), "vacation" => 0, "sick" => 0];
+                // }
             }
         } else {
             $this->leave_credits = DB::fetch_row("SELECT * FROM tbl_emp_leave_credits WHERE employee_id = ? AND is_active = ?", [$emp_id, 1]);
@@ -125,7 +128,6 @@ class LeaveController extends Controller {
                 array_multisort(array_map('strtotime', array_column($this->leave_changes[$i], 'period')), SORT_ASC, $this->leave_changes[$i]);
             }
             $this->leaveBalanceChanges($id,$start_interval,$end_interval);
-            // print_r("<pre>");print_r($this->leave_changes);print_r("</pre>");
         // }
         $this->attendance = $attendance;
         return $this;
@@ -140,7 +142,6 @@ class LeaveController extends Controller {
             $v_bal = $this->leave_balance[$i-1]['vacation'];
             $s_bal = $this->leave_balance[$i-1]['sick'];
             
-        echo "JANMICO";
             for ($j=0;$j<sizeof($this->leave_changes[$i-1]);$j++) {
                 $leave_deduction = in_array(date_create($this->leave_changes[$i-1][$j]['period'])->format('l'), $this->schedule) ? 0.0416666666666667 : 0.0625000000000001;
 
@@ -256,7 +257,6 @@ class LeaveController extends Controller {
             }
         }
         // $future_emp_leave = DB::db('db_master')->fetch_all("SELECT a.*, b.leave_desc FROM tbl_emp_leave a, tbl_leave_type b WHERE a.lv_type = b.id AND a.lv_status = ? AND a.employee_id = ? AND a.lv_date_fr > ? ORDER BY lv_date_fr ASC", [2,$id,$end->format('Y-m-t')]);
-        // print_r("<pre>");print_r($future_emp_leave);print_r("</pre>");
 
         // if ($future_emp_leave) {
         //     for ($i=0; $i < sizeof($future_emp_leave); $i++) {
@@ -304,6 +304,10 @@ class LeaveController extends Controller {
     }
 
     protected function set_leave_credits() {
+        $checker = DB::db('db_master')->fetch_all("SELECT * FROM tbl_emp_leave_credits WHERE employee_id = ? AND is_active = ?", [$this->data['slc']['employee_id'], 1]);
+        if ($checker) {
+            DB::db('db_master')->update("UPDATE tbl_emp_leave_credits SET is_active = ? WHERE employee_id = ?", [0,$this->data['slc']['employee_id']]);
+        }
         $qry_result = DB::db('db_master')->insert("INSERT INTO tbl_emp_leave_credits SET ". DB::stmt_builder($this->data['slc']),$this->data['slc']);
         $this->message = $qry_result != 0 ? ["result" => "success", "message" => "Leave credits has been successfully saved."] : ["result" => "failed", "message" => "Leave credits was not saved. Please check inputted data and try again."];
         $this->index();
@@ -331,6 +335,37 @@ class LeaveController extends Controller {
         $archive = DB::db('db_master')->insert ("INSERT INTO tbl_employee_update_delete SET ". DB::stmt_builder ($data_array),$data_array);
         $delete = DB::db('db_master')->delete("DELETE FROM tbl_emp_leave WHERE leave_id = ?", $this->data['id']);
         $this->index();
+    }
+
+    protected function set_teachers_leave() {
+        // $start = new DateTime (date_create('2021-01-01')->format('Y-m-d'));
+        // $end = new DateTime (date_create('2021-03-17')->modify('+1 day')->format('Y-m-d'));
+        // $interval = new DateInterval('P1D');
+        // $range = new DatePeriod($start, $interval, $end);
+        // $emp_schedule = DTR::get_sched('6');
+        // for ($i=0;$i<sizeof($emp_schedule);$i++) {
+        //     $this->schedule[$i] = $emp_schedule[$i]['weekday'];
+        // }
+        // foreach ($range as $dates) {
+        //     if (in_array($dates->format('l'),$this->schedule)) {
+        //         $month = $dates->format('m-Y');
+        //         $date = $dates->format('Y-m-d');
+        //         DB::db('db_attendance')->insert("INSERT INTO `$month` SET emp_id = '6', date='$date', am_in='7:30AM',am_out='12:00PM',pm_in='1:00PM',pm_out='5:00PM',is_absent='0',total_hours='8',late='0'");
+        //     }
+        // }
+        print_r("<pre>");print_r($this->data);print_r("</pre>");
+        $start = new DateTime (date_create($this->data['tl']['lv_date_fr'])->format('Y-m-d'));
+        $end = new DateTime (date_create($this->data['tl']['lv_date_to'])->modify('+1 day')->format('Y-m-d'));
+        if (($this->data['tl']['employee_id'] == 0) && ($this->data['tl']['emp_salary'] == 0) && ($this->data['tl']['lv_office'] == 0)) {
+            $teachers = DB::db('db_master')->fetch_all("SELECT a.no FROM tbl_employee a, tbl_employee_status b, tbl_position c WHERE a.no = b.employee_id AND b.campus_id = ? AND b.position_id = c.no AND c.etype_id = ?", [$this->user['campus_id'], 1]);
+            for($i = 0; $i < sizeof($teachers); $i++) {
+                $teacher_ids[$i] = $teachers[$i]['no'];
+            }
+            print_r("<pre>");print_r($teacher_ids);print_r("</pre>");
+        } else {
+            $teacher_ids[0] = $this->data['tl']['employee_id'];
+        }
+
     }
 
     protected function set_forced_leave() {

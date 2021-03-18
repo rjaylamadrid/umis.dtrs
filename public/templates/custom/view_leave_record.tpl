@@ -1,7 +1,7 @@
 <div class="modal fade margin-top-70" id="view_leave_record" role="dialog" tabindex="-1">
     <div class="modal-dialog modal-side modal-bottom-right modal-notify modal-danger" role="document" style="max-width: 1200px;">
     <!--Content-->
-        <div id="cover-spin" style="display: none; position:absolute;" class="spinner1"></div>
+        <div id="cover-spin2" style="display: none; position:absolute;" class="spinner1"></div>
         <div class="modal-content">
       <!--Header-->
             <div class="card" style="margin-bottom: 0">

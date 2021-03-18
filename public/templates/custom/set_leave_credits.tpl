@@ -1,6 +1,7 @@
 <div class="modal fade margin-top-70" id="set_leave_credits" role="dialog" tabindex="-1" style="margin-left:-50px;">
   <div class="modal-dialog modal-side modal-bottom-right modal-notify modal-danger" role="document" style="max-width: 600px;">
     <!--Content-->
+    <div id="cover-spin3" style="display: none; position:absolute;" class="spinner1"></div>
     <div class="modal-content">
       <!--Header-->
       <div class="card" style="margin-bottom: 0">
@@ -42,7 +43,7 @@
                   <label class="form-label">Vacation Leave Credits</label>{literal}<input class="form-control" name="slc[vacation]" value="" pattern="^-?\d*(\.\d{0,9})?$" required>{/literal}
                 </div>
                 <div class="col-md-6">
-                  <label class="form-label">Sick Leave Credits</label>{literal}<input class="form-control" name="slc[sick]" value="" pattern="^\d*(\.\d{0,9})?$" required>{/literal}
+                  <label class="form-label">Sick Leave Credits</label>{literal}<input class="form-control" name="slc[sick]" value="" pattern="^-?\d*(\.\d{0,9})?$" required>{/literal}
                 </div>
               </div>
               <div class="row">
@@ -55,7 +56,7 @@
       </div>
       <div class="modal-footer">
       {* <button class="btn btn-primary" onclick="javascript:save_leave_credits()">Save</button> *}
-        <input type="submit" class="btn btn-primary" value="Save">
+        <input type="submit" name="submitbtn" class="btn btn-primary" value="Save">
         <button class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
     </form>
