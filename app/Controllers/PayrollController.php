@@ -3,14 +3,17 @@ namespace Controllers;
 
 use Model\Payroll;
 use Model\SalaryGrade;
+use View\PayrollExcel;
 
 class PayrollController extends Controller {
+    public $emp_type = '1';
+    public $payroll_type;
 
-    public function init_payroll() {
-        $employees = Payroll::initialize($this->data['payroll']['emp_type']);
-        $this->view->assign(['employees' => $employees, 'init' => $this->data['payroll']['emp_type']]);
-        $this->index();
-    }
+    // public function init_payroll() {
+    //     $employees = Payroll::initialize($this->data['payroll']['emp_type']);
+    //     $this->view->assign(['employees' => $employees, 'init' => $this->data['payroll']['emp_type']]);
+    //     $this->index();
+    // }
 
     protected function salary_grade ($sg_id = NULL) {
         $this->salary_grade = new SalaryGrade($sg_id);
@@ -24,12 +27,17 @@ class PayrollController extends Controller {
         $this->view->display('admin/payroll/salary-grade', $data);
     }
 
-    public function download_payroll() {
-        Payroll::generate($this->data['payroll']);
+    protected function init_payroll() {
+        $payroll = $this->data['payroll'];
+        $employees = Payroll::employees($payroll['emp_type']);
+        $headers = Payroll::get_headers($payroll['emp_type']);
+        $excel = new PayrollExcel("Regular Employees.xlsx", $employees, $headers);
     }
     
     protected function formula () {
-        $data[] = "hello world";
+        $payroll = $this->data['payroll'];
+        $headers = Payroll::get_headers($this->emp_type);
+        $data['compensation'] = $headers['COMPENSATION'];
         return $data;
     }
 }

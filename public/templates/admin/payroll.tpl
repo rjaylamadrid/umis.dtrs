@@ -69,7 +69,7 @@
     </div> *}
     <div class="container">
         <div class="row">
-            <div class="col-lg-3 order-lg-1 mb-4">
+            <div class="col-lg-3 mb-4">
                 <div>
                     <div class="form-group mb-1">
                         <label class="form-label">Payroll Type</label>

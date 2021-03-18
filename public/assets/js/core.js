@@ -477,4 +477,16 @@ function payroll(action) {
   // })
 }
 
+function collapse(id) {
+  if($('#'+id).hasClass('show')) {
+    $('#'+id).removeClass('show');
+    $('.'+id).removeClass('fe-chevron-down');
+    $('.'+id).addClass('fe-chevron-right');
+  }else{
+    $('#'+id).addClass('show');
+    $('.'+id).removeClass('fe-chevron-right');
+    $('.'+id).addClass('fe-chevron-down');
+  }
+}
+
 // OTHER FUNCTIONS :: END

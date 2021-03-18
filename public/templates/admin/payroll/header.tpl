@@ -3,7 +3,7 @@
         <form action="" method="POST">
             <input type="hidden" name="payroll[payroll_type]" value="1">
             <input type="hidden" name="payroll[emp_type]" value="1">
-            <input type="hidden" name="action" value="download_payroll">
+            <input type="hidden" name="action" value="init_{$tab}">
             <div class="row">
                 <div class="col-md-4">
                     <div class="input-group">
@@ -24,7 +24,7 @@
                 <div class="col-md-4">
                     <div class="float-right">
                         <button type="submit" class="btn btn-primary">
-                            <span class="mr-2"><i class="fe fe-download"></i></span>Download
+                            {if $tab == 'payroll'}Download{else}Initialize{/if}
                         </button>
                     </div>
                 </div>
