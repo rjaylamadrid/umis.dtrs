@@ -73,7 +73,7 @@
 						<div class="card-body">
 							<div class="form-group form-inline" style="vertical-align: middle;">
 								<label style="display: inline-block;">Request Status Filter</label>
-								<select name="request_stat_filter" class="form-control custom-select" onchange="location.href=this.value" >
+								<select name="request_stat_filter" class="form-control custom-select" onchange="location.href=this.value" style="padding: 0rem 1.75rem 0rem 0.75rem;">
 									<option value="{$server}/leave/0" {if $tab == '0'}selected{/if}>Pending</option>
 									<option value="{$server}/leave/1" {if $tab == '1'}selected{/if}>For Approval</option>
 									<option value="{$server}/leave/2" {if $tab == '2'}selected{/if}>Approved</option>
@@ -82,7 +82,7 @@
 								<div style="float: right;">
 									<button data-toggle="modal" data-target="#view_leave_record" class="btn btn-primary"> <i class="fe fe-layers"></i> View Leave Record Card</button>
 									<button data-toggle="modal" data-target="#set_leave_credits" class="btn btn-primary"> <i class="fe fe-award"></i> Set Leave Credits</button>
-									<button data-toggle="modal" data-target="#set_teachers_leave" class="btn btn-primary"> <i class="fe fe-book"></i> Set Teachers' Leave</button>
+									<button data-toggle="modal" data-target="#set_teachers_leave" class="btn btn-primary"> <i class="fe fe-book"></i> Set Teacher's Leave</button>
 									<button data-toggle="modal" data-target="#set_forced_leave" class="btn btn-primary"> <i class="fe fe-home"></i> Forced Leave</button>
 								</div>
 							</div>

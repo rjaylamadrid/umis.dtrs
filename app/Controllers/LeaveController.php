@@ -356,16 +356,61 @@ class LeaveController extends Controller {
         print_r("<pre>");print_r($this->data);print_r("</pre>");
         $start = new DateTime (date_create($this->data['tl']['lv_date_fr'])->format('Y-m-d'));
         $end = new DateTime (date_create($this->data['tl']['lv_date_to'])->modify('+1 day')->format('Y-m-d'));
-        if (($this->data['tl']['employee_id'] == 0) && ($this->data['tl']['emp_salary'] == 0) && ($this->data['tl']['lv_office'] == 0)) {
-            $teachers = DB::db('db_master')->fetch_all("SELECT a.no FROM tbl_employee a, tbl_employee_status b, tbl_position c WHERE a.no = b.employee_id AND b.campus_id = ? AND b.position_id = c.no AND c.etype_id = ?", [$this->user['campus_id'], 1]);
-            for($i = 0; $i < sizeof($teachers); $i++) {
-                $teacher_ids[$i] = $teachers[$i]['no'];
-            }
-            print_r("<pre>");print_r($teacher_ids);print_r("</pre>");
-        } else {
-            $teacher_ids[0] = $this->data['tl']['employee_id'];
-        }
+        $interval = new DateInterval('P1D');
+        $leave_range = new DatePeriod($start, $interval, $end);
 
+        if (($this->data['tl']['employee_id'] == 0) && ($this->data['tl']['emp_salary'] == 0) && ($this->data['tl']['lv_office'] == 0)) {
+            $teacher_ids = DB::db('db_master')->fetch_all("SELECT a.no, CONCAT(a.last_name,', ',a.first_name,' ',a.middle_name)AS name, d.department_desc, b.salary FROM tbl_employee a, tbl_employee_status b, tbl_position c, tbl_department d WHERE a.no = b.employee_id AND b.campus_id = ? AND b.position_id = c.no AND c.etype_id = ? AND b.department_id = d.no", [$this->user['campus_id'], 1]);
+            $temp=0;
+            foreach ($teacher_ids as $teacher) {
+                $this->data['tl']['employee_id'] = $teacher['no'];
+                $this->data['tl']['emp_salary'] = $teacher['salary'];
+                $this->data['tl']['lv_office'] = $teacher['department_desc'];
+                DB::db('db_master')->insert("INSERT INTO tbl_emp_leave SET " . DB::stmt_builder($this->data['tl']),$this->data['tl']);
+                $emp_schedule = DTR::get_sched($teacher['no']);
+                for ($i=0;$i<sizeof($emp_schedule);$i++) {
+                    $this->schedule[$i] = $emp_schedule[$i]['weekday'];
+                }
+                foreach ($leave_range as $dates) {
+                    if (in_array($dates->format('l'),$this->schedule)) {
+                        $dtr_input = self::attendance_event($teacher['no'], $dates->format('Y-m-d'), '00:00', '23:59');
+                        
+                        if ($dtr_input != '') {
+                            $failed_inputs[$temp] = $teacher['name'] . " on " . $dates->format('Y-m-d');
+                            $temp++;
+                        }
+                    }
+                }
+            }
+            if ($failed_inputs[0] != '') {
+                $this->message = ["result" => "failed", "message" => "Teacher's leave was not processed for the following employees on the following dates:"];
+                foreach ($failed_inputs as $failed) {
+                    $this->message["message"] .= "\n$failed";
+                }
+                $this->message["message"] .= "\nPlease check their data and try again.";
+                $this->index ();
+            } else {
+                $this->message = ["result" => "success", "message" => "Teacher's leave was successfully set for all teachers."];
+                $this->index();
+            }
+        } else {
+            DB::db('db_master')->insert("INSERT INTO tbl_emp_leave SET " . DB::stmt_builder($this->data['tl']),$this->data['tl']);
+            $emp_schedule = DTR::get_sched($this->data['tl']['employee_id']);
+            for ($i=0;$i<sizeof($emp_schedule);$i++) {
+                $this->schedule[$i] = $emp_schedule[$i]['weekday'];
+            }
+            foreach ($leave_range as $dates) {
+                if (in_array($dates->format('l'),$this->schedule)) {
+                    $dtr_input = self::attendance_event($this->data['tl']['employee_id'], $dates->format('Y-m-d'), '00:00', '23:59');
+                }
+            }
+            if ($dtr_input != '') {
+                $this->message = ["result" => "failed", "message" => "Teacher's leave was not placed. Please check the employee's data and try again."];
+            } else {
+                $this->message = ["result" => "success", "message" => "Teacher's leave was successfully set."];
+            }
+            $this->index();
+        }
     }
 
     protected function set_forced_leave() {

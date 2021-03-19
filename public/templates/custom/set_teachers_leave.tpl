@@ -6,7 +6,7 @@
       <!--Header-->
       <div class="card" style="margin-bottom: 0">
         <div class="card-header">
-          <h3 class="card-title">Set Teachers' Leave</h3>
+          <h3 class="card-title">Set Teacher's Leave</h3>
         </div>
         <div class="card-body">
           <div class="row">
@@ -28,7 +28,7 @@
                 <label class="form-label">Position</label><input type="text" id="tl_position" class="form-control" value="N/A" readonly>
                 <label class="form-label">Office</label><input type="text" id="tl_department" class="form-control" value="N/A" readonly>
                 <br />
-                <div id="note"><i>Note: Selecting 'ALL TEACHERS' would not include those who incurred absences of more than 1.5 days, as they are not entitled to the proportional vacation pay (PVP).</i></div>
+                <div id="note"><i>Note: Selecting 'ALL TEACHERS' would not include those who incurred absences of more than 1.5 days, as they shall not be entitled to the proportional vacation pay (PVP).</i></div>
               </div>
             </div>
           </div>
@@ -38,6 +38,7 @@
             <input type="hidden" name="tl[employee_id]" id="tl_emp_id" value="0">
             <input type="hidden" name="tl[emp_salary]" id="tl_emp_salary" value="0">
             <input type="hidden" name="tl[lv_office]" id="tl_dept" value="0">
+            <input type="hidden" name="tl[lv_status]" value="2">
             <div class="form-group">
               <label class="form-label">Leave Type</label>
                 <select name="tl[lv_type]" class="form-control custom-select" required>
@@ -45,12 +46,13 @@
                     <option value="14">Summer Vacation (70 days paid leave for teachers incurring absences not more than 1.5 days)</option>
                     <option value="15">Christmas Vacation (14 days paid leave for teachers incurring absences not more than 1.5 days)</option>
                 </select>
+              <input type="hidden" name="tl[lv_no_days]" id="no_of_working_days" readonly min="1" max="10950" class="form-control" value="">
               <div class="row">
                 <div class="col-md-6">
-                  <label class="form-label">Start</label><input type="date" class="form-control" name="tl[lv_date_fr]" value="" required>
+                  <label class="form-label">Start</label><input type="date" class="form-control" name="tl[lv_date_fr]" id="date_from" value="" onchange="javascript:dtmin(this.form); javascript:date_max(); javascript:date_min();" required>
                 </div>
                 <div class="col-md-6">
-                  <label class="form-label">End</label><input type="date" class="form-control" name="tl[lv_date_to]" value="" required>
+                  <label class="form-label">End</label><input type="date" class="form-control" name="tl[lv_date_to]" id="date_to" value="" onchange="javascript:dtmin(this.form); javascript:date_min(); javascript:date_max();" required>
                 </div>
               </div>
             </div>
