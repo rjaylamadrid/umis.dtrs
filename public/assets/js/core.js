@@ -60,7 +60,7 @@ function confirm_delete(no, id, tab, other_info_col='', other_info_data='', admi
       });
     }
     else if(tab=='service_record') {
-      f({action: 'delete_row', no:no, tab:'status'}, "text", "/employees").then( function (data) {
+      f({action: 'delete_row', no:no, tab:'service'}, "text", "/employees").then( function (data) {
         location.href = "/employees/employment-update/" + id + "/" + tab;
       });
     }
@@ -458,9 +458,9 @@ function modify_log () {
   });
 }
 
-function show_list () {
+function show_list (tab) {
   var form = $('#frmData').serialize();
-  f (form, "text", "/payroll").then( function(html){
+  f (form, "text", "/"+tab).then( function(html){
     $('#settings_tab').html(html);
   });
 }
@@ -507,10 +507,10 @@ function collapse(id) {
   if($('#'+id).hasClass('show')) {
     $('#'+id).removeClass('show');
     $('.'+id).removeClass('fe-chevron-down');
-    $('.'+id).addClass('fe-chevron-right');
+    $('.'+id).addClass('fe-chevron-up');
   }else{
     $('#'+id).addClass('show');
-    $('.'+id).removeClass('fe-chevron-right');
+    $('.'+id).removeClass('fe-chevron-up');
     $('.'+id).addClass('fe-chevron-down');
   }
 }

@@ -98,7 +98,7 @@ class EmployeeProfile {
     }
 
     public function service_record () {
-        $this->service_record = DB::fetch_all ("SELECT position_desc, date_start, date_end, type_id, type_desc, salary, step, a.salary_grade,campus_name FROM tbl_employee_service a, tbl_position b, tbl_employee_type c, tbl_campus d WHERE a.position_id = b.no AND a.etype_id = c.id AND a.campus_id = d.id AND employee_id = ? ORDER BY date_start DESC", $this->id);
+        $this->service_record = DB::fetch_all ("SELECT a.no, position_desc, date_start, date_end, type_id, type_desc, salary, step, a.salary_grade,campus_name FROM tbl_employee_service a, tbl_position b, tbl_employee_type c, tbl_campus d WHERE a.position_id = b.no AND a.etype_id = c.id AND a.campus_id = d.id AND employee_id = ? ORDER BY date_start DESC", $this->id);
     }
     
     private function get ($args = []) {

@@ -80,7 +80,7 @@
                         </select>
                     </div>
                     <div class="form-group mb-2">
-                        <label class="form-label">Employee Type</label>
+                        <label class="form-label">Employee Status</label>
                         <select name="payroll[emp_type]" class="form-control custom-select" id="emp_type">
                             <option value="1">Regular Employees</option>
                             <option value="2">Casual Employees</option>

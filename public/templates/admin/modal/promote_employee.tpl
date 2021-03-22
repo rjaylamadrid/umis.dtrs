@@ -25,8 +25,8 @@
                                     <label class="form-label">Employment Status</label>
                                     <select class="form-control" name="emp_status[etype_id]" required onchange="javascript:init_pos (this.value)">
                                         <option selected disabled>Select</option>
-                                        {foreach from=$emp_type item=type}
-                                        <option value="{$type.etype_id}">{$type.etype_desc}</option>
+                                        {foreach from=$emp_type item=e}
+                                        <option value="{$e.id}" {if $e.id == $period.emp_type}selected{/if}>{$e.type_desc} {if $e.type_desc2} | {$e.type_desc2}{/if}</option>
                                         {/foreach}
                                     </select>
                                 </div>

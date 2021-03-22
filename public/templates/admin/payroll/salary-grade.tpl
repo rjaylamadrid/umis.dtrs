@@ -7,7 +7,7 @@
                     <div class="d-flex">
                         <div class="form-group col-md-4 mb-0">
                             <label class="form-label mb-1">Title</label>
-                            <select class="custom-select form-control" name="tranche" onchange="show_list()">
+                            <select class="custom-select form-control" name="tranche" onchange="show_list('payroll')">
                                 {foreach $sg->tranches as $tranche}
                                     <option value="{$tranche.sg_id}" {if $tranche.sg_id == $sg->tranche.sg_id}selected{/if}>{$tranche.title}</option>
                                 {/foreach}

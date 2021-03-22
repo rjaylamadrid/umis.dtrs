@@ -5,7 +5,7 @@
                 <form action='' method = 'POST' id="frmData">
                     <input type="hidden" name="action" value="show_position">
                     <div class="form-group form-inline m-0">
-                        <select class="custom-select" name="emp_type" onchange="show_list()">
+                        <select class="custom-select" name="emp_type" onchange="show_list('settings')">
                             <option value="1" {if $positions->emp_type == '1'}selected{/if}>Permanent | Teaching</option> 
                             <option value="2" {if $positions->emp_type == '2'}selected{/if}>Permanent | Non-Teaching</option> 
                             <option value="5" {if $positions->emp_type == '5'}selected{/if}>COS | Teaching</option>
