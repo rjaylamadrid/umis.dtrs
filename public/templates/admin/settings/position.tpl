@@ -2,18 +2,21 @@
     <div class="col-lg-12">
         <div class="card">
             <div class="card-body">
-                <form action='' method = 'POST' id="frmData">
-                    <input type="hidden" name="action" value="show_position">
-                    <div class="form-group form-inline m-0">
-                        <select class="custom-select" name="emp_type" onchange="show_list('settings')">
-                            <option value="1" {if $positions->emp_type == '1'}selected{/if}>Permanent | Teaching</option> 
-                            <option value="2" {if $positions->emp_type == '2'}selected{/if}>Permanent | Non-Teaching</option> 
-                            <option value="5" {if $positions->emp_type == '5'}selected{/if}>COS | Teaching</option>
-                            <option value="6" {if $positions->emp_type == '6'}selected{/if}>COS | Non-Teaching</option>
-                            <option value="7" {if $positions->emp_type == '7'}selected{/if}>Project-based</option>
-                        </select>   
-                    </div>
-                </form>
+                <div class="d-flex">
+                    <form action='' method = 'POST' id="frmData">
+                        <input type="hidden" name="action" value="show_position">
+                        <div class="form-group form-inline m-0">
+                            <select class="custom-select" name="emp_type" onchange="show_list('settings')">
+                                <option value="1" {if $emp_type == '1'}selected{/if}>Permanent | Teaching</option> 
+                                <option value="2" {if $emp_type == '2'}selected{/if}>Permanent | Non-Teaching</option> 
+                                <option value="5" {if $emp_type == '5'}selected{/if}>COS | Teaching</option>
+                                <option value="6" {if $emp_type == '6'}selected{/if}>COS | Non-Teaching</option>
+                                <option value="7" {if $emp_type == '7'}selected{/if}>Project-based</option>
+                            </select>   
+                        </div>
+                    </form>
+                    <a href="#" data-toggle="modal" data-target="#newPositionModal" class="ml-auto btn btn-primary">Create Position</a>
+                </div>
             </div>
         </div>
     </div>
@@ -53,7 +56,7 @@
         $("#tbl-positions").DataTable();
     })
 </script>
-{* <div class="modal fade margin-top-70" id="position-modal" role="dialog" tabindex="-1" style="margin-left:-50px;">
+<div class="modal fade margin-top-70" id="newPositionModal" role="dialog" tabindex="-1" style="margin-left:-50px;">
     <div class="modal-dialog" id="position" role="document" style="max-width: 500px;">
     </div>
-</div> *}
+</div>

@@ -22,15 +22,15 @@ class SettingsController extends Controller {
 
     public function position ($emp_type = 1) {
         $this->positions = new Position();
-        $this->positions->positions($emp_type);
+        $this->positions->positions($emp_type, $this->user['campus_id']);
         $data['positions'] = $this->positions;
         return $data;
     }
 
     public function show_position (){
         $type = $this->data['emp_type'];
-        $data = $this->position($type);
-        $this->view->display ("admin/settings/position", $data);
+        $pos = $this->position($type);
+        $this->view->display ("admin/settings/position", ['emp_type'=>$type, 'positions' => $pos['positions']]);
     }
 
     public function change_password($id,$cur_pass,$new_pass,$confirm_pass) {

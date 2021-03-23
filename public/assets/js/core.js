@@ -25,7 +25,7 @@ function init_dtr(id) {
     });
   }
 }
-// ATTENDANCE::END
+// ATTENDANCE::END 
 
 // EMPLOYEE PROFILE :: START
 function show_collapse(id,id_='#') {
@@ -513,6 +513,12 @@ function collapse(id) {
     $('.'+id).removeClass('fe-chevron-up');
     $('.'+id).addClass('fe-chevron-down');
   }
+}
+
+function show_formula() {
+  f({action:'show_formula'}, "text", "/payroll").then(function(html) {
+    
+  })
 }
 
 // OTHER FUNCTIONS :: END

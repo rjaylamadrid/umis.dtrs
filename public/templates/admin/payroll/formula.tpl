@@ -28,13 +28,19 @@
         </div>
         <div class="card mb-2">
             <div class="card-body py-3">
-                <label class="card-title mb-0" onclick="javascript:collapse('deduction')"><span class="mr-2"><i class="deduction fe fe-chevron-right"></i></span>DEDUCTION</label>
+                <div class="d-flex" onclick="javascript:collapse('deduction')">
+                    <label class="card-title mb-0">DEDUCTION</label>
+                    <span class="ml-auto"><i class="deduction fe fe-chevron-up"></i></span>
+                </div>
                 {menu data = $deduction level='deduction'}
             </div>
         </div>
         <div class="card mb-2">
             <div class="card-body py-3">
-                <label class="card-title mb-0" onclick="javascript:collapse('employer-share')"><span class="mr-2"><i class="employer-share fe fe-chevron-right"></i></span>EMPLOYER-SHARE</label>
+                <div class="d-flex" onclick="javascript:collapse('employer-share')">
+                    <label class="card-title mb-0">EMPLOYER-SHARE</label>
+                    <span class="ml-auto"><i class="employer-share fe fe-chevron-up"></i></span>
+                </div>
                 {menu data = $employer_share level='employer-share'}
             </div>
         </div>
@@ -42,6 +48,7 @@
     <div class = "col-md-4">
         <div class = "card">
             <div class="card-body">
+                
             </div>
         </div>
     </div>

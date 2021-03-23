@@ -15,6 +15,7 @@ class Position {
     public $step;
     public $salarygrade;
     public $type;
+    public $campus_id;
 
     public function __construct($id = null, $date_start = null, $emp_type = null, $date = null, $sg_id = null, $step = 0) {
         $this->id = $id;
@@ -26,7 +27,8 @@ class Position {
         $this->position();
     }
 
-    public function positions($emp_type = null) {
+    public function positions($emp_type = null, $campus = null) {
+        $this->campus_id = $campus;
         $this->salary_grade();
         $i = 0;
         $positions = [];
@@ -38,11 +40,14 @@ class Position {
             $this->positions = DB::fetch_all("SELECT * FROM tbl_position ORDER BY position_desc ASC");
         } 
         foreach ($this->positions as $position) {
-            $positions[$i] = $position;
-            $positions[$i]['salary'] = $this->get_salary($position['salary_grade'], $position['no']);
-            if ($position['salary_grade'] == 0) {
-                $positions[$i]['salary_grade'] = 'N/A';
-                $positions[$i]['salary_type'] = $this->type;
+            $salary = $this->get_salary($position['salary_grade'], $position['no']);
+            if($salary > 0) {
+                $positions[$i] = $position;
+                $positions[$i]['salary'] = $salary;
+                if ($position['salary_grade'] == 0) {
+                    $positions[$i]['salary_grade'] = 'N/A';
+                    $positions[$i]['salary_type'] = $this->type;
+                }
             }
             $i++;
         }
@@ -91,7 +96,7 @@ class Position {
             if ($sg_id == $salarygrade['salary_grade']) $result = number_format($salarygrade['steps'][$this->step],2,".",",");
         }
         if ($sg_id == 0) {
-            $salary = DB::fetch_row("SELECT * FROM tbl_cos_salary WHERE position_id = ?", $position_id);
+            $salary = DB::fetch_row("SELECT * FROM tbl_cos_salary WHERE position_id = ? AND campus_id = ?", [$position_id, $this->campus_id]);
             $result = number_format($salary['salary'],2,".",",");
             $this->type = $salary['salary_type'];
         }
