@@ -71,7 +71,7 @@ class EmployeeProfile {
     }
     
     public function training_seminar () {
-        $this->training_seminar = $this->get (["table" => "tbl_employee_training_seminar", "options" => " ORDER BY training_from DESC"]);
+        $this->training_seminar = $this->get (["table" => "tbl_employee_training_seminar", "options" => " AND DATEDIFF(CURDATE(),training_to) < 1827 ORDER BY training_from DESC"]);
     }
 
     public function references () {

@@ -136,8 +136,8 @@ class LeaveController extends Controller {
     protected function leaveBalanceChanges ($id,$start,$end) {
         $emp_leave = DB::db("db_master")->fetch_all("SELECT a.*, b.leave_desc FROM tbl_emp_leave a, tbl_leave_type b WHERE a.employee_id = ? AND a.lv_status = ? AND a.lv_type = b.id AND a.lv_date_fr between ? AND ? ORDER BY a.lv_date_fr ASC", [$id, 2, $start->format('Y-m-d'), $end->format('Y-m-t')]);
 
-        // $size = is_array($this->leave_changes) ? sizeof($this->leave_changes) : 2;
-        $size = sizeof($this->leave_changes) == 1 ? 2 : sizeof($this->leave_changes);
+        $size = is_array($this->leave_changes) ? sizeof($this->leave_changes) : 2;
+        // $size = sizeof($this->leave_changes) == 1 ? 2 : sizeof($this->leave_changes);
         for ($i=1;$i<$size;$i++) {
             $v_bal = $this->leave_balance[$i-1]['vacation'];
             $s_bal = $this->leave_balance[$i-1]['sick'];
@@ -394,6 +394,7 @@ class LeaveController extends Controller {
                 $this->index();
             }
         } else {
+            $this->data['tl']['lv_dateof_filing'] = date('Y-m-d');
             DB::db('db_master')->insert("INSERT INTO tbl_emp_leave SET " . DB::stmt_builder($this->data['tl']),$this->data['tl']);
             $emp_schedule = DTR::get_sched($this->data['tl']['employee_id']);
             for ($i=0;$i<sizeof($emp_schedule);$i++) {

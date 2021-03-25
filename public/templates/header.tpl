@@ -25,12 +25,12 @@
                                 <i class="dropdown-icon fe fe-user"></i> Account
                             </a>
                         {/if}
-                        <a class="dropdown-item" href="/messages">
+                        {* <a class="dropdown-item" href="/messages">
                             <span class="float-right">
                                 <span id="notif" class="badge badge-primary"></span>
                             </span>
                             <i class="dropdown-icon fe fe-send"></i> Messages
-                        </a>
+                        </a> *}
                         <a class="dropdown-item" href="/settings/security">
                             <i class="dropdown-icon fe fe-lock"></i> Change Password
                         </a>
