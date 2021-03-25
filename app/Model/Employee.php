@@ -14,26 +14,33 @@ class Employee {
         return self::$employees;
     }
 
-    public static function type ($type, $status = '1') {
+    public static function type ($type=null, $status = '1') {
         if (!self::$employees) self::employees ();
-        $employees = [];
-        foreach (self::$employees as $e) {
-            if ($e['etype_id'] == $type) {
-                if ($status == 1) {
-                    if ($e['is_active'] == $status) $employees[] = $e;
+        if($type) {
+            $employees = [];
+            foreach (self::$employees as $e) {
+                if ($e['etype_id'] == $type) {
+                    if ($status == 1) {
+                        if ($e['is_active'] == $status) $employees[] = $e;
+                    }
                 }
             }
+        }else{
+            $employees = self::$employees;
         }
         return $employees;
     }
     
-    public function status ($status = '1', $campus) {
+    public static function campus($campus = null) {
         if (!self::$employees) self::employees ();
-        $employees = [];
-        foreach (self::$employees as $e) {
-            if ($e['is_active'] == $status && $e['campus_id'] == $campus) $employees[] = $e;
+        if ($campus) {
+            $employees = [];
+            foreach (self::$employees as $e) {
+                if ($e['campus_id'] == $campus) $employees[] = $e;
+            }
+            self::$employees = $employees;
         }
-        return $employees;
+        return new self();
     }
 
     public static function employees () {
@@ -53,6 +60,7 @@ class Employee {
         }
         self::$employees = $employees;
         return new self();
+        // return self::$employees;
     }
 
     public static function find ($id) {

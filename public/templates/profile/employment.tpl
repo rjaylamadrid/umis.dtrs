@@ -129,7 +129,7 @@
                             <div class="col-lg-6 col-md-6 col-sm-12">
                                 <div class="form-group label-floating">
                                     <label class="form-label">End</label>
-                                    <input type="date" class="form-control" name="employeeinfo[date_to]" required="">
+                                    <input type="date" class="form-control" name="employeeinfo[date_to]">
                                 </div>
                             </div>
                             <div class="col-lg-4 col-md-4 col-sm-12">
@@ -151,7 +151,7 @@
                                         <option value="Regular">Regular</option>
                                         <option value="Casual">Casual</option>
                                         <option value="Temporary">Temporary</option>
-                                        <option value="Contractual">Contractual</option>
+                                        <option value="Contract of Service">Contract of Service</option>
                                         <option value="Project-based">Project-based</option>
                                         <option value="Job Order">Job Order</option>
                                     </select>

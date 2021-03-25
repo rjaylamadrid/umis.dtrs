@@ -57,7 +57,7 @@ class EmployeeProfile {
     }
 
     public function employment () {
-        $this->employment = DB::fetch_all ("SELECT * FROM tbl_employee_employment WHERE employee_id = ?", $this->id);
+        $this->employment = DB::fetch_all ("SELECT * FROM tbl_employee_employment WHERE employee_id = ? ORDER BY date_from DESC", $this->id);
         $this->service_record();
         foreach($this->service_record as $record) {
             $govt = $record['type_id'] == '7' ? 0 : 1;

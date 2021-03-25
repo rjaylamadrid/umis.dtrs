@@ -51,12 +51,9 @@
         </div>
     </div>
 </div>
+{include file="admin/modal/position_modal.tpl"}
 <script>
     require (['datatables'], function () {
         $("#tbl-positions").DataTable();
     })
 </script>
-<div class="modal fade margin-top-70" id="newPositionModal" role="dialog" tabindex="-1" style="margin-left:-50px;">
-    <div class="modal-dialog" id="position" role="document" style="max-width: 500px;">
-    </div>
-</div>

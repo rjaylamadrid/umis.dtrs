@@ -237,7 +237,7 @@ class PDS extends PDF{
             $appointment =  self::$employee->employment[$i]['govt_service'] && self::$employee->employment[$i]['govt_service'] == '1' ? 'Y' : 'N';
             self::$pdf->setXY(6, $y);
             self::multiLine(16.2, 7.1, self::pdsDate(self::$employee->employment[$i]['date_from']), 0);
-            self::multiLine(16.2, 7.1, self::pdsDate(self::$employee->employment[$i]['date_to']), 0);
+            self::multiLine(16.2, 7.1, self::$employee->employment[$i]['date_to'] ? self::pdsDate(self::$employee->employment[$i]['date_to']) : "Present", 0);
             self::multiLine(56, 7.1, self::$employee->employment[$i]['position'], 0);
             self::multiLine(53.2, 7.1, self::$employee->employment[$i]['company'], 0);
             self::multiLine(14, 7.1, self::$employee->employment[$i]['salary'] ? number_format(self::$employee->employment[$i]['salary'],2,'.',',') : '', 0);

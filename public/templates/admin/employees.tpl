@@ -13,6 +13,30 @@
                                 <div style="float: right;">
                                     <form action="" method="POST" id="frm_inactive">
                                         <div class="form-group" style="margin-bottom: 0px;">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        Filter by
+                                                    </button>
+                                                    <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 37px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                        <a class="dropdown-item" href="javascript:void(0)">Employment Status</a>
+                                                        <a class="dropdown-item" href="javascript:void(0)">Department</a>
+                                                        <a class="dropdown-item" href="javascript:void(0)">Specialization</a>
+                                                    </div>
+                                                </div>
+                                                <select name="emp_type" class="form-control custom-select" onchange="document.forms['frm_inactive'].submit()">
+                                                    <option value="">All Employees</option>
+                                                    {foreach $emp_type as $e}
+                                                        <option value="{$e.id}" {if $e.id == $period.emp_type}selected{/if}>{$e.type_desc} {if $e.type_desc2} | {$e.type_desc2}{/if}</option>
+                                                    {/foreach}
+                                                </select>
+                                                <select name="emp_type" class="form-control custom-select collapse" onchange="document.forms['frm_inactive'].submit()">
+                                                    <option value="">All Employees</option>
+                                                    {foreach $emp_type as $e}
+                                                        <option value="{$e.id}" {if $e.id == $period.emp_type}selected{/if}>{$e.type_desc} {if $e.type_desc2} | {$e.type_desc2}{/if}</option>
+                                                    {/foreach}
+                                                </select>
+                                            </div>
                                             <label class="custom-switch" style="display: inline-block; padding: 0 10px; ">
                                                 <input type="checkbox" name="inactive" onchange="document.forms['frm_inactive'].submit()" class="custom-switch-input" {if $status == '0'}checked{/if}>
                                                 <span class="custom-switch-indicator"></span>
