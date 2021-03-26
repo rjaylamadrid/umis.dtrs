@@ -51,7 +51,7 @@ class Message {
 
 	function getLastMessagesData()
 	{
-		return $messages =  DB::fetch_all ("SELECT * FROM tbl_messages WHERE `from` = ".$this->from." AND `to` = ".$this->to."  OR `from` = ".$this->to."  AND `to` = ".$this->from." ORDER BY no DESC LIMIT 1");
+		return $messages =  DB::fetch_all ("SELECT no, `from`, `to`, text, created_on, (SELECT employee_picture FROM tbl_employee WHERE no = ".$this->from.") AS employee_picture FROM tbl_messages WHERE `from` = ".$this->from." AND `to` = ".$this->to." ORDER BY no DESC LIMIT 1");
 	}
 
 	function getContacts($id){

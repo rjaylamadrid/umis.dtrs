@@ -78,7 +78,7 @@ if(typeof $("#user").val() !== "undefined"){
         $(".typing").remove();
         if(msg.typing){
           var msgStatus = user_id == msg.from ? 'you' : 'other';
-          var avatar = user_id == msg.to ? "<div id='r_isActive309' class='avatar d-block' style='background-image: url(/assets/employee_picture/309.jpg)'></div>" : '';
+          var avatar = user_id == msg.to ? "<div id='r_isActive309' class='avatar d-block' style='background-image: url(/assets/employee_picture/" + msg.employee_picture + ")'></div>" : '';
           var HTMLList =  "<div class='message-row " + msgStatus + "-message typing'>" +
                       "<div class='message-content'>" +
                         avatar +
@@ -242,6 +242,7 @@ if(typeof $("#user").val() !== "undefined"){
         status:false,
       };
       f_msg(msg, "json", "/messages").then( function (data) {
+        console.log(data.new_message[0]);
         newMessage(data.new_message[0]);
         data.new_message[0]['command'] = "message";
         data.new_message[0]['msg_id'] = msg_id;
@@ -298,7 +299,7 @@ if(typeof $("#user").val() !== "undefined"){
       //   appendOnceTyping = true;
         var msgStatus = user_id == msg.from ? 'you' : 'other';
         var checkUrl = isURL(msg.text) ? "<a class='message-text' target='_blank' href='" + msg.text + "'>" + msg.text + "</a>" : "<div class='message-text'>" + msg.text + "</div>";
-        var avatar = user_id == msg.to ? "<div id='r_isActive309' class='avatar d-block' style='background-image: url(/assets/employee_picture/309.jpg)'></div>" : '';
+        var avatar = user_id == msg.to ? "<div id='r_isActive309' class='avatar d-block' style='background-image: url(/assets/employee_picture/" + msg.employee_picture + ")'></div>" : '';
         HTMLList =  "<div class='message-row " + msgStatus + "-message'>" +
                       "<div class='message-content'>" +
                         avatar +
