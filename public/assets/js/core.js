@@ -52,6 +52,10 @@ function show_collapse(id,id_='#') {
   }
 }
 
+function employees_filtering() {
+  
+}
+
 function confirm_delete(no, id, tab, other_info_col='', other_info_data='', admin_id='') {
   if(confirm("Are you sure you want to delete this record?")) {
     if(tab=='other-info') {
@@ -247,7 +251,8 @@ function change_emp(emp_info) {
   $("#"+emp_array[5]+"emp_id").val(emp_array[0]);
   $("#"+emp_array[5]+"position").val(emp_array[3]);
   $("#"+emp_array[5]+"department").val(emp_array[4]);
-  $('.spinner1').hide(0);
+  $('.spinner3').hide(0);
+  // $('#cover-spin3').hide(0);
 }
 
 function forced_leave_change(emp_info) {
@@ -272,13 +277,13 @@ function teachers_leave_change(emp_info) {
   $('#cover-spin4').show(0);
 
   if (emp_info == '0') {
-    $('.spinner4').hide(0);
-    $("#note").show(0);
     $("#tl_position").val('N/A');
     $("#tl_department").val('N/A');
     $("#tl_emp_id").val('0');
     $("#tl_emp_salary").val('0');
     $("#tl_dept").val('0');
+    $('.spinner4').hide(0);
+    $("#note").show(0);
   } else {
     $("#note").hide(0);
     var emp_array = emp_info.split(";");
