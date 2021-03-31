@@ -373,4 +373,11 @@ class EmployeesController extends Controller {
         header ("location: /employees/employment-update/$id/schedule/success/".$this->data['schedule_preset']['sched_code']);
     }
     //END OF EMPLOYMENT MODULE
+
+    public function filter() {
+        switch ($this->data['filter']) {
+            case 'status':
+                $this->index();
+        }
+    }
 }

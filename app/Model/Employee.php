@@ -20,13 +20,13 @@ class Employee {
             $employees = [];
             foreach (self::$employees as $e) {
                 if ($e['etype_id'] == $type) {
-                    if ($status == 1) {
-                        if ($e['is_active'] == $status) $employees[] = $e;
-                    }
+                    if ($e['is_active'] == $status) $employees[] = $e;
                 }
             }
-        }else{
-            $employees = self::$employees;
+        }else{$employees = [];
+            foreach (self::$employees as $e) {
+                if ($e['is_active'] == $status) $employees[] = $e;
+            }
         }
         return $employees;
     }

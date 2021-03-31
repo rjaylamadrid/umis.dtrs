@@ -50,7 +50,8 @@ if(typeof $("#user").val() !== "undefined"){
     msgNotif = data.message_notif[0]['tlt_unseen'];
   });
 
-    var conn = new WebSocket('ws://' + window.location.origin.substr(7) + ':9001?'+ session_id + '&user_id='+ user_id);
+    // var conn = new WebSocket('ws://' + window.location.origin.substr(7) + ':9001?'+ session_id + '&user_id='+ user_id);
+    var conn = new WebSocket('ws://192.168.1.11:9001?'+ session_id + '&user_id='+ user_id);
       conn.onopen = function(e) {
         console.log("connection establish");
       }

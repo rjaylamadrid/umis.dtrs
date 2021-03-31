@@ -521,4 +521,16 @@ function show_formula() {
   })
 }
 
+function change_filter(ind) {
+  var filter = ["status", "department", "specialization"];
+
+  for (let i=0; i<3; i++) {
+    if(ind == i) {
+      $('#'+filter[i]).removeClass('collapse');
+    } else {
+      if(!$('#'+filter[i]).hasClass('collapse')) $('#'+filter[i]).addClass('collapse');
+    }
+  }
+}
+
 // OTHER FUNCTIONS :: END
