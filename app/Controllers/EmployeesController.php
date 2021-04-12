@@ -12,6 +12,21 @@ class EmployeesController extends Controller {
     public $profile;
     public $result;
     public $message;
+    public $filters;
+
+    public function get_filters() {
+        $condition = $this->user['is_admin'] ? "WHERE campus_id = ".$this->user['campus_id'] : '';
+        $this->filters['departments'] = DB::fetch_all("SELECT * FROM tbl_department $condition");
+        $this->filters['designation'] = DB::fetch_all("SELECT * FROM tbl_privilege");
+        $this->filters['position'] = DB::fetch_all("SELECT * FROM tbl_position");
+        $this->filters['graduate_study'] = DB::fetch_all("SELECT * FROM tbl_employee_education WHERE level = 'Graduate Studies' GROUP BY school_degree ORDER BY school_degree ASC");
+        $this->filters['bachelors'] = DB::fetch_all("SELECT * FROM tbl_employee_education WHERE level = 'College' GROUP BY school_degree ORDER BY school_degree ASC");
+        $this->filters['eligibility'] = DB::fetch_all("SELECT * FROM tbl_employee_eligibility GROUP BY eligibility_name ORDER BY eligibility_name ASC");
+        $this->filters['training'] = DB::fetch_all("SELECT * FROM tbl_employee_training_seminar GROUP BY training_title ORDER BY training_title ASC");
+        $this->filters['status'] = DB::fetch_all("SELECT * FROM tbl_employee_type");
+        $this->filters['gender'] = DB::fetch_all("SELECT * FROM tbl_employee GROUP BY gender ORDER BY gender");
+        $this->filters['marital'] = DB::fetch_all("SELECT * FROM tbl_employee GROUP BY marital_status ORDER BY marital_status");
+    }
     
     public function bday_celebrant () {
         return DB::fetch_all ("SELECT first_name, last_name, DATE_FORMAT(birthdate, '%M %d') AS BDate, (YEAR(NOW()) - YEAR(birthdate)) AS Age, DAYNAME(DATE_FORMAT(birthdate, '$this->year-%m-%d')) AS Araw, employee_picture FROM tbl_employee a, tbl_employee_status b WHERE a.no = b.employee_id AND b.active_status = 1 AND b.campus_id = ? AND MONTH(a.birthdate) = ? AND DAY(birthdate) BETWEEN 1 AND 31 ORDER BY BDate", [$this->user['campus_id'], $this->year]);

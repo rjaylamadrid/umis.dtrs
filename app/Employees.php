@@ -17,7 +17,11 @@ class Employees extends EmployeesController {
         $status  = $this->data['inactive'] ? 0 : 1;
         $this->stats = EmployeeStats::campus ($this->user['campus_id'])->get_stats ();
         $employees = Employee::campus($this->user['campus_id'])->position()->type($this->data['status'], $status);
-        $this->view->display ('admin/employees', ["stats" => $this->stats, "employees" => $employees,'emp_type' => $this->position->emp_types,'departments' => $this->departments(), 'designations' => $this->designations(), "status" => $status, "result" => $this->result, "type" => $this->data['status']]);
+        $this->get_filters();
+        // print_r("<pre>");
+        // print_r($this->filters);
+        // print_r("</pre>");
+        $this->view->display ('admin/employees', ["stats" => $this->stats, "employees" => $employees,'emp_type' => $this->position->emp_types,'departments' => $this->departments(), 'designations' => $this->designations(), "status" => $status, "result" => $this->result, "type" => $this->data['status'], "campus" => $this->user['campus_id'], "filters" => $this->filters]);
     }
 
     public function profile ($id = null, $tab = 'basic-info', $view='view', $message=NULL) {

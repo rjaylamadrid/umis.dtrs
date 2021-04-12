@@ -52,8 +52,8 @@ function show_collapse(id,id_='#') {
   }
 }
 
-function employees_filtering() {
-  
+function filter_change(vals, category) {
+  alert(vals + category);
 }
 
 function confirm_delete(no, id, tab, other_info_col='', other_info_data='', admin_id='') {

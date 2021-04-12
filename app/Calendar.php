@@ -5,11 +5,12 @@ class Calendar extends CalendarController {
     private $tab = "event";
 
     public function index () {
-        $month=$this->data['month'] ? $this->data['month'] : date('m');
+        $this->data['month'] = $this->data['month'] ? $this->data['month'] : date('m');
+        $this->data['year'] = $this->data['year'] ? $this->data['year'] : date('y');
         if ($this->tab == 'event') {
             $this->get_calendar();
         }
-        $this->view->display ('admin/calendar', ["tab" => $this->tab, "date" => $this->date, "count" => $this->count, "days" => $this->days, "seldate" => $this->selected_date, "lastday" => $this->lastday, "month" => $month, "dtr_code" => $this->dtr_code, "events" => $this->events]);
+        $this->view->display ('admin/calendar', ["tab" => $this->tab, "date" => $this->date, "count" => $this->count, "days" => $this->days, "seldate" => $this->selected_date, "lastday" => $this->lastday, "month" => $this->data['month'], "dtr_code" => $this->dtr_code, "events" => $this->events]);
     }
 
     public function do_action () {

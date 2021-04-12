@@ -17,101 +17,124 @@
                                 </button>
                                 <div class="collapse" id="filters">
                                     <div id="cover-spin" style="display: none; position:absolute;" class="spinner1"></div>
-                                    
-                                    <div id="multiselect">
+
+                                    {* <div id="multiselect">
                                     <form class="demo-example">
                                         <label for="people">Select people:</label>
                                         <select id="people" name="people" multiple="" style="display: none;">
                                             <option value="alice">Alice</option>
                                             <option value="bob">Bob</option>
                                             <option value="carol">Carol</option>
-                                        </select><div class="multi-select-container"><span class="multi-select-button" role="button" aria-haspopup="true" tabindex="0" aria-label="Select people:">-- Select --</span><div class="multi-select-menu" role="menu" style="width: auto;"><div class="multi-select-menuitems"><label class="multi-select-menuitem" for="people_0" role="menuitem"><input type="checkbox" id="people_0" value="alice"> Alice</label><label class="multi-select-menuitem" for="people_1" role="menuitem"><input type="checkbox" id="people_1" value="bob"> Bob</label><label class="multi-select-menuitem" for="people_2" role="menuitem"><input type="checkbox" id="people_2" value="carol"> Carol</label></div></div></div>
+                                        </select>
                                     </form>
                                     </div>
+
+                                    <div id="multiselect">
+                                    <form class="demo-example">
+                                        <label for="asd">Select people:</label>
+                                        <select id="asd" name="asd" multiple="" style="display: none;">
+                                            <option value="alice">Alice</option>
+                                            <option value="bob">Bob</option>
+                                            <option value="carol">Carol</option>
+                                        </select>
+                                    </form>
+                                    </div> *}
 
                                     <form action="" method="POST" id="frm_inactive">
                                         <br />
                                         <div class="row">
                                             <div class="col-md-3">
                                                 <div class="form-label">Campus:</div>
-                                                <select name="emp_type" class="form-control custom-select" onchange="" style="padding: 0rem 1.75rem 0rem 0.75rem;" disabled>
+                                                <select name="filter[campus]" class="form-control custom-select" onchange="" style="padding: 0rem 1.75rem 0rem 0.75rem;" disabled>
                                                     <option value="">Sipocot</option>
                                                 </select>
                                             </div>
                                             <div class="col-md-3">
-                                                <div class="form-label">Department:</div>
-                                                <select name="emp_type" class="form-control custom-select" onchange="" style="padding: 0rem 1.75rem 0rem 0.75rem;">
-                                                    <option value="">GASS</option>
-                                                </select>
+                                                    <div class="form-label">Department:</div>
+                                                    <select id="dept" name="department" class="form-control custom-select" style="padding: 0rem 1.75rem 0rem 0.75rem; max-width:100%;" multiple="">
+                                                        {foreach $filters.departments as $dept}
+                                                            {if $campus == $dept.campus_id}
+                                                                <option value="{$dept.no}" selected>{$dept.department_desc}</option>
+                                                            {/if}
+                                                        {/foreach}
+                                                    </select>
                                             </div>
                                             <div class="col-md-3">
                                                 <div class="form-label">Designation:</div>
-                                                <select name="emp_type" class="form-control custom-select" onchange="" style="padding: 0rem 1.75rem 0rem 0.75rem;">
-                                                    <option value="">HR Officer</option>
+                                                <select id="designation" name="filter[designation]" class="form-control custom-select" onchange="" style="padding: 0rem 1.75rem 0rem 0.75rem; max-width:100%;" multiple="">
+                                                    {foreach $filters.designation as $des}
+                                                            <option value="{$des.priv_id}" selected>{$des.priv_desc}</option>
+                                                    {/foreach}
                                                 </select>
                                             </div>
                                             <div class="col-md-3">
                                                 <div class="form-label">Position:</div>
-                                                <select name="emp_type" class="form-control custom-select" onchange="" style="padding: 0rem 1.75rem 0rem 0.75rem;">
-                                                    <option value="">Administrative Officer IV</option>
+                                                <select id="position" name="filter[position]" class="form-control custom-select" onchange="" style="padding: 0rem 1.75rem 0rem 0.75rem; max-width:100%;" multiple="">
+                                                    {foreach $filters.position as $pos}
+                                                        <option value="{$pos.no}" selected>{$pos.position_desc}
+                                                    {/foreach}
                                                 </select>
                                             </div>
                                             <div class="col-md-3">
                                                 <div class="form-label">Graduate Studies:</div>
-                                                <select name="emp_type" class="form-control custom-select" onchange="" style="padding: 0rem 1.75rem 0rem 0.75rem;">
-                                                    <option value="">MAED - Biological Science</option>
+                                                <select id="graduate" name="filter[grad_stud]" class="form-control custom-select" onchange="" style="padding: 0rem 1.75rem 0rem 0.75rem; max-width:100%;" multiple="">
+                                                    {foreach $filters.graduate_study as $grad}
+                                                        <option value="{$grad.school_degree}" selected>{$grad.school_degree}</option>
+                                                    {/foreach}
                                                 </select>
                                             </div>
                                             <div class="col-md-3">
                                                 <div class="form-label">Bachelor's Degree:</div>
-                                                <select name="emp_type" class="form-control custom-select" onchange="" style="padding: 0rem 1.75rem 0rem 0.75rem;">
-                                                    <option value="">BS Information Technology</option>
+                                                <select id="bachelor" name="filter[bach_degree]" class="form-control custom-select" onchange="" style="padding: 0rem 1.75rem 0rem 0.75rem; max-width:100%;" multiple="">
+                                                    {foreach $filters.bachelors as $bach}
+                                                        <option value="{$bach.school_degree}" selected>{$bach.school_degree}</option>
+                                                    {/foreach}
                                                 </select>
                                             </div>
                                             <div class="col-md-3">
                                                 <div class="form-label">Eligibility:</div>
-                                                <select name="emp_type" class="form-control custom-select" onchange="" style="padding: 0rem 1.75rem 0rem 0.75rem;">
-                                                    <option value="">Career Service - Professional</option>
+                                                <select id="eligibility" name="filter[eligibility]" class="form-control custom-select" onchange="" style="padding: 0rem 1.75rem 0rem 0.75rem; max-width:100%;" multiple="">
+                                                    {foreach $filters.eligibility as $eli}
+                                                        <option value="{$eli.eligibility_name}" selected>{$eli.eligibility_name}</option>
+                                                    {/foreach}
                                                 </select>
                                             </div>
                                             <div class="col-md-3">
                                                 <div class="form-label">Trainings and Seminars:</div>
-                                                <select name="emp_type" class="form-control custom-select" onchange="" style="padding: 0rem 1.75rem 0rem 0.75rem;">
-                                                    <option value="">Computer System Servicing</option>
+                                                <select id="training" name="filter[trainings]" class="form-control custom-select" onchange="" style="padding: 0rem 1.75rem 0rem 0.75rem; max-width:100%;" multiple="">
+                                                    {foreach $filters.training as $train}
+                                                        <option value="{$train.training_title}" selected>{$train.training_title}</option>
+                                                    {/foreach}
                                                 </select>
                                             </div>
                                             <div class="col-md-3">
                                                 <div class="form-label">Appointment Status:</div>
-                                                <select name="emp_type" class="form-control custom-select" onchange="" style="padding: 0rem 1.75rem 0rem 0.75rem;">
-                                                    <option value="">Permanent | Non-Teaching</option>
+                                                <select id="appointment" name="filter[apt_status]" class="form-control custom-select" onchange="" style="padding: 0rem 1.75rem 0rem 0.75rem; max-width:100%;" multiple="">
+                                                    {foreach $filters.status as $stat}
+                                                        <option value="{$stat.id}" selected>{$stat.type_desc}{if $stat.type_desc2} | {$stat.type_desc2} {/if}</option>
+                                                    {/foreach}
                                                 </select>
                                             </div>
                                             <div class="col-md-3">
                                                 <div class="form-label">Gender:</div>
-                                                <select name="emp_type" class="form-control custom-select" onchange="" style="padding: 0rem 1.75rem 0rem 0.75rem;" multiple size="3">
-                                                    <option value="">All</option>
-                                                    <option value="">Male</option>
-                                                    <option value="">Female</option>
+                                                <select id="gender" name="filter[gender]" class="form-control custom-select" onchange="" style="padding: 0rem 1.75rem 0rem 0.75rem; max-width:100%;" multiple="">
+                                                    <option value="1" selected>Male</option>
+                                                    <option value="2" selected>Female</option>
                                                 </select>
                                             </div>
                                             <div class="col-md-3">
                                                 <div class="form-label">Marital Status:</div>
-                                                <select name="emp_type" class="form-control custom-select" onchange="" style="padding: 0rem 1.75rem 0rem 0.75rem;">
-                                                    <option value="">Single</option>
+                                                <select id="marital" name="filter[marital_status]" class="form-control custom-select" onchange="" style="padding: 0rem 1.75rem 0rem 0.75rem; max-width:100%;" multiple="">
+                                                    {foreach $filters.marital as $marital}
+                                                        <option value="{$marital.marital_status}" selected>{$marital.marital_status}</option>
+                                                    {/foreach}
                                                 </select>
                                             </div>
-                                            {* <div class="col-md-3">
-                                                <div class="form-label">Citizenship:</div>
-                                                <select name="emp_type" class="form-control custom-select" onchange="" style="padding: 0rem 1.75rem 0rem 0.75rem;">
-                                                    <option value="">Filipino</option>
-                                                    <option value="">Non-Filipino</option>
-                                                </select>
-                                            </div> *}
                                             <div class="col-md-3">
                                                 <div class="form-label">Active Status:</div>
-                                                <select name="emp_type" class="form-control custom-select" onchange="" style="padding: 0rem 1.75rem 0rem 0.75rem;">
-                                                    <option value="">Active</option>
-                                                    <option value="">Inactive</option>
+                                                <select id="active" name="filter[active_status]" class="form-control custom-select" onchange="" style="padding: 0rem 1.75rem 0rem 0.75rem; max-width:100%;" multiple="">
+                                                    <option value="1" selected>Active</option>
+                                                    <option value="2" selected>Inactive</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -128,9 +151,46 @@
         </div>
     </div>
     <script>
-        $(function(){
-            $('#people').multiSelect();
+        require (['multiselect'], function () {
+            $('#dept').multiSelect({
+                allText: 'Select All'
+            });
+            $('#designation').multiSelect({
+                allText: 'Select All'
+            });
+            $('#position').multiSelect({
+                allText: 'Select All'
+            });
+            $('#graduate').multiSelect({
+                allText: 'Select All'
+            });
+            $('#bachelor').multiSelect({
+                allText: 'Select All'
+            });
+            $('#eligibility').multiSelect({
+                allText: 'Select All'
+            });
+            $('#training').multiSelect({
+                allText: 'Select All'
+            });
+            $('#appointment').multiSelect({
+                allText: 'Select All'
+            });
+            $('#gender').multiSelect({
+                allText: 'Select All'
+            });
+            $('#marital').multiSelect({
+                allText: 'Select All'
+            });
+            $('#active').multiSelect({
+                allText: 'Select All'
+            });
+            $('#dept').on('change', function(){
+                //console.log($(this).val());
+                filter_change($(this).val(), 'dept');
+            });
         });
+        
 
         function set_inactive (id, val = 0) {
             status = val == 0 ? 'inactive' : 'active';
