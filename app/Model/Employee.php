@@ -89,6 +89,6 @@ class Employee {
     }
 
     public static function get_campus ($campus) {
-        return DB::fetch_row ("SELECT * FROM tbl_campus WHERE id = ?", $campus);
+        return DB::db("db_master")->fetch_row ("SELECT * FROM tbl_campus WHERE id = ?", $campus);
     }
 }

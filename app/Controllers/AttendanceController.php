@@ -87,7 +87,13 @@ class AttendanceController extends Controller {
     }
 
     protected function get_raw_data ($period, $args) {
-        return DB::db("db_raw_data")->fetch_all ("SELECT * FROM `$period` WHERE emp_id = ? AND log_date = ?", $args);
+        $raw_data = DB::db("db_raw_data")->fetch_all ("SELECT * FROM `$period` WHERE emp_id = ? AND log_date = ?", $args); 
+        foreach($raw_data as $data) {
+            $campus  = Employee::get_campus($data['campus_id']);
+            $data['campus'] = $campus['campus_name'];
+            $logs[] = $data;
+        }
+        return $logs;
     }
 
     protected function find ($period, $no) {

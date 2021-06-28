@@ -26,7 +26,7 @@
                             <td>{$no}</td>
                             <td>{$raw.log_time}</td>
                             <td class="text-nowrap">{$type[$raw.log_type]}</td>
-                            <td class="w-1">{$raw.cam_name}</td>
+                            <td >{$raw.campus} Campus</td>
                         </tr>
                         {$no = $no + 1}
                         {/foreach}

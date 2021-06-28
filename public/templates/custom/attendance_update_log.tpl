@@ -77,7 +77,7 @@
                             {if $rawdata}
                             {assign var=type value=['', 'IN', 'OUT', 'OT-IN', 'OT-OUT']}
                             {foreach $rawdata as $raw}
-                            <option value="" disabled>{$raw.log_time} - [{$type[$raw.log_type]}] - {$raw.cam_name} Campus</option>
+                            <option value="" disabled>{$raw.log_time} - [{$type[$raw.log_type]}] - {$raw.campus} Campus</option>
                             {/foreach}
                             {/if}
 		                </select>
