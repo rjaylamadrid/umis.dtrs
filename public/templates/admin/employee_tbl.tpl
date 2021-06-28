@@ -1,4 +1,5 @@
 <div class="col-12"><div class="card">
+<div id="cover-spin" style="display: none; position:absolute;" class="spinner1"></div>
     <div class="table-responsive">
         <table style=" font-family:  Arial;" class="table table-hover card-table table-vcenter text-nowrap datatable dataTable no-footer" id="tbl-employees">
             <thead>

@@ -14,18 +14,37 @@ class EmployeesController extends Controller {
     public $message;
     public $filters;
 
-    public function get_filters() {
+    public function get_filters($vals='', $category='') {
+
         $condition = $this->user['is_admin'] ? "WHERE campus_id = ".$this->user['campus_id'] : '';
         $this->filters['departments'] = DB::fetch_all("SELECT * FROM tbl_department $condition");
-        $this->filters['designation'] = DB::fetch_all("SELECT * FROM tbl_privilege");
-        $this->filters['position'] = DB::fetch_all("SELECT * FROM tbl_position");
-        $this->filters['graduate_study'] = DB::fetch_all("SELECT * FROM tbl_employee_education WHERE level = 'Graduate Studies' GROUP BY school_degree ORDER BY school_degree ASC");
-        $this->filters['bachelors'] = DB::fetch_all("SELECT * FROM tbl_employee_education WHERE level = 'College' GROUP BY school_degree ORDER BY school_degree ASC");
-        $this->filters['eligibility'] = DB::fetch_all("SELECT * FROM tbl_employee_eligibility GROUP BY eligibility_name ORDER BY eligibility_name ASC");
-        $this->filters['training'] = DB::fetch_all("SELECT * FROM tbl_employee_training_seminar GROUP BY training_title ORDER BY training_title ASC");
-        $this->filters['status'] = DB::fetch_all("SELECT * FROM tbl_employee_type");
-        $this->filters['gender'] = DB::fetch_all("SELECT * FROM tbl_employee GROUP BY gender ORDER BY gender");
-        $this->filters['marital'] = DB::fetch_all("SELECT * FROM tbl_employee GROUP BY marital_status ORDER BY marital_status");
+
+        // if ($category == 'departments') {
+        //     print_r($vals);
+        //     // $this->filters['departments'] = DB::fetch_all("SELECT * FROM tbl_department WHERE no IN $vals AND campus_id =".$this->user['campus_id']);
+
+        //     // $this->view->display ('admin/employees', ["stats" => $this->stats, "employees" => $employees,'emp_type' => $this->position->emp_types,'departments' => $this->filters['departments'], 'designations' => $this->designations(), "status" => $status, "result" => $this->result, "type" => $this->data['status'], "campus" => $this->user['campus_id'], "filters" => $this->filters]);
+        // }
+        
+        // $this->index();
+        // $this->filters['designation'] = DB::fetch_all("SELECT * FROM tbl_privilege");
+        // $this->filters['position'] = DB::fetch_all("SELECT * FROM tbl_position");
+        // $this->filters['graduate_study'] = DB::fetch_all("SELECT * FROM tbl_employee_education WHERE level = 'Graduate Studies' GROUP BY school_degree ORDER BY school_degree ASC");
+        // $this->filters['bachelors'] = DB::fetch_all("SELECT * FROM tbl_employee_education WHERE level = 'College' GROUP BY school_degree ORDER BY school_degree ASC");
+        // $this->filters['eligibility'] = DB::fetch_all("SELECT * FROM tbl_employee_eligibility GROUP BY eligibility_name ORDER BY eligibility_name ASC");
+        // $this->filters['training'] = DB::fetch_all("SELECT * FROM tbl_employee_training_seminar GROUP BY training_title ORDER BY training_title ASC");
+        // $this->filters['status'] = DB::fetch_all("SELECT * FROM tbl_employee_type");
+        // $this->filters['gender'] = DB::fetch_all("SELECT * FROM tbl_employee GROUP BY gender ORDER BY gender");
+        // $this->filters['marital'] = DB::fetch_all("SELECT * FROM tbl_employee GROUP BY marital_status ORDER BY marital_status");
+    }
+
+    public function view_filtered($vals, $category) {
+        switch ($category) {
+            case "departments" :
+                $depts = $this->departments($vals);
+                break;
+        }
+        $this->view->display ('admin/employees_tbl', ["stats" => $this->stats, "employees" => $employees,'emp_type' => $this->position->emp_types,'departments' => $depts, 'designations' => $this->designations(), "status" => $status, "result" => $this->result, "type" => $this->data['status'], "campus" => $this->user['campus_id'], "filters" => $this->filters]);
     }
     
     public function bday_celebrant () {
@@ -57,8 +76,11 @@ class EmployeesController extends Controller {
         $this->view->index();
     }
     
-    protected function departments () {
-        return DB::fetch_all ("SELECT * FROM tbl_department WHERE campus_id = ? ORDER BY department_desc", $this->user['campus_id']);
+    protected function departments ($vals='') {
+        $returnCondition = $vals ?  "campus_id = ? AND no IN $vals" : "campus_id = ?";
+        // $returnVals = $vals ? [$this->user['campus_id'], [$vals]] : $this->user['campus_id'];
+        return DB::fetch_all ("SELECT * FROM tbl_department WHERE $returnCondition ORDER BY department_desc", $this->user['campus_id']);
+        // return DB::fetch_all ("SELECT * FROM tbl_department WHERE campus_id = ? ORDER BY department_desc", $this->user['campus_id']);
     }
 
     protected function designations () {

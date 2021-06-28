@@ -52,8 +52,14 @@ function show_collapse(id,id_='#') {
   }
 }
 
-function filter_change(vals, category) {
-  alert(vals + category);
+function employees_filter(vals, category) {
+  $('.spinner1').show(0);
+  // alert(vals + category);
+  f({action: 'view_filtered', vals:vals, category:category}, "text", "/employees").then( function (data) {
+    $('.spinner1').hide(0);
+    $('#tbl-employees').html(data);
+    // location.href = "/employees";
+  });
 }
 
 function confirm_delete(no, id, tab, other_info_col='', other_info_data='', admin_id='') {

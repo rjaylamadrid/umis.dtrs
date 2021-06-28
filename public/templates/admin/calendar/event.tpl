@@ -48,13 +48,13 @@
 	</div>
 
 	<div class="col-md-5">
-  <div id="cover-spin" style="display: none; position:absolute;" class="spinner1"></div>
+    <div id="cover-spin" style="display: none; position:absolute;" class="spinner1"></div>
 		<div class="table-responsive">
 		  <table class="table table-bordered" id="tbl-event">
         {include file="admin/calendar/show_events.tpl"}
       </table>
-      </div>
     </div>
+  </div>
   </div>
 
 <div class="modal fade margin-top-70" id="add-event-modal" role="dialog" tabindex="-1" style="margin-left:-50px;">

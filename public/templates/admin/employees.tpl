@@ -155,6 +155,9 @@
             $('#dept').multiSelect({
                 allText: 'Select All'
             });
+            $('#dept').on('change', function(){
+                employees_filter($(this).val(), 'departments');
+            });
             $('#designation').multiSelect({
                 allText: 'Select All'
             });
@@ -184,10 +187,6 @@
             });
             $('#active').multiSelect({
                 allText: 'Select All'
-            });
-            $('#dept').on('change', function(){
-                //console.log($(this).val());
-                filter_change($(this).val(), 'dept');
             });
         });
         
