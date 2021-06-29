@@ -27,14 +27,21 @@ class Attendance extends AttendanceController {
             $interval = new DateInterval('P1D');
             $begin = date_create($this->data['date_from']);
             $end = date_create($this->data['date_to']);
-            
+            $month = ['0'=> $begin->format('F, Y'), '1' => $end->format('F, Y')];
+
             if ($this->data['employee_id']) {
-                $employees[] = Employee::find ($this->data['employee_id'])->get();
+                $employee = Employee::find ($this->data['employee_id'])->get();
+                $title = $employee['last_name'].$month[0];
+                $employees[] = $employee;
             } else {
-                $employees = $this->data['emp_type'] ? Employee::type ($this->data['emp_type']) : Employee::getAll();
+                if ($this->data['emp_type']) {
+                    $employees = Employee::type ($this->data['emp_type']);
+                } else {
+                    $employees = Employee::getAll();
+                    $title = "CBSUA_".$month[0];
+                }
             }
 
-            $month = ['0'=> $begin->format('F, Y'), '1' => $end->format('F, Y')];
             if ($this->data['per_month']) {
                 $daterange = new DatePeriod(new DateTime($begin->format('Y-m-01')), $interval, new DateTime($begin->format('Y-m-t+1')));
                 $datas[] = ["month" => $month[0], "daterange" => $daterange, "from" => $begin, "to" =>$end];
@@ -65,7 +72,7 @@ class Attendance extends AttendanceController {
                     $pdf[] = $this->dtr_data ($vars);
                 }
             }
-            $this->to_pdf($pdf); 
+            $this->to_pdf($pdf, $title); 
         }
     }
 
@@ -78,11 +85,11 @@ class Attendance extends AttendanceController {
     }
 
     protected function get_attendance () {
-        $attendance = $this->attendance ($this->data['id'], ["from" => $this->data['date_from'], "to" => $this->data['date_to']], ($this->data['period'] - 1))->compute ();
         $begin = new DateTime(date_create($this->data['date_from'])->format('Y-m-d'));
         $end = new DateTime(date_create($this->data['date_to'])->format('Y-m-d'));
         $interval = new DateInterval('P1D');
         $daterange = new DatePeriod($begin, $interval, $end->modify('+1 day'));
+        $attendance = $this->attendance ($this->data['id'], ["from" => $this->data['date_from'], "to" => $this->data['date_to']], ($this->data['period'] - 1))->compute ();
 
         $this->view->display ('custom/dtr', ["attendance" => $attendance, "period" => $this->data, "daterange" => $daterange, "employee_id" => $this->data['id']]);
     }

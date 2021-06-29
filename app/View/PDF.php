@@ -16,14 +16,14 @@ class PDF {
         return self::$pdf;
     }
 
-    public static function preview ($args) {
+    public static function preview ($args, $title = "DTR") {
         if (!self::$pdf) self::set ();
         self::setHeaderFooter();
         foreach ($args as $arg) {
             self::$pdf->addPage();
             self::$pdf->writeHTML($arg['content'], true, false, true, false, '');
         }
-        self::$pdf->Output('example_006.pdf', 'I');
+        self::$pdf->Output($title.'.pdf', 'I');
     }
 
     public static function set () {

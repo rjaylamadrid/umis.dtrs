@@ -100,8 +100,8 @@ class AttendanceController extends Controller {
         return DB::db("db_attendance")->fetch_row ("SELECT * FROM `$period` WHERE id = ?", $no);
     }
 
-    protected function to_pdf ($data) {
-        PDF::preview ($data);
+    protected function to_pdf ($data, $title) {
+        PDF::preview ($data, $title);
     }
     
     protected function dtr_data ($vars) {
