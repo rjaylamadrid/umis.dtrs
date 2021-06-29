@@ -13,6 +13,7 @@ class EmployeesController extends Controller {
     public $result;
     public $message;
     public $filters;
+    public $filter_conditions;
 
     public function get_filters($vals='', $category='') {
 
@@ -27,7 +28,7 @@ class EmployeesController extends Controller {
         // }
         
         // $this->index();
-        // $this->filters['designation'] = DB::fetch_all("SELECT * FROM tbl_privilege");
+        $this->filters['designation'] = DB::fetch_all("SELECT * FROM tbl_privilege");
         // $this->filters['position'] = DB::fetch_all("SELECT * FROM tbl_position");
         // $this->filters['graduate_study'] = DB::fetch_all("SELECT * FROM tbl_employee_education WHERE level = 'Graduate Studies' GROUP BY school_degree ORDER BY school_degree ASC");
         // $this->filters['bachelors'] = DB::fetch_all("SELECT * FROM tbl_employee_education WHERE level = 'College' GROUP BY school_degree ORDER BY school_degree ASC");
@@ -38,13 +39,22 @@ class EmployeesController extends Controller {
         // $this->filters['marital'] = DB::fetch_all("SELECT * FROM tbl_employee GROUP BY marital_status ORDER BY marital_status");
     }
 
-    public function view_filtered($vals, $category) {
-        switch ($category) {
-            case "departments" :
-                $depts = $this->departments($vals);
-                break;
+    public function view_filtered() {
+
+        if ($this->data['category'] == 'departments') {
+            $this->filter_conditions = $this->data['vals'] ? " AND b.department_id IN (" . $this->data['vals'] . ") " : " AND b.department_id IN ('') ";
+        } else if ($this->data['category'] == 'designations') {
+            $this->filter_conditions = (($this->data['vals']) && (strpos($this->data['vals'],'8'))) ? " AND b.privilege IN (" . $this->data['vals'] . ",0) " : " AND b.privilege IN ('') ";
         }
-        $this->view->display ('admin/employees_tbl', ["stats" => $this->stats, "employees" => $employees,'emp_type' => $this->position->emp_types,'departments' => $depts, 'designations' => $this->designations(), "status" => $status, "result" => $this->result, "type" => $this->data['status'], "campus" => $this->user['campus_id'], "filters" => $this->filters]);
+        // print_r($this->data['filter_conditions']);
+        $emps = $this->filtered_employees($this->filter_conditions . $this->data['filter_conditions']);
+        $this->view->display ('admin/employee_tbl', ["employees" => $emps, "filter_conditions" => $this->filter_conditions . $this->data['filter_conditions']]);
+    }
+
+    public function filtered_employees($conditions='') {
+        // $conds = implode(" ", $conditions);
+        // print_r($conds);
+        return DB::fetch_all("SELECT a.no as employee_no, first_name, middle_name, last_name, gender, birthdate, is_active, b.*, a.employee_id as employee_id FROM tbl_employee a, tbl_employee_status b WHERE a.no = b.employee_id AND b.no = (SELECT no FROM tbl_employee_status WHERE employee_id = a.no ORDER BY date_start DESC LIMIT 0,1) $conditions ORDER BY last_name ASC");
     }
     
     public function bday_celebrant () {
@@ -77,7 +87,7 @@ class EmployeesController extends Controller {
     }
     
     protected function departments ($vals='') {
-        $returnCondition = $vals ?  "campus_id = ? AND no IN $vals" : "campus_id = ?";
+        $returnCondition = $vals ?  "campus_id = ? AND no IN ($vals)" : "campus_id = ?";
         // $returnVals = $vals ? [$this->user['campus_id'], [$vals]] : $this->user['campus_id'];
         return DB::fetch_all ("SELECT * FROM tbl_department WHERE $returnCondition ORDER BY department_desc", $this->user['campus_id']);
         // return DB::fetch_all ("SELECT * FROM tbl_department WHERE campus_id = ? ORDER BY department_desc", $this->user['campus_id']);

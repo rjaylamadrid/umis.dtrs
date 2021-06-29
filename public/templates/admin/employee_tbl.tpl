@@ -1,3 +1,6 @@
+{* {$x = json_encode($filter_conditions)} *}
+<input type="hidden" value='{json_encode($filter_conditions)}' id="filter_conditions">
+{json_encode($filter_conditions)}
 <div class="col-12"><div class="card">
 <div id="cover-spin" style="display: none; position:absolute;" class="spinner1"></div>
     <div class="table-responsive">

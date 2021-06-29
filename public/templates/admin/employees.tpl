@@ -145,7 +145,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row row-cards row-deck">
+            <div class="row row-cards row-deck" id="employees_list">
                 {include file="admin/employee_tbl.tpl"}
             </div>
         </div>
@@ -155,11 +155,16 @@
             $('#dept').multiSelect({
                 allText: 'Select All'
             });
-            $('#dept').on('change', function(){
-                employees_filter($(this).val(), 'departments');
+            $('#dept').on('change', function() {
+                var dep = JSON.parse($('#filter_conditions').val());
+                employees_filter($(this).val(), 'departments', dep);
             });
             $('#designation').multiSelect({
                 allText: 'Select All'
+            });
+            $('#designation').on('change', function(){
+                var des = JSON.parse($('#filter_conditions').val());
+                employees_filter($(this).val(), 'designations', des);
             });
             $('#position').multiSelect({
                 allText: 'Select All'

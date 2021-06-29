@@ -8,7 +8,7 @@ class Employee {
     static $employee;
     static $employees;
     static $campus;
-    
+
     public static function getAll () {
         if (!self::$employees) self::employees ();
         return self::$employees;
