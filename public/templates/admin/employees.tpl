@@ -162,7 +162,7 @@
             $('#designation').multiSelect({
                 allText: 'Select All'
             });
-            $('#designation').on('change', function(){
+            $('#designation').on('change', function() {
                 var des = JSON.parse($('#filter_conditions').val());
                 employees_filter($(this).val(), 'designations', des);
             });

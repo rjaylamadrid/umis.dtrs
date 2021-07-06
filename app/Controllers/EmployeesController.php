@@ -42,19 +42,21 @@ class EmployeesController extends Controller {
     public function view_filtered() {
 
         if ($this->data['category'] == 'departments') {
-            $this->filter_conditions = $this->data['vals'] ? " AND b.department_id IN (" . $this->data['vals'] . ") " : " AND b.department_id IN ('') ";
+            $this->filter_conditions[0] .= $this->data['vals'] ? " AND b.department_id IN (" . $this->data['vals'] . ") " : " AND b.department_id IN ('') ";
+            // $pos = strpos($this->data['filter_conditions'],'b.department_id');
+            // str_split()
         } else if ($this->data['category'] == 'designations') {
-            $this->filter_conditions = (($this->data['vals']) && (strpos($this->data['vals'],'8'))) ? " AND b.privilege IN (" . $this->data['vals'] . ",0) " : " AND b.privilege IN ('') ";
+            $this->filter_conditions[1] .= (($this->data['vals']) && (strpos($this->data['vals'],'8'))) ? " AND b.privilege IN (" . $this->data['vals'] . ",0) " : " AND b.privilege IN ('') ";
         }
         // print_r($this->data['filter_conditions']);
-        $emps = $this->filtered_employees($this->filter_conditions . $this->data['filter_conditions']);
-        $this->view->display ('admin/employee_tbl', ["employees" => $emps, "filter_conditions" => $this->filter_conditions . $this->data['filter_conditions']]);
+        $emps = $this->filtered_employees($this->filter_conditions);
+        $this->view->display ('admin/employee_tbl', ["employees" => $emps, "filter_conditions" => $this->filter_conditions, "pos" => $pos]);
     }
 
     public function filtered_employees($conditions='') {
-        // $conds = implode(" ", $conditions);
+        $conds = implode(" ", $conditions);
         // print_r($conds);
-        return DB::fetch_all("SELECT a.no as employee_no, first_name, middle_name, last_name, gender, birthdate, is_active, b.*, a.employee_id as employee_id FROM tbl_employee a, tbl_employee_status b WHERE a.no = b.employee_id AND b.no = (SELECT no FROM tbl_employee_status WHERE employee_id = a.no ORDER BY date_start DESC LIMIT 0,1) $conditions ORDER BY last_name ASC");
+        return DB::fetch_all("SELECT a.no as employee_no, first_name, middle_name, last_name, gender, birthdate, is_active, b.*, a.employee_id as employee_id FROM tbl_employee a, tbl_employee_status b WHERE a.no = b.employee_id AND b.no = (SELECT no FROM tbl_employee_status WHERE employee_id = a.no ORDER BY date_start DESC LIMIT 0,1) $conds ORDER BY last_name ASC");
     }
     
     public function bday_celebrant () {

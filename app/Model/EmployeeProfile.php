@@ -59,9 +59,11 @@ class EmployeeProfile {
     public function employment () {
         $this->employment = DB::fetch_all ("SELECT * FROM tbl_employee_employment WHERE employee_id = ? ORDER BY date_from DESC", $this->id);
         $this->service_record();
-        foreach($this->service_record as $record) {
-            $govt = $record['type_id'] == '7' ? 0 : 1;
-            $this->employment[] = array('position' => $record['position_desc'], 'date_from' => $record['date_start'], 'date_to' => $record['date_end'], 'company' => 'Central Bicol State University of Agriculture', 'appointment' => $record['type_desc'], 'salary' => $record['salary'], 'salary_grade' => $record['salary_grade'], 'step' => $record['step'], 'govt_service' => $govt);
+        if($this->service_record){
+            foreach($this->service_record as $record) {
+                $govt = $record['type_id'] == '7' ? 0 : 1;
+                $this->employment[] = array('position' => $record['position_desc'], 'date_from' => $record['date_start'], 'date_to' => $record['date_end'], 'company' => 'Central Bicol State University of Agriculture', 'appointment' => $record['type_desc'], 'salary' => $record['salary'], 'salary_grade' => $record['salary_grade'], 'step' => $record['step'], 'govt_service' => $govt);
+            }
         }
         $this->service_record = [];
     }
