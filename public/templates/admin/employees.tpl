@@ -8,37 +8,25 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-body">
-                            <div class="form-group">
+                            {* <div class="form-group"> *}
                                 <div style="float: right;">
                                     <a href="/employees/registration" class="btn btn-primary"><i class="fe fe-user-plus"></i> Add new employee</a>
                                 </div>
-                                <button type="button" class="btn btn-secondary" onclick="javascript:show_collapse('filters','#')">
+
+                                <form action="" method="POST" id="frm_inactive">
+                                    {* <input type="hidden" name="action" value="filter">
+                                    <input type="hidden" name="filter" value="status"> *}
+                                    <label class="custom-switch" style="display: inline-block; padding: 0 10px; ">
+                                        <input type="checkbox" name="inactive" onchange="document.forms['frm_inactive'].submit()" class="custom-switch-input" {if $status == '0'}checked{/if}>
+                                        <span class="custom-switch-indicator"></span>
+                                        <span class="custom-switch-description">Show Inactive </span>
+                                    </label>
+                                </form>
+                                {* <button type="button" class="btn btn-secondary" onclick="javascript:show_collapse('filters','#')">
                                     Show Filters <span class="fe fe-chevron-down"></span>
                                 </button>
                                 <div class="collapse" id="filters">
                                     <div id="cover-spin" style="display: none; position:absolute;" class="spinner1"></div>
-
-                                    {* <div id="multiselect">
-                                    <form class="demo-example">
-                                        <label for="people">Select people:</label>
-                                        <select id="people" name="people" multiple="" style="display: none;">
-                                            <option value="alice">Alice</option>
-                                            <option value="bob">Bob</option>
-                                            <option value="carol">Carol</option>
-                                        </select>
-                                    </form>
-                                    </div>
-
-                                    <div id="multiselect">
-                                    <form class="demo-example">
-                                        <label for="asd">Select people:</label>
-                                        <select id="asd" name="asd" multiple="" style="display: none;">
-                                            <option value="alice">Alice</option>
-                                            <option value="bob">Bob</option>
-                                            <option value="carol">Carol</option>
-                                        </select>
-                                    </form>
-                                    </div> *}
 
                                     <form action="" method="POST" id="frm_inactive">
                                         <br />
@@ -140,7 +128,7 @@
                                         </div>
                                     </form>
                                 </div>
-                            </div>
+                            </div> *}
                         </div>
                     </div>
                 </div>
@@ -198,7 +186,7 @@
 
         function set_inactive (id, val = 0) {
             status = val == 0 ? 'inactive' : 'active';
-            //if(confirm("Are you sure you want to set this employee " + status + "?")) {
+            if(confirm("Are you sure you want to set this employee " + status + "?")) {
                 if (val == 0) {
                     f({ action: 'set_active', active: val, id: id}, "json", "/employees").then (function (result) {
                         if (result.success) location.reload();
@@ -208,7 +196,7 @@
                     $('#employee_id').val(id);
                     $('#promote-employee-modal').modal('show');
                 }
-            //}
+            }
         }
     </script>
     <div class="modal fade margin-top-70" id="employee-status-modal" role="dialog" tabindex="-1" style="margin-left:-50px;">

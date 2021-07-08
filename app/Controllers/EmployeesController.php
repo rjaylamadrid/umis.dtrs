@@ -65,7 +65,7 @@ class EmployeesController extends Controller {
 
     public function get_position () {
         $this->position = new Position();
-        $this->position->positions($this->data['type']);
+        $this->position->positions($this->data['type'],$this->user['campus_id']);
         echo json_encode($this->position->positions);
     }
 
