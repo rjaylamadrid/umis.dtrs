@@ -1,13 +1,17 @@
 <div class="content">
     <table>
         <tr>
-            <td colspan="1"><img src="http://dtrs.com/assets/img/cbsua_logosmall.png" width="40px" height="40px"></td>
-            <td colspan="5" style="font-size: 7px;">Republic of the Philippines<br/>
-                <b>CENTRAL BICOL STATE UNIVERSITY OF AGRICULTURE</b><br/>
+            <td colspan="1" style="text-align: center; width:20%">
+                <img src="http://dtrs.com/assets/img/cbsua_logosmall.png" width="41px" height="41px">
+                <label style="font-size: 6px; font-weight: bold; color: #006600">ISO 9001:2015<br/>
+                CERTIFIED</label>
+            </td>
+            <td colspan="5" style="font-size: 7px; text-align: center; width:73%">Republic of the Philippines<br/>
+                <b style="font-size: 7px;">CENTRAL BICOL STATE UNIVERSITY OF AGRICULTURE</b><br/>
                 {$campus.campus_address}<br/>
                 Website: www.cbsua.edu.ph<br/>
                 Email Address: {$campus.campus_email}<br/>
-                Telephone: {$campus.campus_telephone}<br/>
+                Trunkline: {$campus.campus_telephone}<br/>
             </td>
         </tr>
         <br/>
@@ -92,7 +96,7 @@
                 {/if}
             {/foreach}
             <tr class="border">
-                <td colspan="7" style="text-align: left;">TOTAL HOURS: <b>{$attendance.total}</b> OVERTIME: <b>0.00</b></td>
+                <td colspan="7" style="text-align: left;">TOTAL DAYS: <b>{$days-$attendance.abs}</b> OVERTIME: <b>0.00</b></td>
                 <td>{$attendance.abs}</td>
                 <td>{$attendance.ut}</td>
             </tr>
