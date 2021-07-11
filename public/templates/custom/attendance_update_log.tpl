@@ -81,7 +81,16 @@
                             {/foreach}
                             {/if}
 		                </select>
-                  </div>
+                  	</div>
+					{if $user.is_admin}
+						{if $checkbox}
+							<div class="form-group">
+								<label class="custom-control custom-checkbox">
+									<input type="checkbox" class="custom-control-input" name="ot-paid" id="ot_paid" value="checked"> <span class="custom-control-label">Validate day as payable</span>
+								</label>
+							</div>
+						{/if}
+					{/if}
 				</div>
 			</div>
 			<div class="card-footer text-right">

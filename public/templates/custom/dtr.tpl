@@ -42,60 +42,60 @@
             {$attendance.ut = 0}
             {$attendance.total = 0}
             {if $attendance}
-            {foreach $daterange as $date}
-                {if $month != $date|date_format:"%m"}
-                    <tr>
-                        <td colspan="11" style="background-color: #00c4ff1a; line-height: 15px"><b>{$date|date_format:"%B %Y"|upper}</b></td>
-                    </tr>
-                    {$month = $date|date_format:"%m"}
-                {/if}
-                {if $attendance['attn'][$date|date_format: "%Y-%m-%d"]}
-                    {$attn = $attendance['attn'][$date|date_format: "%Y-%m-%d"]}
-                    <tr class="" {if $attn.auth == "false"} style="background-color: #ff00001a; line-height: 15px" {/if}>
-                        <td><b>{$attn.date|date_format:"%d"}</b></td>
-                        <td>{$attn.am_in}</td>
-                        <td>{$attn.am_out}</td>
-                        <td>{$attn.pm_in}</td>
-                        <td>{$attn.pm_out}</td>
-                        <td>{$attn.ot_in}</td>
-                        <td>{$attn.ot_out}</td>
-                        <td>{$attn.total_hours}</td>
-                        <td>{$attn.late + $attn.undertime}</td>
-                        {$attendance.ut = $attendance.ut + ($attn.late + $attn.undertime)}
-                        {$attendance.total = $attendance.total + $attn.total_hours}
-                        <td></td>
-                        {if $user.is_admin}
-                        <td><a href="javascript:view_raw_data('{$employee_id}', '{$attn.date|date_format:"%Y-%m-%d"}');" class="icon" title="View Raw Data"><i class="fe fe-eye"></i></a><a href="javascript:update_log('{$attn.id}', '{$employee_id}', '{$attn.date|date_format:"%Y-%m-%d"}');" class="icon" title="Edit Log"><i class="fe fe-edit"></i></a></td>
-                        {/if}
-                    </tr>
-                {else}
-                    {if $date|date_format:"w" == 0 || $date|date_format:"w" == 6}
-                        <tr style="line-height: 13px">
-                            <td><b>{$date|date_format:"%d"}</b></td>
-                            <td colspan="9" style="text-align: center; letter-spacing: 60px;">{$date|date_format:"%A"|upper}</td>
-                            {if $user.is_admin}
-                            <td><a href="javascript:view_raw_data('{$employee_id}', '{$date|date_format:"%Y-%m-%d"}');" class="icon" title="View Raw Data"><i class="fe fe-eye"></i></a><a href="javascript:update_log('0', '{$employee_id}', '{$date|date_format:"%Y-%m-%d"}');" class="icon" title="Edit Log"><i class="fe fe-edit"></i></a></td>
-                            {/if}    
+                {foreach $daterange as $date}
+                    {if $month != $date|date_format:"%m"}
+                        <tr>
+                            <td colspan="11" style="background-color: #00c4ff1a; line-height: 15px"><b>{$date|date_format:"%B %Y"|upper}</b></td>
                         </tr>
-                            {else}
-                        <tr style="line-height: 15px">
-                            <td><b>{$date|date_format:"%d"}</b></td>
-                            <td> : </td>
-                            <td> : </td>
-                            <td> : </td>
-                            <td> : </td>
-                            <td>   </td>
-                            <td>   </td>
-                            <td> 0.00  </td>
-                            <td> 0  </td>
+                        {$month = $date|date_format:"%m"}
+                    {/if}
+                    {if $attendance['attn'][$date|date_format: "%Y-%m-%d"]}
+                        {$attn = $attendance['attn'][$date|date_format: "%Y-%m-%d"]}
+                        <tr class="" {if $attn.auth == "false"} style="background-color: #ff00001a; line-height: 15px" {/if}>
+                            <td><b>{$attn.date|date_format:"%d"}</b></td>
+                            <td>{$attn.am_in}</td>
+                            <td>{$attn.am_out}</td>
+                            <td>{$attn.pm_in}</td>
+                            <td>{$attn.pm_out}</td>
+                            <td>{$attn.ot_in}</td>
+                            <td>{$attn.ot_out}</td>
+                            <td>{$attn.total_hours}</td>
+                            <td>{$attn.late + $attn.undertime}</td>
+                            {$attendance.ut = $attendance.ut + ($attn.late + $attn.undertime)}
+                            {$attendance.total = $attendance.total + $attn.total_hours}
                             <td></td>
                             {if $user.is_admin}
-                            <td><a href="javascript:view_raw_data('{$employee_id}', '{$date|date_format:"%Y-%m-%d"}');" class="icon" title="View Raw Data"><i class="fe fe-eye"></i></a><a href="javascript:update_log('0', '{$employee_id}', '{$date|date_format:"%Y-%m-%d"}');" class="icon" title="Edit Log"><i class="fe fe-edit"></i></a></td>
+                            <td><a href="javascript:view_raw_data('{$employee_id}', '{$attn.date|date_format:"%Y-%m-%d"}');" class="icon" title="View Raw Data"><i class="fe fe-eye"></i></a><a href="javascript:update_log('{$attn.id}', '{$employee_id}', '{$attn.date|date_format:"%Y-%m-%d"}');" class="icon" title="Edit Log"><i class="fe fe-edit"></i></a></td>
                             {/if}
                         </tr>
+                    {else}
+                        {if $date|date_format:"w" == 0 || $date|date_format:"w" == 6}
+                            <tr style="line-height: 13px">
+                                <td><b>{$date|date_format:"%d"}</b></td>
+                                <td colspan="9" style="text-align: center; letter-spacing: 60px;">{$date|date_format:"%A"|upper}</td>
+                                {if $user.is_admin}
+                                <td><a href="javascript:view_raw_data('{$employee_id}', '{$date|date_format:"%Y-%m-%d"}');" class="icon" title="View Raw Data"><i class="fe fe-eye"></i></a><a href="javascript:update_log('0', '{$employee_id}', '{$date|date_format:"%Y-%m-%d"}');" class="icon" title="Edit Log"><i class="fe fe-edit"></i></a></td>
+                                {/if}    
+                            </tr>
+                                {else}
+                            <tr style="line-height: 15px">
+                                <td><b>{$date|date_format:"%d"}</b></td>
+                                <td> : </td>
+                                <td> : </td>
+                                <td> : </td>
+                                <td> : </td>
+                                <td>   </td>
+                                <td>   </td>
+                                <td> 0.00  </td>
+                                <td> 0  </td>
+                                <td></td>
+                                {if $user.is_admin}
+                                <td><a href="javascript:view_raw_data('{$employee_id}', '{$date|date_format:"%Y-%m-%d"}');" class="icon" title="View Raw Data"><i class="fe fe-eye"></i></a><a href="javascript:update_log('0', '{$employee_id}', '{$date|date_format:"%Y-%m-%d"}');" class="icon" title="Edit Log"><i class="fe fe-edit"></i></a></td>
+                                {/if}
+                            </tr>
+                        {/if}
                     {/if}
-                {/if}
-            {/foreach}
+                {/foreach}
             {/if}
       </tbody>
     </table>

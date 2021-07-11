@@ -111,7 +111,7 @@ class AttendanceController extends Controller {
     }
 
     protected function save_log () {
-        DTR::change_log ($this->data['employee_id'], $this->data['attnd'],$this->data['period'], $this->data['date'], $this->data['no']);
+        DTR::change_log ($this->data['employee_id'], $this->data['attnd'],$this->data['period'], $this->data['date'], $this->data['no'], $this->data['ot-paid']);
     }
 
     protected function set_default () {
