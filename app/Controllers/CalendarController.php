@@ -44,9 +44,9 @@ class CalendarController extends Controller {
 
     public function add_event() {
         DB::db('db_master')->insert ("INSERT INTO tbl_event SET ". DB::stmt_builder($this->data['Event']),$this->data['Event']);
-        if (($this->data['Event']['dtr_code_id'] != 1) && ($this->data['Event']['dtr_code_id'] != 3)) {
+        // if (($this->data['Event']['dtr_code_id'] != 1) && ($this->data['Event']['dtr_code_id'] != 3)) {
             self::attendance_event($this->data['Event']['event_date'], $this->data['Event']['dtr_code_id'], $this->data['Event']['event_start'], $this->data['Event']['event_end']);
-        }
+        // }
         $this->date = date_create($this->data['Event']['event_date']);
         $this->index();
     }

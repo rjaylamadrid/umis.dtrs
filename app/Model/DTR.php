@@ -131,7 +131,7 @@ class DTR {
         return DB::db("db_attendance")->fetch_row ("SELECT * FROM `$period` WHERE emp_id = ? AND date = ?", $args);
     }
 
-    public function delete_log ($period, $no) {
+    public static function delete_log ($period, $no) {
         DB::db("db_attendance")->delete("DELETE FROM `$period` WHERE id = ?", $no);
     }
 
