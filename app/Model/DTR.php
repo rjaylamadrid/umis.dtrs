@@ -10,12 +10,16 @@ class DTR {
         return DB::db("db_master")->fetch_all("SELECT * FROM tbl_dtr_code ORDER BY dtr_code ASC");
     }
 
-    public static function get_sched ($id, $date = NULL) {
-        if ($date) {
-            $day = date_format($date,'l');
-            $sched = DB::db("db_master")->fetch_all("SELECT * FROM tbl_schedule  WHERE sched_code = (SELECT sched_code FROM tbl_employee_sched WHERE employee_id = ? AND `date` <= ? ORDER BY `date` DESC LIMIT 0,1) AND weekday = ?", [$id, $date->format('Y-m-d'), $day]);
+    public static function get_sched ($id, $date = NULL, $ot_paid = NULL) {
+        if ($ot_paid) {
+            $sched = DB::db("db_master")->fetch_all("SELECT * FROM tbl_schedule WHERE sched_code = (SELECT sched_code FROM tbl_employee_sched WHERE employee_id = ? AND `date` <= ? ORDER BY `date` DESC LIMIT 0,1) LIMIT 1", [$id, $date->format('Y-m-d')]);
         } else {
-            $sched = DB::db("db_master")->fetch_all("SELECT * FROM tbl_schedule WHERE sched_code = (SELECT sched_code FROM tbl_employee_sched WHERE employee_id = ? ORDER BY `date` DESC LIMIT 0,1)", $id);
+            if ($date) {
+                $day = date_format($date,'l');
+                $sched = DB::db("db_master")->fetch_all("SELECT * FROM tbl_schedule  WHERE sched_code = (SELECT sched_code FROM tbl_employee_sched WHERE employee_id = ? AND `date` <= ? ORDER BY `date` DESC LIMIT 0,1) AND weekday = ?", [$id, $date->format('Y-m-d'), $day]);
+            } else {
+                $sched = DB::db("db_master")->fetch_all("SELECT * FROM tbl_schedule WHERE sched_code = (SELECT sched_code FROM tbl_employee_sched WHERE employee_id = ? ORDER BY `date` DESC LIMIT 0,1)", $id);
+            }
         }
         return $sched;
     }
@@ -34,8 +38,8 @@ class DTR {
         return $result;
     }
 
-    public static function change_log ($id, $attnd, $period, $date, $log_no = NULL) {
-        $attendance = self::compute_log ($attnd, $id, $date, $period);
+    public static function change_log ($id, $attnd, $period, $date, $log_no = NULL, $ot_paid = NULL) {
+        $attendance = self::compute_log ($attnd, $id, $date, $period, $ot_paid);
         if ($log_no) {
             if ($attendance['null']){
                 self::delete_log($period, $log_no);
@@ -52,10 +56,10 @@ class DTR {
         }
     }  
 
-    public static function compute_log ($attnd, $id, $date, $period) {
+    public static function compute_log ($attnd, $id, $date, $period, $ot_paid = NULL) {
         $preset = ["am_in", "am_out", "pm_in", "pm_out", "ot_in", "ot_out"];
         $attendance = ["is_absent" => 0, "total_hours" => 0, "late" => 0, "undertime" => 0];
-        $sched = self::get_sched($id, date_create($date));
+        $sched = self::get_sched($id, date_create($date), $ot_paid);
         $logs = self::get_log($period, [$id, $date]);
         $is_null = $logs[0] == '' ? true :false;
         if ($sched) {
