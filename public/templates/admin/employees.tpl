@@ -63,7 +63,7 @@
                                                 <div class="form-label">Designation:</div>
                                                 <select id="designation" name="filter[designation]" class="form-control custom-select" onchange="" style="padding: 0rem 1.75rem 0rem 0.75rem; max-width:100%;" multiple="">
                                                     {foreach $filters.designation as $des}
-                                                            <option value="{$des.priv_id}" selected>{$des.priv_desc}</option>
+                                                            <option value="{$des.priv_level}" selected>{$des.priv_desc}</option>
                                                     {/foreach}
                                                 </select>
                                             </div>
@@ -77,17 +77,17 @@
                                             </div>
                                             <div class="col-md-3">
                                                 <div class="form-label">Graduate Studies:</div>
-                                                <select id="graduate" name="filter[grad_stud]" class="form-control custom-select" onchange="" style="padding: 0rem 1.75rem 0rem 0.75rem; max-width:100%;" multiple="">
+                                                <select id="graduate" name="filter[grad_stud]" class="form-control custom-select" onchange="" style="padding: 0rem 1.75rem 0rem 0.75rem; max-width:100%;" multiple="" disabled>
                                                     {foreach $filters.graduate_study as $grad}
-                                                        <option value="{$grad.school_degree}" selected>{$grad.school_degree}</option>
+                                                        <option value="'{$grad.highest_level}'" selected>{$grad.highest_level}</option>
                                                     {/foreach}
                                                 </select>
                                             </div>
                                             <div class="col-md-3">
                                                 <div class="form-label">Bachelor's Degree:</div>
-                                                <select id="bachelor" name="filter[bach_degree]" class="form-control custom-select" onchange="" style="padding: 0rem 1.75rem 0rem 0.75rem; max-width:100%;" multiple="">
+                                                <select id="bachelor" name="filter[bach_degree]" class="form-control custom-select" onchange="" style="padding: 0rem 1.75rem 0rem 0.75rem; max-width:100%;" multiple="" disabled>
                                                     {foreach $filters.bachelors as $bach}
-                                                        <option value="{$bach.school_degree}" selected>{$bach.school_degree}</option>
+                                                        <option value="'{$bach.school_degree}'" selected>{$bach.school_degree}</option>
                                                     {/foreach}
                                                 </select>
                                             </div>
@@ -95,7 +95,7 @@
                                                 <div class="form-label">Eligibility:</div>
                                                 <select id="eligibility" name="filter[eligibility]" class="form-control custom-select" onchange="" style="padding: 0rem 1.75rem 0rem 0.75rem; max-width:100%;" multiple="">
                                                     {foreach $filters.eligibility as $eli}
-                                                        <option value="{$eli.eligibility_name}" selected>{$eli.eligibility_name}</option>
+                                                        <option value="'{$eli.eligibility_name}'" selected>{$eli.eligibility_name}</option>
                                                     {/foreach}
                                                 </select>
                                             </div>
@@ -103,7 +103,7 @@
                                                 <div class="form-label">Trainings and Seminars:</div>
                                                 <select id="training" name="filter[trainings]" class="form-control custom-select" onchange="" style="padding: 0rem 1.75rem 0rem 0.75rem; max-width:100%;" multiple="">
                                                     {foreach $filters.training as $train}
-                                                        <option value="{$train.training_title}" selected>{$train.training_title}</option>
+                                                        <option value="'{$train.training_title}'" selected>{$train.training_title}</option>
                                                     {/foreach}
                                                 </select>
                                             </div>
@@ -111,22 +111,22 @@
                                                 <div class="form-label">Appointment Status:</div>
                                                 <select id="appointment" name="filter[apt_status]" class="form-control custom-select" onchange="" style="padding: 0rem 1.75rem 0rem 0.75rem; max-width:100%;" multiple="">
                                                     {foreach $filters.status as $stat}
-                                                        <option value="{$stat.id}" selected>{$stat.type_desc}{if $stat.type_desc2} | {$stat.type_desc2} {/if}</option>
+                                                        <option value="{$stat.id}" selected>{$stat.type_desc}</option>
                                                     {/foreach}
                                                 </select>
                                             </div>
                                             <div class="col-md-3">
                                                 <div class="form-label">Gender:</div>
                                                 <select id="gender" name="filter[gender]" class="form-control custom-select" onchange="" style="padding: 0rem 1.75rem 0rem 0.75rem; max-width:100%;" multiple="">
-                                                    <option value="1" selected>Male</option>
-                                                    <option value="2" selected>Female</option>
+                                                    <option value="'Male'" selected>Male</option>
+                                                    <option value="'Female'" selected>Female</option>
                                                 </select>
                                             </div>
                                             <div class="col-md-3">
                                                 <div class="form-label">Marital Status:</div>
                                                 <select id="marital" name="filter[marital_status]" class="form-control custom-select" onchange="" style="padding: 0rem 1.75rem 0rem 0.75rem; max-width:100%;" multiple="">
                                                     {foreach $filters.marital as $marital}
-                                                        <option value="{$marital.marital_status}" selected>{$marital.marital_status}</option>
+                                                        <option value="'{$marital.marital_status}'" selected>{$marital.marital_status}</option>
                                                     {/foreach}
                                                 </select>
                                             </div>
@@ -153,45 +153,171 @@
     <script>
         require (['multiselect'], function () {
             $('#dept').multiSelect({
-                allText: 'Select All'
+                allText: 'All Departments',
+                noneText: 'None',
+                presets: [ {
+                    name: 'All Departments',
+                    all: true
+                }, {
+                    name: 'None',
+                    options: []
+                } ]
             });
             $('#dept').on('change', function() {
-                var dep = JSON.parse($('#filter_conditions').val());
-                employees_filter($(this).val(), 'departments', dep);
+                var dep = $('#filter_conditions').val();
+                employees_filter($(this).val(), 'department_id', dep);
             });
             $('#designation').multiSelect({
-                allText: 'Select All'
+                allText: 'All Designations',
+                noneText: 'None',
+                presets: [ {
+                    name: 'All Designations',
+                    all: true
+                }, {
+                    name: 'None',
+                    options: []
+                } ]
             });
             $('#designation').on('change', function() {
-                var des = JSON.parse($('#filter_conditions').val());
-                employees_filter($(this).val(), 'designations', des);
+                var des = $('#filter_conditions').val();
+                employees_filter($(this).val(), 'privilege', des);
             });
             $('#position').multiSelect({
-                allText: 'Select All'
+                allText: 'All Positions',
+                noneText: 'None',
+                presets: [ {
+                    name: 'All Positions',
+                    all: true
+                }, {
+                    name: 'None',
+                    options: []
+                } ]
+            });
+            $('#position').on('change', function() {
+                var pos = $('#filter_conditions').val();
+                employees_filter($(this).val(), 'position_id', pos);
             });
             $('#graduate').multiSelect({
-                allText: 'Select All'
+                allText: 'All Graduate Studies',
+                noneText: 'None',
+                presets: [ {
+                    name: 'All Graduate Studies',
+                    all: true
+                }, {
+                    name: 'None',
+                    options: []
+                } ]
+            });
+            $('#graduate').on('change', function() {
+                //$('#filter[bach_degree]_preset_0').attr("checked","checked");
+                //document.getElementById("filter[bach_degree]_preset_0").checked = true;
+                var gra = $('#filter_conditions').val();
+                employees_filter($(this).val(), 'highest_level', gra,2);
             });
             $('#bachelor').multiSelect({
-                allText: 'Select All'
+                allText: 'All College Degrees',
+                noneText: 'None',
+                presets: [ {
+                    name: 'All College Degrees',
+                    all: true
+                }, {
+                    name: 'None',
+                    options: []
+                } ]
+            });
+            $('#bachelor').on('change', function() {
+                var bac = $('#filter_conditions').val();
+                employees_filter($(this).val(), 'school_degree', bac,1);
+            });
+            $('#eligibility').on('change', function() {
+                var eli = $('#filter_conditions').val();
+                employees_filter($(this).val(), 'eligibility_name', eli);
             });
             $('#eligibility').multiSelect({
-                allText: 'Select All'
+                allText: 'All Eligibilities',
+                noneText: 'None',
+                presets: [ {
+                    name: 'All Eligibilities',
+                    all: true
+                }, {
+                    name: 'None',
+                    options: []
+                } ]
             });
             $('#training').multiSelect({
-                allText: 'Select All'
+                allText: 'All Trainings / Seminars',
+                noneText: 'None',
+                presets: [ {
+                    name: 'All Trainings / Seminars',
+                    all: true
+                }, {
+                    name: 'None',
+                    options: []
+                } ]
+            });
+            $('#training').on('change', function() {
+                var tra = $('#filter_conditions').val();
+                employees_filter($(this).val(), 'training_title', tra);
             });
             $('#appointment').multiSelect({
-                allText: 'Select All'
+                allText: 'All Appointment Status',
+                noneText: 'None',
+                presets: [ {
+                    name: 'All Appointment Status',
+                    all: true
+                }, {
+                    name: 'None',
+                    options: []
+                } ]
+            });
+            $('#appointment').on('change', function() {
+                var app = $('#filter_conditions').val();
+                employees_filter($(this).val(), 'etype_id', app);
             });
             $('#gender').multiSelect({
-                allText: 'Select All'
+                allText: 'All Genders',
+                noneText: 'None',
+                presets: [ {
+                    name: 'All Genders',
+                    all: true
+                }, {
+                    name: 'None',
+                    options: []
+                } ]
+            });
+            $('#gender').on('change', function() {
+                var gen = $('#filter_conditions').val();
+                employees_filter($(this).val(), 'gender', gen);
             });
             $('#marital').multiSelect({
-                allText: 'Select All'
+                allText: 'All Status',
+                noneText: 'None',
+                presets: [ {
+                    name: 'All Status',
+                    all: true
+                }, {
+                    name: 'None',
+                    options: []
+                } ]
+            });
+            $('#marital').on('change', function() {
+                var mar = $('#filter_conditions').val();
+                employees_filter($(this).val(), 'marital_status', mar);
             });
             $('#active').multiSelect({
-                allText: 'Select All'
+                allText: 'All Status',
+                noneText: 'None',
+                presets: [ {
+                    name: 'All Status',
+                    all: true
+                }, {
+                    name: 'None',
+                    options: []
+                } ]
+            });
+            $('#active').on('change', function() {
+                var act = $('#filter_conditions').val();
+                employees_filter($(this).val(), 'is_active', act);
             });
         });
         

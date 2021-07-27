@@ -19,44 +19,54 @@ class EmployeesController extends Controller {
 
         $condition = $this->user['is_admin'] ? "WHERE campus_id = ".$this->user['campus_id'] : '';
         $this->filters['departments'] = DB::fetch_all("SELECT * FROM tbl_department $condition");
-
-        // if ($category == 'departments') {
-        //     print_r($vals);
-        //     // $this->filters['departments'] = DB::fetch_all("SELECT * FROM tbl_department WHERE no IN $vals AND campus_id =".$this->user['campus_id']);
-
-        //     // $this->view->display ('admin/employees', ["stats" => $this->stats, "employees" => $employees,'emp_type' => $this->position->emp_types,'departments' => $this->filters['departments'], 'designations' => $this->designations(), "status" => $status, "result" => $this->result, "type" => $this->data['status'], "campus" => $this->user['campus_id'], "filters" => $this->filters]);
-        // }
-        
-        // $this->index();
         $this->filters['designation'] = DB::fetch_all("SELECT * FROM tbl_privilege");
-        // $this->filters['position'] = DB::fetch_all("SELECT * FROM tbl_position");
-        // $this->filters['graduate_study'] = DB::fetch_all("SELECT * FROM tbl_employee_education WHERE level = 'Graduate Studies' GROUP BY school_degree ORDER BY school_degree ASC");
-        // $this->filters['bachelors'] = DB::fetch_all("SELECT * FROM tbl_employee_education WHERE level = 'College' GROUP BY school_degree ORDER BY school_degree ASC");
-        // $this->filters['eligibility'] = DB::fetch_all("SELECT * FROM tbl_employee_eligibility GROUP BY eligibility_name ORDER BY eligibility_name ASC");
-        // $this->filters['training'] = DB::fetch_all("SELECT * FROM tbl_employee_training_seminar GROUP BY training_title ORDER BY training_title ASC");
-        // $this->filters['status'] = DB::fetch_all("SELECT * FROM tbl_employee_type");
-        // $this->filters['gender'] = DB::fetch_all("SELECT * FROM tbl_employee GROUP BY gender ORDER BY gender");
-        // $this->filters['marital'] = DB::fetch_all("SELECT * FROM tbl_employee GROUP BY marital_status ORDER BY marital_status");
+        $this->filters['position'] = DB::fetch_all("SELECT * FROM tbl_position");
+        $this->filters['graduate_study'] = DB::fetch_all("SELECT * FROM tbl_employee_education WHERE level = 'Graduate Studies' GROUP BY highest_level ORDER BY highest_level ASC");
+        $this->filters['bachelors'] = DB::fetch_all("SELECT * FROM tbl_employee_education WHERE level = 'College' GROUP BY school_degree ORDER BY school_degree ASC");
+        $this->filters['eligibility'] = DB::fetch_all("SELECT * FROM tbl_employee_eligibility GROUP BY eligibility_name ORDER BY eligibility_name ASC");
+        $this->filters['training'] = DB::fetch_all("SELECT * FROM tbl_employee_training_seminar GROUP BY training_title ORDER BY training_title ASC");
+        $this->filters['status'] = DB::fetch_all("SELECT * FROM tbl_employee_type");
+        $this->filters['marital'] = DB::fetch_all("SELECT * FROM tbl_employee GROUP BY marital_status ORDER BY marital_status");
     }
 
     public function view_filtered() {
-
-        if ($this->data['category'] == 'departments') {
-            $this->filter_conditions[0] .= $this->data['vals'] ? " AND b.department_id IN (" . $this->data['vals'] . ") " : " AND b.department_id IN ('') ";
-            // $pos = strpos($this->data['filter_conditions'],'b.department_id');
-            // str_split()
-        } else if ($this->data['category'] == 'designations') {
-            $this->filter_conditions[1] .= (($this->data['vals']) && (strpos($this->data['vals'],'8'))) ? " AND b.privilege IN (" . $this->data['vals'] . ",0) " : " AND b.privilege IN ('') ";
+        if ($this->data['filter_conditions'] != NULL) {
+            $split_conds = explode("AND", $this->data['filter_conditions']);
+            for ($i=0; $i<sizeof($split_conds); $i++) {
+                if ($split_conds[$i]) {
+                    if(strstr($this->data['filter_conditions'], $this->data['category'])) {
+                        if (strstr($split_conds[$i], $this->data['category'])) {
+                            $split_conds[$i] = $this->data['category'] . " IN (". $this->data['vals'] . ") ";
+                            break;
+                        }
+                    } else {
+                        $split_conds[sizeof($split_conds)] = $this->data['category'] . " IN (" . $this->data['vals'] . ") ";
+                        break;
+                    }
+                }
+            }
+            if (sizeof($split_conds) > 1){
+                for ($i=0; $i < sizeof($split_conds); $i++) {
+                    if ($i == 0) {
+                        $conditions = $split_conds[$i];
+                    } else if (((strstr($conditions, "school_degree")) || (strstr($conditions, "highest_level"))) && ((strstr($split_conds[$i],"school_degree")) || (strstr($split_conds[$i],"highest_level")))){
+                        $conditions .= " OR ".$split_conds[$i];
+                    } else {
+                        $conditions .= " AND ".$split_conds[$i];
+                    }
+                }
+            } else {
+                $conditions = $split_conds[0];
+            }
+        } else {
+            $conditions = $this->data['category'] . " IN (" . $this->data['vals'] . ") ";
         }
-        // print_r($this->data['filter_conditions']);
-        $emps = $this->filtered_employees($this->filter_conditions);
-        $this->view->display ('admin/employee_tbl', ["employees" => $emps, "filter_conditions" => $this->filter_conditions, "pos" => $pos]);
+        $emps = $this->filtered_employees($conditions);
+        $this->view->display ('admin/employee_tbl', ["employees" => $emps, "filter_conditions" => $conditions]);
     }
 
     public function filtered_employees($conditions='') {
-        $conds = implode(" ", $conditions);
-        // print_r($conds);
-        return DB::fetch_all("SELECT a.no as employee_no, first_name, middle_name, last_name, gender, birthdate, is_active, b.*, a.employee_id as employee_id FROM tbl_employee a, tbl_employee_status b WHERE a.no = b.employee_id AND b.no = (SELECT no FROM tbl_employee_status WHERE employee_id = a.no ORDER BY date_start DESC LIMIT 0,1) $conds ORDER BY last_name ASC");
+        return DB::fetch_all("SELECT * FROM vw_emp_filter WHERE $conditions GROUP BY employee_no ORDER BY last_name ASC");
     }
     
     public function bday_celebrant () {
