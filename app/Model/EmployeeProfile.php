@@ -96,7 +96,8 @@ class EmployeeProfile {
     }
 
     public function schedule () {
-        $this->schedule = DB::fetch_all ("SELECT a.* FROM tbl_schedule a, (SELECT * FROM tbl_employee_sched WHERE employee_id = ? ORDER BY `date` DESC LIMIT 0,1) b WHERE a.sched_code = b.sched_code", $this->id);
+        $this->schedule = DB::fetch_all ("SELECT *  FROM tbl_schedule a, (SELECT * FROM tbl_employee_sched WHERE employee_id = ? AND Status = 1 ORDER BY `date` DESC LIMIT 0,2) b WHERE a.sched_code = b.sched_code", $this->id);
+       
     }
 
     public function service_record () {

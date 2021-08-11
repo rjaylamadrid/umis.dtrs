@@ -124,7 +124,7 @@ function set_emp_inactive(id,status,name,pos) {
       $('#cover-spin').show(0);
       f({action: 'delete_event', no:no}, "text", "/calendar").then( function (data) {
         $('#cover-spin').hide(0);
-        // console.log(data);
+       // console.log(data);
       });
     }
   }
@@ -376,6 +376,76 @@ function get_schedule (sched_code) {
       $("#schedule").html(html);
     });
   }
+}
+
+
+
+
+function Get_id(id){
+ $("#ViewSched").modal('show');
+    let Fname = document.getElementById('Fullname'+id).innerHTML;
+    let fullname = document.getElementById('f_name');
+    fullname.innerHTML = Fname
+  f({action:'showSchedule', id:id}, "text","/schedule").then(function(data){
+    $("#sched").html(data)
+  })
+  f({action:'sched_time_date', id:id, Fname:Fname} , "text","/schedule").then(function(data){
+    $("#full_name").html(data)
+  })
+
+}
+
+function uSchedules(id){
+  $("#ModalUpdate").modal('show');
+  let Fname = document.getElementById('Fullname'+id).innerHTML;
+    let fullname = document.getElementById('f_name');
+    fullname.innerHTML = Fname;
+  localStorage.setItem('id',id)
+  f({action:'showPresets', id:id} , "text","/schedule").then(function(data){
+    $("#Update").html(data)
+  })
+  f({action:'sched_time_date', id:id,Fname:Fname} , "text","/schedule").then(function(data){
+    $("#full_name1").html(data)
+  })
+  f({action:'show_pre'} , "text","/schedule").then(function(data){
+    $("#Myselect").html(data)
+  })
+
+ }
+
+function get_preset_schedules(sched_code){
+ 
+f({action:'showPresets', sched_code:sched_code},"text","/schedule").then(function(data){
+$("#Update").html(data)
+})
+
+// let sched = document.getElementById(sched_code).innerHTML
+// document.getElementById("pre_sched").innerHTML =sched
+// document.getElementById("pre_scheds").innerHTML =sched
+}
+
+function SaveChanges(){
+  var schedcode = document.getElementById("Preset_Select").value;
+  console.log(schedcode)
+  Emid = localStorage.getItem('id')
+    console.log(Emid)
+    if(document.getElementById('Preset_Select').selectedIndex ==0){
+      $("#selectalert").fadeIn(400);
+      setTimeout(function(){
+        $("#selectalert").fadeOut(1000);
+    }, 5000);
+    }else{
+      $("#ModalUpdate").modal('hide')
+      $("#alert").fadeIn(300);
+      setTimeout(function(){
+        $("#alert").fadeOut(1000);
+    }, 5000)
+        f({action:'saveSchedule', sched:schedcode,id:Emid} , "text","/schedule").then(function(data){
+           $("#alert").html(data)
+          })
+    }
+  
+ 
 }
 
 function get_salary () {

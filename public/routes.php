@@ -98,7 +98,13 @@ $router->group(['before' => 'auth'], function ($router) {
         // });
         // ADMIN END
     });
-    
+//SCHEDULES 
+  $router->group(['prefix' => 'schedule'], function($router){
+    $router->get('/', ['Schedules','index']);
+    $router->post('/',['Schedules','do_action']);
+  });
+   
+
     // EMPLOYEE START
     $router->get('/profile/{view}?', ['Profile', 'index']);
     $router->get('/update/{view}?', ['Profile', 'update']);
@@ -109,6 +115,9 @@ $router->group(['before' => 'auth'], function ($router) {
     $router->get('/leave/{tab}?', ['Leave', 'tab']);
     $router->post('/leave', ['Leave', 'do_action']);
     // EMPLOYEE END
+
+
+   
 });
 
 $dispatcher = new Phroute\Phroute\Dispatcher($router->getData());

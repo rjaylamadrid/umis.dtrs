@@ -2,7 +2,7 @@
 namespace Model;
 
 use Database\DB;
-class Schedule {
+class Schedule{
     static $presets;
     static $schedules;
 
@@ -18,4 +18,7 @@ class Schedule {
     public static function schedule ($preset) {
         return DB::fetch_all ("SELECT * FROM tbl_schedule WHERE sched_code = ?", $preset);
     }
+
+    
+    
 }

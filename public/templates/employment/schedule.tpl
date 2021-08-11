@@ -1,3 +1,5 @@
+
+
 {$schedules = $employee->schedule}
 {if $view !="update"}
     {if $employee->info.date_end}
@@ -19,6 +21,8 @@
                 <i class="fe {if $message.success}fe-check{else}fe-alert-triangle{/if} mr-2" aria-hidden="true"></i>{$message.message}
             </div><br/>
         {/if}
+
+       
         <form action="/employees" method="POST">
             <div class="row pl-2">
                 <input type="hidden" id="action" name="action" value="update_schedule">
@@ -30,6 +34,7 @@
                         {else if $schedules[0].sched_code == $preset.sched_code}selected{/if}>{$preset.sched_day} ({$preset.sched_time})</option>
                     {/foreach}
                 </select>
+                 
                 <div class="col-md-6">
                     <div class="form-group" style="float: right;">
                         <a href="javascript:get_schedule('create')" class="btn btn-secondary">Create New Work Schedule</a>
@@ -41,6 +46,7 @@
             </div>
             <div class="col-md-12 mt-5">
                 <div class="form-group" style="float: right;">
+                  
                     <button name="submit" value="submit" class="btn btn-primary">Save Changes</button>
                 </div>
             </div>
@@ -48,6 +54,8 @@
     </div>
     {include file="admin/modal/create_schedule.tpl"}
 {/if}
+
+
 
 {if $sched}
 <script>

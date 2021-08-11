@@ -10,6 +10,8 @@ use View\PDS;
 class Employees extends EmployeesController {
     private $stats;
     public $employee;
+   
+    
 
     public function index () {
         $this->position = new Position();
@@ -70,8 +72,10 @@ class Employees extends EmployeesController {
 
     public function employment ($id, $tab = 'employment_info', $view = 'view', $message = NULL, $sched = NULL) {
         if ($sched != NULL) {
+            
             if ($message) $message = ['success' => '1', 'message' => 'Work schedule has been successfully saved!'];
         } else {
+            
             if ($message) $message = ['success' => '1', 'message' => 'Employment information has been successfully updated!'];
         }
         $this->employee = new EmployeeProfile ($id);
@@ -83,7 +87,8 @@ class Employees extends EmployeesController {
         } catch (\Throwable $th) {
             $this->employee->info ();
         }
-        $presets = Schedule::presets()->all();
+       $presets = Schedule::presets()->all();
+      
         $this->view->display ('admin/employee_employment', ['positions' => $position->positions, 'emp_type' => $position->emp_types, 'employee' => $this->employee, 'tab' => $tab, 'view' => $view, 'presets' => $presets , 'departments' => $this->departments(), 'designations' => $this->designations(), 'message' => $message, 'sched' => $sched]);
     }
 

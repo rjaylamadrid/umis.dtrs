@@ -46,19 +46,22 @@
             </a>
         </div>
     </div>
-</div>
+</div> 
 <div class="header collapse d-lg-flex p-0" id="headerMenuCollapse">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg order-lg-first">
                 <ul class="nav nav-tabs border-0 flex-column flex-lg-row">
+                
                     {foreach from = $headers item = 'header'}
+                      
                         <li class="nav-item">
                             <a href="/{$header.url}" class="nav-link {if $page == $header.url}active{/if}"><i class="fe fe-{$header.icon}"></i> {$header.title}</a>
                         </li>
+                   
                     {/foreach}
                 </ul>
-            </div>
+            </div> 
         </div>
     </div>
 </div>

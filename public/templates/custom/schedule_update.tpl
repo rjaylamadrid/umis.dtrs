@@ -1,7 +1,10 @@
 <div class="table-responsive">
     <table class="table">  
-        <tr class="text-white bg-dark"><td colspan="5">Work Schedule</td>
- 
+    
+    
+        <tr class="alert alert-success"><td colspan="5">Work Schedule</td>
+
+
          {foreach from = $schedules item = schedule}
             <tr>
                 <td>{$schedule.weekday}</td>
@@ -11,6 +14,9 @@
                 <td><div>{$schedule.pm_out|date_format:"%l:%M %p"}<div class="small text-muted">PM OUT</div></div></td>
             </tr>
         {/foreach} 
+   
+  
+      
     </table>    
     
 </div><br>
