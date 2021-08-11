@@ -52,13 +52,12 @@ function show_collapse(id,id_='#') {
   }
 }
 
-function employees_filter(vals, category, filter_conditions) {
+function employees_filter(vals, category, filter_conditions, level='') {
   $('.spinner1').show(0);
-  alert(filter_conditions);
-  f({action: 'view_filtered', vals:vals, category:category, filter_conditions:filter_conditions}, "text", "/employees").then( function (data) {
+  // alert(filter_conditions);
+  f({action: 'view_filtered', vals:vals, category:category, filter_conditions:filter_conditions, level:level}, "text", "/employees").then( function (data) {
     $('.spinner1').hide(0);
     $('#employees_list').html(data);
-    // console.log(data);
   });
 }
 
