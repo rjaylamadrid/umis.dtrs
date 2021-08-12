@@ -1,10 +1,10 @@
 {extends file="layout.tpl"}
 {block name=content} 
-  <div id ="alert" class="container col-lg-2 mt-6 text-center alert alert-success fade show" style="display: none; ">
-  <strong>Schedule successfully saved!</strong> 
+  <div  id ="alert" class="container col-lg-2 mt-6 text-center alert alert-success fade show" style="display: none; ">
+  <strong></strong>
   </div>
-<div class="container col-lg-5 mt-5 "> 
-{$P_Name}
+<div class="container col-lg-5 mt-5 ">  
+
   <table style=" font-family:  Arial;" class="table table-hover card-table table-vcenter text-nowrap datatable dataTable no-footer" id="tbl-employees">
 
   <thead>
@@ -77,6 +77,8 @@
      
         <div class="modal-footer">
         <input class="btn btn text-white bg-dark" onclick="SaveChanges()" type="submit" value="Submit">
+        <input class="btn btn text-white bg-dark" type="submit" data-dismiss="modal" value="Close">
+        
         </div>
       </div>
     </div>

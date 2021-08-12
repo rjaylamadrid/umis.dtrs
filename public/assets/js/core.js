@@ -435,12 +435,12 @@ function SaveChanges(){
     }, 5000);
     }else{
       $("#ModalUpdate").modal('hide')
-      $("#alert").fadeIn(300);
+      $("#alert").fadeIn(400);
       setTimeout(function(){
         $("#alert").fadeOut(1000);
     }, 5000)
         f({action:'saveSchedule', sched:schedcode,id:Emid} , "text","/schedule").then(function(data){
-           $("#alert").html(data)
+           $("#alert strong").html(data)
           })
     }
   

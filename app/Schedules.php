@@ -2,7 +2,7 @@
 use Controllers\ScheduleController;
 
 class Schedules extends ScheduleController{
-    private $mes;
+    
     public function index(){
         $pres = $this->presets();
         $this->view->display('admin/Schedule/schedules', ['infos' => $this->Get_All_Info(),'Presets' => $pres ]);
@@ -36,8 +36,7 @@ public function show_pre(){
 }
 
 public function saveSchedule(){
-    $this->saveChanges();
-
+    $this->saveChanges();   
 }
 
    
