@@ -1,5 +1,6 @@
 <?php
 use Controllers\LoginController;
+use Controllers\ScheduleController;
 
 class Login extends LoginController {
     private $message;
@@ -8,6 +9,7 @@ class Login extends LoginController {
         if ($this->user) {
             if ($this->user['is_admin']) $this->redirect ();
             else $this->redirect ("profile");
+           
         }
 
         $this->view->display ('login', ["message" => $this->message, "page" => "login"]);

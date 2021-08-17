@@ -395,7 +395,9 @@ function Get_id(id){
 }
 
 function uSchedules(id){
+ 
   $("#ModalUpdate").modal('show');
+
   let Fname = document.getElementById('Fullname'+id).innerHTML;
     let fullname = document.getElementById('f_name');
     fullname.innerHTML = Fname;
@@ -413,40 +415,56 @@ function uSchedules(id){
  }
 
 function get_preset_schedules(sched_code){
- 
+ $("#effective_date").removeAttr("hidden", false)
 f({action:'showPresets', sched_code:sched_code},"text","/schedule").then(function(data){
 $("#Update").html(data)
 })
 
-// let sched = document.getElementById(sched_code).innerHTML
-// document.getElementById("pre_sched").innerHTML =sched
-// document.getElementById("pre_scheds").innerHTML =sched
+
 }
 
+
 function SaveChanges(){
+    let eff_date = document.getElementById("effective_date").value;
   var schedcode = document.getElementById("Preset_Select").value;
-  console.log(schedcode)
   Emid = localStorage.getItem('id')
-    console.log(Emid)
+
+  if(eff_date !== ""){
+    $("#ModalUpdate").modal('hide')
+    $("#alert").fadeIn(400);
+    setTimeout(function(){
+      $("#alert").fadeOut(1000);
+  }, 5000)
+      f({action:'update_effectivity', eff_schedcode:schedcode,eff_id:Emid,eff_date:eff_date} , "text","/schedule").then(function(data){
+         $("#alert strong").html(data)
+        });
+
+  }else{
+
     if(document.getElementById('Preset_Select').selectedIndex ==0){
       $("#selectalert").fadeIn(400);
       setTimeout(function(){
         $("#selectalert").fadeOut(1000);
     }, 5000);
     }else{
-      $("#ModalUpdate").modal('hide')
+      $("#ModalUpdate").modal('hide');
       $("#alert").fadeIn(400);
       setTimeout(function(){
         $("#alert").fadeOut(1000);
     }, 5000)
         f({action:'saveSchedule', sched:schedcode,id:Emid} , "text","/schedule").then(function(data){
            $("#alert strong").html(data)
-          })
+          });
     }
   
  
+  }
+    
 }
 
+
+
+  
 function get_salary () {
   var position = $('#positions').val();
   var date = $('#date-start').val();

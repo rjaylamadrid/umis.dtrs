@@ -1,7 +1,7 @@
 <?php
 use Controllers\DashboardController;
 use Model\EmployeeStats;
-
+use Controllers\ScheduleController;
 class Dashboard extends DashboardController {
     
     public function __construct () {
@@ -16,6 +16,7 @@ class Dashboard extends DashboardController {
         } else {
             header ('location: /profile');
         }
+         ScheduleController::Auto_update_schedule();
     }
 
     public function do_action () {

@@ -35,55 +35,70 @@ class ScheduleController extends Controller{
       }
    }
 
+   public static function  Auto_update_schedule(){
+      $effectivity_status = DB:: fetch_all("SELECT * FROM tbl_employee_sched WHERE Status = 0 ORDER BY date");
+      $nowDate = date('Y-m-d');
+      foreach($effectivity_status as $es){
+         if($es['date'] == $nowDate){
+             DB::update("UPDATE tbl_employee_sched SET Status = 3 WHERE employee_id = ? AND Status = 1", $es['employee_id']);
+             DB::update("UPDATE tbl_employee_sched SET Status = 1 WHERE employee_id = ? AND Status = 0", $es['employee_id']);
+         }
+      }
+   }
+
   
 
    public function saveChanges(){
       // 0 inactive
       // 1 active
       // 3 archive
-      $effectivity_status = DB:: fetch_all("SELECT * FROM tbl_employee_sched WHERE Status = 0 ORDER BY date");
-  
       $status0 = DB:: fetch_all("SELECT * FROM tbl_employee_sched WHERE employee_id = ? AND Status = 0 ORDER BY date DESC",$this->data['id']);
       $status1 = DB:: fetch_all("SELECT * FROM tbl_employee_sched WHERE employee_id = ? AND Status = 1 ORDER BY date DESC",$this->data['id']);
      
-      foreach ($effectivity_status as $E_S){
-       
-         // $active_sched_date = $E_S['date'];
-         //     $timestamp = strtotime($active_sched_date);
-         //          $day = date('l', $timestamp);
-         //          echo $day;
-         $idf = strtotime('next monday');
-         $effectivedate = date('Y-m-d',$idf);
-         $sched_date_database = $E_S['date'];
-            // if($sched_date_database === $effectivedate){
-
-            // } 
-      }
+      $idf = strtotime('next monday');
+      $effectivedate = date('Y-m-d',$idf);
+      $empdate = $status0[0]['date'];
+     
       if(empty($status1)){
          if($this->data['id'] && $this->data['sched']){
 
             $sched_date = date('Y-m-d');
             DB::insert("INSERT INTO tbl_employee_sched SET sched_code = ?, employee_id = ?, date = ?, Status = 1", [$this->data['sched'],$this->data['id'], $sched_date]);
-            echo 'Schedule Save successfully!!';
+            echo 'Schedule save successfully!!';
           
          }
       }
       if(!empty($status1)){
          if($this->data['id'] && $this->data['sched']){
             if(!empty($status0)){
-               echo 'This employee has a pending schedule to be effective on: and cannot be save!';
+               echo 'This employee has a pending schedule to be effective on: '.$empdate.' and cannot be save!';
+              
             }else{
-               $sched_date = date('Y-m-d');
-                DB::insert("INSERT INTO tbl_employee_sched SET sched_code = ?, employee_id = ?, date = ?, Status = 0", [$this->data['sched'],$this->data['id'], $sched_date]);
-                  echo 'Schedule successfully saved but this schedule effectivity date is:';
+                  DB::insert("INSERT INTO tbl_employee_sched SET sched_code = ?, employee_id = ?, date = ? ,Status = 0", [$this->data['sched'],$this->data['id'] , $effectivedate]);
+                  echo 'Schedule successfully saved but this schedule effectivity date is on : '. $effectivedate; 
+                  
                   
             }
          }
       }
 
-     
       
    }
 
+    public function update_effectivity(){
+      $update_eff = DB:: fetch_all("SELECT * FROM tbl_employee_sched WHERE employee_id = ? AND Status = 1 ORDER BY date DESC",$this->data['eff_id']);
+      $id = $update_eff[0]['employee_id'];
+      if(!empty($update_eff)){
+         // DB::update("UPDATE tbl_employee_sched SET Status = 1 WHERE employee_id = ? AND Status = 1", $id);
+         DB::insert("INSERT INTO tbl_employee_sched SET sched_code = ?, employee_id = ?, date = ? ,Status = 0", [$this->data['eff_schedcode'],$this->data['eff_id'] ,$this->data['eff_date']]);
+         $this->Auto_update_schedule();
+      }else{
+         DB::insert("INSERT INTO tbl_employee_sched SET sched_code = ?, employee_id = ?, date = ? ,Status = 0", [$this->data['eff_schedcode'],$this->data['eff_id'] ,$this->data['eff_date']]);
+         $this->Auto_update_schedule();
+         // DB::update("UPDATE tbl_employee_sched SET Status = 1 WHERE employee_id = ? AND Status = 1", $id);
+      }
+    }
+
+     
 
 }

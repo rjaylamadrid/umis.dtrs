@@ -14,7 +14,6 @@ class Schedules extends ScheduleController{
 
     public function showSchedule(){
         $Sched = $this->Get_id();
-      
         $this->view->display('admin/Schedule/Modal/View_Sched', ['Sched' => $Sched]);
     }
 
@@ -30,14 +29,14 @@ class Schedules extends ScheduleController{
        $this->view->display('admin/Schedule/Name', ['P_Name' => $Sched_time_date, 'Name' => $this->data['Fname']]);
    }
 
-public function show_pre(){
-    $pre = $this->presets();
-    $this->view->display('admin/Schedule/SelectOption', ['preset' => $pre]);
-}
+    public function show_pre(){
+        $pre = $this->presets();
+        $this->view->display('admin/Schedule/SelectOption', ['preset' => $pre]);
+    }
 
-public function saveSchedule(){
-    $this->saveChanges();   
-}
+    public function saveSchedule(){
+        $this->saveChanges();   
+    }
 
    
 }
