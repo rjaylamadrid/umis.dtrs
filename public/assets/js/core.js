@@ -366,7 +366,7 @@ function set_new (new_emp) {
     $('#employee_id').attr('readonly',false);
   }
 }
-
+// Schedule
 function get_schedule (sched_code) {
   if (sched_code === "create"){
     $("#create-schedule-modal").modal('show');
@@ -396,7 +396,6 @@ function Get_id(id){
 
 function uSchedules(id){
   
-
   $("#ModalUpdate").modal('show');
   let Fname = document.getElementById('Fullname'+id).innerHTML;
     let fullname = document.getElementById('f_name');
@@ -454,6 +453,25 @@ $('#ModalUpdate').on('hidden.bs.modal', function () {
 function enableSubmit(){
  $('#btn_effdate').removeAttr('disabled');
 }
+
+function addpreset(){
+  $("#ModalAddPreset").modal('show');
+}
+
+
+function add_preset(){
+  let preset_day = document.getElementById('schedule_preset[sched_day]').value
+  let preset_time = document.getElementById('schedule_preset[sched_time]').value
+ 
+}
+
+function activateStatus(id){
+  console.log('lester');
+  $("#ActivateStatus").modal('show');
+}
+
+//End Schedule
+
 
 
 function get_salary () {

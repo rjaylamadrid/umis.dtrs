@@ -5,7 +5,7 @@ class Schedules extends ScheduleController{
     
     public function index(){
         $pres = $this->presets();
-        $this->view->display('admin/Schedule/schedules', ['infos' => $this->Get_All_Info(),'Presets' => $pres ]);
+        $this->view->display('admin/Schedule/schedules', ['infos' => $this->Get_All_Info(),'Presets' => $pres , 'Status' => $this->get_sched_info()]);
     }
 
     public function do_action () {
