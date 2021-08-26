@@ -3,11 +3,11 @@
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
   <div class="modal-content">
         <div class="modal-header text-white bg-dark">
-            <h2 class="m-0">Create New Work Schedule</h2>
+            <h2 class="m-0" >Create New Work Schedule</h2>
         </div>
          <div class="modal-body">
             <div class="card">
-            <div class="container mt-4">
+            <div id="create" class="container mt-4">
             <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -43,7 +43,7 @@
                                         <td><input type="time" name="pmin1" id="pmin1" class="form-control"></td>
                                         <td><input type="time" name="pmout1" id="pmout1" class="form-control"></td>
                                     </tr>
-                                                                        <tr>
+                                     <tr>
                                         <td style="text-align: left;"><input type="checkbox" name="day[2]" value="Tuesday" id="day2" onclick="javascript:create_sched(2)" checked=""> Tuesday</td>
                                         <td><input type="time" name="amin2" id="amin2" class="form-control"></td>
                                         <td><input type="time" name="amout2" id="amout2" class="form-control"></td>
@@ -94,8 +94,9 @@
          </div>    
          </div>
         <div class="modal-footer">
-        <a href="javascript:add_preset()" class="btn btn text-white bg-dark"><i class="fe fe-calendar"></i> Save Work Schedule</a>
-        <input class="btn btn text-white bg-dark" type="submit" data-dismiss="modal" value="Close">      
+        <a href="javascript:SaveWorkSchedule()" class="btn btn-primary"><i class="fe fe-calendar"></i> Save Work Schedule</a>
+        <a data-dismiss="modal" href="" class="btn btn-danger"><i class="fe fe-x"></i> Close</a>
+          
         </div>
       </div>
     </div>

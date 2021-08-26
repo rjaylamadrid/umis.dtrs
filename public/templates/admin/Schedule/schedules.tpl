@@ -5,7 +5,7 @@
 <div class="d-flex justify-content-end">
 <a href="javascript:addpreset()" class="btn btn-primary col-lg-3 mt-5 "><i class="fe fe-calendar"></i> Add Work Schedule</a>
 </div>
-
+{$sched}
   <table style=" font-family:  Arial;" class="table table-hover card-table  text-nowrap datatable dataTable no-footer" id="tbl-employees">
 
   <thead>
@@ -23,6 +23,7 @@
                   <td id = "Fullname{$info.no}"> {$info.last_name|upper}, {$info.first_name|upper} {$info.middle_name|upper}<span style="margin-left: 30px;"></span></td>
                   <td>{$info.position_desc|upper}</td>
                   <td>
+                  <span  id="status{$info.no}">
                   {foreach from=$Status item=status }
                     {if $info.no == $status.no}
                         {if $status.Status == 1}
@@ -34,6 +35,7 @@
                         
                     {/if }
                   {/foreach}
+                  </span>
                   </td>
                   <td>
                   <a href="javascript:Get_id({$info.no})" class="icon"><i class="fe fe-eye"></i></a>
@@ -50,7 +52,7 @@
 <div class="modal fade" id="ViewSched" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
     <div class="modal-content">
-      <div class="modal-header text-white bg-dark" id="full_name">
+      <div class="modal-header" id="full_name">
        {include file="admin/Schedule/Name.tpl"}
       </div>
       <div class="modal-body">
@@ -64,7 +66,7 @@
           
           <div class="modal-footer">
          
-            <button type="button" class="btn text-white bg-dark" data-dismiss="modal">CLOSE</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal">CLOSE</button>
           </div>
         </div>
       </div>
@@ -78,7 +80,7 @@
 <div class="modal fade" id="ModalUpdate" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
   <div class="modal-content">
-    <div class="modal-header text-white bg-dark" id="full_name1">
+    <div class="modal-header text-black" id="full_name1">
     {include file="admin/Schedule/Name.tpl"}
     </div>
     <div class="modal-body">
@@ -106,8 +108,9 @@
       </div>
      
         <div class="modal-footer">
-        <input  id ="btn_effdate" class="btn btn text-white bg-dark" onclick="SaveChanges()" type="submit" value="Submit" disabled>
-        <input class="btn btn text-white bg-dark" type="submit" data-dismiss="modal" value="Close">      
+        <input class="btn btn-danger text-white" type="submit" data-dismiss="modal" value="Close">    
+        <input  id ="btn_effdate" class="btn btn-primary" onclick="SaveChanges()" type="submit" value="Submit" disabled>
+
         </div>
       </div>
     </div>
@@ -118,23 +121,33 @@
   <div class="modal fade" id="ActivateStatus" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
     <div class="modal-content">
-    <div class="modal-header text-black bg-white" id="full_name1">
-        <span><h5>Activate Pending Status<h5></span>
+    <div class="modal-header">
+    <h5 class="modal-title text-black bg-white">Activate Pending Status</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        </button>
     </div>
     <div class="container mt-2">
-      
-          <p style="text-align: center;"><b>If you wish to activate this pending schedule click Yes, if not please discard?</b></p>
+            <div id ="activate" class="container" hidden >
+            <p style="text-align: center;"><b>
+             <span><i class="fe fe-check-circle text-green" style="font-size:60px;"></i></span><br>
+            Schedule Pending is Activated
+            </b></p>
+            </div>
+  
+          <p id ="message" style="text-align: center;"><b>If you wish to activate this pending schedule click Yes, if not please Discard?</b></p>
        
     </div>
   
           <div class="modal-footer">
-          <input class="btn btn text-white bg-dark" type="submit" value="Yes">
-          <input class="btn btn text-white bg-dark" type="submit" data-dismiss="modal" value="Discard">      
+          
+          <a id="btnYes" href="javascript:PendingActivate()" class="btn btn-success btn-sm"><i class="fe fe-check"></i> Yes</a>
+          <a id="btnDismiss" href="" class="btn btn-danger btn-sm" data-dismiss="modal" ><i class="fe fe-x"></i> Discard</a>
+              
           </div>
         </div>
       </div>
     </div>
-
+    
 <script>
    require (['datatables'], function () {
        $("#tbl-employees").DataTable();

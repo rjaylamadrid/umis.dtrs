@@ -438,6 +438,7 @@ function SaveChanges(){
         document.getElementById("effective_date").value = '';
         $("#effective_date").attr("hidden", true)
         $('#btn_effdate').attr('disabled',true);
+        $("#status"+Emid).load(location.href + " #status"+Emid);
         });
 
   }
@@ -459,15 +460,80 @@ function addpreset(){
 }
 
 
-function add_preset(){
-  let preset_day = document.getElementById('schedule_preset[sched_day]').value
-  let preset_time = document.getElementById('schedule_preset[sched_time]').value
+// function add_preset(){
+//   let preset_day = document.getElementById('schedule_preset[sched_day]').value
+//   let preset_time = document.getElementById('schedule_preset[sched_time]').value
  
-}
+// }
 
 function activateStatus(id){
-  console.log('lester');
+  localStorage.setItem('id',id)
   $("#ActivateStatus").modal('show');
+}
+
+function PendingActivate(){
+  
+  Activate_Id = localStorage.getItem('id');
+  console.log(Activate_Id);
+  f({action:'Activate_status_pending', Activate_Id:Activate_Id} , "text","/schedule").then(function(data){
+    $("#message").attr("hidden", true);
+    $("#activate").removeAttr("hidden");
+    $("#btnYes").attr("hidden", true);
+    $("#btnDismiss").attr("hidden", true);
+    $("#status"+Activate_Id).load(location.href + " #status"+Activate_Id);
+  });
+}
+
+$('#ActivateStatus').on('hidden.bs.modal', function () {
+  window.location.href="/schedule";
+});
+
+
+function SaveWorkSchedule(){
+  let schd = {};
+    for (var i = 1; i <= 7; i++) {
+     if(document.getElementById("day"+i).checked == false){
+  
+     }else{
+      day = [document.getElementById('day'+i).value];
+      amin = [document.getElementById('amin'+i).value];
+      amout = [document.getElementById('amout'+i).value];
+      pmin = [document.getElementById('pmin'+i).value];
+      pmout = [document.getElementById('pmout'+i).value];
+      day = [document.getElementById('day'+i).value];
+      schedule = {day}
+      schd = {"day": day}
+      localStorage.setItem('schedule',schedule)
+     }
+     getsched = localStorage.getItem('schedule'); 
+     console.log(schd);
+     f({action:'add_work_schedules', schedule:getsched},"text","/schedule").then(function(data){
+      $('#create').html(data);
+      })
+    }
+   
+}
+
+
+function create_sched (ctr) {
+  if(document.getElementById("day"+ctr).checked) {
+    $("#amin"+ctr).show(0);
+    $("#amout"+ctr).show(0);
+    $("#pmin"+ctr).show(0);
+    $("#pmout"+ctr).show(0);
+    $("#amin"+ctr).val('');
+    $("#amout"+ctr).val('');
+    $("#pmin"+ctr).val('');
+    $("#pmout"+ctr).val('');
+    day = document.getElementById('day'+ctr).value='';
+    
+  }
+  else {
+    $("#amin"+ctr).hide(0);
+    $("#amout"+ctr).hide(0);
+    $("#pmin"+ctr).hide(0);
+    $("#pmout"+ctr).hide(0);
+  }
 }
 
 //End Schedule
@@ -542,20 +608,6 @@ function create_date (date, range_type = 'day', range = 0) {
   return y + '-' + (m >= 9 ? m : '0'+ m) + '-' + (d >= 9 ? d : '0'+ d); 
 }
 
-function create_sched (ctr) {
-  if(document.getElementById("day"+ctr).checked) {
-    $("#amin"+ctr).show(0);
-    $("#amout"+ctr).show(0);
-    $("#pmin"+ctr).show(0);
-    $("#pmout"+ctr).show(0);
-  }
-  else {
-    $("#amin"+ctr).hide(0);
-    $("#amout"+ctr).hide(0);
-    $("#pmin"+ctr).hide(0);
-    $("#pmout"+ctr).hide(0);
-  }
-}
 
 function modify_log () {
   var form = $('#formLog').serialize();
