@@ -395,9 +395,9 @@ function Get_id(id){
 }
 
 function uSchedules(id){
- 
-  $("#ModalUpdate").modal('show');
+  
 
+  $("#ModalUpdate").modal('show');
   let Fname = document.getElementById('Fullname'+id).innerHTML;
     let fullname = document.getElementById('f_name');
     fullname.innerHTML = Fname;
@@ -428,43 +428,34 @@ function SaveChanges(){
     let eff_date = document.getElementById("effective_date").value;
   var schedcode = document.getElementById("Preset_Select").value;
   Emid = localStorage.getItem('id')
-
   if(eff_date !== ""){
-    $("#ModalUpdate").modal('hide')
-    $("#alert").fadeIn(400);
+    $("#selectalert").fadeIn(400);
     setTimeout(function(){
-      $("#alert").fadeOut(1000);
+      $("#selectalert").fadeOut(1000);
   }, 5000)
-      f({action:'update_effectivity', eff_schedcode:schedcode,eff_id:Emid,eff_date:eff_date} , "text","/schedule").then(function(data){
-         $("#alert strong").html(data)
+      f({action:'saveChanges', eff_schedcode:schedcode,eff_id:Emid,eff_date:eff_date} , "text","/schedule").then(function(data){
+         $("#selectalert strong").html(data)
+         $('#Preset_Select').prop('selectedIndex',0);
+        document.getElementById("effective_date").value = '';
+        $("#effective_date").attr("hidden", true)
+        $('#btn_effdate').attr('disabled',true);
         });
 
-  }else{
-
-    if(document.getElementById('Preset_Select').selectedIndex ==0){
-      $("#selectalert").fadeIn(400);
-      setTimeout(function(){
-        $("#selectalert").fadeOut(1000);
-    }, 5000);
-    }else{
-      $("#ModalUpdate").modal('hide');
-      $("#alert").fadeIn(400);
-      setTimeout(function(){
-        $("#alert").fadeOut(1000);
-    }, 5000)
-        f({action:'saveSchedule', sched:schedcode,id:Emid} , "text","/schedule").then(function(data){
-           $("#alert strong").html(data)
-          });
-    }
-  
- 
   }
-    
+  
+}
+
+$('#ModalUpdate').on('hidden.bs.modal', function () {
+  $('#Preset_Select').prop('selectedIndex',0);
+  document.getElementById("effective_date").value = '';
+  $("#effective_date").attr("hidden", true)
+});
+
+function enableSubmit(){
+ $('#btn_effdate').removeAttr('disabled');
 }
 
 
-
-  
 function get_salary () {
   var position = $('#positions').val();
   var date = $('#date-start').val();

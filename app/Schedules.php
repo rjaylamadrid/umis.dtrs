@@ -34,9 +34,7 @@ class Schedules extends ScheduleController{
         $this->view->display('admin/Schedule/SelectOption', ['preset' => $pre]);
     }
 
-    public function saveSchedule(){
-        $this->saveChanges();   
+    public function saveChanges(){
+        $this->insert_schedule();
     }
-
-   
 }

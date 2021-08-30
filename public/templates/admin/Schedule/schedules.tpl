@@ -1,8 +1,6 @@
 {extends file="layout.tpl"}
 {block name=content} 
-  <div  id ="alert" class="container col-lg-5 mt-6 text-center alert alert-success fade show" style="display: none; ">
-  <strong></strong>
-  </div>
+  
 <div class="container">  
 
   <table style=" font-family:  Arial;" class="table table-hover card-table table-vcenter text-nowrap datatable dataTable no-footer" id="tbl-employees">
@@ -67,8 +65,9 @@
     <div class="col-12">
     <div class="card">
         <div class="row">
-        <div id ="selectalert" class="container col-lg-10 mt-2 text-center alert alert-danger fade show" style="display: none;" >
-        <strong>Select a preset schedules!!</strong> 
+        
+        <div id ="selectalert" class="container col-lg-10 mt-2 text-center alert alert-success fade show" style="display: none;">
+          <strong></strong>
         </div>
       
                 <div class="row col-lg-8 ml-2">
@@ -77,7 +76,7 @@
                       </div>             
                 </div>
                 <div class="row col-lg-4 mt-3" >
-                <input id="effective_date" type="date" class="form-control" hidden> 
+                <input id="effective_date" type="date" class="form-control" onChange="enableSubmit();" hidden> 
                 </div>
   
               
@@ -91,7 +90,7 @@
       </div>
      
         <div class="modal-footer">
-        <input class="btn btn text-white bg-dark" onclick="SaveChanges()" type="submit" value="Submit">
+        <input  id ="btn_effdate" class="btn btn text-white bg-dark" onclick="SaveChanges()" type="submit" value="Submit" disabled>
         <input class="btn btn text-white bg-dark" type="submit" data-dismiss="modal" value="Close">      
         </div>
       </div>
