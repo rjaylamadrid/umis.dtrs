@@ -5,7 +5,7 @@
 <div class="d-flex justify-content-end">
 <a href="javascript:addpreset()" class="btn btn-primary col-lg-3 mt-5 "><i class="fe fe-calendar"></i> Add Work Schedule</a>
 </div>
-{$sched}
+
   <table style=" font-family:  Arial;" class="table table-hover card-table  text-nowrap datatable dataTable no-footer" id="tbl-employees">
 
   <thead>

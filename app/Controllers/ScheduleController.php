@@ -47,20 +47,23 @@ class ScheduleController extends Controller{
       $sched_no = $number + 1;
       $numlength = mb_strlen($sched_no);
       if($numlength == 1){
-         $this->schedule_code = 'SCHED000'.$sched_no;
+         return $this->schedule_code = 'SCHED000'.$sched_no;
       }elseif($numlength == 2){
-         $this->schedule_code = 'SCHED00'.$sched_no;
+         return $this->schedule_code = 'SCHED00'.$sched_no;
       }elseif($numlength == 3){
-         $this->schedule_code = 'SCHED0'.$sched_no;
+         return $this->schedule_code = 'SCHED0'.$sched_no;
       }elseif($numlength == 4){
-         $this->schedule_code = 'SCHED'.$sched_no;
+         return $this->schedule_code = 'SCHED'.$sched_no;
       }
    }
 
-
-   public function add_work_schedules(){
-      $d = $this->data['schedule'];
-      print_r($d);
+   public function add_to_tbl_schedule(){
+      $code =$this->get_Sched_code();
+      DB::insert("INSERT INTO tbl_schedule_preset SET sched_code=?,sched_day=?, sched_time =? ",[$code,$this->data['name'],$this->data['time']]);
+      $day = $this->data['day'];
+      $amin = $this->data['amin'];
+      $code_schedule = DB::fetch_row("SELECT sched_code FROM tbl_schedule_preset ORDER BY sched_code DESC LIMIT 1");
+       DB::insert("INSERT INTO tbl_schedule SET sched_code=?, weekday =?, am_in = ?",[$code_schedule['sched_code'],$day,$amin]);
    }
 
    public static function  Auto_update_schedule(){

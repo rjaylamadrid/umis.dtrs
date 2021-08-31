@@ -6,8 +6,9 @@
             <h2 class="m-0" >Create New Work Schedule</h2>
         </div>
          <div class="modal-body">
+         <span id="create"></span>
             <div class="card">
-            <div id="create" class="container mt-4">
+            <div class="container mt-4">
             <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">

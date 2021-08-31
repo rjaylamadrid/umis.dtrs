@@ -488,30 +488,35 @@ $('#ActivateStatus').on('hidden.bs.modal', function () {
   window.location.href="/schedule";
 });
 
-
+function presetname(){
+  Preset_name = document.getElementById("schedule_preset[sched_day]").value;
+  Preset_time = document.getElementById("schedule_preset[sched_time]").value;
+     f({action:'add_to_tbl_schedule',name:Preset_name,time:Preset_time},"text","/schedule").then(function(data){
+      $('#create').html(data);
+      })
+}
 function SaveWorkSchedule(){
-  let schd = {};
+  presetname();
+
     for (var i = 1; i <= 7; i++) {
      if(document.getElementById("day"+i).checked == false){
   
      }else{
+      
       day = [document.getElementById('day'+i).value];
       amin = [document.getElementById('amin'+i).value];
       amout = [document.getElementById('amout'+i).value];
       pmin = [document.getElementById('pmin'+i).value];
       pmout = [document.getElementById('pmout'+i).value];
-      day = [document.getElementById('day'+i).value];
-      schedule = {day}
-      schd = {"day": day}
-      localStorage.setItem('schedule',schedule)
-     }
-     getsched = localStorage.getItem('schedule'); 
-     console.log(schd);
-     f({action:'add_work_schedules', schedule:getsched},"text","/schedule").then(function(data){
+      
+      console.log(day);
+     f({action:'add_to_tbl_schedule', day:day,amin:amin},"text","/schedule").then(function(data){
       $('#create').html(data);
       })
-    }
    
+      }
+     }
+  
 }
 
 
