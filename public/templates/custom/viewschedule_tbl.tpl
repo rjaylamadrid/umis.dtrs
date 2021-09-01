@@ -1,6 +1,7 @@
 <div class="container">
 <div class="card">
 <table class="table card-table">
+
             <tbody>  
        {foreach from=$Sched item=sched}
         {if $sched.Status == 1}
