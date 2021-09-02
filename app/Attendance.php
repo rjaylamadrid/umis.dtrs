@@ -105,7 +105,6 @@ class Attendance extends AttendanceController {
         $rawdata = $this->get_raw_data ($period, [$this->data['emp_id'], $this->data['date']]);
         $sched = DTR::get_sched($this->data['emp_id']);
         $scheds = [0 => $sched[0]['weekday'], 1 => $sched[1]['weekday'], 2 => $sched[2]['weekday'], 3 => $sched[3]['weekday'], 4 => $sched[4]['weekday'], 5 => $sched[5]['weekday'], 6 => $sched[6]['weekday']];
-        //if(!(in_array(date_create($this->data['date'])->format('l'),$scheds))) { $checkbox = True; }
         $this->view->display ("custom/attendance_update_log", ["attn" => $attn, "rawdata" => $rawdata, "codes" => DTR::dtr_code(), "period" => $period, "employee_id" => $this->data['emp_id'], "date" => $this->data['date']]);
     }
 

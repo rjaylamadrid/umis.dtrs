@@ -111,7 +111,8 @@ class AttendanceController extends Controller {
     }
 
     protected function save_log () {
-        DTR::change_log ($this->data['employee_id'], $this->data['attnd'],$this->data['period'], $this->data['date'], $this->data['no'], $this->data['ot-paid']);
+        $status = $this->set_DTRstatus($this->data['curr_status'], $this->data['ot-paid'], $this->data['otd-paid']);
+        DTR::change_log ($this->data['employee_id'], $this->data['attnd'],$this->data['period'], $this->data['date'], $this->data['no'], $status);
     }
 
     protected function set_default () {
@@ -146,4 +147,22 @@ class AttendanceController extends Controller {
             }
         }
     }  
+
+    protected function set_DTRstatus($status = 0, $ot = NULL, $ot_day = NULL) {
+        if ($ot && $ot_day) {
+            $status = 34;
+        } else {
+            if (strlen(strval($status)) == 2) {
+                $status = $ot ? "3".substr(strval($status), 1, 1) : "1".substr(strval($status), 1, 1);
+                $status = $ot_day ? substr(strval($status), 0, 1)."4" : substr(strval($status), 0, 1)."2";
+            } else {
+                if ($status == 3 || $status == 1) {
+                    $status = $ot ? 3 : 1;
+                } elseif ($status == 4 || $status == 2) {
+                    $status = $ot_day ? 4 : 2;
+                }
+            }
+        }
+        return $status;
+    }
 }

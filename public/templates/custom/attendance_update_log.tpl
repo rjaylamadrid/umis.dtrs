@@ -23,6 +23,9 @@
 				                <td>
 									<input list="attnd1" type="text" name="attnd[]" class="attnd form-control" placeholder="00:00" autocomplete="off" maxlength="8" {if $attn.am_in && $attn.am_in != ':'}value="{$attn.am_in}"{/if}>
 									<datalist id="attnd1">
+										{foreach $rawdata as $raw}
+											<option value="{$raw.log_time|date_format:'%I:%M %p'}">
+										{/foreach}
 										{foreach $codes as $code}
 										<option value="{$code.dtr_code}">
 										{/foreach}
@@ -32,6 +35,9 @@
 				                <td>
 									<input list="attnd2" type="text" name="attnd[]" class="attnd form-control" placeholder="00:00" autocomplete="off" maxlength="8" {if $attn.am_out && $attn.am_out != ':'}value="{$attn.am_out}"{/if}>
 									<datalist id="attnd2">
+										{foreach $rawdata as $raw}
+											<option value="{$raw.log_time|date_format:'%I:%M %p'}">
+										{/foreach}
 										{foreach $codes as $code}
 										<option value="{$code.dtr_code}">
 										{/foreach}
@@ -43,6 +49,9 @@
 				                <td>
 									<input list="attnd3" type="text" name="attnd[]" class="attnd form-control" placeholder="00:00" autocomplete="off" maxlength="8" {if $attn.pm_in && $attn.pm_in != ':'}value="{$attn.pm_in}"{/if}>
 									<datalist id="attnd3">
+										{foreach $rawdata as $raw}
+											<option value="{$raw.log_time|date_format:'%I:%M %p'}">
+										{/foreach}
 										{foreach $codes as $code}
 										<option value="{$code.dtr_code}">
 										{/foreach}
@@ -52,6 +61,9 @@
 				                <td>
 									<input list="attnd4" type="text" name="attnd[]" class="attnd form-control" placeholder="00:00" autocomplete="off" maxlength="8"  {if $attn.pm_out && $attn.pm_out != ':'}value="{$attn.pm_out}"{/if}>
 									<datalist id="attnd4">
+										{foreach $rawdata as $raw}
+											<option value="{$raw.log_time|date_format:'%I:%M %p'}">
+										{/foreach}
 										{foreach $codes as $code}
 										<option value="{$code.dtr_code}">
 										{/foreach}
@@ -61,11 +73,21 @@
 				            <tr>
 				        		<td>OT IN</td>
 				                <td>
-									<input list="attnd4" type="text" name="attnd[]" class="attnd form-control" placeholder="00:00" autocomplete="off" maxlength="8"  {if $attn.ot_in && $attn.ot_in != ':'}value="{$attn.ot_in}"{/if}>
+									<input list="attnd5" type="text" name="attnd[]" class="attnd form-control" placeholder="00:00" autocomplete="off" maxlength="8"  {if $attn.ot_in && $attn.ot_in != ':'}value="{$attn.ot_in}"{/if}>
+									<datalist id="attnd5">
+										{foreach $rawdata as $raw}
+											<option value="{$raw.log_time|date_format:'%I:%M %p'}">
+										{/foreach}
+									</datalist>
 								</td>
 				                <td>OT OUT</td>
 				                <td>
-									<input list="attnd4" type="text" name="attnd[]" class="attnd form-control" placeholder="00:00" autocomplete="off" maxlength="8"  {if $attn.ot_out && $attn.ot_out != ':'}value="{$attn.ot_out}"{/if}>
+									<input list="attnd6" type="text" name="attnd[]" class="attnd form-control" placeholder="00:00" autocomplete="off" maxlength="8"  {if $attn.ot_out && $attn.ot_out != ':'}value="{$attn.ot_out}"{/if}>
+									<datalist id="attnd6">
+										{foreach $rawdata as $raw}
+											<option value="{$raw.log_time|date_format:'%I:%M %p'}">
+										{/foreach}
+									</datalist>
 								</td>
 				            </tr>
 				        </tbody>
@@ -82,17 +104,22 @@
                             {/if}
 		                </select>
                   	</div>
-					{if $attn.status == '2' || $attn.status == '3'}
+					<input type = "hidden" name = "curr_status" value = "{$attn.status}">
+					{$stat = [1,3,12,34,32, 14]}
+					{if $attn.status|in_array:$stat}
+						{$v_stat = [3,34,32]}
 						<div class="form-group">
 							<label class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" name="os-paid" id="os_paid" value="checked"> <span class="custom-control-label">Validate DAY as payable</span>
+								<input type="checkbox" class="custom-control-input" name="ot-paid" id="ot_paid" value="checked" {if $attn.status|in_array:$v_stat} checked = "True" {/if}> <span class="custom-control-label">Validate OVERTIME as payable</span>
 							</label>
 						</div>
 					{/if}
-					{if $attn.status == '1' || $attn.status == '3'}
+					{$stat = [2,4,12,34,32, 14]}
+					{if $attn.status|in_array:$stat}
+						{$v_stat = [4,34,14]}
 						<div class="form-group">
 							<label class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" name="ot-paid" id="ot_paid" value="checked"> <span class="custom-control-label">Validate OVERTIME as payable</span>
+								<input type="checkbox" class="custom-control-input" name="otd-paid" id="otd_paid" value="checked" {if $attn.status|in_array:$v_stat} checked = "True" {/if}> <span class="custom-control-label">Validate DAY as payable</span>
 							</label>
 						</div>
 					{/if}
