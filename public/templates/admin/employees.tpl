@@ -40,21 +40,20 @@
                                         </select>
                                     </form>
                                     </div> *}
-
                                     <form action="" method="POST" id="frm_inactive">
                                         <br />
                                         <div class="row">
                                             <div class="col-md-3">
                                                 <div class="form-label">Campus:</div>
                                                 <select name="filter[campus]" class="form-control custom-select" onchange="" style="padding: 0rem 1.75rem 0rem 0.75rem;" disabled>
-                                                    <option value="">Sipocot</option>
+                                                    <option value="">{$campus.campus_name}</option>
                                                 </select>
                                             </div>
                                             <div class="col-md-3">
                                                     <div class="form-label">Department:</div>
                                                     <select id="dept" name="department" class="form-control custom-select" style="padding: 0rem 1.75rem 0rem 0.75rem; max-width:100%;" multiple="">
                                                         {foreach $filters.departments as $dept}
-                                                            {if $campus == $dept.campus_id}
+                                                            {if $campus.id == $dept.campus_id}
                                                                 <option value="{$dept.no}" selected>{$dept.department_desc}</option>
                                                             {/if}
                                                         {/foreach}

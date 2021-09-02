@@ -16,7 +16,6 @@ class EmployeesController extends Controller {
     public $filter_conditions;
 
     public function get_filters($vals='', $category='') {
-
         $condition = $this->user['is_admin'] ? "WHERE campus_id = ".$this->user['campus_id'] : '';
         $this->filters['departments'] = DB::fetch_all("SELECT * FROM tbl_department $condition");
         $this->filters['designation'] = DB::fetch_all("SELECT * FROM tbl_privilege");
@@ -63,6 +62,10 @@ class EmployeesController extends Controller {
         }
         $emps = $this->filtered_employees($conditions);
         $this->view->display ('admin/employee_tbl', ["employees" => $emps, "filter_conditions" => $conditions]);
+    }
+
+    public function get_campus_det() {
+        return DB::fetch_all("SELECT * FROM tbl_campus WHERE id = ?", $this->user['campus_id'])[0];
     }
 
     public function filtered_employees($conditions='') {

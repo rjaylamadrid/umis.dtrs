@@ -4,7 +4,7 @@ require.config({
     core: ["bootstrap", "jquery"],
     datatables: ["jquery"],
     chartjs: ["chart"],
-    message: ["jquery"],
+    // message: ["jquery"],
     multiselect: ["jquery"],
   },
   paths: {
@@ -14,7 +14,7 @@ require.config({
     datatables: "assets/js/vendors/datatables.min",
     chart: "assets/js/vendors/chart",
     chartjs: "assets/js/vendors/chartjs-plugin-datalabels.min",
-    message: "assets/js/vendors/message",
+    // message: "assets/js/vendors/message",
     multiselect: "assets/js/vendors/multiselect"
   },
 });
@@ -120,5 +120,5 @@ window.tabler = {
     'gray-dark-lightest': '#ebebec'
     }
 };
-require (['core', 'message']);
+// require (['core', 'message']);
 require (['core', 'multiselect']);
