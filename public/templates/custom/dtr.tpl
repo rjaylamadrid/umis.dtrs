@@ -51,7 +51,7 @@
                     {/if}
                     {if $attendance['attn'][$date|date_format: "%Y-%m-%d"]}
                         {$attn = $attendance['attn'][$date|date_format: "%Y-%m-%d"]}
-                        <tr class="" {if $attn.auth == "false"} style="background-color: #ff00001a; line-height: 15px" {/if}>
+                        <tr class="" {if $attn.auth == "false"} style="background-color: #ff00001a; line-height: 15px" {elseif $attn.status > 0} style="background-color: #ff9a001a; line-height: 15px" {/if}>
                             <td><b>{$attn.date|date_format:"%d"}</b></td>
                             <td>{$attn.am_in}</td>
                             <td>{$attn.am_out}</td>
@@ -63,6 +63,7 @@
                             <td>{$attn.late + $attn.undertime}</td>
                             {$attendance.ut = $attendance.ut + ($attn.late + $attn.undertime)}
                             {$attendance.total = $attendance.total + $attn.total_hours}
+                            {* {$attendance.ot = $attendance.total + $attn.total_hours} *}
                             <td></td>
                             {if $user.is_admin}
                             <td><a href="javascript:view_raw_data('{$employee_id}', '{$attn.date|date_format:"%Y-%m-%d"}');" class="icon" title="View Raw Data"><i class="fe fe-eye"></i></a><a href="javascript:update_log('{$attn.id}', '{$employee_id}', '{$attn.date|date_format:"%Y-%m-%d"}');" class="icon" title="Edit Log"><i class="fe fe-edit"></i></a></td>
@@ -121,5 +122,5 @@
             </div>
         {/if}
     </form>
-    <p>Total rendered hours: {$attendance.total} hours <br> Tardy: {$attendance.ut} minutes</p>
+    <p>Total rendered days: {$attendance.total} days <br> Tardy: {$attendance.ut} minutes</p>
   </div>

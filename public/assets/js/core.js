@@ -137,7 +137,7 @@ function date_max()
 
  $('#date_from').attr('max', maxDate);
 
- console.log(maxDate);
+ //console.log(maxDate);
 }
 
 function date_min()
@@ -146,7 +146,7 @@ function date_min()
 
  $('#date_to').attr('min', minDate);
 
- console.log(minDate);
+ //console.log(minDate);
 }
 
 
@@ -401,7 +401,7 @@ function customDate () {
     var year = $('#yr').val();
     $('#from').val(date_create(year, month, presets[period-1][0]));
     $('#to').val(date_create(year, month, presets[period-1][1]));
-    console.log(date_create(year, month, presets[period-1][1]));
+    //console.log(date_create(year, month, presets[period-1][1]));
     $('#preset').removeClass("d-none");
     $('#custom').addClass("d-none");
   }
@@ -447,13 +447,12 @@ function create_date (date, range_type = 'day', range = 0) {
 }
 
 function create_sched (ctr) {
-  if(document.getElementById("day"+ctr).checked) {
+  if (document.getElementById("day"+ctr).checked) {
     $("#amin"+ctr).show(0);
     $("#amout"+ctr).show(0);
     $("#pmin"+ctr).show(0);
     $("#pmout"+ctr).show(0);
-  }
-  else {
+  } else {
     $("#amin"+ctr).hide(0);
     $("#amout"+ctr).hide(0);
     $("#pmin"+ctr).hide(0);

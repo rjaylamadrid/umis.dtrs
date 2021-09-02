@@ -82,14 +82,19 @@
                             {/if}
 		                </select>
                   	</div>
-					{if $user.is_admin}
-						{if $checkbox}
-							<div class="form-group">
-								<label class="custom-control custom-checkbox">
-									<input type="checkbox" class="custom-control-input" name="ot-paid" id="ot_paid" value="checked"> <span class="custom-control-label">Validate day as payable</span>
-								</label>
-							</div>
-						{/if}
+					{if $attn.status == '2' || $attn.status == '3'}
+						<div class="form-group">
+							<label class="custom-control custom-checkbox">
+								<input type="checkbox" class="custom-control-input" name="os-paid" id="os_paid" value="checked"> <span class="custom-control-label">Validate DAY as payable</span>
+							</label>
+						</div>
+					{/if}
+					{if $attn.status == '1' || $attn.status == '3'}
+						<div class="form-group">
+							<label class="custom-control custom-checkbox">
+								<input type="checkbox" class="custom-control-input" name="ot-paid" id="ot_paid" value="checked"> <span class="custom-control-label">Validate OVERTIME as payable</span>
+							</label>
+						</div>
 					{/if}
 				</div>
 			</div>

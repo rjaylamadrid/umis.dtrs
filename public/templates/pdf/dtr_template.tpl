@@ -56,20 +56,27 @@
             {foreach $daterange as $date}
                 {if $attendance['attn'][$date|date_format:"%Y-%m-%d"]}
                     {$attn = $attendance['attn'][$date|date_format:"%Y-%m-%d"]}
-                    <tr class="border">
-                        <td><b>{$attn.date|date_format:"%d"}</b></td>
-                        <td>{if $attn.am_in|count_characters > 5}{$attn.am_in|substr:0:-1|trim}{else}{$attn.am_in}{/if}</td>
-                        <td>{if $attn.am_out|count_characters > 5}{$attn.am_out|substr:0:-1|trim}{else}{$attn.am_out}{/if}</td>
-                        <td>{if $attn.pm_in|count_characters > 5}{$attn.pm_in|substr:0:-1|trim}{else}{$attn.pm_in}{/if}</td>
-                        <td>{if $attn.pm_out|count_characters > 5}{$attn.pm_out|substr:0:-1|trim}{else}{$attn.pm_out}{/if}</td>
-                        <td>{$attn.ot_in|substr:0:-1|trim}</td>
-                        <td>{$attn.ot_out|substr:0:-1|trim}</td>
-                        {$attendance.ut = $attendance.ut + ($attn.late + $attn.undertime)}
-                        {$attendance.abs = $attendance.abs + $attn.is_absent}
-                        {$attendance.total = $attendance.total + $attn.total_hours}
-                        <td> {$attn.is_absent} </td>
-                        <td>{$attn.late + $attn.undertime}</td>
-                    </tr>
+                    {if $attn.status == '2' || $attn.status == '3'}
+                        <tr class="border">
+                            <td><b>{$date|date_format:"%d"}</b></td>
+                            <td colspan="8" style="letter-spacing: 10px;">{$date|date_format:"%A"|upper}</td>
+                        </tr>
+                    {else}
+                        <tr class="border">
+                            <td><b>{$attn.date|date_format:"%d"}</b></td>
+                            <td>{if $attn.am_in|count_characters > 5}{$attn.am_in|substr:0:-1|trim}{else}{$attn.am_in}{/if}</td>
+                            <td>{if $attn.am_out|count_characters > 5}{$attn.am_out|substr:0:-1|trim}{else}{$attn.am_out}{/if}</td>
+                            <td>{if $attn.pm_in|count_characters > 5}{$attn.pm_in|substr:0:-1|trim}{else}{$attn.pm_in}{/if}</td>
+                            <td>{if $attn.pm_out|count_characters > 5}{$attn.pm_out|substr:0:-1|trim}{else}{$attn.pm_out}{/if}</td>
+                            <td>{$attn.ot_in|substr:0:-1|trim}</td>
+                            <td>{$attn.ot_out|substr:0:-1|trim}</td>
+                            {$attendance.ut = $attendance.ut + ($attn.late + $attn.undertime)}
+                            {$attendance.abs = $attendance.abs + $attn.is_absent}
+                            {$attendance.total = $attendance.total + $attn.total_hours}
+                            <td>{$attn.is_absent|number_format:"2f"}</td>
+                            <td>{$attn.late + $attn.undertime}</td>
+                        </tr>
+                    {/if}
                 {else}
                     {if $date|date_format:"w" == 0 || $date|date_format:"w" == 6}
                         <tr class="border">
@@ -97,7 +104,7 @@
             {/foreach}
             <tr class="border">
                 <td colspan="7" style="text-align: left;">TOTAL DAYS: <b>{$days-$attendance.abs}</b> OVERTIME: <b>0.00</b></td>
-                <td>{$attendance.abs}</td>
+                <td>{$attendance.abs|number_format:"2f"}</td>
                 <td>{$attendance.ut}</td>
             </tr>
             <br/>
