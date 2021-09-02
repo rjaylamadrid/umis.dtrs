@@ -1,9 +1,10 @@
 <div class="container">
 <div class="card">
 <table class="table card-table">
-
+  
             <tbody>  
        {foreach from=$Sched item=sched}
+     
         {if $sched.Status == 1}
             <tr>
             <td class="font-weight-bold" style="font-size: 20px; align-text:left">{$sched.weekday}</td>

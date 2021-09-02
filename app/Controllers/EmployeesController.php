@@ -415,22 +415,22 @@ class EmployeesController extends Controller {
         return DB::update ("UPDATE tbl_employee_status SET ".DB::stmt_builder ($data)." WHERE no = (SELECT no FROM tbl_employee_status WHERE employee_id = ".$id." ORDER BY date_start DESC LIMIT 0,1)", $data);
     }
 
-    public function create_sched_preset() {
-        $scheds = DB::fetch_row ("SELECT COUNT(*)AS COUNT FROM tbl_schedule_preset");
-        $this->data['schedule_preset'] += ['sched_code' => "SCHED".str_pad($scheds['COUNT']+1,4,'0',STR_PAD_LEFT)];
-        DB::insert ("INSERT INTO tbl_schedule_preset SET ". DB::stmt_builder ($this->data['schedule_preset']),$this->data['schedule_preset']);
-        foreach ($this->data['day'] as $key => $days) {
-            $has_sched = False;
-            $inout = array('sched_code' => $this->data['schedule_preset']['sched_code'], 'weekday' => $days);
-            if ($this->data['amin'.$key] != '') {$inout += ['am_in' => date("H:i:s",strtotime($this->data['amin'.$key]))]; $has_sched = True;}
-            if ($this->data['amout'.$key] != '') {$inout += ['am_out' => date("H:i:s",strtotime($this->data['amout'.$key]))]; $has_sched = True;}
-            if ($this->data['pmin'.$key] != '') {$inout += ['pm_in' => date("H:i:s",strtotime($this->data['pmin'.$key]))]; $has_sched = True;}
-            if ($this->data['pmout'.$key] != '') {$inout += ['pm_out' => date("H:i:s",strtotime($this->data['pmout'.$key]))]; $has_sched = True;}
-            if ($has_sched) { DB::insert ("INSERT INTO tbl_schedule SET ". DB::stmt_builder ($inout),$inout); }
-        }
-        $id=$this->data['id'];
-        header ("location: /employees/employment-update/$id/schedule/success/".$this->data['schedule_preset']['sched_code']);
-    }
+    // public function create_sched_preset() {
+    //     $scheds = DB::fetch_row ("SELECT COUNT(*)AS COUNT FROM tbl_schedule_preset");
+    //     $this->data['schedule_preset'] += ['sched_code' => "SCHED".str_pad($scheds['COUNT']+1,4,'0',STR_PAD_LEFT)];
+    //     DB::insert ("INSERT INTO tbl_schedule_preset SET ". DB::stmt_builder ($this->data['schedule_preset']),$this->data['schedule_preset']);
+    //     foreach ($this->data['day'] as $key => $days) {
+    //         $has_sched = False;
+    //         $inout = array('sched_code' => $this->data['schedule_preset']['sched_code'], 'weekday' => $days);
+    //         if ($this->data['amin'.$key] != '') {$inout += ['am_in' => date("H:i:s",strtotime($this->data['amin'.$key]))]; $has_sched = True;}
+    //         if ($this->data['amout'.$key] != '') {$inout += ['am_out' => date("H:i:s",strtotime($this->data['amout'.$key]))]; $has_sched = True;}
+    //         if ($this->data['pmin'.$key] != '') {$inout += ['pm_in' => date("H:i:s",strtotime($this->data['pmin'.$key]))]; $has_sched = True;}
+    //         if ($this->data['pmout'.$key] != '') {$inout += ['pm_out' => date("H:i:s",strtotime($this->data['pmout'.$key]))]; $has_sched = True;}
+    //         if ($has_sched) { DB::insert ("INSERT INTO tbl_schedule SET ". DB::stmt_builder ($inout),$inout); }
+    //     }
+    //     $id=$this->data['id'];
+    //     header ("location:/employees/".$this->data['schedule_preset']['sched_code']);
+    // }
     //END OF EMPLOYMENT MODULE
 
     public function filter() {

@@ -4,6 +4,7 @@
     <div class="my-3 my-md-5">
         <div class="container">
             {include file="admin/employee_stats.tpl"}
+            {include file="modal/Create_Schedule.tpl"}
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">

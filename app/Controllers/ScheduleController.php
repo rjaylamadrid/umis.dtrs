@@ -9,27 +9,28 @@ class ScheduleController extends Controller{
   
    public function Get_id(){
       if($this->data['id']){
-         return DB::fetch_all("SELECT *  FROM tbl_schedule a, (SELECT * FROM tbl_employee_sched WHERE employee_id = ?  ORDER BY `date` DESC LIMIT 0,3) b WHERE a.sched_code = b.sched_code",$this->data['id']);          
+         return DB::fetch_all("SELECT *  FROM tbl_schedule a, (SELECT * FROM tbl_employee_sched WHERE employee_id = ?  ORDER BY `date` DESC LIMIT 0,3) b WHERE a.sched_code = b.sched_code ORDER BY weekday",$this->data['id']);          
       }
     }
+    public function insert_into_preset(){
+      $scheds = DB::fetch_row ("SELECT COUNT(*)AS COUNT FROM tbl_schedule_preset");
+      $code = "SCHED".str_pad($scheds['COUNT']+1,4,'0',STR_PAD_LEFT);
+      $p_name = $this->data['p_name'];
+      $p_time = $this->data['p_time'];
+      DB::insert("INSERT INTO tbl_schedule_preset SET sched_code = ?, sched_day = ?, sched_time = ?", [$code,$p_name,$p_time]);
+    }
+
+
+    public function create_sched(){
+    
+      $d_Code = DB::fetch_row("SELECT sched_code FROM tbl_schedule_preset ORDER BY sched_code DESC LIMIT 1");
+      $code1 = $d_Code['sched_code'];
+      DB::insert("INSERT INTO tbl_schedule SET sched_code = ?, weekday = ?, am_in = ?,am_out = ?,pm_in = ?,pm_out = ?", [$code1,$this->data['day'],$this->data['amin'],$this->data['amout'],$this->data['pmin'],$this->data['pmout']]);
+      echo 'lester';
+      
+    }
    
-   public function get_Sched_code(){
-      $sched_code = DB::fetch_row("SELECT sched_code FROM `db_master`.`tbl_schedule_preset` ORDER BY sched_code desc limit 1");
-      $s_code = $sched_code['sched_code'];
-      preg_match('!\d+!',$s_code, $matches);
-      $number = (int)$matches[0];
-      $sched_no = $number + 1;
-      $numlength = mb_strlen($sched_no);
-      if($numlength == 1){
-         return $this->schedule_code = 'SCHED000'.$sched_no;
-      }elseif($numlength == 2){
-         return $this->schedule_code = 'SCHED00'.$sched_no;
-      }elseif($numlength == 3){
-         return $this->schedule_code = 'SCHED0'.$sched_no;
-      }elseif($numlength == 4){
-         return $this->schedule_code = 'SCHED'.$sched_no;
-      }
-   }
+   
 
    public static function  Auto_update_schedule(){
       $effectivity_status = DB:: fetch_all("SELECT * FROM tbl_employee_sched WHERE Status = 0 ORDER BY date");
