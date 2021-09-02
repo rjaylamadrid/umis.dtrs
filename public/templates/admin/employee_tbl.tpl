@@ -16,6 +16,7 @@
                 </tr>
             </thead>
             <tbody>
+            
                 {foreach from = $employees item = employee}
                     <tr>
                         <td>{$employee.employee_id}</td>
@@ -25,13 +26,14 @@
                         <td>{$employee.position}</td>
                         <td>
                         <span  id="status{$employee.employee_no}">
-                        {foreach from=$Status item=status }
-                          {if $employee.employee_no == $status.no}
-                              {if $status.Status == 1}
-                                <a href="javascript:ViewSchedule({$employee.employee_no})"><span class="badge bg-success">{$status.sched_code}</span></a>
+                        {foreach from=$SchedStat item=schedstat }
+                          {if $employee.employee_no == $schedstat.no}
+                              {if $schedstat.Status == 1}
+                                <a href="javascript:ViewSchedule({$employee.employee_no})"><span class="badge bg-success">{$schedstat.sched_code}</span></a>
                                 
-                             {elseif $status.Status == 0}
-                              <a href="javascript:activateStatus({$employee.employee_no})"><span class="badge bg-danger">{$status.sched_code}</span></a>
+                             {elseif $schedstat.Status == 0}
+                                
+                              <a href="javascript:activateStatus({$employee.employee_no})" data-bs-toggle="tooltip" data-bs-placement="top" title="Effective on: {$schedstat.date}"><span class="badge bg-danger">{$schedstat.sched_code}</span></a>
                               {/if  }
                               
                           {/if }
@@ -52,6 +54,7 @@
                                 {/if}
                                 </a>
                                 <a href="javascript:edit_schedule({$employee.employee_no});" class="dropdown-item"><i class="dropdown-icon fe fe-calendar"></i>Edit Schedule </a>
+                              
                             </div>
                         </td>
                     </tr>

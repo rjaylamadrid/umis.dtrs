@@ -420,11 +420,6 @@ function create_sched (ctr) {
   }
 }
 
-
-
-
-
-
 function edit_schedule(id){
   $("#ModalUpdate").modal('show');
   localStorage.setItem('id',id)

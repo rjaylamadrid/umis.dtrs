@@ -10,6 +10,7 @@
                         <div class="card-body">
                             <div class="form-group">
                                 <div style="float: right;">
+                                    <a href="javascript:create_schedule()" class="btn btn-primary"><i class="fe fe-calendar"></i> Create Preset Schedule</a>
                                     <a href="/employees/registration" class="btn btn-primary"><i class="fe fe-user-plus"></i> Add new employee</a>
                                 </div>
                                 <button type="button" class="btn btn-secondary" onclick="javascript:show_collapse('filters','#')">

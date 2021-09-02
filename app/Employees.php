@@ -22,7 +22,7 @@ class Employees extends EmployeesController {
         $this->get_filters();
         // print_r("<pre>");
         // print_r("</pre>");
-        $this->view->display ('admin/employees', ["stats" => $this->stats, "employees" => $employees,'emp_type' => $this->position->emp_types,'departments' => $this->departments(), 'designations' => $this->designations(), "status" => $status, "result" => $this->result, "type" => $this->data['status'], "campus" => $this->user['campus_id'], "filters" => $this->filters ,"Status" => $this->get_sched_info() ]);  
+        $this->view->display ('admin/employees', ["stats" => $this->stats, "employees" => $employees,'emp_type' => $this->position->emp_types,'departments' => $this->departments(), 'designations' => $this->designations(), "status" => $status, "result" => $this->result, "type" => $this->data['status'], "campus" => $this->user['campus_id'], "filters" => $this->filters ,"SchedStat" => $this->get_sched_info() ]);  
     }
 
     public function profile ($id = null, $tab = 'basic-info', $view='view', $message=NULL) {

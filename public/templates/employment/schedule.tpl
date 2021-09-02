@@ -8,9 +8,9 @@
             <i class="fe fe-alert-triangle mr-2" aria-hidden="true"></i> Currently inactive employee!
         </div><br/>
     {else}
-        <div class="form-group" style="float: right;">
+        {* <div class="form-group" style="float: right;">
             <a href="{$server}/employees/employment-update/{$employee->id}/{$tab}" class="btn btn-secondary btn-sm ml-2"><i class="fe fe-edit-2"></i> Edit</a>
-        </div>
+        </div> *}
     {/if}
     {include file="custom/schedule.tpl"}
 {else}
@@ -23,7 +23,7 @@
         {/if}
 
        
-        <form action="/employees" method="POST">
+        {* <form action="/employees" method="POST">
             <div class="row pl-2">
                 <input type="hidden" id="action" name="action" value="update_schedule">
                 <input type="hidden" name="employee_id" value="{$employee->id}">
@@ -40,14 +40,14 @@
                         <a href="javascript:get_schedule('create')" class="btn btn-secondary">Create New Work Schedule</a>
                     </div>
                 </div>
-            </div>
+            </div> *}
             <div id="schedule">
-            {include file="custom/schedule.tpl"}
+            {* {include file="custom/schedule.tpl"} *}
             </div>
             <div class="col-md-12 mt-5">
                 <div class="form-group" style="float: right;">
                   
-                    <button name="submit" value="submit" class="btn btn-primary">Save Changes</button>
+                    {* <button name="submit" value="submit" class="btn btn-primary">Save Changes</button> *}
                 </div>
             </div>
         </form>
