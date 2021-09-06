@@ -17,9 +17,10 @@
             {include file="templates/custom/presetselect.tpl"}
             </div>             
         </div>
-                <div class="row col-lg-6 mt-3" >
-                <input id="effective_date" type="date" class="form-control" onChange="enableSubmit();" hidden> 
+                <div class="row col-lg-6 mt-3" id="datemin" >
+                  {include file="templates/custom/dateMin.tpl"}
                 </div>
+    
         </div> 
     
     <div class="table-responsive" id ="Update">

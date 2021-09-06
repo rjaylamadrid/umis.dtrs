@@ -2,6 +2,7 @@
     <div class="card">
     <table class="table card-table" >
                 <tbody>   
+                
                 {foreach from=$selectschedule item=Schedule}
                 <tr>
                 <td class="font-weight-bold" style="font-size: 20px;">{$Schedule.weekday}</td>

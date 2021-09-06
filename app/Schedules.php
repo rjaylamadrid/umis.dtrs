@@ -9,15 +9,21 @@ class Schedules extends ScheduleController{
     }
 
     public function showSchedule(){
+       
         $Sched = $this->Get_id();
+       
         $this->view->display('templates/custom/viewschedule_tbl', ['Sched' => $Sched]);
     }
 
     public function SelectOptionPresetAndtableSchedule(){
-        $this->view->display('templates/custom/presetselect', ['preset' => $this->presets()]);
+        $this->view->display('templates/custom/presetselect', ['preset' => $this->presets(),'mindate' => $this->MinDate()]);
     }
 
     public function tableschedule(){
         $this->view->display('templates/custom/tableschedule', ['selectschedule' => $this->selectschedule()]);
+    }
+
+    public function datemin(){
+        $this->view->display('templates/custom/dateMin', ['mindate' => $this->MinDate()]);
     }
 }

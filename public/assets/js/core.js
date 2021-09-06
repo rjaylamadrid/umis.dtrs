@@ -423,13 +423,7 @@ f({action:'insert_into_preset',p_name:Preset_Name,p_time:Preset_Time},"text","/s
             }, 5000)
           })
           }
-          
-
-          }      
-   
-
-
-
+          }     
 })
 }
 
@@ -464,12 +458,14 @@ function edit_schedule(id){
   f({action:'SelectOptionPresetAndtableSchedule', id:id},"text","/schedule").then(function(data){
      $('#Myselect').html(data);
   })
+  f({action:'datemin',id:id},"text","/schedule").then(function(data){
+    $("#datemin").html(data);
+    })
 }
 
 
 function get_preset(sched_code){
   $("#effective_date").removeAttr("hidden", false)
-  console.log(sched_code);
   f({action:'tableschedule', sched_code:sched_code},"text","/schedule").then(function(data){
   $("#Update").html(data)
   })
