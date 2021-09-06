@@ -373,12 +373,12 @@ function set_new (new_emp) {
 $('#ModalUpdate').on('hidden.bs.modal', function () {
   $('#Preset_Select').prop('selectedIndex',0);
   document.getElementById("effective_date").value = '';
-  $("#effective_date").attr("hidden", true)
+  $("#effective_date").attr("hidden", true);
 });
 
 
 function activateStatus(id){
-  localStorage.setItem('id',id)
+  localStorage.setItem('id',id);
   $("#ActivateStatus").modal('show');
 }
 
@@ -488,17 +488,17 @@ function enableSubmit(){
 function SaveChanges(){
     let eff_date = document.getElementById("effective_date").value;
   var schedcode = document.getElementById("Preset_Select").value;
-  Emid = localStorage.getItem('id')
+  Emid = localStorage.getItem('id');
   if(eff_date !== ""){
     $("#selectalert").fadeIn(400);
     setTimeout(function(){
       $("#selectalert").fadeOut(1000);
-  }, 5000)
+  }, 5000);
       f({action:'insert_schedule', eff_schedcode:schedcode,eff_id:Emid,eff_date:eff_date} , "text","/schedule").then(function(data){
-         $("#selectalert strong").html(data)
+         $("#selectalert strong").html(data);
          $('#Preset_Select').prop('selectedIndex',0);
         document.getElementById("effective_date").value = '';
-        $("#effective_date").attr("hidden", true)
+        $("#effective_date").attr("hidden", true);
         $('#btn_effdate').attr('disabled',true);
         $("#status"+Emid).load(location.href + " #status"+Emid);
         });
@@ -508,12 +508,13 @@ function SaveChanges(){
 }
 
 function ViewSchedule(id){
+  // console.log(id);
   $("#ViewSched").modal('show');
   let Fname = document.getElementById('GetName'+id).innerHTML;
     let fullname = document.getElementById('full_name');
-    fullname.innerHTML = Fname
+    fullname.innerHTML = Fname;
   f({action:'showSchedule', id:id}, "text","/schedule").then(function(data){
-    $("#sched").html(data)
+    $("#sched").html(data);
   })
 }
 
