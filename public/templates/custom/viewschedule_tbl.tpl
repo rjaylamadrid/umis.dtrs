@@ -5,7 +5,7 @@
             <tbody>  
        {foreach from=$Sched item=sched}
      
-        {if $sched.Status == 1}
+        {if $sched.status == 1}
             <tr>
             <td class="font-weight-bold" style="font-size: 20px; align-text:left">{$sched.weekday}</td>
             <td style="text-align: center;"><div><strong>{$sched.am_in|date_format:"%l:%M %p"}</strong><div class="small text-muted">AM IN</div></div></td>

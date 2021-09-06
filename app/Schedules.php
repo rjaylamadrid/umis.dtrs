@@ -13,12 +13,11 @@ class Schedules extends ScheduleController{
         $this->view->display('templates/custom/viewschedule_tbl', ['Sched' => $Sched]);
     }
 
-public function SelectOptionPresetAndtableSchedule(){
-    $this->view->display('templates/custom/presetselect', ['preset' => $this->presets()]);
-}
+    public function SelectOptionPresetAndtableSchedule(){
+        $this->view->display('templates/custom/presetselect', ['preset' => $this->presets()]);
+    }
 
-public function tableschedule(){
-    $this->view->display('templates/custom/tableschedule', ['selectschedule' => $this->selectschedule()]);
-}
-
+    public function tableschedule(){
+        $this->view->display('templates/custom/tableschedule', ['selectschedule' => $this->selectschedule()]);
+    }
 }

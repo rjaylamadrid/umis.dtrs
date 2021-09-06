@@ -444,8 +444,8 @@ class EmployeesController extends Controller {
     }
 
 
-    public function get_sched_info(){
-    return DB::fetch_all("SELECT a.no, d.sched_code, d.Status, d.date FROM tbl_employee a RIGHT JOIN tbl_employee_sched d ON d.employee_id = a.no");
-}
+    // public function get_sched_info(){
+    //     return DB::fetch_all("SELECT a.no, d.sched_code, d.Status, d.date FROM tbl_employee a RIGHT JOIN tbl_employee_sched d ON d.employee_id = a.no");
+    // }
 
 }
