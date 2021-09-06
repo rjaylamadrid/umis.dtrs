@@ -61,7 +61,7 @@ class EmployeesController extends Controller {
             $conditions = $this->data['category'] . " IN (" . $this->data['vals'] . ") ";
         }
         $emps = $this->filtered_employees($conditions);
-        $emps = Schedule::get_schedules($emps);
+        $emps = $emps ? Schedule::get_schedules($emps) : NULL;
         $this->view->display ('admin/employee_tbl', ["employees" => $emps, "filter_conditions" => $conditions]);
     }
 
