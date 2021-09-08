@@ -16,8 +16,9 @@
                 </tr>
             </thead>
             <tbody>
-            
+           {* {print_r($employees)} *}
                 {foreach from = $employees item = employee}
+                    
                     <tr>
                         <td>{$employee.employee_id}</td>
                         <td id="GetName{$employee.employee_no}">{$employee.first_name|upper} {$employee.last_name|upper}</td>

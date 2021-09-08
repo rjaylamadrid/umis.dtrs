@@ -384,7 +384,6 @@ function activateStatus(id){
 
 function PendingActivate(){
   Activate_Id = localStorage.getItem('id');
-  console.log(Activate_Id);
   f({action:'Activate_status_pending', Activate_Id:Activate_Id} , "text","/schedule").then(function(data){
     $("#message").attr("hidden", true);
     $("#activate").removeAttr("hidden");
@@ -454,27 +453,33 @@ function create_sched (ctr) {
 
 function edit_schedule(id){
   $("#ModalUpdate").modal('show');
-  localStorage.setItem('id',id)
+  let Fname = document.getElementById('GetName'+id).innerHTML;
+    let fullname = document.getElementById('edit_name');
+    fullname.innerHTML = Fname;
+  localStorage.setItem('id',id);
   f({action:'SelectOptionPresetAndtableSchedule', id:id},"text","/schedule").then(function(data){
      $('#Myselect').html(data);
   })
   f({action:'datemin',id:id},"text","/schedule").then(function(data){
     $("#datemin").html(data);
     })
+    f({action:'activeschedule_selected',id:id},"text","/schedule").then(function(data){
+      $("#Update").html(data);
+      })
 }
 
 
 function get_preset(sched_code){
-  $("#effective_date").removeAttr("hidden", false)
+  $("#effective_date").removeAttr("hidden", false);
   f({action:'tableschedule', sched_code:sched_code},"text","/schedule").then(function(data){
-  $("#Update").html(data)
+  $("#Update").html(data);
   })
 }
 
 $('#ModalUpdate').on('hidden.bs.modal', function () {
   $('#Preset_Select').prop('selectedIndex',0);
   document.getElementById("effective_date").value = '';
-  $("#effective_date").attr("hidden", true)
+  $("#effective_date").attr("hidden", true);
 });
 
 function enableSubmit(){
@@ -504,7 +509,6 @@ function SaveChanges(){
 }
 
 function ViewSchedule(id){
-  // console.log(id);
   $("#ViewSched").modal('show');
   let Fname = document.getElementById('GetName'+id).innerHTML;
     let fullname = document.getElementById('full_name');

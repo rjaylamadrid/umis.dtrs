@@ -3,8 +3,10 @@
 <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
   <div class="modal-content">
     <div class="modal-header text-black" >
-    <h2 style="margin:0" id="Upmodal_name"><i class="dropdown-icon fe fe-calendar"></i>EDIT SCHEDULE</h2>
+    <h2 style="margin:0" id="Upmodal_name"><i class="dropdown-icon fe fe-calendar"></i>EDIT SCHEDULE - <span id="edit_name"></span></h2>
+    
     </div>
+    
     <div class="modal-body">
     <div class="col-12">
     <div class="card">

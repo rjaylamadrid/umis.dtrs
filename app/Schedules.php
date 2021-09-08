@@ -16,11 +16,15 @@ class Schedules extends ScheduleController{
     }
 
     public function SelectOptionPresetAndtableSchedule(){
-        $this->view->display('templates/custom/presetselect', ['preset' => $this->presets(),'mindate' => $this->MinDate()]);
+        $this->view->display('templates/custom/presetselect', ['preset' => $this->presets()]);
     }
 
     public function tableschedule(){
         $this->view->display('templates/custom/tableschedule', ['selectschedule' => $this->selectschedule()]);
+    }
+
+    public function activeschedule_selected(){
+        $this->view->display('templates/custom/tableschedule', ['update_sched' => $this->Get_id()]);
     }
 
     public function datemin(){

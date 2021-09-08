@@ -3,6 +3,9 @@ namespace Model;
 
 use Database\DB;
 use Model\Employee;
+use DateTime;
+use DateInterval;
+use DatePeriod;
 
 class DTR {     
 
@@ -165,5 +168,25 @@ class DTR {
           ALTER TABLE `$period`
             ADD CONSTRAINT `$period_ibfk_1` FOREIGN KEY (`emp_id`) REFERENCES `db_master`.`tbl_employee` (`no`);";
         return DB::db('db_attendance') -> insert ($query);
+    }
+
+    public static function update_attendance($emp_id, $date_from, $date_to) {
+        $logs = [];
+        $interval = new DateInterval('P1D');
+        $date_from = new DateTime($date_from);
+        $date_to = new DateTime($date_to);
+        $daterange = new DatePeriod($date_from, $interval, $date_to->modify('+1 day'));
+
+        foreach ($daterange as $date) {
+            $fdate = date_format($date, 'Y-m-d');
+            $period = date_format($date, 'm-Y');
+            $log = DB::db('db_attendance') -> fetch_row("SELECT * FROM `".$period."` WHERE emp_id = ? and date = ?", [$emp_id, $fdate]);
+
+            if ($log){
+                $attnd = array($log['am_in'], $log['am_out'], $log['pm_in'], $log['pm_out'], $log['ot_in'], $log['ot_out']);
+                $attendance = self::change_log ($emp_id, $attnd, $period, $fdate);
+            }
+            $logs[] = $log;
+        }
     }
 }

@@ -1,10 +1,8 @@
 <div class="table-responsive">
     <table class="table">  
     
-    
+  
         <tr class="alert alert-success"><td colspan="5">Work Schedule</td>
-
-
          {foreach from = $schedules item = schedule}
             <tr>
                 <td>{$schedule.weekday}</td>

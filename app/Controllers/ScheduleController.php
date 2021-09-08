@@ -1,7 +1,7 @@
 <?php 
 
 namespace Controllers;
-
+use Model\DTR;
 use Database\DB;
 
 
@@ -55,46 +55,48 @@ class ScheduleController extends Controller{
             DB::insert("INSERT INTO tbl_employee_sched SET sched_code = ?, employee_id = ?, date = ? ,status = 1", [$this->data['eff_schedcode'],$this->data['eff_id'] ,$this->data['eff_date']]);
             echo 'Schedule Saved Successfully and effective from now on!';
             exit;
-          }elseif($this->data['eff_date']!== date('Y-m-d')){
+          }elseif($this->data['eff_date'] < date('Y-m-d')){
+          
+               DB::update("UPDATE tbl_employee_sched SET status = 2 WHERE employee_id = ? AND status = 1", $this->data['eff_id']);
+               DB::insert("INSERT INTO tbl_employee_sched SET sched_code = ?, employee_id = ?, date = ? ,status = 1", [$this->data['eff_schedcode'],$this->data['eff_id'] ,$this->data['eff_date']]);
+               DTR::update_attendance($this->data['eff_id'], $this->data['eff_date'], date('Y-m-d'));
+               echo 'Saved Sucessfully , Effectivity date is on: <span style="color:red">'.$this->data['eff_date'];
+               echo '</span>';
+            
+          }elseif($this->data['eff_date'] > date('Y-m-d')){
             $check_sched = DB:: fetch_all("SELECT * FROM tbl_employee_sched WHERE employee_id = ? AND status = 0 ORDER BY date DESC",$this->data['eff_id']);
-            if(empty($check_sched)){
+            if(!empty($check_sched)){
+               echo '<span style="color:red">You have a pending schedule that will take effect on: '. $check_sched[0]['date'] .' and cannot be save!';
+               echo '</span>';
+            }else{
                DB::insert("INSERT INTO tbl_employee_sched SET sched_code = ?, employee_id = ?, date = ? ,status = 0", [$this->data['eff_schedcode'],$this->data['eff_id'] ,$this->data['eff_date']]);
                echo 'Saved Sucessfully , Effectivity date is on: <span style="color:red">'.$this->data['eff_date'];
                echo '</span>';
-            }else{
-               echo '<span style="color:red">You have a pending schedule that will take effect on: '. $check_sched[0]['date'] .' and cannot be save!';
-               echo '</span>';
             }
-            
           }
          
        }else{
-         if($this->data['eff_date']!== date('Y-m-d')){
+         if($this->data['eff_date'] > date('Y-m-d')){
             $check_sched_0 = DB:: fetch_all("SELECT * FROM tbl_employee_sched WHERE employee_id = ? AND status = 0 ORDER BY date DESC",$this->data['eff_id']);
               if(!empty($check_sched_0)){
                echo '<span style="color:red">You have a pending schedule that will take effect on: '. $check_sched_0[0]['date'];
                echo '</span>';
+               exit;
               }else{
-                 if($this->data['eff_date'] < date('Y-m-d')){
-                  $insert_1 = DB::insert("INSERT INTO tbl_employee_sched SET sched_code = ?, employee_id = ?, date = ? ,status = 1", [$this->data['eff_schedcode'],$this->data['eff_id'] ,$this->data['eff_date']]); 
+                  $insert_1 = DB::insert("INSERT INTO tbl_employee_sched SET sched_code = ?, employee_id = ?, date = ? ,status = 0", [$this->data['eff_schedcode'],$this->data['eff_id'] ,$this->data['eff_date']]); 
                   if($insert_1){
-                     echo 'Schedule Saved Successfully!';   
+                     echo 'Saved Sucessfully , Effectivity date is on: <span style="color:red">'.$this->data['eff_date'];
+                     echo '</span>';
+                     exit;
                   }
-                     
-                  }elseif($this->data['eff_date'] > date('Y-m-d')){
-                     $insert_0 = DB::insert("INSERT INTO tbl_employee_sched SET sched_code = ?, employee_id = ?, date = ? ,status = 0", [$this->data['eff_schedcode'],$this->data['eff_id'] ,$this->data['eff_date']]);
-                     if($insert_0){
-                        echo '<span style="color:red">The effectivity of this schedule is on: '. $this->data['eff_date'];
-                        echo '</span>';
-                    }
-                  }
-                    
-                 
                 }
-               
-             
-            
-              
+
+            }elseif($this->data['eff_date'] < date('Y-m-d')){
+               DB::update("UPDATE tbl_employee_sched SET status = 2 WHERE employee_id = ? AND status = 1", $this->data['eff_id']);
+               DB::insert("INSERT INTO tbl_employee_sched SET sched_code = ?, employee_id = ?, date = ? ,status = 1", [$this->data['eff_schedcode'],$this->data['eff_id'] ,$this->data['eff_date']]);
+               DTR::update_attendance($this->data['eff_id'], $this->data['eff_date'], date('Y-m-d'));
+               echo 'Saved Sucessfully , Effectivity date is on: <span style="color:red">'.$this->data['eff_date'];
+               echo '</span>';
             }elseif($this->data['eff_date']== date('Y-m-d')){
                DB::insert("INSERT INTO tbl_employee_sched SET sched_code = ?, employee_id = ?, date = ? ,status = 1", [$this->data['eff_schedcode'],$this->data['eff_id'] ,$this->data['eff_date']]);
                echo 'Schedule Saved Successfully and effective from now on!';
