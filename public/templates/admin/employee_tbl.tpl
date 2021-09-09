@@ -16,7 +16,6 @@
                 </tr>
             </thead>
             <tbody>
-          
                 {foreach from = $employees item = employee}
                     
                     <tr>

@@ -25,8 +25,6 @@
                     </tr> 
                     {/if}
                 {/foreach}
-                
-
                 </div>
                 </tbody>
      </table>
