@@ -65,9 +65,24 @@
                             {$attendance.total = $attendance.total + $attn.total_hours}
                             {* {$attendance.ot = $attendance.total + $attn.total_hours} *}
                             <td></td>
-                            {if $user.is_admin}
+                            {* {if $user.is_admin}
                             <td><a href="javascript:view_raw_data('{$employee_id}', '{$attn.date|date_format:"%Y-%m-%d"}');" class="icon" title="View Raw Data"><i class="fe fe-eye"></i></a><a href="javascript:update_log('{$attn.id}', '{$employee_id}', '{$attn.date|date_format:"%Y-%m-%d"}');" class="icon" title="Edit Log"><i class="fe fe-edit"></i></a></td>
-                            {/if}
+                            {/if} *}
+                            <td class="text-center"><div class="item-action dropdown">
+                                <a href="javascript:void(0)" data-toggle="dropdown" class="icon" aria-expanded="false"><i class="fe fe-more-vertical"></i></a>
+                                <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; transform: translate3d(-181px, 20px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                    <a href="{$server}/employees/profile/{$employee.employee_no}/basic-info" class="dropdown-item"><i class="dropdown-icon fe fe-tag"></i> Profile 
+                                    </a>
+                                    <a href="{$server}/employees/employment/{$employee.employee_no}/employment_info" class="dropdown-item"><i class="dropdown-icon fe fe-user"></i> Employment
+                                    </a>
+                                    {if $employee.is_active == '1'}
+                                        <a href="javascript:set_emp_inactive('{$employee.employee_no}', '{if $employee.is_active == '0'}1{else}0{/if}','{$employee.first_name|upper} {$employee.last_name|upper}','{$employee.position}');" class="dropdown-item"><i class="dropdown-icon fe fe-tag"></i> Set as {if $employee.is_active == '0'}Active{else}Inactive{/if}
+                                    {else}
+                                        <a href="javascript:set_inactive('{$employee.employee_no}', '{if $employee.is_active == '0'}1{else}0{/if}');" class="dropdown-item"><i class="dropdown-icon fe fe-tag"></i> Set as {if $employee.is_active == '0'}Active{else}Inactive{/if}
+                                    {/if}
+                                    </a>
+                                </div>
+                            </td>
                         </tr>
                     {else}
                         {if $date|date_format:"w" == 0 || $date|date_format:"w" == 6}

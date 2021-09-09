@@ -105,7 +105,7 @@
 		                </select>
                   	</div>
 					<input type = "hidden" name = "curr_status" value = "{$attn.status}">
-					{$stat = [1,3,12,34,32, 14]}
+					{$stat = [1,3,12,34,32,14]}
 					{if $attn.status|in_array:$stat}
 						{$v_stat = [3,34,32]}
 						<div class="form-group">
@@ -114,7 +114,7 @@
 							</label>
 						</div>
 					{/if}
-					{$stat = [2,4,12,34,32, 14]}
+					{$stat = [2,4,12,34,32,14]}
 					{if $attn.status|in_array:$stat}
 						{$v_stat = [4,34,14]}
 						<div class="form-group">
