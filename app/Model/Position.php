@@ -36,6 +36,7 @@ class Position {
             $this->emp_type = $emp_type;
             $this->emp_type();
             $this->positions = DB::fetch_all("SELECT * FROM tbl_position WHERE etype_id = ? ORDER BY position_desc ASC", $this->emp_type['type_id']);
+            
         } else {
             $this->positions = DB::fetch_all("SELECT * FROM tbl_position ORDER BY position_desc ASC");
         } 

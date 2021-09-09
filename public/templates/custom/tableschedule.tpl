@@ -16,7 +16,7 @@
            
                 {foreach from=$update_sched item=Schedule}
                     {if $Schedule.status == 1}
-                    <tr>
+                    <tr style="color:rgb(0, 0, 0)">
                     <td class="font-weight-bold" style="font-size: 20px;">{$Schedule.weekday}</td>
                     <td style="text-align: center;"><div><strong>{$Schedule.am_in|date_format:"%l:%M %p"}</strong><div class="small text-muted">AM IN</div></div></td>
                     <td style="text-align: center;"><div><strong>{$Schedule.am_out|date_format:"%l:%M %p"}</strong><div class="small text-muted">AM OUT</div></div></td>

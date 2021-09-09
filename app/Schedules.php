@@ -16,7 +16,7 @@ class Schedules extends ScheduleController{
     }
 
     public function SelectOptionPresetAndtableSchedule(){
-        $this->view->display('templates/custom/presetselect', ['preset' => $this->presets()]);
+        $this->view->display('templates/custom/presetselect', ['preset' => $this->presets(),'code' => $this->SelectedDisabled()]);
     }
 
     public function tableschedule(){

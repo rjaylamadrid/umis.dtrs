@@ -12,6 +12,15 @@ class ScheduleController extends Controller{
          return DB::fetch_all("SELECT *  FROM tbl_schedule a, (SELECT * FROM tbl_employee_sched WHERE employee_id = ?  ORDER BY `date` DESC LIMIT 0,3) b WHERE a.sched_code = b.sched_code ORDER BY weekday",$this->data['id']);          
       }
     }
+
+    public function SelectedDisabled(){
+       $schedcode = $this->Get_id();
+       foreach($schedcode as $code){
+          if($code['status']==1){
+             return $code['sched_code'];
+          }
+       }
+    }
     public function insert_into_preset(){
       $scheds = DB::fetch_row ("SELECT COUNT(*)AS COUNT FROM tbl_schedule_preset");
       $code = "SCHED".str_pad($scheds['COUNT']+1,4,'0',STR_PAD_LEFT);

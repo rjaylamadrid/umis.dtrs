@@ -16,7 +16,7 @@
                 </tr>
             </thead>
             <tbody>
-           {* {print_r($employees)} *}
+          
                 {foreach from = $employees item = employee}
                     
                     <tr>

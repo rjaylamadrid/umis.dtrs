@@ -348,7 +348,9 @@ function init_pos(type) {
   }
   f({action: 'get_position', type:type}, "json", "/employees").then( function (positions) {
     $('#positions').html("<option selected disabled>Position</option>");
+    
     positions.forEach(function (position){
+      console.log(position['position_desc']);
         $('#positions').append("<option value='" + position['no'] + "'>" + position['position_desc'] + "</option>");
         $('#salary').val("Php 0.00");
     });
