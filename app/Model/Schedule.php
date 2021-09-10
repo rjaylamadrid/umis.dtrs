@@ -20,7 +20,7 @@ class Schedule{
     }
 
     public static function emp_sched ($emp_id) {
-        return DB::fetch_row ("SELECT * FROM tbl_employee_sched WHERE employee_id = ?  AND status = 1 ORDER BY date DESC", $emp_id);
+        return DB::fetch_all ("SELECT * FROM tbl_employee_sched WHERE employee_id = ? ORDER BY status ASC LIMIT 0,2", $emp_id);
     }
 
     public static function get_schedules($emps) {
