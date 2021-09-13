@@ -391,13 +391,11 @@ function PendingActivate(){
     $("#activate").removeAttr("hidden");
     $("#btnYes").attr("hidden", true);
     $("#btnDismiss").attr("hidden", true);
-    $("#status"+Activate_Id).load(location.href + " #status"+Activate_Id);
+    // $("#status"+Activate_Id).load(location.href + " #status"+Activate_Id);
   });
 }
 
-// $('#ActivateStatusd').on('hidden.bs.modal', function () {
-//   window.location.href="/employees";
-// });
+
 
 function create_schedule(){
   $("#create-schedule-modal").modal('show');
