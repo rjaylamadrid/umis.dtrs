@@ -17,14 +17,14 @@ class EmployeesController extends Controller {
 
     public function get_filters($vals='', $category='') {
         $condition = $this->user['is_admin'] ? "WHERE campus_id = ".$this->user['campus_id'] : '';
-        $this->filters['departments'] = DB::fetch_all("SELECT * FROM tbl_department $condition");
-        $this->filters['designation'] = DB::fetch_all("SELECT * FROM tbl_privilege");
-        $this->filters['position'] = DB::fetch_all("SELECT * FROM tbl_position");
+        $this->filters['departments'] = DB::fetch_all("SELECT * FROM tbl_department $condition ORDER BY department_desc ASC");
+        $this->filters['designation'] = DB::fetch_all("SELECT * FROM tbl_privilege ORDER BY priv_desc ASC");
+        $this->filters['position'] = DB::fetch_all("SELECT * FROM tbl_position ORDER BY position_desc ASC");
         $this->filters['graduate_study'] = DB::fetch_all("SELECT * FROM tbl_employee_education WHERE level = 'Graduate Studies' GROUP BY highest_level ORDER BY highest_level ASC");
         $this->filters['bachelors'] = DB::fetch_all("SELECT * FROM tbl_employee_education WHERE level = 'College' GROUP BY school_degree ORDER BY school_degree ASC");
         $this->filters['eligibility'] = DB::fetch_all("SELECT * FROM tbl_employee_eligibility GROUP BY eligibility_name ORDER BY eligibility_name ASC");
         $this->filters['training'] = DB::fetch_all("SELECT * FROM tbl_employee_training_seminar GROUP BY training_title ORDER BY training_title ASC");
-        $this->filters['status'] = DB::fetch_all("SELECT * FROM tbl_employee_type");
+        $this->filters['status'] = DB::fetch_all("SELECT * FROM tbl_employee_type ORDER BY type_desc ASC");
         $this->filters['marital'] = DB::fetch_all("SELECT * FROM tbl_employee GROUP BY marital_status ORDER BY marital_status");
     }
 

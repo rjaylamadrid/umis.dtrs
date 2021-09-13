@@ -20,7 +20,7 @@
                 {foreach from = $employees item = employee}
                     
                     <tr>
-                        <td>{$employee.employee_id}</td>
+                        <td>{$employee.emp_id}</td>
                         <td id="GetName{$employee.employee_no}">{$employee.first_name|upper} {$employee.last_name|upper}</td>
                         <td>{$employee.gender}</td>
                         <td>{$employee.birthdate|date_format:'M d, Y'}</td>
