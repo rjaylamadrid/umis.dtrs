@@ -29,11 +29,11 @@ class Controller {
     }
 
     protected function access () {
-        // $str_access = 'S!mU-ABn8bC*3';
-        // $headers = array(["url" => "dashboard", "icon" => "home", "title" => "Dashboard"], ["url" => "employees", "icon" => "users", "title" => "Employees"], ["url" => "payroll", "icon" => "credit-card", "title" => "Payroll"], ["url" => "attendance", "icon" => "clock", "title" => "Daily Time Record"], ["url" => "calendar", "icon" => "calendar", "title" => "Calendar"],["url" => "leave", "icon" => "mail", "title" => "Leave Request"],["url" => "settings", "icon" => "settings", "title" => "Settings"], ["url" => "profile", "icon" => "user", "title" => "Profile"], ["url" => "payslip", "icon" => "credit-card", "title" => "Payroll"], ["url" => "dtr", "icon" => "clock", "title" => "Daily Time Record"], ["url" => "leave", "icon" => "file", "title" => "Leave Management"]);
+        $str_access = 'S!mU-ABn8bC*3';
+        $headers = array(["url" => "dashboard", "icon" => "home", "title" => "Dashboard"], ["url" => "employees", "icon" => "users", "title" => "Employees"], ["url" => "payroll", "icon" => "credit-card", "title" => "Payroll"], ["url" => "attendance", "icon" => "clock", "title" => "Daily Time Record"], ["url" => "calendar", "icon" => "calendar", "title" => "Calendar"],["url" => "leave", "icon" => "mail", "title" => "Leave Request"],["url" => "settings", "icon" => "settings", "title" => "Settings"], ["url" => "profile", "icon" => "user", "title" => "Profile"], ["url" => "payslip", "icon" => "credit-card", "title" => "Payroll"], ["url" => "dtr", "icon" => "clock", "title" => "Daily Time Record"], ["url" => "leave", "icon" => "file", "title" => "Leave Management"]);
        
-        $str_access = 'S!m-A8bC*3I';
-        $headers = array(["url" => "dashboard", "icon" => "home", "title" => "Dashboard"], ["url" => "employees", "icon" => "users", "title" => "Employees"], ["url" => "attendance", "icon" => "clock", "title" => "Daily Time Record"], ["url" => "calendar", "icon" => "calendar", "title" => "Calendar"], ["url" => "settings", "icon" => "settings", "title" => "Settings"], ["url" => "profile", "icon" => "user", "title" => "Profile"], ["url" => "dtr", "icon" => "clock", "title" => "Daily Time Record"]);
+        // $str_access = 'S!m-A8bC*3I';
+        // $headers = array(["url" => "dashboard", "icon" => "home", "title" => "Dashboard"], ["url" => "employees", "icon" => "users", "title" => "Employees"], ["url" => "attendance", "icon" => "clock", "title" => "Daily Time Record"], ["url" => "calendar", "icon" => "calendar", "title" => "Calendar"], ["url" => "settings", "icon" => "settings", "title" => "Settings"], ["url" => "profile", "icon" => "user", "title" => "Profile"], ["url" => "dtr", "icon" => "clock", "title" => "Daily Time Record"]);
         $u_headers = [];
       
       

@@ -16,7 +16,7 @@
                 </tr>
             </thead>
             <tbody>
-          
+         
                 {foreach from = $employees item = employee}
                     
                     <tr>
@@ -27,11 +27,14 @@
                         <td>{$employee.position}</td>
                         <td>
                         <span  id="status{$employee.employee_no}">
-                            {if $employee.sched['status'] == 1}
-                                <a href="javascript:ViewSchedule({$employee.employee_no})"><span class="badge bg-success">{$employee.sched['sched_code']}</span></a>
-                            {elseif $employee.sched['status'] == 0}
-                                <a href="javascript:activateStatus({$employee.employee_no})" data-bs-toggle="tooltip" data-bs-placement="top" title="Effective on: {$employee.sched['date']}"><span class="badge bg-danger">{$employee.sched['sched_code']}</span></a>
-                            {/if  }
+                            {foreach from=$employee.sched item=sched}
+                                {if $sched['status'] == 1}
+                                    <a href="javascript:ViewSchedule({$employee.employee_no})"><span class="badge bg-success">{$sched['sched_code']}</span></a>
+                                {elseif $sched['status'] == 0}
+                                    <a href="javascript:activateStatus({$employee.employee_no})" data-bs-toggle="tooltip" data-bs-placement="top" title="Effective on: {$sched['date']}"><span class="badge bg-danger">{$sched['sched_code']}</span></a>
+                                {/if  }
+                            {/foreach}
+                            
                         </span>
                         </td>
                         <td class="text-center"><div class="item-action dropdown">

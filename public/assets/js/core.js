@@ -395,9 +395,9 @@ function PendingActivate(){
   });
 }
 
-$('#ActivateStatus').on('hidden.bs.modal', function () {
-  window.location.href="/employees";
-});
+// $('#ActivateStatusd').on('hidden.bs.modal', function () {
+//   window.location.href="/employees";
+// });
 
 function create_schedule(){
   $("#create-schedule-modal").modal('show');

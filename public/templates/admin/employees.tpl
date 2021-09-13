@@ -135,7 +135,7 @@
                                                 <div class="form-label">Active Status:</div>
                                                 <select id="active" name="filter[active_status]" class="form-control custom-select" onchange="" style="padding: 0rem 1.75rem 0rem 0.75rem; max-width:100%;" multiple="">
                                                     <option value="1" selected>Active</option>
-                                                    <option value="2" selected>Inactive</option>
+                                                    <option value="0" selected>Inactive</option>
                                                 </select>
                                             </div>
                                         </div>
