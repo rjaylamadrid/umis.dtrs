@@ -1,7 +1,13 @@
-<div class="container">
+<div class="container" id= "blur">
     <div class="card">
     <table class="table card-table" >
+<div class="text-center" >
+<div class="spinner-border" role="status" style="width: 5rem; height: 5rem; position:absolute; left:42%;top:25%;" hidden>
+<span class="visually-hidden"></span>
+</div>
+</div>
     
+   
                 <tbody>   
             
                 {foreach from=$selectschedule item=Schedule}

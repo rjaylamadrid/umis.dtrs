@@ -184,7 +184,7 @@ class DTR {
 
             if ($log){
                 $attnd = array($log['am_in'], $log['am_out'], $log['pm_in'], $log['pm_out'], $log['ot_in'], $log['ot_out']);
-                $attendance = self::change_log ($emp_id, $attnd, $period, $fdate);
+                $attendance = self::change_log ($emp_id, $attnd, $period, $fdate,$log['id']);
             }
             $logs[] = $log;
         }

@@ -9,7 +9,7 @@
     
     <div class="modal-body">
     <div class="col-12">
-    <div class="card">
+    <div class="card" >
         <div class="row">
         
         <div id ="selectalert" class="container col-lg-8 mt-2 text-center alert alert-success fade show" style="display: none;"><strong></strong></div>

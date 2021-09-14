@@ -391,7 +391,6 @@ function PendingActivate(){
     $("#activate").removeAttr("hidden");
     $("#btnYes").attr("hidden", true);
     $("#btnDismiss").attr("hidden", true);
-    // $("#status"+Activate_Id).load(location.href + " #status"+Activate_Id);
   });
 }
 
@@ -419,8 +418,8 @@ f({action:'insert_into_preset',p_name:Preset_Name,p_time:Preset_Time},"text","/s
               $("#insertmes").fadeIn(400);
               setTimeout(function(){
                 $("#insertmes").fadeOut(1000);
-            }, 5000)
-          })
+            }, 5000);
+          });
           }
           }     
 })
@@ -491,11 +490,15 @@ function SaveChanges(){
   var schedcode = document.getElementById("Preset_Select").value;
   Emid = localStorage.getItem('id');
   if(eff_date !== ""){
-    $("#selectalert").fadeIn(400);
-    setTimeout(function(){
-      $("#selectalert").fadeOut(1000);
-  }, 5000);
+    $(".spinner-border").removeAttr("hidden", false);
+    $("#blur").css("filter","blur(0.7px)");
       f({action:'insert_schedule', eff_schedcode:schedcode,eff_id:Emid,eff_date:eff_date} , "text","/schedule").then(function(data){
+        $("#selectalert").fadeIn(400);
+        $(".spinner-border").attr("hidden", true);
+        $("#blur").css("filter","blur(0px)");
+        setTimeout(function(){
+          $("#selectalert").fadeOut(1000);
+      }, 5000);
          $("#selectalert strong").html(data);
          $('#Preset_Select').prop('selectedIndex',0);
         document.getElementById("effective_date").value = '';

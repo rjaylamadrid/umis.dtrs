@@ -22,7 +22,7 @@
         <div class="modal-footer">
         
         <a id="btnYes" href="javascript:PendingActivate()" class="btn btn-success btn-sm"><i class="fe fe-check"></i> Yes</a>
-        <a id="btnDismiss" href="" class="btn btn-danger btn-sm" data-dismiss="modal" ><i class="fe fe-x"></i> Discard</a>
+        <a id="btnDismiss" href="#" class="btn btn-danger btn-sm" data-dismiss="modal" ><i class="fe fe-x"></i> Discard</a>
             
         </div>
       </div>

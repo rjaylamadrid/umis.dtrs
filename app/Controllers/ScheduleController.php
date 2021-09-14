@@ -47,7 +47,11 @@ class ScheduleController extends Controller{
       foreach($effectivity_status as $es){
          if($es['date'] == $nowDate){
              DB::update("UPDATE tbl_employee_sched SET status = 2 WHERE employee_id = ? AND status = 1", $es['employee_id']);
-             DB::update("UPDATE tbl_employee_sched SET status = 1 WHERE employee_id = ? AND status = 0", $es['employee_id']);
+            $dtrset = DB::update("UPDATE tbl_employee_sched SET status = 1 WHERE employee_id = ? AND status = 0", $es['employee_id']);
+            if($dtrset){
+               $d_date = DB::fetch_row("SELECT * FROM tbl_employee_sched WHERE employee_id = ? AND status = 1 ORDER BY date DESC",$es['employee_id']);
+               DTR::update_attendance($d_date['employee_id'], $d_date['date'], date('Y-m-d'));
+            }
          }
       }
    }
@@ -116,9 +120,10 @@ class ScheduleController extends Controller{
 
    public function Activate_status_pending(){
       $nowdateActivate = date('Y-m-d');
-     
       DB::fetch_all("UPDATE tbl_employee_sched SET status = 2 WHERE employee_id = ? AND status = 1", $this->data['Activate_Id']);
       DB::fetch_all("UPDATE tbl_employee_sched a SET a.date = '$nowdateActivate', a.status = 1 WHERE a.employee_id = ? AND a.status = 0", $this->data['Activate_Id']);
+      $activateSelect = pg_fetch_row("SELECT * FROM tbl_employee_sched WHERE employee_id = ? AND status = 1 ORDER BY date DESC",$this->data['Activate_Id']);
+      DTR::update_attendance($activateSelect['employee_id'], $activateSelect['date'], date('Y-m-d'));
    }
 
 
