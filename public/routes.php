@@ -29,7 +29,6 @@ $router->filter('is_admin', function(){
     }
 });
 // FILTERS END
-
 $router->group(['before' => 'auth'], function ($router) {
     $router->group(['before' => 'is_admin'], function ($router) {
         // ADMIN START:

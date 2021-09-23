@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ratchetphp/Ratchet.git",
-                "reference": "36983e12ffff4eaf042106b7341c7f99f7e3072a"
+                "reference": "78fb27b015035147735f4f6a784d6b0cdc86c3e7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ratchetphp/Ratchet/zipball/36983e12ffff4eaf042106b7341c7f99f7e3072a",
-                "reference": "36983e12ffff4eaf042106b7341c7f99f7e3072a",
+                "url": "https://api.github.com/repos/ratchetphp/Ratchet/zipball/78fb27b015035147735f4f6a784d6b0cdc86c3e7",
+                "reference": "78fb27b015035147735f4f6a784d6b0cdc86c3e7",
                 "shasum": ""
             },
             "require": {
@@ -67,7 +67,7 @@
                 "issues": "https://github.com/ratchetphp/Ratchet/issues",
                 "source": "https://github.com/ratchetphp/Ratchet/tree/master"
             },
-            "time": "2021-01-26T14:05:50+00:00"
+            "time": "2021-08-31T17:43:51+00:00"
         },
         {
             "name": "evenement/evenement",
@@ -176,12 +176,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "dc960a912984efb74d0a90222870c72c87f10c91"
+                "reference": "9d006741ba865a45adccfac45d8e1053086a5a3f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/dc960a912984efb74d0a90222870c72c87f10c91",
-                "reference": "dc960a912984efb74d0a90222870c72c87f10c91",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/9d006741ba865a45adccfac45d8e1053086a5a3f",
+                "reference": "9d006741ba865a45adccfac45d8e1053086a5a3f",
                 "shasum": ""
             },
             "require": {
@@ -219,12 +219,33 @@
             ],
             "authors": [
                 {
+                    "name": "Graham Campbell",
+                    "email": "hello@gjcampbell.co.uk",
+                    "homepage": "https://github.com/GrahamCampbell"
+                },
+                {
                     "name": "Michael Dowling",
                     "email": "mtdowling@gmail.com",
                     "homepage": "https://github.com/mtdowling"
                 },
                 {
+                    "name": "George Mponos",
+                    "email": "gmponos@gmail.com",
+                    "homepage": "https://github.com/gmponos"
+                },
+                {
+                    "name": "Tobias Nyholm",
+                    "email": "tobias.nyholm@gmail.com",
+                    "homepage": "https://github.com/Nyholm"
+                },
+                {
+                    "name": "Márk Sági-Kazár",
+                    "email": "mark.sagikazar@gmail.com",
+                    "homepage": "https://github.com/sagikazarmark"
+                },
+                {
                     "name": "Tobias Schultze",
+                    "email": "webmaster@tubo-world.de",
                     "homepage": "https://github.com/Tobion"
                 }
             ],
@@ -243,7 +264,7 @@
                 "issues": "https://github.com/guzzle/psr7/issues",
                 "source": "https://github.com/guzzle/psr7/tree/1.x"
             },
-            "time": "2021-04-26T09:17:50+00:00"
+            "time": "2021-09-05T19:11:18+00:00"
         },
         {
             "name": "maennchen/zipstream-php",
@@ -491,12 +512,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPOffice/PhpSpreadsheet.git",
-                "reference": "de5f4508567de98d5636acf65fd8bee54657c020"
+                "reference": "f50c2871090ac89fb41c0c79fdc9af7127021319"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPOffice/PhpSpreadsheet/zipball/de5f4508567de98d5636acf65fd8bee54657c020",
-                "reference": "de5f4508567de98d5636acf65fd8bee54657c020",
+                "url": "https://api.github.com/repos/PHPOffice/PhpSpreadsheet/zipball/f50c2871090ac89fb41c0c79fdc9af7127021319",
+                "reference": "f50c2871090ac89fb41c0c79fdc9af7127021319",
                 "shasum": ""
             },
             "require": {
@@ -588,7 +609,7 @@
                 "issues": "https://github.com/PHPOffice/PhpSpreadsheet/issues",
                 "source": "https://github.com/PHPOffice/PhpSpreadsheet/tree/master"
             },
-            "time": "2021-08-24T15:58:38+00:00"
+            "time": "2021-09-20T01:33:10+00:00"
         },
         {
             "name": "phroute/phroute",
@@ -1685,12 +1706,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-foundation.git",
-                "reference": "67e13c1609a13ff25bbf77b830438f18771a49e7"
+                "reference": "65808acd52ee65add91353cde5cb432021a9ca43"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/67e13c1609a13ff25bbf77b830438f18771a49e7",
-                "reference": "67e13c1609a13ff25bbf77b830438f18771a49e7",
+                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/65808acd52ee65add91353cde5cb432021a9ca43",
+                "reference": "65808acd52ee65add91353cde5cb432021a9ca43",
                 "shasum": ""
             },
             "require": {
@@ -1750,7 +1771,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-08-18T14:21:25+00:00"
+            "time": "2021-09-14T13:02:56+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -1758,12 +1779,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
-                "reference": "9174a3d80210dca8daa7f31fec659150bbeabfc6"
+                "reference": "344e456152e22a1bce3048c6c311059ea14bde47"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/9174a3d80210dca8daa7f31fec659150bbeabfc6",
-                "reference": "9174a3d80210dca8daa7f31fec659150bbeabfc6",
+                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/344e456152e22a1bce3048c6c311059ea14bde47",
+                "reference": "344e456152e22a1bce3048c6c311059ea14bde47",
                 "shasum": ""
             },
             "require": {
@@ -1815,7 +1836,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-mbstring/tree/v1.23.1"
+                "source": "https://github.com/symfony/polyfill-mbstring/tree/main"
             },
             "funding": [
                 {
@@ -1831,7 +1852,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-05-27T12:26:48+00:00"
+            "time": "2021-09-13T13:54:24+00:00"
         },
         {
             "name": "symfony/polyfill-php80",
@@ -1839,12 +1860,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php80.git",
-                "reference": "1100343ed1a92e3a38f9ae122fc0eb21602547be"
+                "reference": "57b712b08eddb97c762a8caa32c84e037892d2e9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-php80/zipball/1100343ed1a92e3a38f9ae122fc0eb21602547be",
-                "reference": "1100343ed1a92e3a38f9ae122fc0eb21602547be",
+                "url": "https://api.github.com/repos/symfony/polyfill-php80/zipball/57b712b08eddb97c762a8caa32c84e037892d2e9",
+                "reference": "57b712b08eddb97c762a8caa32c84e037892d2e9",
                 "shasum": ""
             },
             "require": {
@@ -1899,7 +1920,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-php80/tree/v1.23.1"
+                "source": "https://github.com/symfony/polyfill-php80/tree/main"
             },
             "funding": [
                 {
@@ -1915,7 +1936,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-07-28T13:41:28+00:00"
+            "time": "2021-09-13T13:58:33+00:00"
         },
         {
             "name": "symfony/routing",
@@ -1923,12 +1944,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/routing.git",
-                "reference": "d49fdd06dc330bf7ba91641cc7712ab814a7f10e"
+                "reference": "6097f4eef3b8d4d0691cc1b164aa32c14565882d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/routing/zipball/d49fdd06dc330bf7ba91641cc7712ab814a7f10e",
-                "reference": "d49fdd06dc330bf7ba91641cc7712ab814a7f10e",
+                "url": "https://api.github.com/repos/symfony/routing/zipball/6097f4eef3b8d4d0691cc1b164aa32c14565882d",
+                "reference": "6097f4eef3b8d4d0691cc1b164aa32c14565882d",
                 "shasum": ""
             },
             "require": {
@@ -2005,7 +2026,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-08-18T08:03:57+00:00"
+            "time": "2021-09-08T12:50:02+00:00"
         },
         {
             "name": "tecnickcom/tcpdf",

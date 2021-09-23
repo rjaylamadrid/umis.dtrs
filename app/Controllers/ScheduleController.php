@@ -35,8 +35,7 @@ class ScheduleController extends Controller{
       $d_Code = DB::fetch_row("SELECT sched_code FROM tbl_schedule_preset ORDER BY sched_code DESC LIMIT 1");
       $code1 = $d_Code['sched_code'];
       DB::insert("INSERT INTO tbl_schedule SET sched_code = ?, weekday = ?, am_in = ?,am_out = ?,pm_in = ?,pm_out = ?", [$code1,$this->data['day'],$this->data['amin'],$this->data['amout'],$this->data['pmin'],$this->data['pmout']]);
-      echo 'lester';
-      
+      echo 'Preset schedule saved successfully';   
     }
    
    
@@ -133,7 +132,7 @@ class ScheduleController extends Controller{
     }
    
     function selectschedule(){
-      return DB::fetch_all("SELECT * FROM tbl_schedule WHERE sched_code=?",$this->data['sched_code']);
+      return DB::fetch_all("SELECT * FROM tbl_schedule WHERE sched_code=? ORDER BY weekday",$this->data['sched_code']);
     }
 
    function MinDate(){

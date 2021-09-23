@@ -43,7 +43,7 @@
                   <div class="input-group composer">
                     <textarea id="message" class="form-control border" rows="2" placeholder="Type a message..."></textarea>  
                     <span class="input-group-append">
-                      <button class="btn text-white" type="button">Send</button>
+                      <button id="btnSend" class="btn text-white" type="button" disabled>Send</button>
                     </span>
                   </div>
                 </div>

@@ -403,30 +403,36 @@ function create_schedule(){
 function insert_schedule(){
 let Preset_Name = document.getElementById('schedule_preset[sched_day]').value;
 let Preset_Time = document.getElementById('schedule_preset[sched_time]').value;
-f({action:'insert_into_preset',p_name:Preset_Name,p_time:Preset_Time},"text","/schedule").then(function(data){
-
-  
-        for(i=1;i<=7;i++){
-          
-          if(document.getElementById('day'+i).checked==true){
-            let day = document.getElementById('day'+i).value;
-            let amin = document.getElementById('amin'+i).value;
-            let amout = document.getElementById('amout'+i).value;
-            let pmin = document.getElementById('pmin'+i).value;
-            let pmout = document.getElementById('pmout'+i).value;
-            f({action:'create_sched',day:day,amin:amin,amout:amout,pmin:pmin,pmout:pmout},"text","/schedule").then(function(data){
-              $("#insertmes").fadeIn(400);
-              setTimeout(function(){
-                $("#insertmes").fadeOut(1000);
-            }, 5000);
-          });
-          }
-          }     
-})
+if(Preset_Name !== '' && Preset_Time !=='' ){
+  f({action:'insert_into_preset',p_name:Preset_Name,p_time:Preset_Time},"text","/schedule").then(function(data){
+    for(i=1;i<=7;i++){  
+     if(document.getElementById('day'+i).checked==true){
+        let day = document.getElementById('day'+i).value;
+        let amin = document.getElementById('amin'+i).value;
+        let amout = document.getElementById('amout'+i).value;
+        let pmin = document.getElementById('pmin'+i).value;
+        let pmout = document.getElementById('pmout'+i).value;
+        f({action:'create_sched',day:day,amin:amin,amout:amout,pmin:pmin,pmout:pmout},"text","/schedule").then(function(data){
+          $("#insertmes").fadeIn(400);
+          setTimeout(function(){
+            $("#insertmes").fadeOut(1000);
+        }, 5000);
+      });
+     }
+  }     
+});
+}
 }
 
-
-
+function btnDisabled(){
+  let Preset_Name = document.getElementById('schedule_preset[sched_day]').value;
+  let Preset_Time = document.getElementById('schedule_preset[sched_time]').value;
+  if(Preset_Name !=='' && Preset_Time !== ''){
+    $('#insertBtn').removeAttr('disabled');
+  }else{
+    $('#insertBtn').attr('disabled',true);
+  }
+}
 
 
 function create_sched (ctr) {

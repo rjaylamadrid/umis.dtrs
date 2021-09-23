@@ -12,13 +12,13 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label">Work Schedule Preset Name</label>
-                                    <input type="text" class="form-control" id="schedule_preset[sched_day]"  placeholder="i.e. EVERYDAY" required>
+                                    <input type="text" class="form-control" id="schedule_preset[sched_day]"  onchange ="btnDisabled();" placeholder="i.e. EVERYDAY" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label">Work Schedule Preset Time</label>
-                                    <input type="text" class="form-control" id="schedule_preset[sched_time]"  placeholder="i.e. 7:30 - 12:00 | 1:00 - 5:00" required>
+                                    <input type="text" class="form-control" id="schedule_preset[sched_time]"  onchange ="btnDisabled();" placeholder="i.e. 7:30 - 12:00 | 1:00 - 5:00" required>
                                 </div>
                             </div>
                         </div>
@@ -46,7 +46,7 @@
                         </div>
                         <div class="col-md-12 mt-5">
                             <div class="form-group" style="float: right;">
-                                <button name="button" value="submit" class="btn btn-primary" onclick="insert_schedule();">Save Work Schedule</button>
+                                <button id="insertBtn" name="button" value="submit" class="btn btn-primary" onclick="insert_schedule();" disabled>Save Work Schedule</button>
                                 <a href="#" class="btn btn-secondary" data-dismiss="modal">Cancel</a>
                             </div>
                         </div>

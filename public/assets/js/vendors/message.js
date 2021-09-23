@@ -51,7 +51,7 @@ if(typeof $("#user").val() !== "undefined"){
   });
 
     // var conn = new WebSocket('ws://' + window.location.origin.substr(7) + ':9001?'+ session_id + '&user_id='+ user_id);
-    var conn = new WebSocket('ws://192.168.1.11:9001?'+ session_id + '&user_id='+ user_id);
+    var conn = new WebSocket('ws://192.168.2.18:9001?'+ session_id + '&user_id='+ user_id);
       conn.onopen = function(e) {
         console.log("connection establish");
       }
@@ -101,6 +101,7 @@ if(typeof $("#user").val() !== "undefined"){
           $("#recents").html("<ul class='list-unstyled list-separated'></ul>");
           for(let recent of data.recents){
             showRecents(recent);
+        
           }
         });
         go_online(onlineUsers[0]);
@@ -108,18 +109,27 @@ if(typeof $("#user").val() !== "undefined"){
     }
   };
 
+  
+
   function showRecents (item) {
+    let itemtext = item.from == item.FromReply ? "You: "+ item.ReplyText:item.first_name +": "+item.ReplyText;
+    if(itemtext.length >= 30){    
+    itemtext = itemtext.substring(0,27) + "...";
+    }
+    
     var HTMLList =  "<li class='list-separated-item' onclick='javascript:selectMsgReceiver(" + item.no + ")' style='cursor: pointer;'>" +
                       "<div class='row align-items-center'>" +
-                        "<div class='col-auto'>" +
+                        "<div clas s='col-auto'>" +
                           "<div id='r_isActive" + item.no + "' class='avatar d-block' style='background-image: url(/assets/employee_picture/" + item.employee_picture + ")'>" +
                             "<span class='avatar-status bg-red'></span>" +
                           "</div>" +
                         "</div>" +
                         "<div class='col'>" +
                           "<span id='isSeen" + item.no + "' class='mt-2 float-right badge badge-danger'></span>" +
-                          "<div><small class='d-block item-except text-sm h-1x'>"+ item.first_name + ' ' + item.last_name +"</small></div>" +
-                          "<small class='d-block item-except text-sm text-muted h-1x'>" + item.text + "</small>" +
+                          "<div><small class='d-block item-except text-sm h-1x' style='font-weight:bold'>"+ item.first_name.toUpperCase() + ' ' + item.last_name.toUpperCase() +"</small></div>" +
+                          "<small class='d-block item-except text-mute text-sm h-2x'>" +
+                            itemtext 
+                          + "</small>" +
                         "</div>" +
                       "</div>" +
                     "</li>";
@@ -137,7 +147,7 @@ if(typeof $("#user").val() !== "undefined"){
                         "</div>" +
                         "<div class='col'>" +
                         "<span id='isSeen" + item.no + "' class='mt-2 float-right badge badge-danger'></span>" +
-                          "<div><small class='d-block item-except text-sm h-1x'>"+ item.first_name + ' ' + item.last_name +"</small></div>" +
+                          "<div id='unseenMes'><small class='d-block item-except text-sm h-1x'>"+ item.first_name.toUpperCase() + ' ' + item.last_name.toUpperCase() +"</small></div>" +
                         "</div>" +
                       "</div>" +
                     "</li>";
@@ -231,7 +241,8 @@ if(typeof $("#user").val() !== "undefined"){
   });
 
   $("#message").keyup(function (event){
-    var keycode = (event.keycode ? event.keycode : event.which)
+    $("#btnSend").removeAttr('disabled',false);
+    var keycode = (event.keycode ? event.keycode : event.which);
     if(keycode == '13') {
       event.preventDefault();
       var msg = {
@@ -260,6 +271,7 @@ if(typeof $("#user").val() !== "undefined"){
       });
       go_online(onlineUsers[0]);
     }else if($("#message").val() == ""){
+      $("#btnSend").attr('disabled',true);
       var msg = {
         command: "message",
         from: user_id,
@@ -299,8 +311,9 @@ if(typeof $("#user").val() !== "undefined"){
       // }else{
       //   appendOnceTyping = true;
         var msgStatus = user_id == msg.from ? 'you' : 'other';
+        console.log(checkUrl);
         var checkUrl = isURL(msg.text) ? "<a class='message-text' target='_blank' href='" + msg.text + "'>" + msg.text + "</a>" : "<div class='message-text'>" + msg.text + "</div>";
-        var avatar = user_id == msg.to ? "<div id='r_isActive309' class='avatar d-block' style='background-image: url(/assets/employee_picture/" + msg.employee_picture + ")'></div>" : '';
+        var avatar = user_id == msg.to ? "<div id='r_isActive309' class='avatar d-block' style='background-image: url(/assets/employee_picture/" + msg.employee_picture + ")'></div>" :''; 
         HTMLList =  "<div class='message-row " + msgStatus + "-message'>" +
                       "<div class='message-content'>" +
                         avatar +

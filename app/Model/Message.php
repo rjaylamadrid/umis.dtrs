@@ -79,7 +79,8 @@ class Message {
 	}
 
 	function getRecentConversation($user_id) {
-		return $result = DB::fetch_all("SELECT  b.no, a.from, a.to, employee_picture, first_name, last_name, text FROM tbl_messages a, tbl_employee b, (SELECT `to`, MAX(`created_on`) `created_on` FROM tbl_messages WHERE `from` = ". $user_id ." GROUP BY `to`) c WHERE a.to = c.to AND a.created_on = c.created_on AND a.to = b.no AND a.from = ". $user_id ." GROUP BY a.to ORDER BY a.created_on DESC");
+		return $result = DB::fetch_all("SELECT b.no, a.from, a.to, employee_picture, first_name, last_name,(SELECT `from` FROM tbl_messages WHERE (`from`= a.`from` AND `to` = c.`to`) OR (`from`= c.`to` AND `to` =  a.`from`) ORDER BY created_on DESC LIMIT 1) as FromReply,(SELECT text FROM tbl_messages WHERE (`from`= a.`from` AND `to` = c.`to`) OR (`from`= c.`to` AND `to` =  a.`from`) ORDER BY created_on DESC LIMIT 1) as ReplyText FROM tbl_messages a,tbl_employee b,(SELECT `to`, MAX(`created_on`) `created_on` FROM tbl_messages WHERE `from` = ".$user_id." GROUP BY `to`) c WHERE a.to = c.to AND a.created_on = c.created_on AND a.to = b.no  AND a.from = ".$user_id." GROUP BY a.to ORDER BY a.created_on DESC");
+		// return $result = DB::fetch_all("SELECT  b.no, a.from, a.to, employee_picture, first_name, last_name, text FROM tbl_messages a, tbl_employee b, (SELECT `to`, MAX(`created_on`) `created_on` FROM tbl_messages WHERE `from` = ". $user_id ." GROUP BY `to`) c WHERE a.to = c.to AND a.created_on = c.created_on AND a.to = b.no AND a.from = ". $user_id ." GROUP BY a.to ORDER BY a.created_on DESC");
 	}
 
 	function searchForRecents($user_id, $search_data) {

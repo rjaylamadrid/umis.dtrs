@@ -120,5 +120,5 @@ window.tabler = {
     'gray-dark-lightest': '#ebebec'
     }
 };
-// require (['core', 'message']);
+require (['core', 'message']);
 require (['core', 'multiselect']);
