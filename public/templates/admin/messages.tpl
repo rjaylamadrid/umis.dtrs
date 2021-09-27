@@ -41,9 +41,9 @@
                 </div>
                 <div class="card-footer py-0 px-0">
                   <div class="input-group composer">
-                    <textarea id="message" class="form-control border" rows="2" placeholder="Type a message..."></textarea>  
+                    <textarea id="message" class="form-control border" rows="2" placeholder="Type a message..." hidden></textarea>  
                     <span class="input-group-append">
-                      <button id="btnSend" class="btn text-white" type="button" disabled>Send</button>
+                      <button id="btnSend" class="btn text-white" type="button" disabled hidden>Send</button>
                     </span>
                   </div>
                 </div>

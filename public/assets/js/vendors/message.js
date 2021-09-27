@@ -183,6 +183,9 @@ if(typeof $("#user").val() !== "undefined"){
     }
   }
   function selectMsgReceiver(receiver_id) {
+    $("#message").removeAttr('hidden',false);
+    $("#btnSend").removeAttr('hidden',false);
+    localStorage.setItem('receiver_id',receiver_id)
     receiver = receiver_id;
     conn.send(JSON.stringify({command: "subscribe", sender_id: user_id, receiver_id: receiver_id}));
     $("#chat-message-list").html(""); 
@@ -239,6 +242,18 @@ if(typeof $("#user").val() !== "undefined"){
       go_online(onlineUsers[0]);
     });
   });
+
+  // $("#message").focus(function(){
+  //   receiver = localStorage.getItem('receiver_id');
+  //   f_msg({action: 'update_msg_status',sender_id: user_id,receiver_id:receiver}, "json", "/messages").then( function (data) {
+  //     // console.log(data.message_notif[0]['tlt_unseen']);
+  //     // $("#msgSeen" + receiver).html('');
+  //     if(data.message_notif[0]['tlt_unseen']){
+  //   $("#notif").text(data.message_notif[0]['tlt_unseen'] == 0 ? '' : data.message_notif[0]['tlt_unseen']);
+  //       msgNotif = data.message_notif[0]['tlt_unseen'];
+  //     }
+  //   });
+  // });
 
   $("#message").keyup(function (event){
     $("#btnSend").removeAttr('disabled',false);
@@ -311,15 +326,15 @@ if(typeof $("#user").val() !== "undefined"){
       // }else{
       //   appendOnceTyping = true;
         var msgStatus = user_id == msg.from ? 'you' : 'other';
-        console.log(checkUrl);
-        var checkUrl = isURL(msg.text) ? "<a class='message-text' target='_blank' href='" + msg.text + "'>" + msg.text + "</a>" : "<div class='message-text'>" + msg.text + "</div>";
+        var msgSeen = user_id == msg.from && msg.status == 0 ? 'Seen ': '';
+        var checkUrl = isURL(msg.text) ? "<a class='message-text text-break' target='_blank' href='" + msg.text + "'>" + msg.text + "</a>" : "<div class='message-text text-break'>" + msg.text + "</div>";
         var avatar = user_id == msg.to ? "<div id='r_isActive309' class='avatar d-block' style='background-image: url(/assets/employee_picture/" + msg.employee_picture + ")'></div>" :''; 
         HTMLList =  "<div class='message-row " + msgStatus + "-message'>" +
-                      "<div class='message-content'>" +
+                      "<div class='message-content text-break'>" +
                         avatar +
                         checkUrl +
                       "</div>" +
-                      "<div class='message-time'>" + fmtDateTime(new Date(msg.created_on.toString().substr(0, 10) + ", " + msg.created_on.toString().substr(11))) + "</div>" +
+                      "<div id='msgSeen' class='message-time' style='margin-left:50px';>" + msgSeen + fmtDateTime(new Date(msg.created_on.toString().substr(0, 10) + ", " + msg.created_on.toString().substr(11))) + "</div>" +
                     "</div>";
      $("#chat-message-list").append(HTMLList);
       
