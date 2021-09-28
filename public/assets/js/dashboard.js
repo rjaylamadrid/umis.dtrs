@@ -6,6 +6,7 @@ require.config({
     chartjs: ["chart"],
     message: ["jquery"],
     multiselect: ["jquery"],
+    
   },
   paths: {
     core: "assets/js/core",
@@ -16,6 +17,7 @@ require.config({
     chartjs: "assets/js/vendors/chartjs-plugin-datalabels.min",
     message: "assets/js/vendors/message",
     multiselect: "assets/js/vendors/multiselect"
+   
   },
 });
 window.tabler = {

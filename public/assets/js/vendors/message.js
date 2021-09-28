@@ -26,9 +26,11 @@ if(typeof $("#user").val() !== "undefined"){
     contactsData.unshift(data.contacts);
   });
   console.log(contactsData);
+  console.log(user_id);
   f_msg({action: 'get_recents', user_id: user_id }, "json", "/messages").then( function (data) {
     $("#recents").html("<ul class='list-unstyled list-separated'></ul>");
     for(let recent of data.recents){
+      console.log(recent);
       showRecents(recent);
     }
   });
@@ -185,7 +187,7 @@ if(typeof $("#user").val() !== "undefined"){
   function selectMsgReceiver(receiver_id) {
     $("#message").removeAttr('hidden',false);
     $("#btnSend").removeAttr('hidden',false);
-    localStorage.setItem('receiver_id',receiver_id)
+    localStorage.setItem('receiver_id',receiver_id);
     receiver = receiver_id;
     conn.send(JSON.stringify({command: "subscribe", sender_id: user_id, receiver_id: receiver_id}));
     $("#chat-message-list").html(""); 

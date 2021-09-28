@@ -20,14 +20,12 @@
                     </span>
                 </div>
               </div>
-
               <div class="row border border-top-0">
                 <h5 class="my-2 mx-2">RECENTS</h5>
               </div>
 
               <div class="row border border-top-0">
                 <div id="recents" class="card-body o-auto py-0" style="height: 35rem">
-                  
                 </div>
               </div>
             </div>
@@ -40,11 +38,14 @@
                   <div id="chat-message-list" class="chat-message-list" ref="chat-message-list"></div>
                 </div>
                 <div class="card-footer py-0 px-0">
-                  <div class="input-group composer">
-                    <textarea id="message" class="form-control border" rows="2" placeholder="Type a message..." hidden></textarea>  
-                    <span class="input-group-append">
+                  <div class="input-group composer form-outline">
+                    <textarea id="message" class="form-control border" rows="2"  placeholder="Type a message..." hidden></textarea> 
+                    <span class="mt-4">
+                      </span>
+                   <span class="input-group-append">
                       <button id="btnSend" class="btn text-white" type="button" disabled hidden>Send</button>
                     </span>
+                   
                   </div>
                 </div>
               </div> 

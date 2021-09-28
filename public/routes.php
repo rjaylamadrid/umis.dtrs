@@ -85,10 +85,10 @@ $router->group(['before' => 'auth'], function ($router) {
             $router->get("/{status}", ["Request", "get_requests"]);
         });
         //Message
-        $router->group(["prefix" => "messages"], function ($router) {
-            $router->get("/", ["Messages", "index"]);
-            $router->post("/", ["Messages", "do_action"]);
-        });
+        // $router->group(["prefix" => "messages"], function ($router) {
+        //     $router->get("/", ["Messages", "index"]);
+        //     $router->post("/", ["Messages", "do_action"]);
+        // });
         //Leave
         // $router->group(["prefix" => "leave"], function ($router) {
         //     $router->get("/", ["Leave", "index"]);
@@ -113,6 +113,10 @@ $router->group(['before' => 'auth'], function ($router) {
     $router->get('/leave', ['Leave', 'index']);
     $router->get('/leave/{tab}?', ['Leave', 'tab']);
     $router->post('/leave', ['Leave', 'do_action']);
+    $router->group(["prefix" => "messages"], function ($router) {
+        $router->get("/", ["Messages", "index"]);
+        $router->post("/", ["Messages", "do_action"]);
+    });
     // EMPLOYEE END
 
 
