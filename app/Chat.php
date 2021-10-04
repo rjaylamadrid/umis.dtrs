@@ -47,7 +47,6 @@ class Chat implements MessageComponentInterface {
         $data = json_decode($msg);
         $messages_object = new Message();
         switch ($data->command) {
-
             case "subscribe":
                 $this->sender[$conn->resourceId] = $data->sender_id;
                 $this->receiver[$conn->resourceId] = $data->receiver_id;

@@ -25,14 +25,15 @@ if(typeof $("#user").val() !== "undefined"){
     } 
     contactsData.unshift(data.contacts);
   });
-  console.log(contactsData);
-  console.log(user_id);
+  
   f_msg({action: 'get_recents', user_id: user_id }, "json", "/messages").then( function (data) {
     $("#recents").html("<ul class='list-unstyled list-separated'></ul>");
+    console.log(data.recents);
+
     for(let recent of data.recents){
-      console.log(recent);
       showRecents(recent);
-    }
+
+    }  
   });
 
   // f_msg({action: 'get_online_users', user_id: user_id}, "json", "/messages").then( function (data) {
@@ -74,7 +75,7 @@ if(typeof $("#user").val() !== "undefined"){
             unSeenMsg(us);
           }
         });
-        console.log(msgNotif);
+        // console.log(msgNotif);
         msgNotif = parseInt(msgNotif) + 1;
         $("#notif").text(msgNotif == 0 ? '' : msgNotif);
       }else{
@@ -97,7 +98,7 @@ if(typeof $("#user").val() !== "undefined"){
             newMessage(msg);
           }
         }
-        console.log(msg);
+        // console.log(msg);
         $("#chat-message-list").animate({ scrollTop: $('#chat-message-list')[0].scrollHeight}, 1000);
         f_msg({action: 'get_recents', user_id: user_id }, "json", "/messages").then( function (data) {
           $("#recents").html("<ul class='list-unstyled list-separated'></ul>");
@@ -114,7 +115,9 @@ if(typeof $("#user").val() !== "undefined"){
   
 
   function showRecents (item) {
-    let itemtext = item.from == item.FromReply ? "You: "+ item.ReplyText:item.first_name +": "+item.ReplyText;
+    var upper = item.first_name.charAt(0).toUpperCase() + item.first_name.slice(1);
+    var BoldText = item.Status == 1 ? "<strong>" + upper+": "+item.ReplyText + "</strong>" :upper +": "+item.ReplyText
+    let itemtext = item.from == item.FromReply ? "You: "+ item.ReplyText:BoldText;
     if(itemtext.length >= 30){    
     itemtext = itemtext.substring(0,27) + "...";
     }
@@ -128,7 +131,7 @@ if(typeof $("#user").val() !== "undefined"){
                         "</div>" +
                         "<div class='col'>" +
                           "<span id='isSeen" + item.no + "' class='mt-2 float-right badge badge-danger'></span>" +
-                          "<div><small class='d-block item-except text-sm h-1x' style='font-weight:bold'>"+ item.first_name.toUpperCase() + ' ' + item.last_name.toUpperCase() +"</small></div>" +
+                          "<div><small class='d-block item-except text-sm h-1x' style='font-weight:bold'>"+ item.first_name.toUpperCase() + ' ' + item.last_name.toUpperCase()+"</small></div>" +
                           "<small class='d-block item-except text-mute text-sm h-2x'>" +
                             itemtext 
                           + "</small>" +
@@ -148,7 +151,7 @@ if(typeof $("#user").val() !== "undefined"){
                           "</div>" +
                         "</div>" +
                         "<div class='col'>" +
-                        "<span id='isSeen" + item.no + "' class='mt-2 float-right badge badge-danger'></span>" +
+                        // "<span id='isSeen" + item.no + "' class='mt-2 float-right badge badge-danger'></span>" +
                           "<div id='unseenMes'><small class='d-block item-except text-sm h-1x'>"+ item.first_name.toUpperCase() + ' ' + item.last_name.toUpperCase() +"</small></div>" +
                         "</div>" +
                       "</div>" +
@@ -216,7 +219,7 @@ if(typeof $("#user").val() !== "undefined"){
     });
 
     f_msg({action: 'update_msg_status', sender_id: receiver_id, receiver_id: user_id}, "json", "/messages").then( function (data) {
-      console.log(data.message_notif[0]['tlt_unseen']);
+      // console.log(data.message_notif[0]['tlt_unseen']);
       $("#isSeen" + receiver_id).text('');
       if(data.message_notif[0]['tlt_unseen']){
         $("#notif").text(data.message_notif[0]['tlt_unseen'] == 0 ? '' : data.message_notif[0]['tlt_unseen']);
@@ -231,13 +234,13 @@ if(typeof $("#user").val() !== "undefined"){
         showRecents(recent);
       }
     });
-    go_online(onlineUsers[0]);
+    go_online(onlineUsers[0])
   });
 
   $("#searchForContacts").keyup(function () {
     f_msg({action: 'search_contacts', user_id: user_id, search_data: $("#searchForContacts").val()}, "json", "/messages").then( function (data) {
       $("#contacts").html("<ul class='list-unstyled list-separated'></ul>");
-      console.log(data);
+      // console.log(data);
       for(let contact of data.contacts){
         showContacts(contact);
       }
@@ -271,7 +274,7 @@ if(typeof $("#user").val() !== "undefined"){
         status:false,
       };
       f_msg(msg, "json", "/messages").then( function (data) {
-        console.log(data.new_message[0]);
+        // console.log(data.new_message[0]);
         newMessage(data.new_message[0]);
         data.new_message[0]['command'] = "message";
         data.new_message[0]['msg_id'] = msg_id;
@@ -307,7 +310,8 @@ if(typeof $("#user").val() !== "undefined"){
         typing:true,
         msg_id: msg_id
       };
-      conn.send(JSON.stringify(msg));
+     
+      conn.send(JSON.stringify(msg));  
     }
   });
 
@@ -327,16 +331,14 @@ if(typeof $("#user").val() !== "undefined"){
       //               "</div>";
       // }else{
       //   appendOnceTyping = true;
+        var avatar = user_id == msg.to ? "<div id='r_isActive309' class='avatar d-block' style='background-image: url(/assets/employee_picture/" + msg.employee_picture + ")'></div>" :'';
+        var msgNull = msg.text == '' ? '':"<div class='message-content text-break'>"+ avatar + "<div class='message-text text-break'>" + msg.text + "</div></div>";
         var msgStatus = user_id == msg.from ? 'you' : 'other';
         var msgSeen = user_id == msg.from && msg.status == 0 ? 'Seen ': '';
-        var checkUrl = isURL(msg.text) ? "<a class='message-text text-break' target='_blank' href='" + msg.text + "'>" + msg.text + "</a>" : "<div class='message-text text-break'>" + msg.text + "</div>";
-        var avatar = user_id == msg.to ? "<div id='r_isActive309' class='avatar d-block' style='background-image: url(/assets/employee_picture/" + msg.employee_picture + ")'></div>" :''; 
-        HTMLList =  "<div class='message-row " + msgStatus + "-message'>" +
-                      "<div class='message-content text-break'>" +
-                        avatar +
-                        checkUrl +
-                      "</div>" +
-                      "<div id='msgSeen' class='message-time' style='margin-left:50px';>" + msgSeen + fmtDateTime(new Date(msg.created_on.toString().substr(0, 10) + ", " + msg.created_on.toString().substr(11))) + "</div>" +
+        var msgtimeNull = msg.text == ''? '':"<div id='msgSeen' class='message-time' style='margin-left:50px';>" + msgSeen + fmtDateTime(new Date(msg.created_on.toString().substr(0, 10) + ", " + msg.created_on.toString().substr(11))) + "</div>";
+        var checkUrl = isURL(msg.text) ? "<a class='message-text text-break' target='_blank' href='" + msg.text + "'>" + msg.text + "</a>" :msgNull ;
+       
+        HTMLList =  "<div class='message-row " + msgStatus + "-message'>" + msgNull + msgtimeNull  +
                     "</div>";
      $("#chat-message-list").append(HTMLList);
       
