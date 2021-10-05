@@ -115,12 +115,15 @@ if(typeof $("#user").val() !== "undefined"){
   
 
   function showRecents (item) {
-    var upper = item.first_name.charAt(0).toUpperCase() + item.first_name.slice(1);
+    var upper = item.first_name.charAt(0).toUpperCase() + item.first_name.slice(1).toLowerCase();
     var BoldText = item.Status == 1 ? "<strong>" + upper+": "+item.ReplyText + "</strong>" :upper +": "+item.ReplyText
     let itemtext = item.from == item.FromReply ? "You: "+ item.ReplyText:BoldText;
     if(itemtext.length >= 30){    
-    itemtext = itemtext.substring(0,27) + "...";
-    }
+      itemtext = itemtext.substring(0,20) + "...";
+      }
+    var recentDate = itemtext + " • "+ fmtDateTime(new Date(item.created_on.toString().substr(0, 10) + ", " + item.created_on.toString().substr(11)));
+    // RecentDateTime(new Date(item.created_on.toString().substr(0, 10) + ", " + item.created_on.toString().substr(11)));
+    
     
     var HTMLList =  "<li class='list-separated-item' onclick='javascript:selectMsgReceiver(" + item.no + ")' style='cursor: pointer;'>" +
                       "<div class='row align-items-center'>" +
@@ -133,7 +136,7 @@ if(typeof $("#user").val() !== "undefined"){
                           "<span id='isSeen" + item.no + "' class='mt-2 float-right badge badge-danger'></span>" +
                           "<div><small class='d-block item-except text-sm h-1x' style='font-weight:bold'>"+ item.first_name.toUpperCase() + ' ' + item.last_name.toUpperCase()+"</small></div>" +
                           "<small class='d-block item-except text-mute text-sm h-2x'>" +
-                            itemtext 
+                            recentDate 
                           + "</small>" +
                         "</div>" +
                       "</div>" +
@@ -345,6 +348,34 @@ if(typeof $("#user").val() !== "undefined"){
     }
   }
 
+//   function RecentDateTime(ymd){
+//     var day, month, year, hours, minutes,ampm;
+//     var mS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+//     var dS = ['','Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+//     dtNow = date_create(new Date().getFullYear(), new Date().getMonth() + 1, new Date().getDate());
+//     dtdate = new Date().getDate();
+//     days = ymd.getDay();
+//     day = ymd.getDate();  
+//     month = ymd.getMonth() + 1;
+//     year = ymd.getFullYear();
+//     hours = ymd.getHours();
+//     minutes = ymd.getMinutes();
+//     ampm = hours >= 12 ? 'PM' : 'AM';
+//     hours = hours % 12;
+//     hours = hours ? hours : 12;
+//     minutes = minutes < 10 ? '0' + minutes : minutes;
+//     dbDate = date_create(year, month, day);
+//     d1 = new Date(dbDate);
+//     d2 = new Date(dtNow);
+//     // console.log(Math.floor(d2-d1)/(1000*3600*24));
+
+//     if(day == dtdate ){
+//       dateTime = hours + ':' + minutes + ' ' + ampm;
+//     }
+// return dateTime;
+
+//   }
+  
   function fmtDateTime(dt) {
     var day, month, year, hours, minutes, dateTime, ampm, dtNow, fmtDate;
     var mS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
@@ -362,6 +393,7 @@ if(typeof $("#user").val() !== "undefined"){
     hours = hours % 12;
     hours = hours ? hours : 12;
     minutes = minutes < 10 ? '0' + minutes : minutes;
+  
     if(year + '-' + month + '-' + day == dtNow){
       dateTime = hours + ':' + minutes + ' ' + ampm;
     }else{
