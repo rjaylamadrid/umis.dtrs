@@ -4,8 +4,7 @@
     <div class="modal-content">
       <div class="modal-header">
       <b><h2 style="margin:0" id="full_name"></h2></b>
-      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-      </button>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
       <div class="col-12">

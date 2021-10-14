@@ -42,10 +42,10 @@
                     <textarea id="message" class="form-control border" rows="2"  placeholder="Type a message..." hidden></textarea> 
                     <span class="mt-4">
                       </span>
-                   <span class="input-group-append">
+                   {* <span class="input-group-append">
                       <button id="btnSend" class="btn text-white" type="button" disabled hidden>Send</button>
                     </span>
-                   
+                    *}
                   </div>
                 </div>
               </div> 

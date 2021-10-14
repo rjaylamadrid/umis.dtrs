@@ -37,6 +37,7 @@ class Message {
 
 	function saveMessage()
 	{
+		
 		$check = DB::fetch_row("SELECT * FROM tbl_messages WHERE `from` =".$this->from." AND `to` =".$this->to."");
 		if(empty($check)){
 			DB::insert ("INSERT INTO tbl_messages VALUES(null,".$this->from.",".$this->to.",'".$this->text."','".$this->created_on."',".$this->status.")");
@@ -60,6 +61,7 @@ class Message {
 
 	function getReceiverInfo($receiver_id){
 		return $employee = DB::fetch_all ("SELECT no, first_name, last_name, employee_picture, email_address FROM tbl_employee WHERE no = ".$receiver_id);
+		
 	}
 
 	function getLastMessagesData()
@@ -95,7 +97,6 @@ class Message {
 		// return $result = DB::fetch_all("SELECT b.no, a.from, a.to, employee_picture, first_name, last_name,(SELECT `from` FROM tbl_messages WHERE (`from`= a.`from` AND `to` = c.`to`) OR (`from`= c.`to` AND `to` =  a.`from`) ORDER BY created_on DESC LIMIT 1) as FromReply,(SELECT text FROM tbl_messages WHERE (`from`= a.`from` AND `to` = c.`to`) OR (`from`= c.`to` AND `to` =  a.`from`) ORDER BY created_on DESC LIMIT 1) as ReplyText FROM tbl_messages a,tbl_employee b,(SELECT `to`, MAX(`created_on`) `created_on` FROM tbl_messages WHERE `from` = ".$user_id." GROUP BY `to`) c WHERE a.to = c.to AND a.created_on = c.created_on AND a.to = b.no  AND a.from = ".$user_id." GROUP BY a.to ORDER BY a.created_on DESC");
 		// return $result = DB::fetch_all("SELECT  b.no, a.from, a.to, employee_picture, first_name, last_name, text FROM tbl_messages a, tbl_employee b, (SELECT `to`, MAX(`created_on`) `created_on` FROM tbl_messages WHERE `from` = ". $user_id ." GROUP BY `to`) c WHERE a.to = c.to AND a.created_on = c.created_on AND a.to = b.no AND a.from = ". $user_id ." GROUP BY a.to ORDER BY a.created_on DESC");
 		return $result = DB::fetch_all("SELECT b.no, a.from, a.to, employee_picture, first_name, last_name ,(SELECT `from` FROM tbl_messages WHERE (`from`= a.`from` AND `to` = c.`to`) OR (`from`= c.`to` AND `to` =  a.`from`) ORDER BY created_on DESC LIMIT 1) as FromReply,(SELECT text FROM tbl_messages WHERE (`from`= a.`from` AND `to` = c.`to`) OR (`from`= c.`to` AND `to` =  a.`from`) ORDER BY created_on DESC LIMIT 1) as ReplyText, (SELECT created_on FROM tbl_messages WHERE (`from`= a.`from` AND `to` = c.`to`) OR (`from`= c.`to` AND `to` =  a.`from`) ORDER BY created_on DESC LIMIT 1) as created_on, (SELECT status FROM tbl_messages WHERE (`from`= a.`from` AND `to` = c.`to`) OR (`from`= c.`to` AND `to` =  a.`from`) ORDER BY created_on DESC LIMIT 1) as Status FROM tbl_messages a,tbl_employee b,(SELECT `to`, MAX(`created_on`) `created_on` FROM tbl_messages WHERE `from` = ".$user_id." GROUP BY `to`) c WHERE a.to = c.to AND a.created_on = c.created_on AND a.to = b.no  AND a.from = ".$user_id." GROUP BY a.to ORDER BY a.created_on DESC");
-	
 	}
 
 

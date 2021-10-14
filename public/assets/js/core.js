@@ -681,5 +681,39 @@ function change_filter(ind) {
   }
 }
 
+//SETTINGS - DEPARTMENT -START
+function AddDepartment(){
+  $("#AddDepartment1").modal('show');
+}
 
-// OTHER FUNCTIONS :: END
+function addDeparment(){
+  var dep_code= document.getElementById("Dep_code").value;
+  var dept_desc = document.getElementById("Dep_Desc").value;
+
+  if(dep_code == '' && dept_desc == ''){
+    HTMLList = "<div class='alert alert-danger ml-5 mr-5 mt-2 mb-1 text-center' role='alert'>Please input the require field!</div>";
+    $("#alert").append(HTMLList);
+    setTimeout(function(){
+      $("#alert").fadeOut(800);
+  }, 5000);
+  }else{
+    if(document.getElementById("projectBase").checked == true){
+      let p_base = 1;
+      console.log(p_base);
+      f({action:'addDeparment', dep_code:dep_code,dept_desc:dept_desc,p_base:p_base},"text","/settings").then(function(data){
+        $("#alert").html(data);
+      })
+    }else{
+      let p_base = 0;
+      console.log(p_base);
+      f({action:'addDeparment', dep_code:dep_code,dept_desc:dept_desc,p_base:p_base},"text","/settings").then(function(data){
+        $("#alert").html(data);
+      })
+    }
+   
+   
+  }
+
+}
+
+// OTHER FUNCTIONS :: END 

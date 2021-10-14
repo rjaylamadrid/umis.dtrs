@@ -27,7 +27,6 @@ class Messages extends MessagesController {
     }
 
     public function get_contacts(){
-
         $message_object = new Message();
         echo json_encode(['contacts' => $message_object->getContacts($this->data['user_id'])]);
     }
@@ -70,6 +69,7 @@ class Messages extends MessagesController {
         $message_object->setCreatedOn(date("Y-m-d G:i:s"));
         $message_object->setStatus(1);
         $message_object->saveMessage();
+        $message_object->updateMessageStatus($this->data['sender_id'], $this->data['receiver_id']);
         echo json_encode(['new_message' => $message_object->getLastMessagesData()]);
     }
 

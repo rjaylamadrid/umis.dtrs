@@ -1,4 +1,6 @@
 <?php
+
+use Controllers\Controller;
 use Controllers\DashboardController;
 use Model\EmployeeStats;
 use Controllers\ScheduleController;
@@ -17,8 +19,8 @@ class Dashboard extends DashboardController {
             header ('location: /profile');
         }
          ScheduleController::Auto_update_schedule();
+      
     }
-
     public function do_action () {
         call_user_func_array ([$this, $this->data['action']], $this->data);
     }

@@ -2,7 +2,7 @@
 use Controllers\SettingsController;
 
 class Settings extends SettingsController {
-    private $tabs = ["connection", "security", "salary-grade", "position", "payroll", "w-tax"];
+    private $tabs = ["connection", "security", "salary-grade", "position", "payroll", "w-tax", "department"];
     private $vars;
 
     public function index() {
@@ -17,7 +17,7 @@ class Settings extends SettingsController {
         $this->view->display ("admin/settings", $this->vars);
     }
     
-    public function do_action () {
+    public function do_action () {  
         call_user_func_array ([$this, $this->data['action']], $this->data);
     }
 

@@ -13,7 +13,7 @@
                 <div class="dropdown">
                     <a href="#" class="nav-link pr-0 leading-none" data-toggle="dropdown">
                         <span><img class="avatar" style="object-fit: cover;" src="{$server}/assets/employee_picture/{if $user.employee_picture}{$user.employee_picture}{else}0.jpeg{/if}"></span>
-                        <span class="ml-2 d-none d-lg-block">
+                            <span class="ml-2 d-none d-lg-block">
                             <span class="text-default">{$user.first_name|upper} {$user.last_name|upper}</span>
                             <input id="user" type="hidden" value="{$user.employee_id}"/>
                             <small class="text-muted d-block mt-1">{$user.position}</small>
@@ -27,7 +27,7 @@
                         {/if}
                         <a class="dropdown-item" href="/messages">
                             <span class="float-right">
-                                <span id="notif" class="badge badge-primary"></span>
+                                <span id="notif" class="badge badge-danger"></span>
                             </span>
                             <i class="dropdown-icon fe fe-send"></i> Messages
                         </a> 

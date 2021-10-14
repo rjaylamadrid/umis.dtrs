@@ -34,9 +34,10 @@ class DB {
     }
 
     private static function execute ($args) {
-        if (!self::$db) self::connect (['192.168.2.222', self::$dbname, 'root', 'password']);
+        // if (!self::$db) self::connect (['10.10.10.253', self::$dbname, 'umis', 'UMISxdr5%tgb']);
+        if (!self::$db) self::connect (['10.99.68.135', self::$dbname, 'root', 'password']);
         $args[1] = isset ($args[1]) ? is_array ($args[1]) ? $args[1] : [$args[1]] : []; // Convert vars to array IF NOT array
-        try {
+        try { 
             if (!($query = self::$db->prepare($args[0]))) return;
             if (!($query->execute($args[1]))) return;
             return $query;

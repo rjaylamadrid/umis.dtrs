@@ -11,7 +11,7 @@
                 <a href="/settings/security" class="list-group-item list-group-item-action d-flex align-items-center {if $tab == "security"}active{/if}"><span class="icon mr-3"><i class="fe fe-lock"></i></span>Security</a>
                 <a href="/settings/position" class="list-group-item list-group-item-action d-flex align-items-center {if $tab == "position"}active{/if}"><span class="icon mr-3"><i class="fe fe-briefcase"></i></span>Position</a>
           		<a href="/settings/connection" class="list-group-item list-group-item-action d-flex align-items-center {if $tab == "connection"}active{/if}"><span class="icon mr-3"><i class="fe fe-inbox"></i></span>Connection</a>
-                
+                <a href="/settings/department" class="list-group-item list-group-item-action d-flex align-items-center {if $tab == "department"}active{/if}"><span class="icon mr-3"><i class="fe fe-inbox"></i></span>Department</a>
           	</div>
         </div>
     </div>

@@ -20,6 +20,27 @@ class SettingsController extends Controller {
 
     }
 
+
+
+    protected function department () {
+        $employeeid = $this->user = $_SESSION['user']['employee_id'];
+        $departmentInfo = DB::fetch_all("SELECT c.department_code,c.department_desc FROM tbl_employee_status a JOIN tbl_campus b ON b.id = a.campus_id JOIN tbl_department c ON c.campus_id = b.id WHERE a.employee_id = ".$employeeid."");
+        $data['department'] = $departmentInfo;
+        return $data;
+    }
+
+    public function addDeparment(){
+        $employeeid = $this->user = $_SESSION['user']['employee_id'];
+        $campus = DB::fetch_row("SELECT * FROM tbl_employee_status WHERE employee_id=".$employeeid."");
+        $c_id =$campus['campus_id'];   
+        echo $this->data['dep_code'];
+        // DB::insert("INSERT INTO tbl_department SET department_code = ?, department_desc = ?, campus_id= ?, is_project =? ,department_status=?",$this->data['dep_code'],$this->data['dept_desc'],$c_id,$this->data['p_base']);
+    }
+
+    public function DeptInfo(){
+        $this->view->display ("admin/settings/department", ['department'=> $this->department()]);
+    }
+
     public function position ($emp_type = 1) {
         $this->positions = new Position();
         $this->positions->positions($emp_type, $this->user['campus_id']);

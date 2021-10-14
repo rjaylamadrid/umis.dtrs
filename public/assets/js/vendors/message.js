@@ -28,11 +28,8 @@ if(typeof $("#user").val() !== "undefined"){
   
   f_msg({action: 'get_recents', user_id: user_id }, "json", "/messages").then( function (data) {
     $("#recents").html("<ul class='list-unstyled list-separated'></ul>");
-    console.log(data.recents);
-
     for(let recent of data.recents){
       showRecents(recent);
-
     }  
   });
 
@@ -43,6 +40,7 @@ if(typeof $("#user").val() !== "undefined"){
   // });
 
   f_msg({action: 'get_unseen_msg', user_id: user_id}, "json", "/messages").then( function (data) {
+  console.log(data.unseen);
     for(let us of data.unseen){
       unSeenMsg(us);
     }
@@ -54,10 +52,10 @@ if(typeof $("#user").val() !== "undefined"){
   });
 
     // var conn = new WebSocket('ws://' + window.location.origin.substr(7) + ':9001?'+ session_id + '&user_id='+ user_id);
-    var conn = new WebSocket('ws://192.168.2.18:9001?'+ session_id + '&user_id='+ user_id);
+    var conn = new WebSocket('ws://10.99.68.144:9001?'+ session_id + '&user_id='+ user_id);
       conn.onopen = function(e) {
         console.log("connection establish");
-      }
+    }
 
   conn.onmessage = function(e) {
     var msg = JSON.parse(e.data);
@@ -75,7 +73,7 @@ if(typeof $("#user").val() !== "undefined"){
             unSeenMsg(us);
           }
         });
-        // console.log(msgNotif);
+        console.log(msgNotif);
         msgNotif = parseInt(msgNotif) + 1;
         $("#notif").text(msgNotif == 0 ? '' : msgNotif);
       }else{
@@ -116,15 +114,12 @@ if(typeof $("#user").val() !== "undefined"){
 
   function showRecents (item) {
     var upper = item.first_name.charAt(0).toUpperCase() + item.first_name.slice(1).toLowerCase();
-    var BoldText = item.Status == 1 ? "<strong>" + upper+": "+item.ReplyText + "</strong>" :upper +": "+item.ReplyText
+    var BoldText = item.Status == 1 ? "<b>" + upper+": "+item.ReplyText + "</b>" :upper +": "+item.ReplyText
     let itemtext = item.from == item.FromReply ? "You: "+ item.ReplyText:BoldText;
     if(itemtext.length >= 30){    
       itemtext = itemtext.substring(0,20) + "...";
       }
-    var recentDate = itemtext + " • "+ fmtDateTime(new Date(item.created_on.toString().substr(0, 10) + ", " + item.created_on.toString().substr(11)));
-    // RecentDateTime(new Date(item.created_on.toString().substr(0, 10) + ", " + item.created_on.toString().substr(11)));
-    
-    
+    var recentDate = itemtext + " • "+"<span class='message-time'>" + fmtDateTime(new Date(item.created_on.toString().substr(0, 10) + ", " + item.created_on.toString().substr(11)))+"</span>";
     var HTMLList =  "<li class='list-separated-item' onclick='javascript:selectMsgReceiver(" + item.no + ")' style='cursor: pointer;'>" +
                       "<div class='row align-items-center'>" +
                         "<div clas s='col-auto'>" +
@@ -133,7 +128,7 @@ if(typeof $("#user").val() !== "undefined"){
                           "</div>" +
                         "</div>" +
                         "<div class='col'>" +
-                          "<span id='isSeen" + item.no + "' class='mt-2 float-right badge badge-danger'></span>" +
+                          "<span id='isSeen" + item.no + "' class='float-right badge badge-danger' style='border-radius:40px;'></span>" +
                           "<div><small class='d-block item-except text-sm h-1x' style='font-weight:bold'>"+ item.first_name.toUpperCase() + ' ' + item.last_name.toUpperCase()+"</small></div>" +
                           "<small class='d-block item-except text-mute text-sm h-2x'>" +
                             recentDate 
@@ -143,7 +138,7 @@ if(typeof $("#user").val() !== "undefined"){
                     "</li>";
                     
     $("#recents").append("<ul class='list-unstyled list-separated'>" + HTMLList + "</ul>");
-  }
+  };
 
   function showContacts (item) {
     var HTMLList =  "<li class='list-separated-item' onclick='javascript:selectMsgReceiver(" + item.no + ")' style='cursor: pointer;'>" +
@@ -164,7 +159,7 @@ if(typeof $("#user").val() !== "undefined"){
   }
 
   function unSeenMsg (item){
-    $("#isSeen" + item.from).text(item.status == 0 ? '' : item.status);
+    $("#isSeen" + item.from).text(item.status == 0 ? '': item.status );
   }
 
   function go_online (items) {
@@ -200,6 +195,7 @@ if(typeof $("#user").val() !== "undefined"){
     f_msg({action: 'get_receiver_info', receiver_id: receiver_id}, "json", "/messages").then( function (data) {
       $("#chatName").text(data.receiver_info[0].first_name + ' ' + data.receiver_info[0].last_name);
       $("#chatEmail").text(data.receiver_info[0].email_address);
+ 
       var HTMLList =  "<div class='col-auto'>" +
                         "<div id='c_isActive" + data.receiver_info[0].no + "' class='avatar d-block' style='background-image: url(/assets/employee_picture/" + data.receiver_info[0].employee_picture + ")'>" +
                           "<span class='avatar-status bg-red'></span>" +
@@ -207,14 +203,20 @@ if(typeof $("#user").val() !== "undefined"){
                       "</div>" +
                       "<div class='col'>" +
                         "<span id='isSeen" + data.receiver_info[0].no + "' class='mt-2 float-right badge badge-danger'></span>" +
-                        "<div><small class='d-block item-except text-sm h-1x'>"+ data.receiver_info[0].first_name + ' ' + data.receiver_info[0].last_name +"</small></div>" +
+                        "<div><small class='d-block item-except text-sm h-1x'>"+ data.receiver_info[0].first_name.toUpperCase() + ' ' + data.receiver_info[0].last_name.toUpperCase() +"</small></div>" +
                       "</div>";
       $("#selectedUser").html("<div class='row align-items-center'>" + HTMLList + "</div>");
       receiver_picture = data.receiver_info[0].employee_picture;
     });
+    f_msg({action: 'get_recents', user_id: user_id }, "json", "/messages").then( function (data) {
+      $("#recents").html("<ul class='list-unstyled list-separated'></ul>");
+      for(let recent of data.recents){
+        showRecents(recent);
+      }  
+    });
 
     f_msg({action: 'get_conversation', sender_id: user_id, receiver_id: receiver_id}, "json", "/messages").then( function (data) {
-      for(let convo of data.conversation){
+      for(let convo of data.conversation){ 
         newMessage(convo);
         appendOnceTyping = true
       }
@@ -228,6 +230,7 @@ if(typeof $("#user").val() !== "undefined"){
         $("#notif").text(data.message_notif[0]['tlt_unseen'] == 0 ? '' : data.message_notif[0]['tlt_unseen']);
         msgNotif = data.message_notif[0]['tlt_unseen'];
       }
+      go_online(onlineUsers[0]);
     });
   }
   $("#searchForRecents").keyup(function () {
@@ -237,7 +240,7 @@ if(typeof $("#user").val() !== "undefined"){
         showRecents(recent);
       }
     });
-    go_online(onlineUsers[0])
+    go_online(onlineUsers[0]);
   });
 
   $("#searchForContacts").keyup(function () {
@@ -264,6 +267,7 @@ if(typeof $("#user").val() !== "undefined"){
   // });
 
   $("#message").keyup(function (event){
+    
     $("#btnSend").removeAttr('disabled',false);
     var keycode = (event.keycode ? event.keycode : event.which);
     if(keycode == '13') {
@@ -277,12 +281,13 @@ if(typeof $("#user").val() !== "undefined"){
         status:false,
       };
       f_msg(msg, "json", "/messages").then( function (data) {
-        // console.log(data.new_message[0]);
         newMessage(data.new_message[0]);
         data.new_message[0]['command'] = "message";
         data.new_message[0]['msg_id'] = msg_id;
+        console.log(data.new_message[0]['msg_id']);
         conn.send(JSON.stringify(data.new_message[0]));
       });
+      
       msg_id++;
       $("#message").val("");
       $("#chat-message-list").animate({ scrollTop: $('#chat-message-list')[0].scrollHeight}, 1000);
@@ -294,6 +299,7 @@ if(typeof $("#user").val() !== "undefined"){
       });
       go_online(onlineUsers[0]);
     }else if($("#message").val() == ""){
+      $("#chat-message-list").animate({ scrollTop: $('#chat-message-list')[0].scrollHeight}, 1000);
       $("#btnSend").attr('disabled',true);
       var msg = {
         command: "message",
@@ -313,9 +319,10 @@ if(typeof $("#user").val() !== "undefined"){
         typing:true,
         msg_id: msg_id
       };
-     
       conn.send(JSON.stringify(msg));  
     }
+
+  
   });
 
   function newMessage(msg) {
@@ -338,44 +345,14 @@ if(typeof $("#user").val() !== "undefined"){
         var msgNull = msg.text == '' ? '':"<div class='message-content text-break'>"+ avatar + "<div class='message-text text-break'>" + msg.text + "</div></div>";
         var msgStatus = user_id == msg.from ? 'you' : 'other';
         var msgSeen = user_id == msg.from && msg.status == 0 ? 'Seen ': '';
-        var msgtimeNull = msg.text == ''? '':"<div id='msgSeen' class='message-time' style='margin-left:50px';>" + msgSeen + fmtDateTime(new Date(msg.created_on.toString().substr(0, 10) + ", " + msg.created_on.toString().substr(11))) + "</div>";
+        var msgtimeNull = msg.text == ''? '':"<div id='msgSeen"+ user_id +"' class='message-time' style='margin-left:50px';>" + msgSeen + fmtDateTime(new Date(msg.created_on.toString().substr(0, 10) + ", " + msg.created_on.toString().substr(11))) + "</div>";
         var checkUrl = isURL(msg.text) ? "<a class='message-text text-break' target='_blank' href='" + msg.text + "'>" + msg.text + "</a>" :msgNull ;
-       
-        HTMLList =  "<div class='message-row " + msgStatus + "-message'>" + msgNull + msgtimeNull  +
-                    "</div>";
-     $("#chat-message-list").append(HTMLList);
-      
+        HTMLList ="<div class='message-row " + msgStatus + "-message'>" + msgNull + msgtimeNull  + "</div>";
+        $("#chat-message-list").append(HTMLList);
     }
   }
 
-//   function RecentDateTime(ymd){
-//     var day, month, year, hours, minutes,ampm;
-//     var mS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
-//     var dS = ['','Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-//     dtNow = date_create(new Date().getFullYear(), new Date().getMonth() + 1, new Date().getDate());
-//     dtdate = new Date().getDate();
-//     days = ymd.getDay();
-//     day = ymd.getDate();  
-//     month = ymd.getMonth() + 1;
-//     year = ymd.getFullYear();
-//     hours = ymd.getHours();
-//     minutes = ymd.getMinutes();
-//     ampm = hours >= 12 ? 'PM' : 'AM';
-//     hours = hours % 12;
-//     hours = hours ? hours : 12;
-//     minutes = minutes < 10 ? '0' + minutes : minutes;
-//     dbDate = date_create(year, month, day);
-//     d1 = new Date(dbDate);
-//     d2 = new Date(dtNow);
-//     // console.log(Math.floor(d2-d1)/(1000*3600*24));
 
-//     if(day == dtdate ){
-//       dateTime = hours + ':' + minutes + ' ' + ampm;
-//     }
-// return dateTime;
-
-//   }
-  
   function fmtDateTime(dt) {
     var day, month, year, hours, minutes, dateTime, ampm, dtNow, fmtDate;
     var mS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
@@ -397,7 +374,7 @@ if(typeof $("#user").val() !== "undefined"){
     if(year + '-' + month + '-' + day == dtNow){
       dateTime = hours + ':' + minutes + ' ' + ampm;
     }else{
-      dateTime = mS[m_index] + ' ' + year + ' AT ' + hours + ':' + minutes + ' ' + ampm;
+      dateTime = mS[m_index] +' '+ day +', '+ year +" "+  hours + ':' + minutes + ' ' + ampm;
     }
     return dateTime;
   }
