@@ -24,7 +24,7 @@ class SettingsController extends Controller {
 
     protected function department () {
         $employeeid = $this->user = $_SESSION['user']['employee_id'];
-        $departmentInfo = DB::fetch_all("SELECT c.department_code,c.department_desc FROM tbl_employee_status a JOIN tbl_campus b ON b.id = a.campus_id JOIN tbl_department c ON c.campus_id = b.id WHERE a.employee_id = ".$employeeid."");
+        $departmentInfo = DB::fetch_all("SELECT c.no,c.department_code,c.department_desc,c.is_project,department_status FROM tbl_employee_status a JOIN tbl_campus b ON b.id = a.campus_id JOIN tbl_department c ON c.campus_id = b.id WHERE a.employee_id = ".$employeeid."");
         $data['department'] = $departmentInfo;
         return $data;
     }
@@ -33,8 +33,14 @@ class SettingsController extends Controller {
         $employeeid = $this->user = $_SESSION['user']['employee_id'];
         $campus = DB::fetch_row("SELECT * FROM tbl_employee_status WHERE employee_id=".$employeeid."");
         $c_id =$campus['campus_id'];   
-        echo $this->data['dep_code'];
-        // DB::insert("INSERT INTO tbl_department SET department_code = ?, department_desc = ?, campus_id= ?, is_project =? ,department_status=?",$this->data['dep_code'],$this->data['dept_desc'],$c_id,$this->data['p_base']);
+        $dbquery = DB::insert("INSERT INTO tbl_department SET `no`=?, department_code = ?, department_desc = ?, campus_id = ?, is_project =?",[NULL,$this->data['dep_code'],$this->data['dept_desc'],$c_id,$this->data['p_base']]);
+    }
+
+    public function UpdateDepartment(){
+        $employeeid = $this->user = $_SESSION['user']['employee_id'];
+        $campus = DB::fetch_row("SELECT * FROM tbl_employee_status WHERE employee_id=".$employeeid."");
+        $c_id =$campus['campus_id'];
+     DB::update("UPDATE tbl_department SET `no` = ?,department_code=?,department_desc =?,campus_id=?,is_project=?,department_status=? WHERE `no` = ?",[$this->data['no'],$this->data['dept_code'],$this->data['dept_desc'],$c_id,$this->data['ProjectBase'],$this->data['CheckActive'],$this->data['no']]);
     }
 
     public function DeptInfo(){

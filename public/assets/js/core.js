@@ -690,30 +690,65 @@ function addDeparment(){
   var dep_code= document.getElementById("Dep_code").value;
   var dept_desc = document.getElementById("Dep_Desc").value;
 
-  if(dep_code == '' && dept_desc == ''){
+  if(dep_code == '' || dept_desc == ''){
     HTMLList = "<div class='alert alert-danger ml-5 mr-5 mt-2 mb-1 text-center' role='alert'>Please input the require field!</div>";
     $("#alert").append(HTMLList);
     setTimeout(function(){
       $("#alert").fadeOut(800);
   }, 5000);
-  }else{
+  console.log(HTMList);
+  }else{ 
     if(document.getElementById("projectBase").checked == true){
       let p_base = 1;
-      console.log(p_base);
-      f({action:'addDeparment', dep_code:dep_code,dept_desc:dept_desc,p_base:p_base},"text","/settings").then(function(data){
-        $("#alert").html(data);
-      })
+      localStorage.setItem('p_base',p_base);
     }else{
       let p_base = 0;
-      console.log(p_base);
-      f({action:'addDeparment', dep_code:dep_code,dept_desc:dept_desc,p_base:p_base},"text","/settings").then(function(data){
-        $("#alert").html(data);
-      })
+      localStorage.setItem('p_base',p_base);
     }
-   
-   
+    p_base = localStorage.getItem('p_base');
+    f({action:'addDeparment', dep_code:dep_code,dept_desc:dept_desc,p_base:p_base},"text","/settings").then(function(data){
+      $("#alert").html(data);
+    })
+  }
+}
+
+function showEdit(no){
+  $(".dept_items").attr("hidden", true);
+  $("#dept_item"+no).attr("hidden", false);
+}
+
+function updateDepartment(no){
+  var dept_code = document.getElementById("dept_code"+no).innerHTML;
+  var dept_desc = document.getElementById("dept_desc"+no).innerHTML;
+  if(document.getElementById('dept_active'+no).checked == true){
+    check1 = 1;
+    localStorage.setItem('checked1',check1);
+  }else{
+    check1 = 0;
+    localStorage.setItem('checked1',check1);
   }
 
+  if(document.getElementById('dept_projectbase'+no).checked == true){
+    check2 = 1;
+    localStorage.setItem('checked2',check2);
+  }else{
+    check2 = 0;
+    localStorage.setItem('checked2',check2);
+  }
+  CheckActive = localStorage.getItem("checked1");
+  ProjectBase = localStorage.getItem("checked2");
+  $("#updateIcon"+no).attr("hidden", true);
+  f({action:'UpdateDepartment', no:no,dept_code:dept_code,dept_desc:dept_desc,CheckActive:CheckActive,ProjectBase:ProjectBase},"text","/settings").then(function(data){
+    $("#refresh"+no).html(data);
+    $("#UpdateSpinner"+no).attr("hidden", false);
+  });
+  setTimeout(function(){
+    $("#UpdateSpinner"+no).fadeOut(100);
+    $("#updateIcon"+no).attr("hidden", false);
+}, 1000);
+
+
 }
+
 
 // OTHER FUNCTIONS :: END 

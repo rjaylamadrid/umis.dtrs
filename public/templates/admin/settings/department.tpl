@@ -13,11 +13,26 @@
                         </tr>
                     </thead>
                     <tbody>
+                  
                 {foreach from=$department item=departments}
-                        <tr>
-                            <td>{$departments.department_code}</td>
-                            <td>{$departments.department_desc   }</td>
-                            <td class="float-right"><a href="#" class="icon" aria-expanded="false"><i class="fe fe-edit"></i></td>
+                        <tr id="refesh{$departments.no}">
+                            <td class="col-sm-3" id="dept_code{$departments.no}" contenteditable="true" onfocus="showEdit({$departments.no});">{$departments.department_code}</td>
+                            <td class="col-sm-10" id="dept_desc{$departments.no}" contenteditable="true" onfocus="showEdit({$departments.no});">{$departments.department_desc}</td>   
+                            <td>
+                                    <div class="dept_items" id="dept_item{$departments.no}" hidden="true">
+                                        <span class="float-right ml-5">
+                                        <span class="mr-5">
+                                        <input id="dept_active{$departments.no}" class="form-check-input float-right" type="checkbox"{if ($departments.department_status == 1)}checked{/if}>
+                                        <span  class="form-check-label is-invalid font-weight-bold">Active</span>
+                                        </span>
+                                        <input id="dept_projectbase{$departments.no}" class="form-check-input float-right" type="checkbox"  {if ($departments.is_project == 1)}checked{/if}>
+                                        <span class="form-check-label is-invalid font-weight-bold" >Project base</span>
+                                        <button  type="button" class="btn btn-primary btn-sm my-0" onclick="updateDepartment({$departments.no});"><i id ="updateIcon{$departments.no}" class="fe fe-save"></i><div id="UpdateSpinner{$departments.no}" class="spinner-border spinner-border-sm text-light" hidden></div> Update</button>
+                                        </span>
+                                    </div>
+
+                            </td>
+                            
                         </tr>
                 {/foreach}
                     </tbody>
@@ -26,6 +41,7 @@
         </div>
     </div>
 </div>
+
 {include file="admin/modal/update_dept_modal.tpl"}
 
 <script>
