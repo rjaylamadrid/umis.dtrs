@@ -5,7 +5,7 @@
     <h3 class="modal-title">ADD DEPARTMENT</h3>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
     </div>
-  <div id="alert"> </div>
+  <div id="alert"></div>
    
  <div class="modal-body">
                     <div class="mb-3">

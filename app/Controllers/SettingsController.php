@@ -3,6 +3,8 @@ namespace Controllers;
 
 use Database\DB;
 use Model\Position;
+use PhpOffice\PhpSpreadsheet\Calculation\Financial\Depreciation;
+use PhpOffice\PhpSpreadsheet\RichText\Run;
 
 class SettingsController extends Controller {
     public $positions;
@@ -30,17 +32,14 @@ class SettingsController extends Controller {
     }
 
     public function addDeparment(){
-        $employeeid = $this->user = $_SESSION['user']['employee_id'];
-        $campus = DB::fetch_row("SELECT * FROM tbl_employee_status WHERE employee_id=".$employeeid."");
-        $c_id =$campus['campus_id'];   
-        $dbquery = DB::insert("INSERT INTO tbl_department SET `no`=?, department_code = ?, department_desc = ?, campus_id = ?, is_project =?",[NULL,$this->data['dep_code'],$this->data['dept_desc'],$c_id,$this->data['p_base']]);
+        $c_id =$this->user['campus_id'];   
+        DB::insert("INSERT INTO tbl_department SET `no`=?, department_code = ?, department_desc = ?, campus_id = ?, is_project =?",[NULL,$this->data['dep_code'],$this->data['dept_desc'],$c_id,$this->data['p_base']]);
+        $this->view->display ("admin/settings/department", ['department'=> $this->department()]);
     }
 
     public function UpdateDepartment(){
-        $employeeid = $this->user = $_SESSION['user']['employee_id'];
-        $campus = DB::fetch_row("SELECT * FROM tbl_employee_status WHERE employee_id=".$employeeid."");
-        $c_id =$campus['campus_id'];
-     DB::update("UPDATE tbl_department SET `no` = ?,department_code=?,department_desc =?,campus_id=?,is_project=?,department_status=? WHERE `no` = ?",[$this->data['no'],$this->data['dept_code'],$this->data['dept_desc'],$c_id,$this->data['ProjectBase'],$this->data['CheckActive'],$this->data['no']]);
+        $c_id =$this->user['campus_id'];
+        DB::update("UPDATE tbl_department SET `no` = ?,department_code=?,department_desc =?,campus_id=?,is_project=?,department_status=? WHERE `no` = ?",[$this->data['no'],$this->data['dept_code'],$this->data['dept_desc'],$c_id,$this->data['ProjectBase'],$this->data['CheckActive'],$this->data['no']]);
     }
 
     public function DeptInfo(){

@@ -527,6 +527,44 @@ function ViewSchedule(id){
   })
 }
 
+function applyTOall(){
+  l=7;
+  for (let i=1;i <= l;i++){
+        let day = document.getElementById('day'+i).value;
+        let amin = document.getElementById('amin'+i).value;
+        let amout = document.getElementById('amout'+i).value;
+        let pmin = document.getElementById('pmin'+i).value;
+        let pmout = document.getElementById('pmout'+i).value;
+
+        preset = {
+          [day] :[amin,amout,pmin,pmout]
+        };
+        var c = 0;
+        if(preset[day].includes('')==false){
+         let include = [preset[day]];
+         am1=include[0][0];
+         am2=include[0][1];
+         pm1=include[0][2];
+         pm2=include[0][3]; 
+        }else{ 
+        }
+        document.getElementById('amin'+i).value = am1;
+        document.getElementById('amout'+i).value = am2;
+        document.getElementById('pmin'+i).value = pm1;
+        document.getElementById('pmout'+i).value = pm2;
+        document.getElementById('pmout'+i).value = pm2;
+        // console.log(preset[day].includes(''));
+
+        // // console.log(preset);  
+        // document.getElementById('pmout2').value = preset['Monday'][3];
+  }     
+  
+  
+  
+}
+
+
+
 //End of Modifying Schedule
 
 function get_salary () {
@@ -707,8 +745,15 @@ function addDeparment(){
     }
     p_base = localStorage.getItem('p_base');
     f({action:'addDeparment', dep_code:dep_code,dept_desc:dept_desc,p_base:p_base},"text","/settings").then(function(data){
-      $("#alert").html(data);
-    })
+      HTMLList = "<div class='alert alert-success ml-5 mr-5 mt-2 mb-1 text-center' role='alert'>Saved Successfully</div>";
+      $("#alert").append(HTMLList);
+      setTimeout(function(){
+        $("#alert").fadeOut(200); 
+        if($("#AddDepartment1").modal('hide')){
+          window.location.href="/settings/department";
+        };
+      }, 1000);
+    });
   }
 }
 
@@ -727,7 +772,6 @@ function updateDepartment(no){
     check1 = 0;
     localStorage.setItem('checked1',check1);
   }
-
   if(document.getElementById('dept_projectbase'+no).checked == true){
     check2 = 1;
     localStorage.setItem('checked2',check2);
@@ -738,16 +782,14 @@ function updateDepartment(no){
   CheckActive = localStorage.getItem("checked1");
   ProjectBase = localStorage.getItem("checked2");
   $("#updateIcon"+no).attr("hidden", true);
-  f({action:'UpdateDepartment', no:no,dept_code:dept_code,dept_desc:dept_desc,CheckActive:CheckActive,ProjectBase:ProjectBase},"text","/settings").then(function(data){
-    $("#refresh"+no).html(data);
-    $("#UpdateSpinner"+no).attr("hidden", false);
+  $("#UpdateSpinner"+no).attr("hidden", false);
+  f({action:'UpdateDepartment', no:no,dept_code:dept_code,dept_desc:dept_desc,CheckActive:CheckActive,ProjectBase:ProjectBase},"text","/settings").then(function(data){ 
+    // $("#refresh"+no).load(location.href + " #settings_tab"+no);
+    setTimeout(function(){
+      $("#updateIcon"+no).attr("hidden", false);
+      $("#UpdateSpinner"+no).attr("hidden", true);
+  }, 1000);
   });
-  setTimeout(function(){
-    $("#UpdateSpinner"+no).fadeOut(100);
-    $("#updateIcon"+no).attr("hidden", false);
-}, 1000);
-
-
 }
 
 

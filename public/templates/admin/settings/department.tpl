@@ -1,4 +1,3 @@
-
 <div class="row row-cards row-deck">
     <div class="col-12">
     <a href="javascript:AddDepartment();" data-bs-toggle="modal" data-bs-target="#AddDepartment" class="ml-auto btn btn-primary mb-3"><i class="fe fe-plus"></i> Add Department</a>
@@ -13,9 +12,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                  
                 {foreach from=$department item=departments}
-                        <tr id="refesh{$departments.no}">
+                        <tr>
                             <td class="col-sm-3" id="dept_code{$departments.no}" contenteditable="true" onfocus="showEdit({$departments.no});">{$departments.department_code}</td>
                             <td class="col-sm-10" id="dept_desc{$departments.no}" contenteditable="true" onfocus="showEdit({$departments.no});">{$departments.department_desc}</td>   
                             <td>
@@ -30,9 +28,7 @@
                                         <button  type="button" class="btn btn-primary btn-sm my-0" onclick="updateDepartment({$departments.no});"><i id ="updateIcon{$departments.no}" class="fe fe-save"></i><div id="UpdateSpinner{$departments.no}" class="spinner-border spinner-border-sm text-light" hidden></div> Update</button>
                                         </span>
                                     </div>
-
                             </td>
-                            
                         </tr>
                 {/foreach}
                     </tbody>
@@ -41,9 +37,7 @@
         </div>
     </div>
 </div>
-
 {include file="admin/modal/update_dept_modal.tpl"}
-
 <script>
     require (['datatables'], function () {
         $("#tbl-positions").DataTable();

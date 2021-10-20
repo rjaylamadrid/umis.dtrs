@@ -22,21 +22,21 @@
                                 </div>
                             </div>
                         </div>
+                        <a href="javascript:applyTOall();" class="btn btn-primary  float-right" style="margin-right:52px" id="apply{$day}">Apply to all</a>
                         <div class="table-responsive">
                             <table class="table card-table table-striped">
-                                <thead>
-                                    <tr><th>Day</th><th>AM IN</th><th>AM OUT</th><th>PM IN</th><th>PM OUT</th><th></th></tr>
+                                <thead>  
+                                    <tr class="text-center"><th>Day</th><th>AM IN</th><th>AM OUT</th><th>PM IN</th><th>PM OUT</th></tr>
                                 </thead>
                                 <tbody>
                                     {$days = array('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday')}
                                     {foreach from=$days item=day}
                                     <tr>
-                                        
-                                        <td><input type="checkbox" name="day[{$day@iteration}]" value="{$day}" id="day{$day@iteration}" onclick="javascript:create_sched({$day@iteration})" checked>{$day}</td>
-                                        <td><input type="time" name="amin{$day@iteration}" id="amin{$day@iteration}" required></td>
-                                        <td><input type="time" name="amout{$day@iteration}" id="amout{$day@iteration}" required></td>
-                                        <td><input type="time" name="pmin{$day@iteration}" id="pmin{$day@iteration}" required></td>
-                                        <td><input type="time" name="pmout{$day@iteration}" id="pmout{$day@iteration}" required></td>
+                                        <td><input type="checkbox" name="day[{$day@iteration}]" value="{$day}" id="day{$day@iteration}" onclick="javascript:create_sched({$day@iteration})" checked>  {$day}</td>
+                                        <td><input type="time" name="amin{$day@iteration}" id="amin{$day@iteration}" ></td>
+                                        <td><input type="time" name="amout{$day@iteration}" id="amout{$day@iteration}"></td>
+                                        <td><input type="time" name="pmin{$day@iteration}" id="pmin{$day@iteration}" ></td>
+                                        <td><input type="time" name="pmout{$day@iteration}" id="pmout{$day@iteration}"></td>   
                                     </tr>
                                     {/foreach}
                                 </tbody>
