@@ -47,7 +47,7 @@ $router->group(['before' => 'auth'], function ($router) {
             $router->get('/registration', ['Employees', 'registration']);
             $router->get('/employment/{id}/{tab}/{result}?', ['Employees', 'employment']);
             $router->get('/{tab}/{result}?/{sched}?', ['Employees', 'employment_update']);
-            $router->get('/{id}/export', ['Employees', 'export']);
+            $router->get('/{id}/export', ['Employees', 'export']); 
         });
 
         // Attendance
@@ -106,6 +106,7 @@ $router->group(['before' => 'auth'], function ($router) {
 
     // EMPLOYEE START
     $router->get('/profile/{view}?', ['Profile', 'index']);
+    $router->get('/{id}/export', ['Employees', 'export']);
     $router->get('/update/{view}?', ['Profile', 'update']);
     $router->get('/payslip', ['Payroll', 'payslip']);
     $router->get('/dtr', ['DTR', 'index']);

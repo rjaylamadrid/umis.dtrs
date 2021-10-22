@@ -40,4 +40,14 @@ class Payroll{
         if ($payroll['employer-share']) $headers['EMPLOYER-SHARE'] = json_decode($payroll['employer-share'], true);
         return $headers;
     }
+
+    public static function get_payroll_factors ($type) {
+        $compensation = DB::fetch_all ("SELECT * FROM tbl_compensation WHERE etype_id = ?", $type);
+        $deduction = DB::fetch_all ("SELECT * FROM tbl_deduction WHERE etype_id = ?", $type);
+        $employer_share = DB::fetch_all ("SELECT * FROM tbl_employer_share WHERE etype_id = ?", $type);
+        $factors = array('0' => array('title' => 'Compensation', 'data' => $compensation), 
+                        '1' => array('title' => 'Deduction', 'data' => $deduction), 
+                        '2' => array('title' => 'Employer-share', 'data' => $employer_share));
+        return $factors;
+    }
 }

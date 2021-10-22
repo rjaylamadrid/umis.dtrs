@@ -11,6 +11,17 @@ class DashboardController extends Controller {
     }
 
     public function bday_celebrant () {
-        return DB::fetch_all ("SELECT first_name, last_name, DATE_FORMAT(birthdate, '%M %d') AS BDate, (YEAR(NOW()) - YEAR(birthdate)) AS Age,  CONCAT(YEAR(NOW()),'-',DATE_FORMAT(birthdate, '%m-%d')) as Araw, employee_picture FROM tbl_employee a, tbl_employee_status b WHERE a.no = b.employee_id AND b.is_active = 1 AND b.campus_id = ? AND MONTH(a.birthdate) = ? AND DAY(birthdate) BETWEEN 1 AND 31 ORDER BY BDate", [$this->user['campus_id'], date('m')]);
+        $birthday = [];
+        $celebrants = [];
+        $results = DB::fetch_all ("SELECT first_name, last_name, DATE_FORMAT(birthdate, '%M %d') AS BDate, (YEAR(NOW()) - YEAR(birthdate)) AS Age,  CONCAT(YEAR(NOW()),'-',DATE_FORMAT(birthdate, '%m-%d')) as Araw, employee_picture FROM tbl_employee a, tbl_employee_status b WHERE a.no = b.employee_id AND b.is_active = 1 AND b.campus_id = ? AND MONTH(a.birthdate) = ? AND DAY(birthdate) BETWEEN 1 AND 31 ORDER BY BDate", [$this->user['campus_id'], date('m')]);
+        foreach($results as $celebrant) {
+            if ($celebrant['BDate']  == date("F d")) {
+                $birthday[] = $celebrant;
+            } else {
+                $celebrants[] = $celebrant;
+
+            }
+        }
+        return array_merge($birthday, $celebrants);
     }
 }

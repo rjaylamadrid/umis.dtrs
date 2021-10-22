@@ -243,7 +243,7 @@ function delete_leave(id) {
   } else {
     return false;
   }
-}
+} 
 
 function disapp(disapp) {
   disapp.remarks.disabled = disapp.approved.checked == false ? false : true;
@@ -701,11 +701,6 @@ function collapse(id) {
   }
 }
 
-function show_formula() {
-  f({action:'show_formula'}, "text", "/payroll").then(function(html) {
-    
-  })
-}
 
 function change_filter(ind) {
   var filter = ["status", "department", "specialization"];
@@ -794,3 +789,37 @@ function updateDepartment(no){
 
 
 // OTHER FUNCTIONS :: END 
+function add_payroll_data(type, save = false) {
+  if (save) {
+    var form = $('#add_payroll_data').serialize();
+    f({action:'add_payroll_factor', form: form}, "text", "/payroll").then(function(html) {
+      $('#formula_tab').html(html);
+    })
+    $('#add-payroll-modal').modal('hide');
+  } else {
+    var form = $('#add_payroll_data').serialize();
+    f({action:'show_payroll_factor', form: form}, "text", "/payroll").then(function(html) {
+      $('#add-payroll-modal').html(html);
+      var etype_id = $('#emp_type').val();
+      $('.title').html(type);
+      $('#payroll_data_type').val(type);
+      $('#etype_id').val(etype_id);
+      $('#add-payroll-modal').modal('show');
+    })
+  }
+}
+
+function show_formula() {
+  // f({action:'show_formula'}, "text", "/payroll").then(function(html) {
+    
+  // })
+}
+
+function change_etype_formula() {
+  var type_id = $('#emp_type').val();
+  f({action:'formula', etype_id:type_id}, "text", "/payroll").then(function(html) {
+    $('#formula_tab').html(html);
+  })
+}
+
+// OTHER FUNCTIONS :: END

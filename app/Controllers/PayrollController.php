@@ -4,6 +4,7 @@ namespace Controllers;
 use Model\Payroll;
 use Model\SalaryGrade;
 use View\PayrollExcel;
+use Model\Employee;
 
 class PayrollController extends Controller {
     public $emp_type = '1';
@@ -24,10 +25,11 @@ class PayrollController extends Controller {
 
     protected function show_salary () {
         $data = $this->salary_grade($this->data['tranche']);
+        $data['action'] = "changed";
         $this->view->display('admin/payroll/salary-grade', $data);
     }
 
-    protected function init_payroll() {
+    protected function download_payroll() {
         $payroll = $this->data['payroll'];
         $employees = Payroll::employees($payroll['emp_type']);
         $headers = Payroll::get_headers($payroll['emp_type']);
@@ -36,8 +38,34 @@ class PayrollController extends Controller {
     
     protected function formula () {
         $payroll = $this->data['payroll'];
-        $headers = Payroll::get_headers($this->emp_type);
-        $data['compensation'] = $headers['COMPENSATION'];
+        $etype = $this->data ? $this->data['etype_id'] : $this->emp_type;
+        $data['payroll'] = Payroll::get_payroll_factors($etype);
+        if($this->data) {
+            $data['vw_formula'] = true;
+            $this->view->display('admin/payroll/formula', $data);
+        } else {
+            return $data;
+        }
+    }
+
+    protected function generate_report() {
+        return [];
+    }
+
+    protected function loan() {
+        $data['employees'] = Employee::employee_status('true', 1);
+
         return $data;
     }
-}
+
+    protected function add_payroll_factor() {
+        print_r($this->data);
+        $data['payroll'] = Payroll::get_payroll_factors($this->data['etype_id']);
+        $data['vw_formula'] = true;
+        $this->view->display('admin/payroll/formula', $data);
+    }
+
+    protected function show_payroll_factor() {
+        $this->view->display('admin/modal/add_payroll_factor');
+    }
+}   

@@ -91,4 +91,20 @@ class Employee {
     public static function get_campus ($campus) {
         return DB::db("db_master")->fetch_row ("SELECT * FROM tbl_campus WHERE id = ?", $campus);
     }
+
+    public static function employee_status ($is_cos = true, $is_active  = 1) {
+        $employees = [];
+        if ($is_cos) {
+            for ($i = 1; $i<= 4; $i++){
+                $employee = self::type($i, $is_active);
+                $employees = array_merge ($employees, $employee);
+            }
+        } else {
+            for ($i = 5; $i<= 7; $i++){
+                $employee = self::type($i, $is_active);
+                $employees = array_merge ($employees, $employee);
+            }
+        }
+        return $employees;
+    }
 }

@@ -52,7 +52,7 @@ if(typeof $("#user").val() !== "undefined"){
   });
 
     // var conn = new WebSocket('ws://' + window.location.origin.substr(7) + ':9001?'+ session_id + '&user_id='+ user_id);
-    var conn = new WebSocket('ws://10.99.68.144:9001?'+ session_id + '&user_id='+ user_id);
+    var conn = new WebSocket('ws://192.168.2.222:9001?'+ session_id + '&user_id='+ user_id);
       conn.onopen = function(e) {
         console.log("connection establish");
     }

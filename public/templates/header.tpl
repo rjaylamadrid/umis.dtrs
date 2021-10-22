@@ -52,12 +52,24 @@
         <div class="row align-items-center">
             <div class="col-lg order-lg-first">
                 <ul class="nav nav-tabs border-0 flex-column flex-lg-row">
-                
                     {foreach from = $headers item = 'header'}
-                      
-                        <li class="nav-item">
-                            <a href="/{$header.url}" class="nav-link {if $page == $header.url}active{/if}"><i class="fe fe-{$header.icon}"></i> {$header.title}</a>
-                        </li>
+                        {if $header.url == "payroll"}
+                            <li class="nav-item dropdown">
+                                <a href="/{$header.url}" class="nav-link {if $page == $header.url}active{/if}" data-toggle="dropdown" aria-expanded="true"><i class="fe fe-{$header.icon}"></i> {$header.title}</a>
+                                <div class="dropdown-menu dropdown-menu-arrow" x-placement="bottom-start" style="position: absolute; transform: translate3d(11px, 54px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                    <a href="/payroll" class="dropdown-item">Reports</a>
+                                    <a href="/payroll/payslip" class="dropdown-item">Payslip</a>
+                                    <a href="/payroll/formula" class="dropdown-item">Formula</a>
+                                    <a href="/payroll/loan" class="dropdown-item">Loan</a>
+                                    <a href="/payroll/salary-grade" class="dropdown-item">Salary Grade</a>
+                                    <a href="/payroll/generate-report" class="dropdown-item active">Generate Payroll</a>
+                                </div>
+                            </li>
+                        {else}
+                            <li class="nav-item">
+                                <a href="/{$header.url}" class="nav-link {if $page == $header.url}active{/if}"><i class="fe fe-{$header.icon}"></i> {$header.title}</a>
+                            </li>
+                        {/if}
                    
                     {/foreach}
                 </ul>

@@ -49,7 +49,8 @@
                         <a href="{$server}{if $user.is_admin}/employees/profile/{$employee->id}/other-info{else}/profile/other-info{/if}" class="list-group-item list-group-item-action d-flex align-items-center {if $tab == 'other-info'} active {/if}"><span class="icon mr-3"><i class="fe fe-file-text"></i></span>Other Information</a>
                     </div>
                 </div>
-                <a href="{$server}/employees/{$employee->id}/export" target="_blank"  class="btn btn-success btn-block" style="margin-top: 10px; margin-bottom: 10px; color: white;">Generate Personal Data Sheet</a>
+
+                <a href="{$server}{if $user.type == "admin"}/employees{/if}/{$employee->id}/export" target="_blank"  class="btn btn-success btn-block" style="margin-top: 10px; margin-bottom: 10px; color: white;">Generate Personal Data Sheet</a>
             </div>
         {/if}
             <div class="{if $view == 'update'}col-md-10{else}col-md-8{/if} col-sm-12">

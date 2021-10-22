@@ -28,7 +28,7 @@
       	        	<div class="card-header">
                         <h3 class="card-title"><b>LIST</b> of Employees</h3>
                     </div>
-      	        	<div id="employee-list" class="selectgroup selectgroup-vertical w-100 o-auto" style="max-height: 60rem;">
+      	        	<div id="employee-list" class="selectgroup selectgroup-vertical w-100 o-auto" style="max-height: 70vh;">
                         {* <label class="selectgroup-item">
                             <input type="radio" name="employee_id" value="0" class="selectgroup-input" checked="" onclick="init_dtr (0);">
                             <span class="selectgroup-button" style="text-align: left;">Blank DTR</span>

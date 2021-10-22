@@ -62,8 +62,9 @@
                         <td>{$attn.ot_out|substr:0:-1|trim}</td>
                         {$attendance.ut = $attendance.ut + ($attn.late + $attn.undertime)}
                         {$attendance.abs = $attendance.abs + $attn.is_absent}
+                        {$attendance.total_days = $attendance.total_days + (1 - $attn.is_absent)}
                         {$attendance.total = $attendance.total + $attn.total_hours}
-                        <td> {$attn.is_absent} </td>
+                        <td> {$attn.is_absent|string_format:"%.2f"} </td>
                         <td>{$attn.late + $attn.undertime}</td>
                     </tr>
                 {else}
@@ -92,8 +93,8 @@
                 {/if}
             {/foreach}
             <tr class="border">
-                <td colspan="7" style="text-align: left;">TOTAL HOURS: <b>{$attendance.total}</b> OVERTIME: <b>0.00</b></td>
-                <td>{$attendance.abs}</td>
+                <td colspan="7" style="text-align: left;">TOTAL DAYS: <b>{$attendance.total_days}</b> OVERTIME: <b>0.00</b></td>
+                <td>{$attendance.abs|string_format:"%.2f"}</td>
                 <td>{$attendance.ut}</td>
             </tr>
             <br/>

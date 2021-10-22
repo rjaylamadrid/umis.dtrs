@@ -61,7 +61,7 @@ class DTR {
 
     public static function compute_log ($attnd, $id, $date, $period, $ot_paid = NULL) {
         $preset = ["am_in", "am_out", "pm_in", "pm_out", "ot_in", "ot_out"];
-        $attendance = ["is_absent" => 0, "total_hours" => 0, "late" => 0, "undertime" => 0];
+        $attendance = ["is_absent" => 1, "total_hours" => 0, "late" => 0, "undertime" => 0];
         $sched = self::get_sched($id, date_create($date), $ot_paid);
         $logs = self::get_log($period, [$id, $date]);
         $is_null = $logs[0] == '' ? true :false;
@@ -91,7 +91,7 @@ class DTR {
                                         $start = $late > 0 ? $attnd[$i-1] : $sched[0][$preset[$i-1]];
                                         $end = $undertime > 0 ? $attnd[$i] : $end = $sched[0][$preset[$i]];
                                         $attendance['total_hours'] += ((strtotime($end) - strtotime($start))/60)/60;
-                                        $attendance['is_absent'] += .5;
+                                        $attendance['is_absent'] -= .5;
                                     }
                                 }
                             }
@@ -184,7 +184,7 @@ class DTR {
 
             if ($log){
                 $attnd = array($log['am_in'], $log['am_out'], $log['pm_in'], $log['pm_out'], $log['ot_in'], $log['ot_out']);
-                $attendance = self::change_log ($emp_id, $attnd, $period, $fdate,$log['id']);
+                $attendance = self::change_log ($emp_id, $attnd, $period, $fdate, $log['id']);
             }
             $logs[] = $log;
         }
